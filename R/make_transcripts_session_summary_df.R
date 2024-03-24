@@ -18,8 +18,8 @@
 #' @examples
 #' make_transcripts_session_summary_df(
 #'   clean_names_df = make_clean_names_df(
-#'     data_folder = 'data',
-#'     section_names_lookup_file = 'section_names_lookup.csv',
+#'     data_folder = "data",
+#'     section_names_lookup_file = "section_names_lookup.csv",
 #'     transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
 #'     roster_sessions = student_roster_sessions(
 #'       transcripts_list_df = join_transcripts_list(
@@ -33,9 +33,7 @@
 #'     )
 #'   )
 #' )
-
 make_transcripts_session_summary_df <- function(clean_names_df) {
-
   day <-
     duration <-
     n <-
@@ -44,8 +42,7 @@ make_transcripts_session_summary_df <- function(clean_names_df) {
     session_num <- time <- transcript_section <- wordcount <- NULL
 
   if (tibble::is_tibble(clean_names_df)
-  ){
-
+  ) {
     clean_names_df %>%
       # group_by(section, day, time, session_num, preferred_name) %>%
       dplyr::group_by(section, day, time, session_num, preferred_name, transcript_section) %>%

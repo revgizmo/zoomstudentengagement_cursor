@@ -14,13 +14,12 @@
 #' @examples
 #' load_section_names_lookup()
 #'
-load_section_names_lookup <- function(data_folder = 'data',
-                                      names_lookup_file = 'section_names_lookup.csv',
-                                      section_names_lookup_col_types = 'cccdcccd') {
-
+load_section_names_lookup <- function(data_folder = "data",
+                                      names_lookup_file = "section_names_lookup.csv",
+                                      section_names_lookup_col_types = "cccdcccd") {
   preferred_name <- section <- student_id <- NULL
 
-  file_path <- paste0(data_folder, '/', names_lookup_file)
+  file_path <- paste0(data_folder, "/", names_lookup_file)
 
   # Check if the file exists
   if (file.exists(file_path)) {
@@ -31,7 +30,6 @@ load_section_names_lookup <- function(data_folder = 'data',
     # File doesn't exist, handle the situation accordingly
     print(paste("File does not exist:", file_path))
     data <- make_blank_section_names_lookup_csv()
-
   }
 
   data %>%

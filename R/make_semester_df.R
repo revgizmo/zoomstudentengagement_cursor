@@ -16,14 +16,13 @@
 #' @examples
 #' make_semester_df()
 make_semester_df <- function(semester_units = 14,
-                             class_start_time_gmt = '04:00:00',
+                             class_start_time_gmt = "04:00:00",
                              class_duration_min = 90) {
-
   start_time_gmt <- end_time_gmt <- NULL
 
-  class_start_time_gmt = hms::as_hms(class_start_time_gmt)
+  class_start_time_gmt <- hms::as_hms(class_start_time_gmt)
 
-  class_end_time_gmt = hms::as_hms(class_start_time_gmt + (class_duration_min * 60))
+  class_end_time_gmt <- hms::as_hms(class_start_time_gmt + (class_duration_min * 60))
 
 
   tibble::tibble(
@@ -32,8 +31,8 @@ make_semester_df <- function(semester_units = 14,
     end_time_gmt = class_end_time_gmt,
     duration = end_time_gmt - start_time_gmt,
     d2 = base::difftime(end_time_gmt,
-                        start_time_gmt,
-                        units = c("mins"))
+      start_time_gmt,
+      units = c("mins")
+    )
   )
-
 }

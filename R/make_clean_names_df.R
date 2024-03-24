@@ -18,8 +18,8 @@
 #'
 #' @examples
 #' make_clean_names_df(
-#'   data_folder = 'data',
-#'   section_names_lookup_file = 'section_names_lookup.csv',
+#'   data_folder = "data",
+#'   section_names_lookup_file = "section_names_lookup.csv",
 #'   transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
 #'   roster_sessions = student_roster_sessions(
 #'     transcripts_list_df = join_transcripts_list(
@@ -33,12 +33,10 @@
 #'   )
 #' )
 #'
-
-make_clean_names_df <- function(data_folder = 'data',
-                                section_names_lookup_file = 'section_names_lookup.csv',
+make_clean_names_df <- function(data_folder = "data",
+                                section_names_lookup_file = "section_names_lookup.csv",
                                 transcripts_fliwc_df,
                                 roster_sessions) {
-
   comments <-
     day <-
     dept <-
@@ -60,23 +58,30 @@ make_clean_names_df <- function(data_folder = 'data',
     transcript_section <- wordcount <- wordcount_perc <- wpm <- NULL
 
   if (tibble::is_tibble(transcripts_fliwc_df) &&
-      tibble::is_tibble(roster_sessions)
-  ){
-
+    tibble::is_tibble(roster_sessions)
+  ) {
     transcripts_fliwc_df %>%
-      dplyr::rename(transcript_name = name,
-                    transcript_section = section) %>%
+      dplyr::rename(
+        transcript_name = name,
+        transcript_section = section
+      ) %>%
       dplyr::left_join(
-        load_section_names_lookup(data_folder = data_folder,
-                                  names_lookup_file = section_names_lookup_file),
-        by = dplyr::join_by(transcript_name,
-                            transcript_section,
-                            day,
-                            time)) %>%
+        load_section_names_lookup(
+          data_folder = data_folder,
+          names_lookup_file = section_names_lookup_file
+        ),
+        by = dplyr::join_by(
+          transcript_name,
+          transcript_section,
+          day,
+          time
+        )
+      ) %>%
       dplyr::mutate(
         formal_name = dplyr::if_else(is.na(formal_name),
-                                     transcript_name,
-                                     formal_name)
+          transcript_name,
+          formal_name
+        )
       ) %>%
       dplyr::full_join(
         roster_sessions,

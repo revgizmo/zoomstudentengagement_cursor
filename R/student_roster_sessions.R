@@ -23,11 +23,9 @@
 #'     roster_df = load_roster()
 #'   )
 #' )
-
 student_roster_sessions <-
   function(transcripts_list_df,
            roster_small_df) {
-
     . <-
       course_num <-
       course_num_transcript <-
@@ -41,9 +39,8 @@ student_roster_sessions <-
       start_time_local <- student_id <- transcript_section <- NULL
 
     if (tibble::is_tibble(transcripts_list_df) &&
-        tibble::is_tibble(roster_small_df)
-    ){
-
+      tibble::is_tibble(roster_small_df)
+    ) {
       transcripts_list_df %>%
         dplyr::rename(transcript_section = section) %>%
         tidyr::separate(
@@ -52,8 +49,10 @@ student_roster_sessions <-
           sep = "\\.",
           remove = F
         ) %>%
-        dplyr::mutate(dept_transcript = toupper(dept),
-                      dept = NULL) %>%
+        dplyr::mutate(
+          dept_transcript = toupper(dept),
+          dept = NULL
+        ) %>%
         dplyr::cross_join(roster_small_df, ., suffix = c("_roster", "_transcript")) %>%
         # mutate(section = as.integer(section),
         #        section_y = as.integer((as.numeric(section_y) - 201) * 100)) %>%
@@ -75,6 +74,5 @@ student_roster_sessions <-
           # ,
           # everything()
         )
-
     }
   }

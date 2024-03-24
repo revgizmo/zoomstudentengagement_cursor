@@ -41,28 +41,27 @@
 #' @examples
 #' load_transcript_files_list()
 load_transcript_files_list <-
-  function(data_folder = 'data',
-           transcripts_folder = 'transcripts',
+  function(data_folder = "data",
+           transcripts_folder = "transcripts",
            # zoom_recorded_sessions_csv_names_pattern =
            #   'zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv',
            transcript_files_names_pattern =
-             'GMT\\d{8}-\\d{6}_Recording',
-           dt_extract_pattern = '(?<=GMT)\\d{8}',
-           transcript_file_extension_pattern = '.transcript',
-           closed_caption_file_extension_pattern = '.cc',
-           recording_start_pattern = '(?<=GMT)\\d{8}-\\d{6}',
+             "GMT\\d{8}-\\d{6}_Recording",
+           dt_extract_pattern = "(?<=GMT)\\d{8}",
+           transcript_file_extension_pattern = ".transcript",
+           closed_caption_file_extension_pattern = ".cc",
+           recording_start_pattern = "(?<=GMT)\\d{8}-\\d{6}",
            recording_start_format = "%Y%m%d-%H%M%S",
-           start_time_local_tzone = "America/Los_Angeles"
-  ) {
-
+           start_time_local_tzone = "America/Los_Angeles") {
     . <- file_name <- recording_start <- file_type <- NULL
 
-    transcripts_folder_path <- paste0(data_folder, '/', transcripts_folder, '/')
+    transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
-    if (file.exists(transcripts_folder_path)){
-
-      transcript_files <- list.files(transcripts_folder_path,
-                                     transcript_files_names_pattern)
+    if (file.exists(transcripts_folder_path)) {
+      transcript_files <- list.files(
+        transcripts_folder_path,
+        transcript_files_names_pattern
+      )
 
       transcript_files %>%
         data.table::data.table("file_name" = .) %>%
@@ -72,24 +71,27 @@ load_transcript_files_list <-
           # session_num = dense_rank(dt),
           file_type = dplyr::case_when(
             grepl(transcript_file_extension_pattern,
-                  file_name,
-                  fixed = FALSE) ~
-              'transcript_file',
+              file_name,
+              fixed = FALSE
+            ) ~
+              "transcript_file",
             grepl(closed_caption_file_extension_pattern,
-                  file_name,
-                  fixed = FALSE) ~
-              'closed_caption_file',
-            .default = 'chat_file'
+              file_name,
+              fixed = FALSE
+            ) ~
+              "closed_caption_file",
+            .default = "chat_file"
           ),
           recording_start = readr::parse_datetime(stringr::str_extract(file_name, recording_start_pattern),
-                                                  format = recording_start_format),
+            format = recording_start_format
+          ),
           start_time_local = lubridate::with_tz(recording_start,
-                                                tzone = start_time_local_tzone)
-        )  %>%
-        tidyr::pivot_wider(names_from = file_type,
-                           values_from = file_name)
-
+            tzone = start_time_local_tzone
+          )
+        ) %>%
+        tidyr::pivot_wider(
+          names_from = file_type,
+          values_from = file_name
+        )
     }
   }
-
-

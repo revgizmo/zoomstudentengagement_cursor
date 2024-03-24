@@ -42,19 +42,18 @@
 #' @examples
 #' load_zoom_recorded_sessions_list()
 load_zoom_recorded_sessions_list <-
-  function(data_folder = 'data',
-           transcripts_folder = 'transcripts',
+  function(data_folder = "data",
+           transcripts_folder = "transcripts",
            topic_split_pattern =
-             paste0("^(?<dept>\\S+) (?<section>\\S+) - ",
-                    "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"),
+             paste0(
+               "^(?<dept>\\S+) (?<section>\\S+) - ",
+               "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+             ),
            zoom_recorded_sessions_csv_names_pattern =
-             'zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv',
-           dept = 'LTF',
-           semester_start_mdy = 'Jan 01, 2024',
-           scheduled_session_length_hours = 1.5
-  ) {
-
-
+             "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
+           dept = "LTF",
+           semester_start_mdy = "Jan 01, 2024",
+           scheduled_session_length_hours = 1.5) {
     . <-
       `Topic` <-
       `ID` <-
@@ -62,12 +61,11 @@ load_zoom_recorded_sessions_list <-
       `File Size (MB)` <-
       `File Count` <-
       `Total Views` <-
-      `Total Downloads`  <- `Total Downloads` <- `Last Accessed` <- match_start_time <- NULL
+      `Total Downloads` <- `Total Downloads` <- `Last Accessed` <- match_start_time <- NULL
 
-    transcripts_folder_path <- paste0(data_folder, '/', transcripts_folder, '/')
+    transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
-    if (file.exists(transcripts_folder_path)){
-
+    if (file.exists(transcripts_folder_path)) {
       term_files <- list.files(transcripts_folder_path)
 
       # # Define the regex pattern with named capture groups
@@ -80,7 +78,7 @@ load_zoom_recorded_sessions_list <-
 
       zoom_recorded_sessions_csv_names %>%
         paste0(transcripts_folder_path, .) %>%
-        readr::read_csv(id = 'filepath') %>%
+        readr::read_csv(id = "filepath") %>%
         dplyr::group_by(`Topic`, `ID`, `Start Time`, `File Size (MB)`, `File Count`) %>%
         dplyr::summarise(
           `Total Views` = max(`Total Views`),
@@ -100,6 +98,5 @@ load_zoom_recorded_sessions_list <-
           match_end_time = match_start_time + lubridate::hours(scheduled_session_length_hours + 0.5)
         ) %>%
         dplyr::filter(match_start_time >= lubridate::mdy(semester_start_mdy))
-
     }
   }

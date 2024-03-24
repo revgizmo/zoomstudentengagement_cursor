@@ -1,4 +1,4 @@
-options(blogdown.ext = '.Rmd')
+options(blogdown.ext = ".Rmd")
 
 
 if (interactive()) {

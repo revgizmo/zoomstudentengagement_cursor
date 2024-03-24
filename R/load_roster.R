@@ -13,17 +13,14 @@
 #'
 #' @examples
 #' load_roster()
-
 load_roster <- function(
-    data_folder = 'data',
-    roster_file = 'roster.csv') {
-
+    data_folder = "data",
+    roster_file = "roster.csv") {
   enrolled <- NULL
 
-  roster_file_path <- paste0(data_folder, '/', roster_file)
+  roster_file_path <- paste0(data_folder, "/", roster_file)
 
-  if (file.exists(roster_file_path)){
-
+  if (file.exists(roster_file_path)) {
     readr::read_csv(roster_file_path) %>%
       dplyr::filter(enrolled == TRUE)
   }

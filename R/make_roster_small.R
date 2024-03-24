@@ -14,13 +14,11 @@
 #' @examples
 #' make_roster_small(roster_df = load_roster())
 make_roster_small <- function(roster_df) {
-
   student_id <-
     first_last <-
     preferred_name <- dept <- course_num <- section <- NULL
 
   if (tibble::is_tibble(roster_df)) {
-
     roster_df %>%
       dplyr::select(student_id, first_last, preferred_name, dept, course_num, section)
   }

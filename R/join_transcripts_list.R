@@ -21,33 +21,32 @@
 #' transcript_files_df <- load_transcript_files_list()
 #' cancelled_classes_df <- load_cancelled_classes()
 #'
-#' join_transcripts_list(df_zoom_recorded_sessions = zoom_recorded_sessions_df,
-#'                       df_transcript_files = transcript_files_df,
-#'                       df_cancelled_classes = cancelled_classes_df)
-
+#' join_transcripts_list(
+#'   df_zoom_recorded_sessions = zoom_recorded_sessions_df,
+#'   df_transcript_files = transcript_files_df,
+#'   df_cancelled_classes = cancelled_classes_df
+#' )
 join_transcripts_list <- function(
     df_zoom_recorded_sessions,
     df_transcript_files,
-    df_cancelled_classes
-) {
-
+    df_cancelled_classes) {
   match_start_time <- start_time_local <- match_end_time <- section <- dense_rank <- NULL
 
   if (tibble::is_tibble(df_zoom_recorded_sessions) &&
-      tibble::is_tibble(df_transcript_files) &&
-      tibble::is_tibble(df_zoom_recorded_sessions)
-  ){
-
+    tibble::is_tibble(df_transcript_files) &&
+    tibble::is_tibble(df_zoom_recorded_sessions)
+  ) {
     df_zoom_recorded_sessions %>%
       dplyr::cross_join(df_transcript_files) %>%
-      dplyr::filter(match_start_time <= start_time_local,
-                    match_end_time >= start_time_local) %>%
+      dplyr::filter(
+        match_start_time <= start_time_local,
+        match_end_time >= start_time_local
+      ) %>%
       dplyr::bind_rows(df_cancelled_classes) %>%
       dplyr::arrange(start_time_local) %>%
       dplyr::group_by(section) %>%
       dplyr::mutate(session_num = dense_rank(start_time_local)) %>%
       dplyr::ungroup()
-
   }
 }
 # join_transcripts_list(df_zoom_recorded_sessions = zoom_recorded_sessions_df,

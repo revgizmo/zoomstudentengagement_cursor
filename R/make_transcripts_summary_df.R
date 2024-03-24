@@ -17,8 +17,8 @@
 #' make_transcripts_summary_df(
 #'   make_transcripts_session_summary_df(
 #'     clean_names_df = make_clean_names_df(
-#'       data_folder = 'data',
-#'       section_names_lookup_file = 'section_names_lookup.csv',
+#'       data_folder = "data",
+#'       section_names_lookup_file = "section_names_lookup.csv",
 #'       transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
 #'       roster_sessions = student_roster_sessions(
 #'         transcripts_list_df = join_transcripts_list(
@@ -33,16 +33,12 @@
 #'     )
 #'   )
 #' )
-
 make_transcripts_summary_df <-
   function(transcripts_session_summary_df) {
-
-
     duration <- n <- preferred_name <- section <- wordcount <- NULL
 
     if (tibble::is_tibble(transcripts_session_summary_df)
-    ){
-
+    ) {
       transcripts_session_summary_df %>%
         dplyr::group_by(section, preferred_name) %>%
         dplyr::summarise(
@@ -59,7 +55,7 @@ make_transcripts_summary_df <-
           perc_duration = duration / sum(duration, na.rm = TRUE) * 100,
           perc_wordcount = wordcount / sum(wordcount, na.rm = TRUE) * 100
         ) %>%
-        dplyr::ungroup()  %>%
+        dplyr::ungroup() %>%
         dplyr::arrange(-duration)
     }
   }

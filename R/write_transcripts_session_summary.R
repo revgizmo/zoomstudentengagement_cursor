@@ -28,8 +28,8 @@
 #' write_transcripts_session_summary(
 #'   make_transcripts_session_summary_df(
 #'     clean_names_df = make_clean_names_df(
-#'       data_folder = 'data',
-#'       section_names_lookup_file = 'section_names_lookup.csv',
+#'       data_folder = "data",
+#'       section_names_lookup_file = "section_names_lookup.csv",
 #'       transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
 #'       roster_sessions = student_roster_sessions(
 #'         transcripts_list_df = join_transcripts_list(
@@ -44,17 +44,13 @@
 #'     )
 #'   )
 #' )
-
 write_transcripts_session_summary <-
   function(transcripts_session_summary_df,
-           data_folder = 'data',
-           transcripts_session_summary_file = 'transcripts_session_summary.csv') {
-
+           data_folder = "data",
+           transcripts_session_summary_file = "transcripts_session_summary.csv") {
     if (tibble::is_tibble(transcripts_session_summary_df)
-    ){
-
+    ) {
       transcripts_session_summary_df %>%
-        readr::write_csv(paste0(data_folder, '/', transcripts_session_summary_file))
-
+        readr::write_csv(paste0(data_folder, "/", transcripts_session_summary_file))
     }
   }

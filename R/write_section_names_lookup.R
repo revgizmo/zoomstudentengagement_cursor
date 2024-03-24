@@ -23,8 +23,8 @@
 #' @examples
 #' write_section_names_lookup(
 #'   clean_names_df = make_clean_names_df(
-#'     data_folder = 'data',
-#'     section_names_lookup_file = 'section_names_lookup.csv',
+#'     data_folder = "data",
+#'     section_names_lookup_file = "section_names_lookup.csv",
 #'     transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
 #'     roster_sessions = student_roster_sessions(
 #'       transcripts_list_df = join_transcripts_list(
@@ -37,15 +37,13 @@
 #'       )
 #'     )
 #'   ),
-#'   data_folder = 'data',
-#'   section_names_lookup_file = 'section_names_lookup.csv'
+#'   data_folder = "data",
+#'   section_names_lookup_file = "section_names_lookup.csv"
 #' )
-
 write_section_names_lookup <-
   function(clean_names_df,
-           data_folder = 'data',
-           section_names_lookup_file = 'section_names_lookup.csv') {
-
+           data_folder = "data",
+           section_names_lookup_file = "section_names_lookup.csv") {
     day <-
       formal_name <-
       n <-
@@ -54,22 +52,22 @@ write_section_names_lookup <-
       student_id <- time <- transcript_name <- transcript_section <- NULL
 
     if (tibble::is_tibble(clean_names_df) &&
-        file.exists(data_folder)
-    ){
-
+      file.exists(data_folder)
+    ) {
       clean_names_df %>%
-        dplyr::group_by(transcript_section,
-                        day,
-                        time,
-                        section,
-                        preferred_name,
-                        formal_name,
-                        transcript_name,
-                        student_id) %>%
+        dplyr::group_by(
+          transcript_section,
+          day,
+          time,
+          section,
+          preferred_name,
+          formal_name,
+          transcript_name,
+          student_id
+        ) %>%
         dplyr::summarise(n = dplyr::n()) %>%
         dplyr::arrange(preferred_name, formal_name) %>%
         dplyr::select(-n) %>%
-        readr::write_csv(paste0(data_folder, '/', section_names_lookup_file))
-
+        readr::write_csv(paste0(data_folder, "/", section_names_lookup_file))
+    }
   }
-}

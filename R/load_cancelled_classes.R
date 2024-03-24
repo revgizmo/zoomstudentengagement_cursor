@@ -18,14 +18,14 @@
 #' @examples
 #' load_cancelled_classes()
 load_cancelled_classes <-
-  function(data_folder = 'data',
-           cancelled_classes_file = 'cancelled_classes.csv',
-           cancelled_classes_col_types = 'ccccccccnnnncTTcTTccci') {
+  function(data_folder = "data",
+           cancelled_classes_file = "cancelled_classes.csv",
+           cancelled_classes_col_types = "ccccccccnnnncTTcTTccci") {
+    cancelled_classes_file_path <- paste0(data_folder, "/", cancelled_classes_file)
 
-    cancelled_classes_file_path <- paste0(data_folder, '/', cancelled_classes_file)
-
-    if (file.exists(cancelled_classes_file_path)){
+    if (file.exists(cancelled_classes_file_path)) {
       readr::read_csv(cancelled_classes_file_path,
-               col_types = cancelled_classes_col_types)
+        col_types = cancelled_classes_col_types
+      )
     }
   }

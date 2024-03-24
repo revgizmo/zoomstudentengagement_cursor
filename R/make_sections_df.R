@@ -10,15 +10,11 @@
 #'
 #' @examples
 #' make_sections_df(roster_df = load_roster())
-
 make_sections_df <- function(roster_df) {
-
   dept <- course_num <- section <- NULL
 
   if (tibble::is_tibble(roster_df)) {
-
     roster_df %>%
       dplyr::count(dept, course_num, section)
-
   }
 }

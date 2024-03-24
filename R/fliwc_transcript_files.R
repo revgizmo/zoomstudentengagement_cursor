@@ -16,38 +16,36 @@
 #'
 #' @examples
 #' fliwc_transcript_files(df_transcript_list = NULL)
-
 fliwc_transcript_files <-
   function(df_transcript_list,
-           data_folder = 'data',
-           transcripts_folder = 'transcripts',
+           data_folder = "data",
+           transcripts_folder = "transcripts",
            names_to_exclude = NULL) {
-
-
     transcript_file <- transcript_path <- name <- NULL
 
-    transcripts_folder_path <- paste0(data_folder, '/', transcripts_folder, '/')
+    transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
 
     if (tibble::is_tibble(df_transcript_list) &&
-        file.exists(transcripts_folder_path)
-    ){
-
+      file.exists(transcripts_folder_path)
+    ) {
       df_transcript_list %>%
         dplyr::mutate(
           transcript_path = dplyr::if_else(
             is.na(transcript_file),
             NA,
-            paste0(transcripts_folder_path, '/', transcript_file)
+            paste0(transcripts_folder_path, "/", transcript_file)
           ),
-          fliwc = purrr::map2(transcript_path,
-                              list(c(names_exclude = names_to_exclude)),
-                              fliwc)
+          fliwc = purrr::map2(
+            transcript_path,
+            list(c(names_exclude = names_to_exclude)),
+            fliwc
+          )
         ) %>%
         tidyr::unnest(cols = c(fliwc)) %>%
-        dplyr::mutate(name_raw = name,
-                      name = stringr::str_trim(name))
-
-
+        dplyr::mutate(
+          name_raw = name,
+          name = stringr::str_trim(name)
+        )
     }
   }
