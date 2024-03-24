@@ -1,0 +1,59 @@
+#' Make Transcripts Session Summary
+#'
+#' This function creates a tibble from the provided tibble containing session
+#' details and summary metrics by speaker for all class sessions (and
+#' placeholders for missing sections), including customized student names, and
+#' summarizes results at the level of the session and preferred student name.
+#'
+#' @param clean_names_df A tibble containing session details and summary metrics
+#'   by speaker for all class sessions (and placeholders for missing sections),
+#'   including customized student names.
+#'
+#' @return a tibble containing session details and
+#'   summary metrics by speaker for all class sessions (and placeholders for
+#'   missing sections), including customized student names, and summarizes
+#'   results at the level of the session and preferred student name.
+#' @export
+#'
+#' @examples
+#' make_transcripts_session_summary_df(
+#'   clean_names_df = make_clean_names_df(
+#'     data_folder = 'data',
+#'     section_names_lookup_file = 'section_names_lookup.csv',
+#'     transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
+#'     roster_sessions = student_roster_sessions(
+#'       transcripts_list_df = join_transcripts_list(
+#'         df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
+#'         df_transcript_files = load_transcript_files_list(),
+#'         df_cancelled_classes = load_cancelled_classes()
+#'       ),
+#'       roster_small_df = make_roster_small(
+#'         roster_df = load_roster()
+#'       )
+#'     )
+#'   )
+#' )
+
+make_transcripts_session_summary_df <- function(clean_names_df) {
+
+  day <-
+    duration <-
+    n <-
+    preferred_name <-
+    section <-
+    session_num <- time <- transcript_section <- wordcount <- NULL
+
+  if (tibble::is_tibble(clean_names_df)
+  ){
+
+    clean_names_df %>%
+      # group_by(section, day, time, session_num, preferred_name) %>%
+      dplyr::group_by(section, day, time, session_num, preferred_name, transcript_section) %>%
+      dplyr::summarise(
+        n = sum(n, na.rm = F),
+        duration = sum(duration, na.rm = F),
+        wordcount = sum(wordcount, na.rm = F)
+      ) %>%
+      dplyr::ungroup()
+  }
+}

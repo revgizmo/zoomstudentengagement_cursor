@@ -6,6 +6,12 @@
 \usage{
 hello()
 }
+\value{
+some pretty text
+}
 \description{
 Hello, world! Conor's version
+}
+\examples{
+hello()
 }

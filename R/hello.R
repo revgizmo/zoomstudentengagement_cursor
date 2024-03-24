@@ -15,10 +15,11 @@
 
 #' Hello, world! Conor's version
 #'
-#' @return
+#' @return some pretty text
 #' @export
 #'
 #' @examples
+#' hello()
 hello <- function() {
   print("Hello, world!")
 }
