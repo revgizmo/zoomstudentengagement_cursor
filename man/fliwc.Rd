@@ -4,7 +4,14 @@
 \alias{fliwc}
 \title{Faculty Linguistic Inquiry and Word Count}
 \usage{
-fliwc(transcript_file_path, names_exclude = c("dead_air"))
+fliwc(
+  transcript_file_path,
+  names_exclude = c("dead_air"),
+  consolidate_comments = TRUE,
+  max_pause_sec = 1,
+  add_dead_air = TRUE,
+  dead_air_name = "dead_air"
+)
 }
 \arguments{
 \item{transcript_file_path}{File path of a .vtt file of a Zoom recording
@@ -12,6 +19,26 @@ transcript.}
 
 \item{names_exclude}{Character vector of names to exclude from the results.
 Defaults to 'c("dead_air")'}
+
+\item{consolidate_comments}{Set to `TRUE` to consolidate consecutive comments
+from the same speaker with gaps of less than `max_pause_sec`. `FALSE`
+returns the results from the raw transcript.  Defaults to `TRUE`}
+
+\item{max_pause_sec}{Maximum pause between comments to be consolidated.  If
+the raw comments from the Zoom recording transcript contain 2 consecutive
+comments from the same speaker, and the time between the end of the first
+comment and start of the second comment is less than `max_pause_sec`
+seconds, then the comments will be consolidated.  If the time between the
+comments is larger, they will not be consolidated. Defaults to 1.}
+
+\item{add_dead_air}{Set to `TRUE` to adds rows for any time between
+transcribed comments, labeled with the `dead_air_name` provided (or the
+default value of 'dead_air').  The resuting tibble will have rows
+accounting for the time from the beginning of the first comment to the end
+of the last one. Defaults to `TRUE`.}
+
+\item{dead_air_name}{Character string to label the `name` column in any rows
+added for dead air. Defaults to 'dead_air'.}
 }
 \value{
 A tibble containing summary metrics by speaker from a Zoom recording
@@ -27,5 +54,6 @@ of `wordcount`, `wordcount_perc`, and `wpm` by Brooks Ambrose:
 https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246
 }
 \examples{
-fliwc(transcript_file_path = 'NULL')
+fliwc(transcript_file_path = "NULL")
+
 }

@@ -35,7 +35,9 @@ zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list()
 transcript_files_df <- load_transcript_files_list()
 cancelled_classes_df <- load_cancelled_classes()
 
-join_transcripts_list(df_zoom_recorded_sessions = zoom_recorded_sessions_df,
-                      df_transcript_files = transcript_files_df,
-                      df_cancelled_classes = cancelled_classes_df)
+join_transcripts_list(
+  df_zoom_recorded_sessions = zoom_recorded_sessions_df,
+  df_transcript_files = transcript_files_df,
+  df_cancelled_classes = cancelled_classes_df
+)
 }

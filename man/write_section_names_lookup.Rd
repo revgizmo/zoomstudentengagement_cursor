@@ -37,8 +37,8 @@ specified data folder (`data_folder`).
 \examples{
 write_section_names_lookup(
   clean_names_df = make_clean_names_df(
-    data_folder = 'data',
-    section_names_lookup_file = 'section_names_lookup.csv',
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
     roster_sessions = student_roster_sessions(
       transcripts_list_df = join_transcripts_list(
@@ -51,7 +51,7 @@ write_section_names_lookup(
       )
     )
   ),
-  data_folder = 'data',
-  section_names_lookup_file = 'section_names_lookup.csv'
+  data_folder = "data",
+  section_names_lookup_file = "section_names_lookup.csv"
 )
 }
