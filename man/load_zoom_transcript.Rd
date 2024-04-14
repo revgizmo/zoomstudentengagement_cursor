@@ -2,7 +2,7 @@
 % Please edit documentation in R/load_zoom_transcript.R
 \name{load_zoom_transcript}
 \alias{load_zoom_transcript}
-\title{Faculty Linguistic Inquiry and Word Count}
+\title{Load Zoom Transcript}
 \usage{
 load_zoom_transcript(transcript_file_path)
 }

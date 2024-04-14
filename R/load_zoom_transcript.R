@@ -1,4 +1,4 @@
-#' Faculty Linguistic Inquiry and Word Count
+#' Load Zoom Transcript
 #'
 #' Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
 #'

@@ -8,4 +8,12 @@
 \description{
 Takes Zoom transcripts and student rosters, converts them for analysis, and analyzes the results for student engagement, with a particular focus on participation equity.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/revgizmo/zoomstudentengagement}
+  \item Report bugs at \url{https://github.com/revgizmo/zoomstudentengagement/issues}
+}
+
+}
 \keyword{internal}

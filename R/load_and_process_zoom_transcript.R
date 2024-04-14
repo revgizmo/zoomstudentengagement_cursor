@@ -1,6 +1,7 @@
-#' Faculty Linguistic Inquiry and Word Count
+#' Load and Process Zoom Transcript
 #'
-#' Process a Zoom recording transcript and return summary metrics by speaker
+#' Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
+
 #'
 #' Original code posted by Conor Healy:
 #' https://ucbischool.slack.com/archives/C02A36407K9/p1631855705002000 Addition
@@ -12,8 +13,6 @@
 
 #' @param transcript_file_path File path of a .vtt file of a Zoom recording
 #'   transcript.
-#' @param names_exclude Character vector of names to exclude from the results.
-#'   Defaults to 'c("dead_air")'
 #' @param consolidate_comments Set to `TRUE` to consolidate consecutive comments
 #'   from the same speaker with gaps of less than `max_pause_sec`. `FALSE`
 #'   returns the results from the raw transcript.  Defaults to `TRUE`
@@ -33,15 +32,14 @@
 #' @param na_name Character string to label the `name` column in any rows where
 #'   the transcript `name` is `NA`. Defaults to 'unknown'.
 #'
-#' @return A tibble containing summary metrics by speaker from a Zoom recording
-#'   transcript
+#' @return A tibble containing the comments from a Zoom recording transcript
+#'
 #' @export
 #'
 #' @examples
-#' fliwc(transcript_file_path = "NULL")
+#' load_and_process_zoom_transcript(transcript_file_path = "NULL")
 #'
-fliwc <- function(transcript_file_path,
-                  names_exclude = c("dead_air"),
+load_and_process_zoom_transcript <- function(transcript_file_path,
                   consolidate_comments = TRUE,
                   max_pause_sec = 1,
                   add_dead_air = TRUE,
@@ -52,46 +50,51 @@ fliwc <- function(transcript_file_path,
   . <-
     begin <-
     comment_num <-
-    duration <-
-    end <-
-    n <-
-    name <- prior_dead_air <- start <- timestamp <- wordcount <- NULL
+    duration <- end <- name <- prior_dead_air <- start <- NULL
 
-  consolidate_comments_ <- consolidate_comments
   max_pause_sec_ <- max_pause_sec
-  add_dead_air_ <- add_dead_air
   dead_air_name_ <- dead_air_name
   na_name_ <- na_name
 
-
   if (file.exists(transcript_file_path)) {
 
-    transcript_df <- zoomstudentengagement::load_and_process_zoom_transcript(transcript_file_path,
-                                                 consolidate_comments = consolidate_comments_,
-                                                 max_pause_sec = max_pause_sec_,
-                                                 add_dead_air = add_dead_air_,
-                                                 dead_air_name = dead_air_name_,
-                                                 na_name = na_name_
-    )
+    transcript_df <- zoomstudentengagement::load_zoom_transcript(transcript_file_path) %>%
+      dplyr::mutate(
+        begin = dplyr::lag(end, order_by = start, default = hms::hms(0)),
+        prior_dead_air = start - begin,
+        prior_speaker = dplyr::lag(name, order_by = start, default = NA)
+      ) %>%
+      dplyr::select(
+        comment_num,
+        name,
+        comment,
+        start,
+        end,
+        duration,
+        prior_dead_air,
+        tidyselect::everything()
+      )
 
+    if (consolidate_comments == TRUE) {
+      transcript_df <- transcript_df %>%
+        zoomstudentengagement::consolidate_transcript(., max_pause_sec = max_pause_sec_)
+    }
+
+    if (add_dead_air == TRUE) {
+      transcript_df <- transcript_df %>%
+        zoomstudentengagement::add_dead_air_rows(dead_air_name = dead_air_name_)
+    }
 
     return_df <- transcript_df %>%
-      dplyr::filter(!name %in% unlist(names_exclude)) %>%
-      dplyr::group_by(name) %>%
-      dplyr::summarise(
-        n = dplyr::n(),
-        duration = sum(as.numeric(duration, units = "mins")),
-        wordcount = sum(as.numeric(wordcount, units = "mins")),
-        comments = list(comment)
-      ) %>%
-      dplyr::ungroup() %>%
+      dplyr::arrange(start) %>%
       dplyr::mutate(
-        n_perc = n / sum(n) * 100,
-        duration_perc = duration / sum(duration) * 100,
-        wordcount_perc = wordcount / sum(wordcount) * 100,
-        wpm = wordcount / duration
-      ) %>%
-      dplyr::arrange(-duration)
+        comment_num = dplyr::row_number(),
+        name =
+          dplyr::case_when(
+            is.na(name) ~ na_name_,
+            TRUE ~ name
+          )
+        )
 
     return_df
   }

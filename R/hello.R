@@ -23,3 +23,4 @@
 hello <- function() {
   print("Hello, world!")
 }
+# document()
