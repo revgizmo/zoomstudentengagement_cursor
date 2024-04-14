@@ -35,8 +35,9 @@ add_dead_air_rows <- function(df, dead_air_name = 'dead_air') {
         raw_start = NA,
         wordcount = NA,
         prior_dead_air = NULL,
-        prev_end = NULL,
-        comment_num = paste("dead_air", comment_num)
+        prev_end = NULL
+        # ,
+        # comment_num = paste("dead_air", comment_num)
       ) %>%
       dplyr::bind_rows(df, .)
   }
