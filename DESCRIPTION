@@ -24,3 +24,5 @@ Imports:
     tibble,
     tidyr,
     tidyselect
+URL: https://github.com/revgizmo/zoomstudentengagement
+BugReports: https://github.com/revgizmo/zoomstudentengagement/issues
