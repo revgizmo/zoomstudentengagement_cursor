@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of zoomstudentengagement is to ...
+The goal of zoomstudentengagement is to ... 
 
 ## Installation
 
@@ -36,22 +36,6 @@ This is a basic example which shows you how to solve a common problem:
 library(zoomstudentengagement)
 ## basic example code
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
 
 
 
@@ -86,6 +70,26 @@ In that case, don't forget to commit and push the resulting figure files, so the
         1. If you have an existing "cancelled_classes.csv", update it as necessary, or
         2. Run `make_blank_cancelled_classes_df()` and save it as a .csv file.
     4. Run `join_transcripts_list()` to get a tibble from the joining of the listing of session recordings loaded from the cloud recording csvs ('df_zoom_recorded_sessions'), the list of transcript files ('df_transcript_files'), and the list of cancelled classes ('df_cancelled_classes') into a single tibble.
-6. Load Zoom Transcript files and Run Faculty Linguistic Inquiry and Word Count on those sessions.
+5. Load Zoom Transcript files and Run Faculty Linguistic Inquiry and Word Count on those sessions.
     1. Run `fliwc_transcript_files()`.
+
+
+# Old
+
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+
+```{r cars}
+summary(cars)
+```
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+
+You can also embed plots, for example:
+
+```{r pressure, echo = FALSE}
+plot(pressure)
+```
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+
 

@@ -27,7 +27,6 @@ A tibble listing the cancelled class sessions for scheduled classes
 \description{
 This function creates a tibble from a provided csv file of cancelled class
 sessions for scheduled classes where a zoom recording is not expected.
-transcript files of Zoom recordings.
 }
 \examples{
 load_cancelled_classes()
