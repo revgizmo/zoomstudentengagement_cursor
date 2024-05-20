@@ -23,7 +23,6 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(zoomstudentengagement)
-## basic example code
 ```
 
 # Steps to use zoomstudentengagement
@@ -93,18 +92,11 @@ zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
   semester_start_mdy = "Jan 01, 2024",
   scheduled_session_length_hours = 1.5
 )
-#> New names:
-#> • `` -> `...9`
-#> Warning: One or more parsing issues, call `problems()` on your data frame for details,
-#> e.g.:
-#>   dat <- vroom(...)
-#>   problems(dat)
-#> Rows: 4 Columns: 10
+#> Rows: 4 Columns: 9
 #> ── Column specification ────────────────────────────────────────────────────────
 #> Delimiter: ","
 #> chr (4): Topic, ID, Start Time, Last Accessed
 #> dbl (4): File Size (MB), File Count, Total Views, Total Downloads
-#> lgl (1): ...9
 #> 
 #> ℹ Use `spec()` to retrieve the full column specification for this data.
 #> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -263,18 +255,11 @@ fliwc_transcript_files(
 
 load_zoom_recorded_sessions_list(data_folder = system.file("extdata",  package="zoomstudentengagement")
 )
-#> New names:
-#> • `` -> `...9`
-#> Warning: One or more parsing issues, call `problems()` on your data frame for details,
-#> e.g.:
-#>   dat <- vroom(...)
-#>   problems(dat)
-#> Rows: 4 Columns: 10
+#> Rows: 4 Columns: 9
 #> ── Column specification ────────────────────────────────────────────────────────
 #> Delimiter: ","
 #> chr (4): Topic, ID, Start Time, Last Accessed
 #> dbl (4): File Size (MB), File Count, Total Views, Total Downloads
-#> lgl (1): ...9
 #> 
 #> ℹ Use `spec()` to retrieve the full column specification for this data.
 #> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.

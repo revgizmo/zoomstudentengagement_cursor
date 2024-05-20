@@ -34,7 +34,7 @@ This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(zoomstudentengagement)
-## basic example code
+
 ```
 
 
@@ -101,6 +101,7 @@ library(zoomstudentengagement)
 
 
 ## 4. Load the list of Zoom Recordings Transcripts
+
     1. Run `load_zoom_recorded_sessions_list()` to get a tibble from a provided csv file of Zoom recordings.
     
 ```{r}

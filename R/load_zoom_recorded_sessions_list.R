@@ -25,6 +25,11 @@
 #'   the csv file names from the cloud recording csvs and extract useful
 #'   columns. Defaults to
 #'   'zoomus_recordings__\\\\d{8}(?:\\\\s+copy\\\\s*\\\\d*)?\\\\.csv'
+#' @param zoom_recorded_sessions_csv_col_names Comma separated string of column
+#'   names in the cloud recording csvs. Zoom tends to save the file with an
+#'   extra ',' at the end of the header row, causing a null column to be
+#'   imported.  Defaults to 'Topic,ID,Start Time,File Size (MB),File Count,Total
+#'   Views,Total Downloads,Last Accessed'
 #' @param dept the school department associated with the recordings to keep.
 #'   Zoom often captures unwanted recordings, and this is used to filter only
 #'   the targeted ones.  This value is compared to the `dept` column extracted
@@ -51,9 +56,14 @@ load_zoom_recorded_sessions_list <-
              ),
            zoom_recorded_sessions_csv_names_pattern =
              "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
+           zoom_recorded_sessions_csv_col_names =
+"Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed",
            dept = "LTF",
            semester_start_mdy = "Jan 01, 2024",
-           scheduled_session_length_hours = 1.5) {
+           scheduled_session_length_hours = 1.5
+
+
+           ) {
     . <-
       `Topic` <-
       `ID` <-
@@ -62,6 +72,10 @@ load_zoom_recorded_sessions_list <-
       `File Count` <-
       `Total Views` <-
       `Total Downloads` <- `Total Downloads` <- `Last Accessed` <- match_start_time <- NULL
+
+
+
+    zoom_recorded_sessions_csv_col_names_vector <- strsplit(zoom_recorded_sessions_csv_col_names, ",")[[1]]
 
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
@@ -78,7 +92,9 @@ load_zoom_recorded_sessions_list <-
 
       zoom_recorded_sessions_csv_names %>%
         paste0(transcripts_folder_path, .) %>%
-        readr::read_csv(id = "filepath") %>%
+        readr::read_csv(id = "filepath",
+                        col_names = zoom_recorded_sessions_csv_col_names_vector,
+                        skip = 1) %>%
         dplyr::group_by(`Topic`, `ID`, `Start Time`, `File Size (MB)`, `File Count`) %>%
         dplyr::summarise(
           `Total Views` = max(`Total Views`),

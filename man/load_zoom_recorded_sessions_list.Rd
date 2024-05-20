@@ -11,6 +11,8 @@ load_zoom_recorded_sessions_list(
     "(?<day>[A-Za-z]+) (?<time>\\\\S+\\\\s*\\\\S+) (?<instructor>\\\\(.*?\\\\))"),
   zoom_recorded_sessions_csv_names_pattern =
     "zoomus_recordings__\\\\d{8}(?:\\\\s+copy\\\\s*\\\\d*)?\\\\.csv",
+  zoom_recorded_sessions_csv_col_names =
+    "Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed",
   dept = "LTF",
   semester_start_mdy = "Jan 01, 2024",
   scheduled_session_length_hours = 1.5
@@ -34,6 +36,12 @@ combined one)}
 the csv file names from the cloud recording csvs and extract useful
 columns. Defaults to
 'zoomus_recordings__\\\\d{8}(?:\\\\s+copy\\\\s*\\\\d*)?\\\\.csv'}
+
+\item{zoom_recorded_sessions_csv_col_names}{Comma separated string of column
+names in the cloud recording csvs. Zoom tends to save the file with an
+extra ',' at the end of the header row, causing a null column to be
+imported.  Defaults to 'Topic,ID,Start Time,File Size (MB),File Count,Total
+Views,Total Downloads,Last Accessed'}
 
 \item{dept}{the school department associated with the recordings to keep.
 Zoom often captures unwanted recordings, and this is used to filter only
