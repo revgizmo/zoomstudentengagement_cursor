@@ -2,7 +2,7 @@
 % Please edit documentation in R/consolidate_transcript.R
 \name{consolidate_transcript}
 \alias{consolidate_transcript}
-\title{Faculty Linguistic Inquiry and Word Count}
+\title{Consolidate Transcript}
 \usage{
 consolidate_transcript(df, max_pause_sec = 1)
 }

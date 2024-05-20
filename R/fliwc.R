@@ -80,15 +80,15 @@ fliwc <- function(transcript_file_path,
       dplyr::group_by(name) %>%
       dplyr::summarise(
         n = dplyr::n(),
-        duration = sum(as.numeric(duration, units = "mins")),
-        wordcount = sum(as.numeric(wordcount, units = "mins")),
+        duration = sum(as.numeric(duration, units = "mins"), na.rm = TRUE),
+        wordcount = sum(as.numeric(wordcount, units = "mins"), na.rm = TRUE),
         comments = list(comment)
       ) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(
         n_perc = n / sum(n) * 100,
-        duration_perc = duration / sum(duration) * 100,
-        wordcount_perc = wordcount / sum(wordcount) * 100,
+        duration_perc = duration / sum(duration, na.rm = TRUE) * 100,
+        wordcount_perc = wordcount / sum(wordcount, na.rm = TRUE) * 100,
         wpm = wordcount / duration
       ) %>%
       dplyr::arrange(-duration)

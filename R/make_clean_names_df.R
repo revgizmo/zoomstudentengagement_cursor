@@ -65,6 +65,8 @@ make_clean_names_df <- function(data_folder = "data",
         transcript_name = name,
         transcript_section = section
       ) %>%
+      # join section_names_lookup to add any manually corrected formal_name values:
+      # (section_names_lookup_file is also the file to update to resolve add incorrect names)
       dplyr::left_join(
         load_section_names_lookup(
           data_folder = data_folder,
@@ -77,12 +79,14 @@ make_clean_names_df <- function(data_folder = "data",
           time
         )
       ) %>%
+      # fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
       dplyr::mutate(
         formal_name = dplyr::if_else(is.na(formal_name),
           transcript_name,
           formal_name
         )
       ) %>%
+      # join to the roster of enrolled students
       dplyr::full_join(
         roster_sessions,
         by = dplyr::join_by(
@@ -94,6 +98,7 @@ make_clean_names_df <- function(data_folder = "data",
         ),
         keep = FALSE
       ) %>%
+      # fill in any preferred_name values that weren't on the roster of enrolled students
       dplyr::mutate(
         preferred_name = dplyr::if_else(!is.na(preferred_name), preferred_name, formal_name)
       ) %>%
