@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_sections_df.R
 \name{make_sections_df}
 \alias{make_sections_df}
-\title{Make Class Sections DF}
+\title{Make a DF of Class Sections from the Student Roster}
 \usage{
 make_sections_df(roster_df)
 }

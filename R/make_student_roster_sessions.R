@@ -1,4 +1,4 @@
-#' Make a DF of Student Roster With Rows for Each Recorded Class Section
+#' Make a DF of the Student Roster With Rows for Each Recorded Class Section
 #'
 #' This function creates a tibble from a provided tibble students enrolled
 #' in the class or classes (`roster_small_df`) and a tibble of class sessions with corresponding transcript
@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @examples
-#' student_roster_sessions(
+#' make_student_roster_sessions(
 #'   transcripts_list_df = join_transcripts_list(
 #'     df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
 #'     df_transcript_files = load_transcript_files_list(),
@@ -23,7 +23,7 @@
 #'     roster_df = load_roster()
 #'   )
 #' )
-student_roster_sessions <-
+make_student_roster_sessions <-
   function(transcripts_list_df,
            roster_small_df) {
     . <-

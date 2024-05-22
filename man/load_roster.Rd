@@ -2,7 +2,7 @@
 % Please edit documentation in R/load_roster.R
 \name{load_roster}
 \alias{load_roster}
-\title{Load CSV of Student Roster}
+\title{Load Roster of Students from a CSV file}
 \usage{
 load_roster(data_folder = "data", roster_file = "roster.csv")
 }

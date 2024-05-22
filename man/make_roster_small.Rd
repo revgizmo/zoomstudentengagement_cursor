@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_roster_small.R
 \name{make_roster_small}
 \alias{make_roster_small}
-\title{Make Smaller DF of the Student Roster}
+\title{Make a Smaller DF of the Student Roster}
 \usage{
 make_roster_small(roster_df)
 }

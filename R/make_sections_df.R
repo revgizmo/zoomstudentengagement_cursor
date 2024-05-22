@@ -1,4 +1,4 @@
-#' Make Class Sections DF
+#' Make a DF of Class Sections from the Student Roster
 #'
 #' This function creates a tibble that includes rows for each section (grouped by dept and course number) and student count in each
 #' @keywords sections

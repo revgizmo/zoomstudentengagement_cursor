@@ -1,4 +1,4 @@
-#' Make Smaller DF of the Student Roster
+#' Make a Smaller DF of the Student Roster
 #'
 #' This function creates a tibble that includes rows for each students enrolled
 #' in the class or classes, with a small subset of the roster columns.

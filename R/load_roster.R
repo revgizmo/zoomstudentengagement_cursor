@@ -1,4 +1,4 @@
-#' Load CSV of Student Roster
+#' Load Roster of Students from a CSV file
 #'
 #' This function creates a tibble from a provided csv file of students enrolled
 #' in the class or classes

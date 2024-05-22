@@ -29,7 +29,7 @@
 #'     data_folder = "data",
 #'     section_names_lookup_file = "section_names_lookup.csv",
 #'     transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-#'     roster_sessions = student_roster_sessions(
+#'     roster_sessions = make_student_roster_sessions(
 #'       transcripts_list_df = join_transcripts_list(
 #'         df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
 #'         df_transcript_files = load_transcript_files_list(),
