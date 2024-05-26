@@ -1,7 +1,6 @@
 #' Make Blank Section Names Lookup Tibble
-
+#'
 #' This function creates an empty tibble for customization of student names by section.
-
 #'
 #' @return An empty tibble for customization of student names by section.
 #' @export

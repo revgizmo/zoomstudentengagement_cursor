@@ -31,28 +31,32 @@
 #' )
 make_students_only_transcripts_summary_df <-
   function(transcripts_session_summary_df) {
-    duration <- n <- preferred_name <- section <- wordcount <- NULL
+    section <- NULL
 
     if (tibble::is_tibble(transcripts_session_summary_df)
     ) {
       transcripts_session_summary_df %>%
-        dplyr::group_by(section, preferred_name) %>%
-        dplyr::summarise(
-          session_ct = sum(!is.na(duration)),
-          n = sum(n),
-          duration = sum(duration),
-          wordcount = sum(wordcount)
-        ) %>%
-        dplyr::ungroup() %>%
-        dplyr::group_by(section) %>%
-        dplyr::mutate(
-          wpm = wordcount / duration,
-          perc_n = n / sum(n, na.rm = TRUE) * 100,
-          perc_duration = duration / sum(duration, na.rm = TRUE) * 100,
-          perc_wordcount = wordcount / sum(wordcount, na.rm = TRUE) * 100
-        ) %>%
-        dplyr::ungroup() %>%
-        dplyr::arrange(-duration)
+        dplyr::filter(!is.na(section)) %>%
+        make_transcripts_summary_df()
+      #
+      # transcripts_session_summary_df %>%
+      #   dplyr::group_by(section, preferred_name) %>%
+      #   dplyr::summarise(
+      #     session_ct = sum(!is.na(duration)),
+      #     n = sum(n),
+      #     duration = sum(duration),
+      #     wordcount = sum(wordcount)
+      #   ) %>%
+      #   dplyr::ungroup() %>%
+      #   dplyr::group_by(section) %>%
+      #   dplyr::mutate(
+      #     wpm = wordcount / duration,
+      #     perc_n = n / sum(n, na.rm = TRUE) * 100,
+      #     perc_duration = duration / sum(duration, na.rm = TRUE) * 100,
+      #     perc_wordcount = wordcount / sum(wordcount, na.rm = TRUE) * 100
+      #   ) %>%
+      #   dplyr::ungroup() %>%
+      #   dplyr::arrange(-duration)
     }
   }
 

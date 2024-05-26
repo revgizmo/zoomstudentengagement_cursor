@@ -1,20 +1,27 @@
-#' Make Smaller DF of the Student Roster
+#' Make Clean Names DF
 #'
-#' This function creates a tibble from the joining of a tibble of customized student names by section (`section_names_lookup_file` in the `data_folder` folder),
-#' a tibble containing session details and summary metrics by speaker
-#'   for all class sessions (`transcripts_fliwc_df`), and A tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student
-#' (`roster_sessions`) into a single tibble.
 #'
-#' @param data_folder overall data folder for your recordings. Defaults to 'data'
-#' @param section_names_lookup_file File name of the csv file of customized student names by section
-#'   Defaults to 'section_names_lookup.csv'
-#' @param transcripts_fliwc_df A tibble containing session details and summary metrics by speaker
-#'   for all class sessions in the tibble provided.
-#' @param roster_sessions A tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student.
+#' This function creates a tibble containing session details and summary metrics
+#' by speaker for all class sessions (and placeholders for missing sections)
+#' from the joining of:
+#' * a tibble of customized student names by section (`section_names_lookup_file` in the `data_folder` folder),
+#' * a tibble containing session details and summary metrics by speaker for all class sessions (`transcripts_fliwc_df`), and
+#' * a tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student (`roster_sessions`) into a single tibble.
+#'
+#' @param data_folder overall data folder for your recordings. Defaults to
+#'   'data'
+#' @param section_names_lookup_file File name of the csv file of customized
+#'   student names by section Defaults to 'section_names_lookup.csv'
+#' @param transcripts_fliwc_df A tibble containing session details and summary
+#'   metrics by speaker for all class sessions in the tibble provided.
+#' @param roster_sessions A tibble listing the students enrolled in the class or
+#'   classes, with rows for each recorded class section for each student.
 #'
 #' @return A tibble containing session details and summary metrics by speaker
-#'   for all class sessions (and placeholders for missing sections), including customized student names.
+#'   for all class sessions (and placeholders for missing sections), including
+#'   customized student names.
 #' @export
+#' @md
 #'
 #' @examples
 #' make_clean_names_df(

@@ -2,8 +2,7 @@
 % Please edit documentation in R/make_blank_section_names_lookup_csv.R
 \name{make_blank_section_names_lookup_csv}
 \alias{make_blank_section_names_lookup_csv}
-\title{Make Blank Section Names Lookup Tibble
-This function creates an empty tibble for customization of student names by section.}
+\title{Make Blank Section Names Lookup Tibble}
 \usage{
 make_blank_section_names_lookup_csv()
 }
@@ -11,7 +10,6 @@ make_blank_section_names_lookup_csv()
 An empty tibble for customization of student names by section.
 }
 \description{
-Make Blank Section Names Lookup Tibble
 This function creates an empty tibble for customization of student names by section.
 }
 \examples{

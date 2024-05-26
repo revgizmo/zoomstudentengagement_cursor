@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_clean_names_df.R
 \name{make_clean_names_df}
 \alias{make_clean_names_df}
-\title{Make Smaller DF of the Student Roster}
+\title{Make Clean Names DF}
 \usage{
 make_clean_names_df(
   data_folder = "data",
@@ -12,25 +12,32 @@ make_clean_names_df(
 )
 }
 \arguments{
-\item{data_folder}{overall data folder for your recordings. Defaults to 'data'}
+\item{data_folder}{overall data folder for your recordings. Defaults to
+'data'}
 
-\item{section_names_lookup_file}{File name of the csv file of customized student names by section
-Defaults to 'section_names_lookup.csv'}
+\item{section_names_lookup_file}{File name of the csv file of customized
+student names by section Defaults to 'section_names_lookup.csv'}
 
-\item{transcripts_fliwc_df}{A tibble containing session details and summary metrics by speaker
-for all class sessions in the tibble provided.}
+\item{transcripts_fliwc_df}{A tibble containing session details and summary
+metrics by speaker for all class sessions in the tibble provided.}
 
-\item{roster_sessions}{A tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student.}
+\item{roster_sessions}{A tibble listing the students enrolled in the class or
+classes, with rows for each recorded class section for each student.}
 }
 \value{
 A tibble containing session details and summary metrics by speaker
-  for all class sessions (and placeholders for missing sections), including customized student names.
+for all class sessions (and placeholders for missing sections), including
+customized student names.
 }
 \description{
-This function creates a tibble from the joining of a tibble of customized student names by section (`section_names_lookup_file` in the `data_folder` folder),
-a tibble containing session details and summary metrics by speaker
-  for all class sessions (`transcripts_fliwc_df`), and A tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student
-(`roster_sessions`) into a single tibble.
+This function creates a tibble containing session details and summary metrics
+by speaker for all class sessions (and placeholders for missing sections)
+from the joining of:
+\itemize{
+\item a tibble of customized student names by section (\code{section_names_lookup_file} in the \code{data_folder} folder),
+\item a tibble containing session details and summary metrics by speaker for all class sessions (\code{transcripts_fliwc_df}), and
+\item a tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student (\code{roster_sessions}) into a single tibble.
+}
 }
 \examples{
 make_clean_names_df(
