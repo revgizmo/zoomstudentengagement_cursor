@@ -66,7 +66,7 @@ fliwc <- function(transcript_file_path,
 
   if (file.exists(transcript_file_path)) {
 
-    transcript_df <- zoomstudentengagement::load_and_process_zoom_transcript(transcript_file_path,
+    transcript_df <- zoomstudentengagement::process_zoom_transcript(transcript_file_path,
                                                  consolidate_comments = consolidate_comments_,
                                                  max_pause_sec = max_pause_sec_,
                                                  add_dead_air = add_dead_air_,

@@ -1,6 +1,6 @@
 #' Load and Process Zoom Transcript
 #'
-#' Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
+#' DEPRICATED - Use process_zoom_transcript() instead. - Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
 
 #'
 #' Original code posted by Conor Healy:
@@ -47,55 +47,66 @@ load_and_process_zoom_transcript <- function(transcript_file_path,
                   na_name = 'unknown'
                   ) {
 
-  . <-
-    begin <-
-    comment_num <-
-    duration <- end <- name <- prior_dead_air <- start <- NULL
+  process_zoom_transcript(transcript_file_path,
+                          consolidate_comments = TRUE,
+                          max_pause_sec = 1,
+                          add_dead_air = TRUE,
+                          dead_air_name = 'dead_air',
+                          na_name = 'unknown'
+  )
 
-  max_pause_sec_ <- max_pause_sec
-  dead_air_name_ <- dead_air_name
-  na_name_ <- na_name
-
-  if (file.exists(transcript_file_path)) {
-
-    transcript_df <- zoomstudentengagement::load_zoom_transcript(transcript_file_path) %>%
-      dplyr::mutate(
-        begin = dplyr::lag(end, order_by = start, default = hms::hms(0)),
-        prior_dead_air = start - begin,
-        prior_speaker = dplyr::lag(name, order_by = start, default = NA)
-      ) %>%
-      dplyr::select(
-        comment_num,
-        name,
-        comment,
-        start,
-        end,
-        duration,
-        prior_dead_air,
-        tidyselect::everything()
-      )
-
-    if (consolidate_comments == TRUE) {
-      transcript_df <- transcript_df %>%
-        zoomstudentengagement::consolidate_transcript(., max_pause_sec = max_pause_sec_)
-    }
-
-    if (add_dead_air == TRUE) {
-      transcript_df <- transcript_df %>%
-        zoomstudentengagement::add_dead_air_rows(dead_air_name = dead_air_name_)
-    }
-
-    return_df <- transcript_df %>%
-      dplyr::arrange(start) %>%
-      dplyr::mutate(
-        comment_num = dplyr::row_number(),
-        name =
-          dplyr::case_when(
-            is.na(name) ~ na_name_,
-            TRUE ~ name
-          )
-        )
-
-    return_df
-  }
+# . <-
+#   begin <-
+#   comment_num <-
+#   duration <- end <- name <- prior_dead_air <- start <- NULL
+#
+#
+#
+#
+#   max_pause_sec_ <- max_pause_sec
+#   dead_air_name_ <- dead_air_name
+#   na_name_ <- na_name
+#
+#   if (file.exists(transcript_file_path)) {
+#
+#     transcript_df <- zoomstudentengagement::load_zoom_transcript(transcript_file_path) %>%
+#       dplyr::mutate(
+#         begin = dplyr::lag(end, order_by = start, default = hms::hms(0)),
+#         prior_dead_air = start - begin,
+#         prior_speaker = dplyr::lag(name, order_by = start, default = NA)
+#       ) %>%
+#       dplyr::select(
+#         comment_num,
+#         name,
+#         comment,
+#         start,
+#         end,
+#         duration,
+#         prior_dead_air,
+#         tidyselect::everything()
+#       )
+#
+#     if (consolidate_comments == TRUE) {
+#       transcript_df <- transcript_df %>%
+#         zoomstudentengagement::consolidate_transcript(., max_pause_sec = max_pause_sec_)
+#     }
+#
+#     if (add_dead_air == TRUE) {
+#       transcript_df <- transcript_df %>%
+#         zoomstudentengagement::add_dead_air_rows(dead_air_name = dead_air_name_)
+#     }
+#
+#     return_df <- transcript_df %>%
+#       dplyr::arrange(start) %>%
+#       dplyr::mutate(
+#         comment_num = dplyr::row_number(),
+#         name =
+#           dplyr::case_when(
+#             is.na(name) ~ na_name_,
+#             TRUE ~ name
+#           )
+#         )
+#
+#     return_df
+#   }
 }

@@ -37,13 +37,95 @@ library(zoomstudentengagement)
   - etc
 
 ``` r
-data_folder_input <- 'data_201_2024_t1_fall'
+# data_folder_input <- 'data_201_2024_t1_spring'
 # data_folder_input <- 'data_lft'
-library(zoomstudentengagement)
 
+# library(zoomstudentengagement)
 data_folder_input <- system.file("extdata",  package="zoomstudentengagement")
-data_folder_input
-#> [1] "/Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata"
+
+
+
+# data_folder_input <- 'data'
+
+transcripts_folder_input <- "transcripts"
+topic_split_pattern_input <- paste0(
+  "^(?<dept>\\S+) (?<section>\\S+) - ",
+  "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+)
+zoom_recorded_sessions_csv_names_pattern_input <- "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv"
+dept_input <- "LFT"
+semester_start_mdy_input <- "Jan 01, 2024"
+scheduled_session_length_hours_input <- 1.5
+
+
+### roster_file
+roster_file_input = 'roster.csv'
+# roster_file used in load_roster()
+
+
+### cancelled_classes_file
+cancelled_classes_file_input <- 'cancelled_classes.csv'
+# cancelled_classes_file used in load_cancelled_classes()
+
+
+### names_lookup_file
+names_lookup_file_input <- 'section_names_lookup.csv'
+# names_lookup_file used in load_section_names_lookup(), make_clean_names_df()
+
+
+### transcripts_session_summary_file_input
+transcripts_session_summary_file_input <- 'transcripts_session_summary.csv'
+# transcripts_session_summary_file_input used in write_transcripts_session_summary()
+
+
+### transcripts_summary_file_input
+transcripts_summary_file_input <- 'transcripts_summary.csv'
+# transcripts_summary_file_input used in write_transcripts_summary()
+
+
+### instructor_name_input
+instructor_name_input = 'Conor Healy'
+# instructor_name_input used in make_students_only_transcripts_summary_df()
+
+
+### student_summary_report
+student_summary_report_input <- 'Zoom Student Engagement Analysis - student summary report'
+# student_summary_report used in run_student_reports()
+
+
+cat(paste("data_folder_input: \n  +", data_folder_input, "\n\n", 
+          "transcripts_folder_input: \n  +", transcripts_folder_input, "\n\n", 
+          "dept_input: \n  +", dept_input, "\n\n", 
+          "semester_start_mdy_input: \n  +", semester_start_mdy_input, "\n\n", 
+          "topic_split_pattern_input: \n  +", topic_split_pattern_input, "\n\n", 
+          "zoom_recorded_sessions_csv_names_pattern_input: \n  +", zoom_recorded_sessions_csv_names_pattern_input, "\n\n", 
+          "scheduled_session_length_hours_input: \n  +", scheduled_session_length_hours_input, "\n\n", 
+          "roster_file_input: \n  +", roster_file_input
+)
+)
+#> data_folder_input: 
+#>   + /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata 
+#> 
+#>  transcripts_folder_input: 
+#>   + transcripts 
+#> 
+#>  dept_input: 
+#>   + LFT 
+#> 
+#>  semester_start_mdy_input: 
+#>   + Jan 01, 2024 
+#> 
+#>  topic_split_pattern_input: 
+#>   + ^(?<dept>\S+) (?<section>\S+) - (?<day>[A-Za-z]+) (?<time>\S+\s*\S+) (?<instructor>\(.*?\)) 
+#> 
+#>  zoom_recorded_sessions_csv_names_pattern_input: 
+#>   + zoomus_recordings__\d{8}(?:\s+copy\s*\d*)?\.csv 
+#> 
+#>  scheduled_session_length_hours_input: 
+#>   + 1.5 
+#> 
+#>  roster_file_input: 
+#>   + roster.csv
 ```
 
 ## 2. Load the zoomstudentengagement library
@@ -76,21 +158,17 @@ library(zoomstudentengagement)
 
 ## 4. Load the list of Zoom Recordings Transcripts
 
-    1. Run `load_zoom_recorded_sessions_list()` to get a tibble from a provided csv file of Zoom recordings.
+1.  Run `load_zoom_recorded_sessions_list()` to get a tibble from a
+    provided csv file of Zoom recordings.
 
 ``` r
 zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
   data_folder = data_folder_input,
-  transcripts_folder = "transcripts",
-  topic_split_pattern = paste0(
-    "^(?<dept>\\S+) (?<section>\\S+) - ",
-    "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
-  ),
-  zoom_recorded_sessions_csv_names_pattern =
-    "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
-  dept = "LTF",
-  semester_start_mdy = "Jan 01, 2024",
-  scheduled_session_length_hours = 1.5
+  transcripts_folder = transcripts_folder_input,
+  topic_split_pattern = topic_split_pattern_input,
+  zoom_recorded_sessions_csv_names_pattern = zoom_recorded_sessions_csv_names_pattern_input,
+  semester_start_mdy = semester_start_mdy_input,
+  scheduled_session_length_hours = scheduled_session_length_hours_input
 )
 #> Rows: 4 Columns: 9
 #> ── Column specification ────────────────────────────────────────────────────────
@@ -100,6 +178,21 @@ zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
 #> 
 #> ℹ Use `spec()` to retrieve the full column specification for this data.
 #> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+# getwd()
+# zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
+#   data_folder = data_folder_input,
+#   transcripts_folder = "transcripts",
+#   topic_split_pattern = paste0(
+#     "^(?<dept>\\S+) (?<section>\\S+) - ",
+#     "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+#   ),
+#   zoom_recorded_sessions_csv_names_pattern =
+#     "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
+#   dept = "LTF",
+#   semester_start_mdy = "Jan 01, 2024",
+#   scheduled_session_length_hours = 1.5
+# )
 
 zoom_recorded_sessions_df
 #> # A tibble: 3 × 15
@@ -146,7 +239,7 @@ transcript_files_df
 ``` r
 cancelled_classes_df <- load_cancelled_classes(
   data_folder = data_folder_input,
-  cancelled_classes_file = "cancelled_classes.csv",
+  cancelled_classes_file = cancelled_classes_file_input,
   cancelled_classes_col_types = "ccccccccnnnncTTcTTccci"
 )
 #> [1] "File does not exist: /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata/cancelled_classes.csv"
@@ -185,10 +278,10 @@ transcripts_list_df
 
 ## 5. Load Zoom Transcript files and Run Faculty Linguistic Inquiry and Word Count on those sessions.
 
-    1. Run `fliwc_transcript_files()`.
+1.  Run `fliwc_transcript_files()`.
 
 ``` r
-fliwc_transcript_files(
+transcripts_fliwc_df <- fliwc_transcript_files(
   transcripts_list_df,
   data_folder = data_folder_input,
   transcripts_folder = "transcripts",
@@ -201,6 +294,9 @@ fliwc_transcript_files(
 #> 
 #> ℹ Use `spec()` to retrieve the full column specification for this data.
 #> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+
+transcripts_fliwc_df
 #> # A tibble: 7 × 33
 #>   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`
 #>   <chr>           <chr> <chr>                   <dbl>        <dbl>         <dbl>
@@ -218,6 +314,691 @@ fliwc_transcript_files(
 #> #   transcript_file <chr>, chat_file <chr>, session_num <int>,
 #> #   transcript_path <chr>, name <chr>, n <int>, duration <dbl>,
 #> #   wordcount <dbl>, comments <list>, n_perc <dbl>, duration_perc <dbl>, …
+
+transcripts_fliwc_df %>% count(name)
+#> # A tibble: 7 × 2
+#>   name                  n
+#>   <chr>             <int>
+#> 1 Conor Healy           1
+#> 2 Dr. Melissa Ko        1
+#> 3 Ryan Sloan            1
+#> 4 Shreeharsh Kelkar     1
+#> 5 Srijani Ghosh         1
+#> 6 dead_air              1
+#> 7 unknown               1
+```
+
+# Load Other Data
+
+## 1. Load Roster of Students from a CSV file
+
+0.  Run Students.Rmd to create roster.csv. (Which is based on the course
+    roster output from UC Berkeley’s BCourses implementation of Canvas.)
+1.  Run `load_roster()` to get a tibble from a provided csv file of
+    students enrolled in the class or classes.
+
+``` r
+roster_df <- load_roster(
+  data_folder = data_folder_input,
+  roster_file = roster_file_input)
+#> Rows: 7 Columns: 22
+#> ── Column specification ────────────────────────────────────────────────────────
+#> Delimiter: ","
+#> chr (14): first_last, last_first, last_name, first_name, role, email_address...
+#> dbl  (6): student_id, user_id, lec, units, course_num, section
+#> lgl  (2): waitlist_position, enrolled
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+roster_df
+#> # A tibble: 7 × 22
+#>   student_id first_last          last_first   last_name first_name user_id role 
+#>        <dbl> <chr>               <chr>        <chr>     <chr>        <dbl> <chr>
+#> 1 9990000019 Melissa Ko          Ko, Melissa  Ko        Melissa    9990019 Stud…
+#> 2 9990000020 Ryan Sloan          Sloan, Ryan  Sloan     Ryan       9990020 Stud…
+#> 3 9990000021 Shreeharsh Kelkar   Kelkar, Shr… Kelkar    Shreeharsh 9990021 Stud…
+#> 4 9990000022 Srijani Ghosh       Ghosh, Srij… Ghosh     Srijani    9990022 Stud…
+#> 5 9990000023 Khalilah Beal-Uribe Beal-Uribe,… Beal-Uri… Khalilah   9990023 Stud…
+#> 6 9990000024 John Fielding       Fielding, J… Fielding  John       9990024 Stud…
+#> 7 9990000025 Conor Healy         Healy, Conor Healy     Conor      9990025 Stud…
+#> # ℹ 15 more variables: email_address <chr>, lec <dbl>, majors <chr>,
+#> #   terms_in_attendance <chr>, units <dbl>, grading_basis <chr>,
+#> #   waitlist_position <lgl>, dept <chr>, course_num <dbl>, section <dbl>,
+#> #   roster_dt_min <chr>, roster_dt_max <chr>, enrolled <lgl>, roster_dt <chr>,
+#> #   preferred_name <chr>
+```
+
+## 2. Make the `sections_df` data frame of Class Sections from the Student Roster
+
+1.  Run `make_sections_df()` to get a tibble that includes rows for each
+    section (grouped by dept and course number) and student count in
+    each.
+
+``` r
+sections_df <- make_sections_df(roster_df)
+
+sections_df
+#> # A tibble: 1 × 4
+#>   dept  course_num section     n
+#>   <chr>      <dbl>   <dbl> <int>
+#> 1 LTF           23      24     7
+```
+
+## 3. Make the `roster_small_df` data frame of the Student Roster
+
+1.  Run `make_roster_small()` to get a tibble that includes rows for
+    each students enrolled in the class or classes, with a small subset
+    of the roster columns.
+
+``` r
+roster_small_df <- make_roster_small(roster_df)
+
+roster_small_df
+#> # A tibble: 7 × 6
+#>   student_id first_last          preferred_name      dept  course_num section
+#>        <dbl> <chr>               <chr>               <chr>      <dbl>   <dbl>
+#> 1 9990000019 Melissa Ko          Melissa Ko          LTF           23      24
+#> 2 9990000020 Ryan Sloan          Ryan Sloan          LTF           23      24
+#> 3 9990000021 Shreeharsh Kelkar   Shreeharsh Kelkar   LTF           23      24
+#> 4 9990000022 Srijani Ghosh       Srijani Ghosh       LTF           23      24
+#> 5 9990000023 Khalilah Beal-Uribe Khalilah Beal-Uribe LTF           23      24
+#> 6 9990000024 John Fielding       John Fielding       LTF           23      24
+#> 7 9990000025 Conor Healy         Conor Healy         LTF           23      24
+```
+
+## 4. Make the `roster_sessions` data frame of the Student Roster With Rows for Each Recorded Class Section
+
+1.  Run `make_student_roster_sessions()` to get a tibble from a provided
+    tibble students enrolled in the class or classes (‘roster_small_df’)
+    and a tibble of class sessions with corresponding transcript files
+    or placeholders for cancelled classes (‘transcripts_list_df’).
+
+``` r
+roster_sessions <- make_student_roster_sessions(
+  transcripts_list_df,
+  roster_small_df
+)
+  
+
+roster_sessions
+#> # A tibble: 7 × 9
+#>   student_id first_last      preferred_name dept  course_num section session_num
+#>        <dbl> <chr>           <chr>          <chr>      <dbl>   <dbl>       <int>
+#> 1 9990000019 Melissa Ko      Melissa Ko     LTF           23      24           1
+#> 2 9990000020 Ryan Sloan      Ryan Sloan     LTF           23      24           1
+#> 3 9990000021 Shreeharsh Kel… Shreeharsh Ke… LTF           23      24           1
+#> 4 9990000022 Srijani Ghosh   Srijani Ghosh  LTF           23      24           1
+#> 5 9990000023 Khalilah Beal-… Khalilah Beal… LTF           23      24           1
+#> 6 9990000024 John Fielding   John Fielding  LTF           23      24           1
+#> 7 9990000025 Conor Healy     Conor Healy    LTF           23      24           1
+#> # ℹ 2 more variables: start_time_local <dttm>, transcript_section <chr>
+```
+
+# Clean Names
+
+- Run the `clean_names` code block
+- If any names except “dead_air”, “unknown”, or the instructor’s name
+  are listed, resolve them.
+  - Update students with their formal name from the roster
+  - If appropriate, update `Students.Rmd` with a corresponding
+    `preferred_name`
+  - Any guest students, label them as “Guests”
+
+## 1. Make Clean Names DF of joined student names from the roster and transcripts
+
+1.  Run `make_clean_names_df()` to get a tibble containing session
+    details and summary metrics by speaker for all class sessions (and
+    placeholders for missing sections) from the joining of::
+    - a tibble of customized student names by section
+      (`section_names_lookup_file` in the `data_folder` folder),
+    - a tibble containing session details and summary metrics by speaker
+      for all class sessions (`transcripts_fliwc_df`), and
+    - a tibble listing the students enrolled in the class or classes,
+      with rows for each recorded class section for each student
+      (`roster_sessions`) into a single tibble.
+
+``` r
+clean_names_df <- make_clean_names_df(
+  data_folder = data_folder_input,
+  section_names_lookup_file = names_lookup_file_input,
+  transcripts_fliwc_df,
+  roster_sessions
+)
+
+clean_names_df
+#> # A tibble: 10 × 38
+#>    preferred_name      formal_name transcript_name student_id transcript_section
+#>    <chr>               <chr>       <chr>                <dbl> <chr>             
+#>  1 Melissa Ko          Melissa Ko  <NA>            9990000019 23.24             
+#>  2 Ryan Sloan          Ryan Sloan  Ryan Sloan      9990000020 23.24             
+#>  3 Shreeharsh Kelkar   Shreeharsh… Shreeharsh Kel… 9990000021 23.24             
+#>  4 Srijani Ghosh       Srijani Gh… Srijani Ghosh   9990000022 23.24             
+#>  5 Khalilah Beal-Uribe Khalilah B… <NA>            9990000023 23.24             
+#>  6 John Fielding       John Field… <NA>            9990000024 23.24             
+#>  7 Conor Healy         Conor Healy Conor Healy     9990000025 23.24             
+#>  8 Dr. Melissa Ko      Dr. Meliss… Dr. Melissa Ko          NA 23.24             
+#>  9 dead_air            dead_air    dead_air                NA 23.24             
+#> 10 unknown             unknown     unknown                 NA 23.24             
+#> # ℹ 33 more variables: session_num <int>, n <int>, duration <dbl>,
+#> #   wordcount <dbl>, comments <list>, n_perc <dbl>, duration_perc <dbl>,
+#> #   wordcount_perc <dbl>, wpm <dbl>, name_raw <chr>, start_time_local <dttm>,
+#> #   Topic <chr>, ID <chr>, `Start Time` <chr>, `File Size (MB)` <dbl>,
+#> #   `File Count` <dbl>, `Total Views` <dbl>, `Total Downloads` <dbl>,
+#> #   `Last Accessed` <chr>, dept <chr>, day <chr>, time <chr>, instructor <chr>,
+#> #   match_start_time <dttm>, match_end_time <dttm>, dt <chr>, …
+```
+
+## 2. Write Section Names Lookup
+
+1.  Run `write_section_names_lookup()` to save subset of
+    `clean_names_df` as a csv file with the specified file name
+    (section_names_lookup.csv) to the specified data folder
+    (/Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata).
+
+``` r
+write_section_names_lookup(
+  clean_names_df,
+  data_folder = data_folder_input,
+  section_names_lookup_file = names_lookup_file_input)
+```
+
+## 3. Make Names to Clean
+
+1.  Run `make_names_to_clean_df()` to get a tibble containing only the
+    records in `clean_names_df` with transcript recordings but no
+    matching student id.
+
+``` r
+make_names_to_clean_df(clean_names_df) 
+#> # A tibble: 3 × 4
+#> # Groups:   student_id, preferred_name [3]
+#>   student_id preferred_name transcript_name     n
+#>        <dbl> <chr>          <chr>           <int>
+#> 1         NA Dr. Melissa Ko Dr. Melissa Ko      1
+#> 2         NA dead_air       dead_air            1
+#> 3         NA unknown        unknown             1
+```
+
+## 4. Manually edit section_names_lookup.csv to clear names needing cleaning
+
+1.  Open section_names_lookup.csv in your editor of choice.
+2.  For each `transcript_name` that should be updated (because the user
+    changed their name in Zoom, they were a guest, etc.), update the
+    `preferred_name`, `formal_name`, and `student_id` values.
+3.  Save the section_names_lookup.csv file.
+
+## 5. Repeat Step 1 as until the only names
+
+# Results
+
+## 1. Make Transcripts Session Summary
+
+1.  Run `make_transcripts_session_summary_df()` to get a tibble from
+    `clean_names_df`, and summarizes results at the level of the session
+    and preferred student name.
+
+``` r
+transcripts_session_summary_df <- make_transcripts_session_summary_df(clean_names_df)
+
+transcripts_session_summary_df
+#> # A tibble: 10 × 9
+#>    section day   time   session_num preferred_name      transcript_section     n
+#>      <dbl> <chr> <chr>        <int> <chr>               <chr>              <int>
+#>  1      24 Thurs 6:30PM           1 Conor Healy         23.24                 30
+#>  2      24 Thurs 6:30PM           1 Ryan Sloan          23.24                  1
+#>  3      24 Thurs 6:30PM           1 Shreeharsh Kelkar   23.24                  3
+#>  4      24 Thurs 6:30PM           1 Srijani Ghosh       23.24                  8
+#>  5      24 <NA>  <NA>             1 John Fielding       23.24                 NA
+#>  6      24 <NA>  <NA>             1 Khalilah Beal-Uribe 23.24                 NA
+#>  7      24 <NA>  <NA>             1 Melissa Ko          23.24                 NA
+#>  8      NA Thurs 6:30PM           1 Dr. Melissa Ko      23.24                  2
+#>  9      NA Thurs 6:30PM           1 dead_air            23.24                 45
+#> 10      NA Thurs 6:30PM           1 unknown             23.24                  1
+#> # ℹ 2 more variables: duration <dbl>, wordcount <dbl>
+```
+
+### 1B. Write Transcripts Session Summary
+
+1.  Run `write_transcripts_session_summary()` to save the summary
+    results at the level of the session and preferred student name as a
+    csv file with the specified file name
+    (transcripts_session_summary.csv) to the specified data folder
+    (/Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata).
+
+``` r
+write_transcripts_session_summary(
+  transcripts_session_summary_df,
+  data_folder = data_folder_input,
+  transcripts_session_summary_file = transcripts_session_summary_file_input)
+```
+
+## 2. Make Transcripts Summary
+
+1.  Run `make_transcripts_summary_df()` to get a tibble from summary
+    metrics by student and class session
+    (`transcripts_session_summary_df`) that summarizes results at the
+    level of the class section and preferred student name.
+
+``` r
+transcripts_summary_df <- make_transcripts_summary_df(
+  transcripts_session_summary_df)
+
+transcripts_summary_df 
+#> # A tibble: 10 × 10
+#>    section preferred_name      session_ct     n duration wordcount   wpm perc_n
+#>      <dbl> <chr>                    <int> <int>    <dbl>     <dbl> <dbl>  <dbl>
+#>  1      24 Conor Healy                  1    30   8.08        1418 175.   71.4 
+#>  2      24 Srijani Ghosh                1     8   1.15         213 185.   19.0 
+#>  3      NA dead_air                     1    45   1.06           0   0    93.8 
+#>  4      24 Shreeharsh Kelkar            1     3   0.722         86 119.    7.14
+#>  5      NA Dr. Melissa Ko               1     2   0.712         98 138.    4.17
+#>  6      24 Ryan Sloan                   1     1   0.521         95 182.    2.38
+#>  7      NA unknown                      1     1   0.0113         1  88.2   2.08
+#>  8      24 John Fielding                0    NA  NA             NA  NA    NA   
+#>  9      24 Khalilah Beal-Uribe          0    NA  NA             NA  NA    NA   
+#> 10      24 Melissa Ko                   0    NA  NA             NA  NA    NA   
+#> # ℹ 2 more variables: perc_duration <dbl>, perc_wordcount <dbl>
+```
+
+### 2B. Write Transcripts Summary
+
+1.  Run `write_transcripts_summary()` to save the summary results at the
+    level of the class section and preferred student name as a csv file
+    with the specified file name (transcripts_summary.csv) to the
+    specified data folder
+    (/Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata).
+
+``` r
+write_transcripts_summary(
+  transcripts_summary_df,
+  data_folder = data_folder_input,
+  transcripts_summary_file = transcripts_summary_file_input)
+```
+
+## 2. Plot Users by key metrics
+
+1.  Run `plot_users_by_metric()` for the key metrics to output said
+    plots.
+
+``` r
+# plot_users_by_metric()
+plot_users_by_metric(transcripts_summary_df, metric = 'session_ct')
+```
+
+<img src="man/figures/README-unnamed-chunk-21-1.png" width="100%" />
+
+``` r
+plot_users_by_metric(transcripts_summary_df, metric = 'n')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-21-2.png" width="100%" />
+
+``` r
+plot_users_by_metric(transcripts_summary_df, metric = 'perc_n')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-21-3.png" width="100%" />
+
+``` r
+plot_users_by_metric(transcripts_summary_df, metric = 'duration')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-21-4.png" width="100%" />
+
+``` r
+plot_users_by_metric(transcripts_summary_df, metric = 'perc_duration')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-21-5.png" width="100%" />
+
+``` r
+plot_users_by_metric(transcripts_summary_df, metric = 'wordcount')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-21-6.png" width="100%" />
+
+``` r
+plot_users_by_metric(transcripts_summary_df, metric = 'perc_wordcount')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-21-7.png" width="100%" />
+
+``` r
+plot_users_by_metric(transcripts_summary_df, metric = 'wpm')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-21-8.png" width="100%" />
+
+# Students Only
+
+## 1. Make Transcripts Summary
+
+1.  Run `make_students_only_transcripts_summary_df()` to filter for only
+    the students enrolled in the class and get a tibble from summary
+    results at the level of the class section and preferred student name
+    for those enrolled students.
+
+``` r
+students_only_transcripts_summary_df <- make_students_only_transcripts_summary_df(
+  transcripts_session_summary_df)
+
+students_only_transcripts_summary_df
+#> # A tibble: 7 × 10
+#>   section preferred_name      session_ct     n duration wordcount   wpm perc_n
+#>     <dbl> <chr>                    <int> <int>    <dbl>     <dbl> <dbl>  <dbl>
+#> 1      24 Conor Healy                  1    30    8.08       1418  175.  71.4 
+#> 2      24 Srijani Ghosh                1     8    1.15        213  185.  19.0 
+#> 3      24 Shreeharsh Kelkar            1     3    0.722        86  119.   7.14
+#> 4      24 Ryan Sloan                   1     1    0.521        95  182.   2.38
+#> 5      24 John Fielding                0    NA   NA            NA   NA   NA   
+#> 6      24 Khalilah Beal-Uribe          0    NA   NA            NA   NA   NA   
+#> 7      24 Melissa Ko                   0    NA   NA            NA   NA   NA   
+#> # ℹ 2 more variables: perc_duration <dbl>, perc_wordcount <dbl>
+```
+
+## 2. Plot Students by key metrics
+
+1.  Run `plot_users_by_metric()` for the key metrics to output said
+    plots.
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'session_ct')
+```
+
+<img src="man/figures/README-unnamed-chunk-23-1.png" width="100%" />
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'n')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-23-2.png" width="100%" />
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'perc_n')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-23-3.png" width="100%" />
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'duration')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-23-4.png" width="100%" />
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'perc_duration')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-23-5.png" width="100%" />
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'wordcount')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-23-6.png" width="100%" />
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'perc_wordcount')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-23-7.png" width="100%" />
+
+``` r
+plot_users_by_metric(students_only_transcripts_summary_df,
+                     metric = 'wpm')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-23-8.png" width="100%" />
+
+## 3. Plot Students with names masked by key metrics
+
+1.  Run `plot_users_masked_section_by_metric()` for the key metrics to
+    output said plots, but with student names masked by “Student \_“.
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df, 
+                                    metric = 'session_ct')
+```
+
+<img src="man/figures/README-unnamed-chunk-24-1.png" width="100%" />
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
+                                    metric = 'n')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-24-2.png" width="100%" />
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
+                                    metric = 'perc_n')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-24-3.png" width="100%" />
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
+                                    metric = 'duration')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-24-4.png" width="100%" />
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
+                                    metric = 'perc_duration')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-24-5.png" width="100%" />
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
+                                    metric = 'wordcount')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-24-6.png" width="100%" />
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
+                                    metric = 'perc_wordcount')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-24-7.png" width="100%" />
+
+``` r
+plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
+                                    metric = 'wpm')
+#> Warning: Removed 3 rows containing missing values (`geom_point()`).
+```
+
+<img src="man/figures/README-unnamed-chunk-24-8.png" width="100%" />
+
+# Student Reports
+
+## 1. Make Transcripts Summary
+
+1.  Run `run_student_reports()` to filter for only the students enrolled
+    in the class and get a tibble from summary results at the level of
+    the class section and preferred student name for those enrolled
+    students.
+
+## run_student_reports()
+
+``` r
+
+
+run_student_reports <-
+  function(df_sections = sections_df,
+           df_roster = roster_df,
+           data_folder = 'data',
+           transcripts_session_summary_file = 'transcripts_session_summary.csv',
+           transcripts_summary_file = 'transcripts_summary.csv',
+           student_summary_report =
+             'Zoom Student Engagement Analysis - student summary report')
+  {
+    student_summary_report_rmd <-
+      paste0(student_summary_report, '.Rmd')
+    
+    for (section in df_sections$section) {
+      print(section)
+      
+      target_section <- section
+      
+      target_students <- df_roster %>%
+        filter(section == target_section) %>%
+        .$preferred_name %>%
+        c('All Students', .)
+      
+      # target_student <- 'All Students'
+      
+      for (target_student in target_students) {
+        print(target_student)
+        
+        student_summary_report_output_file <-
+          paste0(
+            data_folder,
+            '/',
+            student_summary_report,
+            ' - section ',
+            target_section,
+            ' - ',
+            target_student,
+            '.pdf'
+          )
+        
+        
+        rmarkdown::render(
+          student_summary_report_rmd,
+          params = list(
+            target_section = target_section,
+            target_student = target_student,
+            data_folder = data_folder,
+            transcripts_session_summary_file = transcripts_session_summary_file,
+            transcripts_summary_file = transcripts_summary_file
+          ),
+          output_file = student_summary_report_output_file
+        )
+        print(student_summary_report_output_file)
+        
+      }
+      
+    }
+  }
+```
+
+### Run run_student_reports()
+
+``` r
+# run_student_reports(
+#   df_sections = sections_df,
+#   df_roster = roster_df,
+#   data_folder = data_folder_input,
+#   transcripts_session_summary_file = transcripts_session_summary_file_input,
+#   transcripts_summary_file = transcripts_summary_file_input,
+#   student_summary_report = student_summary_report_input
+#   
+# ) 
+```
+
+# Walkthrough of key steps
+
+## 1. load_zoom_transcript()
+
+1.  Run `load_zoom_transcript()` to get a tibble containing the comments
+    from a provided Zoom recording transcript.
+
+``` r
+single_zoom_transcript_df <- load_zoom_transcript(
+  transcript_file_path = paste0(
+    data_folder_input,
+    '/',
+    transcripts_folder_input,
+    '/',
+    'GMT20240124-202901_Recording.transcript.vtt'
+  )
+)
+#> Rows: 306 Columns: 1
+#> ── Column specification ────────────────────────────────────────────────────────
+#> Delimiter: "\t"
+#> chr (1): WEBVTT
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+single_zoom_transcript_df
+#> # A tibble: 102 × 9
+#>    comment_num name      comment start     end        duration raw_start raw_end
+#>    <chr>       <chr>     <chr>   <time>    <time>     <drtn>   <chr>     <chr>  
+#>  1 1           Srijani … Hi!     00'00.05" 00'01.790"  1.740 … 00:00:00… 00:00:…
+#>  2 2           Conor He… Get th… 00'02.07" 00'04.050"  1.980 … 00:00:02… 00:00:…
+#>  3 3           Srijani … Hello!… 00'05.14" 00'08.310"  3.170 … 00:00:05… 00:00:…
+#>  4 4           Srijani … So      00'09.71" 00'11.670"  1.960 … 00:00:09… 00:00:…
+#>  5 5           Conor He… let's … 00'12.16" 00'14.309"  2.149 … 00:00:12… 00:00:…
+#>  6 6           Conor He… Studen… 00'14.55" 00'30.599" 16.049 … 00:00:14… 00:00:…
+#>  7 7           Conor He… that.   00'31.44" 00'32.390"  0.950 … 00:00:31… 00:00:…
+#>  8 8           Dr. Meli… and I'… 00'32.52" 00'43.089" 10.569 … 00:00:32… 00:00:…
+#>  9 9           Dr. Meli… Can yo… 00'43.50" 00'51.110"  7.610 … 00:00:43… 00:00:…
+#> 10 10          Dr. Meli… yeah, … 00'51.13" 00'58.459"  7.329 … 00:00:51… 00:00:…
+#> # ℹ 92 more rows
+#> # ℹ 1 more variable: wordcount <int>
+```
+
+## 2. process_zoom_transcript()
+
+1.  Run `process_zoom_transcript()` to get a tibble containing the
+    comments from a Zoom recording transcript.
+
+``` r
+process_zoom_transcript(
+                  # transcript_file_path = NULL,
+                  # consolidate_comments = TRUE,
+                  # max_pause_sec = 1,
+                  # add_dead_air = TRUE,
+                  # dead_air_name = 'dead_air',
+                  # na_name = 'unknown',
+                  transcript_df = single_zoom_transcript_df)
+#> # A tibble: 90 × 9
+#>    comment_num name       comment start     end       duration wordcount raw_end
+#>          <int> <chr>      <chr>   <time>    <time>    <drtn>       <int> <lgl>  
+#>  1           1 dead_air   <NA>    00'00.00" 00'00.05"  0.0499…        NA NA     
+#>  2           2 Srijani G… Hi!     00'00.05" 00'01.79"  1.7400…         1 NA     
+#>  3           3 dead_air   <NA>    00'01.79" 00'02.07"  0.2799…        NA NA     
+#>  4           4 Conor Hea… Get th… 00'02.07" 00'04.05"  1.9800…         4 NA     
+#>  5           5 dead_air   <NA>    00'04.05" 00'05.14"  1.0900…        NA NA     
+#>  6           6 Srijani G… Hello!… 00'05.14" 00'08.31"  3.1699…         8 NA     
+#>  7           7 dead_air   <NA>    00'08.31" 00'09.71"  1.4000…        NA NA     
+#>  8           8 Srijani G… So      00'09.71" 00'11.67"  1.9600…         1 NA     
+#>  9           9 dead_air   <NA>    00'11.67" 00'12.16"  0.4900…        NA NA     
+#> 10          10 Conor Hea… let's … 00'12.16" 00'32.39" 20.2300…        38 NA     
+#> # ℹ 80 more rows
+#> # ℹ 1 more variable: raw_start <lgl>
 ```
 
 # Steps to use zoomstudentengagement
