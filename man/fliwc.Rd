@@ -5,13 +5,14 @@
 \title{Faculty Linguistic Inquiry and Word Count}
 \usage{
 fliwc(
-  transcript_file_path,
+  transcript_file_path = "",
   names_exclude = c("dead_air"),
   consolidate_comments = TRUE,
   max_pause_sec = 1,
   add_dead_air = TRUE,
   dead_air_name = "dead_air",
-  na_name = "unknown"
+  na_name = "unknown",
+  transcript_df = NULL
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ added for dead air. Defaults to 'dead_air'.}
 
 \item{na_name}{Character string to label the `name` column in any rows where
 the transcript `name` is `NA`. Defaults to 'unknown'.}
+
+\item{transcript_df}{Tibble containing the comments from a Zoom recording transcript (which is generally the result of calling `process_zoom_transcript()`.}
 }
 \value{
 A tibble containing summary metrics by speaker from a Zoom recording

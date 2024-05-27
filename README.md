@@ -465,6 +465,7 @@ clean_names_df <- make_clean_names_df(
   transcripts_fliwc_df,
   roster_sessions
 )
+#> [1] "File does not exist: /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata/section_names_lookup.csv"
 
 clean_names_df
 #> # A tibble: 10 × 38
@@ -976,14 +977,17 @@ single_zoom_transcript_df
     comments from a Zoom recording transcript.
 
 ``` r
-process_zoom_transcript(
-                  # transcript_file_path = NULL,
-                  # consolidate_comments = TRUE,
-                  # max_pause_sec = 1,
-                  # add_dead_air = TRUE,
-                  # dead_air_name = 'dead_air',
-                  # na_name = 'unknown',
-                  transcript_df = single_zoom_transcript_df)
+processed_zoom_transcript_df <- process_zoom_transcript(
+  # transcript_file_path = NULL,
+  # consolidate_comments = TRUE,
+  # max_pause_sec = 1,
+  # add_dead_air = TRUE,
+  # dead_air_name = 'dead_air',
+  # na_name = 'unknown',
+  transcript_df = single_zoom_transcript_df
+)
+
+processed_zoom_transcript_df
 #> # A tibble: 90 × 9
 #>    comment_num name       comment start     end       duration wordcount raw_end
 #>          <int> <chr>      <chr>   <time>    <time>    <drtn>       <int> <lgl>  
@@ -999,6 +1003,36 @@ process_zoom_transcript(
 #> 10          10 Conor Hea… let's … 00'12.16" 00'32.39" 20.2300…        38 NA     
 #> # ℹ 80 more rows
 #> # ℹ 1 more variable: raw_start <lgl>
+```
+
+## 3. fliwc()
+
+1.  Run `fliwc()` to process a Zoom recording transcript and return
+    summary metrics by speaker.
+
+``` r
+fliwc_transcript_df <- fliwc(
+  # transcript_file_path = '',
+  names_exclude = c("dead_air"),
+  # consolidate_comments = TRUE,
+  # max_pause_sec = 1,
+  # add_dead_air = TRUE,
+  # dead_air_name = 'dead_air',
+  # na_name = 'unknown',
+  transcript_df = processed_zoom_transcript_df
+)
+
+fliwc_transcript_df
+#> # A tibble: 6 × 9
+#>   name         n duration wordcount comments n_perc duration_perc wordcount_perc
+#>   <chr>    <int>    <dbl>     <dbl> <list>    <dbl>         <dbl>          <dbl>
+#> 1 Conor H…    30   8.08        1418 <chr>     66.7         72.2          74.2   
+#> 2 Srijani…     8   1.15         213 <chr>     17.8         10.3          11.1   
+#> 3 Shreeha…     3   0.722         86 <chr>      6.67         6.45          4.50  
+#> 4 Dr. Mel…     2   0.712         98 <chr>      4.44         6.36          5.13  
+#> 5 Ryan Sl…     1   0.521         95 <chr>      2.22         4.65          4.97  
+#> 6 unknown      1   0.0113         1 <chr>      2.22         0.101         0.0523
+#> # ℹ 1 more variable: wpm <dbl>
 ```
 
 # Steps to use zoomstudentengagement

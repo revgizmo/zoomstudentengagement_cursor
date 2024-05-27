@@ -653,22 +653,49 @@ single_zoom_transcript_df
 
 ```
 
+
+
 ## 2. process_zoom_transcript()
 
 1. Run `process_zoom_transcript()` to get a tibble containing the comments from a Zoom recording transcript.
 
 ```{r}
-process_zoom_transcript(
-                  # transcript_file_path = NULL,
-                  # consolidate_comments = TRUE,
-                  # max_pause_sec = 1,
-                  # add_dead_air = TRUE,
-                  # dead_air_name = 'dead_air',
-                  # na_name = 'unknown',
-                  transcript_df = single_zoom_transcript_df)
+processed_zoom_transcript_df <- process_zoom_transcript(
+  # transcript_file_path = NULL,
+  # consolidate_comments = TRUE,
+  # max_pause_sec = 1,
+  # add_dead_air = TRUE,
+  # dead_air_name = 'dead_air',
+  # na_name = 'unknown',
+  transcript_df = single_zoom_transcript_df
+)
+
+processed_zoom_transcript_df
 
 ```
 
+
+
+
+## 3. fliwc()
+
+1. Run `fliwc()` to process a Zoom recording transcript and return summary metrics by speaker.
+
+```{r}
+fliwc_transcript_df <- fliwc(
+  # transcript_file_path = '',
+  names_exclude = c("dead_air"),
+  # consolidate_comments = TRUE,
+  # max_pause_sec = 1,
+  # add_dead_air = TRUE,
+  # dead_air_name = 'dead_air',
+  # na_name = 'unknown',
+  transcript_df = processed_zoom_transcript_df
+)
+
+fliwc_transcript_df
+
+```
 
 
 
