@@ -1,4 +1,68 @@
 
+- [zoomstudentengagement](#zoomstudentengagement)
+  - [Installation](#installation)
+  - [Example](#example)
+- [Steps to use
+  zoomstudentengagement](#steps-to-use-zoomstudentengagement)
+  - [1. Define Inputs:](#1-define-inputs)
+  - [2. Load the zoomstudentengagement
+    library](#2-load-the-zoomstudentengagement-library)
+  - [3. Download the Zoom Recording
+    Transcripts](#3-download-the-zoom-recording-transcripts)
+  - [4. Load the list of Zoom Recordings
+    Transcripts](#4-load-the-list-of-zoom-recordings-transcripts)
+  - [5. Load Zoom Transcript files and Run Faculty Linguistic Inquiry
+    and Word Count on those
+    sessions.](#5-load-zoom-transcript-files-and-run-faculty-linguistic-inquiry-and-word-count-on-those-sessions)
+- [Load Other Data](#load-other-data)
+  - [1. Load Roster of Students from a CSV
+    file](#1-load-roster-of-students-from-a-csv-file)
+  - [2. Make the `sections_df` data frame of Class Sections from the
+    Student
+    Roster](#2-make-the-sections_df-data-frame-of-class-sections-from-the-student-roster)
+  - [3. Make the `roster_small_df` data frame of the Student
+    Roster](#3-make-the-roster_small_df-data-frame-of-the-student-roster)
+  - [4. Make the `roster_sessions` data frame of the Student Roster With
+    Rows for Each Recorded Class
+    Section](#4-make-the-roster_sessions-data-frame-of-the-student-roster-with-rows-for-each-recorded-class-section)
+- [Clean Names](#clean-names)
+  - [1. Make Clean Names DF of joined student names from the roster and
+    transcripts](#1-make-clean-names-df-of-joined-student-names-from-the-roster-and-transcripts)
+  - [2. Write Section Names Lookup](#2-write-section-names-lookup)
+  - [3. Make Names to Clean](#3-make-names-to-clean)
+  - [4. Manually edit section_names_lookup.csv to clear names needing
+    cleaning](#4-manually-edit-section_names_lookupcsv-to-clear-names-needing-cleaning)
+  - [5. Repeat Step 1 as necessary until the only names left are
+    intentionally unmatched to students on the
+    roster.](#5-repeat-step-1-as-necessary-until-the-only-names-left-are-intentionally-unmatched-to-students-on-the-roster)
+- [Results](#results)
+  - [1. Make Transcripts Session
+    Summary](#1-make-transcripts-session-summary)
+    - [1B. Write Transcripts Session
+      Summary](#1b-write-transcripts-session-summary)
+  - [2. Make Transcripts Summary](#2-make-transcripts-summary)
+    - [2B. Write Transcripts Summary](#2b-write-transcripts-summary)
+  - [2. Plot Users by key metrics](#2-plot-users-by-key-metrics)
+- [Students Only](#students-only)
+  - [1. Make Transcripts Summary](#1-make-transcripts-summary)
+  - [2. Plot Students by key metrics](#2-plot-students-by-key-metrics)
+  - [3. Plot Students with names masked by key
+    metrics](#3-plot-students-with-names-masked-by-key-metrics)
+- [Student Reports](#student-reports)
+  - [1. Make Transcripts Summary](#1-make-transcripts-summary-1)
+  - [run_student_reports()](#run_student_reports)
+    - [Run run_student_reports()](#run-run_student_reports)
+- [`fliwc()` a single transcript file:](#fliwc-a-single-transcript-file)
+  - [1. fliwc()](#1-fliwc)
+- [Walkthrough of key steps in
+  `fliwc()`](#walkthrough-of-key-steps-in-fliwc)
+  - [1. load_zoom_transcript()](#1-load_zoom_transcript)
+  - [2. process_zoom_transcript()](#2-process_zoom_transcript)
+  - [3. fliwc()](#3-fliwc)
+- [Steps to use
+  zoomstudentengagement](#steps-to-use-zoomstudentengagement-1)
+- [Old](#old)
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # zoomstudentengagement
@@ -6,7 +70,64 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of zoomstudentengagement is to …
+The goal of `zoomstudentengagement` is to allow instructors to gain
+insights into student engagement, with a particular focus on
+participation equity, from Zoom transcripts of recorded course sessions.
+
+In it’s current form, the `zoomstudentengagement` library is useful for
+4 related things:
+
+1.  **Load Zoom transcripts**
+    1.  `load_zoom_transcript()` takes a Zoom transcript .vtt file and
+        load it into a rectangular format without additions or
+        modifications.
+    2.  `process_zoom_transcript()` process a Zoom transcript with given
+        parameters to get a tibble containing the comments, including
+        consolidating consecutive comments from the same speaker and
+        adding rows for “dead_air”.
+2.  **Calculate summary metrics** by speaker from a Zoom recording
+    transcript or transcripts
+    1.  `fliwc()` calculates summary metrics by speaker from a Zoom
+        recording transcript.
+    2.  `fliwc_transcript_files()` calculates summary metrics by speaker
+        from multiple Zoom recording transcripts.
+3.  **Do some housekeeping** to load and clean the student roster.
+    1.  `load_roster()` loads a Roster of Students from a CSV file
+        (`roster.csv`)
+    2.  `make_sections_df()` generates a tibble that includes rows for
+        each section (grouped by dept and course number) and student
+        count in each.
+    3.  `make_roster_small()` gets a tibble that includes rows for each
+        students enrolled in the class or classes, with a small subset
+        of the roster columns.
+    4.  `make_student_roster_sessions()` generates a tibble from the and
+        list of transcript files.
+    5.  Clean up the names in the transcript.
+        1.  `make_clean_names_df()` joins the student names by section
+            (from `make_student_roster_sessions()`) and the session
+            details and transcript summary by speaker for all class
+            sessions (from `fliwc_transcript_files()`).
+        2.  `write_section_names_lookup()` saves a subset of the clean
+            names df to a csv file so it can be updated manually.
+        3.  `make_names_to_clean_df()` returns a tibble containing only
+            the records in the clean names df that have transcript
+            recordings but no matching student id (so they can be
+            manually updated if necessary\_.
+        4.  Manually edit the section names lookup csv to clear names
+            needing cleaning.
+        5.  Repeat Steps 1-4 as necessary until the only names left are
+            intentionally unmatched to students on the roster.
+4.  **Analyze results** across students/speakers to gain insights into
+    student engagement, with a particular focus on participation equity.
+    1.  `make_transcripts_session_summary_df()` returns a tibble from
+        the cleaned names, and summarizes results at the level of the
+        session and preferred student name.
+    2.  `make_transcripts_summary_df()` returns a tibble from the
+        summary metrics by student and class session (from
+        `make_transcripts_session_summary_df()`) that summarizes results
+        at the level of the class section and preferred student name.
+    3.  `plot_users_by_metric()` outputs plots for the key metrics. This
+        function needs to be run for each metric.
 
 ## Installation
 
@@ -28,13 +149,6 @@ library(zoomstudentengagement)
 # Steps to use zoomstudentengagement
 
 ## 1. Define Inputs:
-
-- Current Term Inputs
-  - `instructor_name_input`
-  - etc
-- Other Constants
-  - `names_exclude_input`
-  - etc
 
 ``` r
 # data_folder_input <- 'data_201_2024_t1_spring'
@@ -93,40 +207,30 @@ student_summary_report_input <- 'Zoom Student Engagement Analysis - student summ
 # student_summary_report used in run_student_reports()
 
 
-cat(paste("data_folder_input: \n  +", data_folder_input, "\n\n", 
-          "transcripts_folder_input: \n  +", transcripts_folder_input, "\n\n", 
-          "dept_input: \n  +", dept_input, "\n\n", 
-          "semester_start_mdy_input: \n  +", semester_start_mdy_input, "\n\n", 
-          "topic_split_pattern_input: \n  +", topic_split_pattern_input, "\n\n", 
-          "zoom_recorded_sessions_csv_names_pattern_input: \n  +", zoom_recorded_sessions_csv_names_pattern_input, "\n\n", 
-          "scheduled_session_length_hours_input: \n  +", scheduled_session_length_hours_input, "\n\n", 
-          "roster_file_input: \n  +", roster_file_input
+cat(paste0("+ `data_folder_input`:  '", data_folder_input, "'\n", 
+          "+ `transcripts_folder_input` = '", transcripts_folder_input, "'\n", 
+          "+ `dept_input`: '", dept_input, "'\n", 
+          "+ `semester_start_mdy_input`: '", semester_start_mdy_input, "'\n", 
+          "+ `topic_split_pattern_input`: '", topic_split_pattern_input, "'\n", 
+          "+ `zoom_recorded_sessions_csv_names_pattern_input`: '", zoom_recorded_sessions_csv_names_pattern_input, "'\n", 
+          "+ `scheduled_session_length_hours_input`: '", scheduled_session_length_hours_input, "'\n", 
+          "+ `roster_file_input`: '", roster_file_input, "'"
 )
 )
-#> data_folder_input: 
-#>   + /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata 
-#> 
-#>  transcripts_folder_input: 
-#>   + transcripts 
-#> 
-#>  dept_input: 
-#>   + LFT 
-#> 
-#>  semester_start_mdy_input: 
-#>   + Jan 01, 2024 
-#> 
-#>  topic_split_pattern_input: 
-#>   + ^(?<dept>\S+) (?<section>\S+) - (?<day>[A-Za-z]+) (?<time>\S+\s*\S+) (?<instructor>\(.*?\)) 
-#> 
-#>  zoom_recorded_sessions_csv_names_pattern_input: 
-#>   + zoomus_recordings__\d{8}(?:\s+copy\s*\d*)?\.csv 
-#> 
-#>  scheduled_session_length_hours_input: 
-#>   + 1.5 
-#> 
-#>  roster_file_input: 
-#>   + roster.csv
 ```
+
+- `data_folder_input`:
+  ‘/Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata’
+- `transcripts_folder_input` = ‘transcripts’
+- `dept_input`: ‘LFT’
+- `semester_start_mdy_input`: ‘Jan 01, 2024’
+- `topic_split_pattern_input`: ’^(?<dept>+) (?
+  <section>
+  +) - (?<day>\[A-Za-z\]+) (?<time>++) (?<instructor>$.*?$)’
+- `zoom_recorded_sessions_csv_names_pattern_input`:
+  ’zoomus_recordings\_\_(?:+copy?.csv’
+- `scheduled_session_length_hours_input`: ‘1.5’
+- `roster_file_input`: ‘roster.csv’
 
 ## 2. Load the zoomstudentengagement library
 
@@ -465,7 +569,6 @@ clean_names_df <- make_clean_names_df(
   transcripts_fliwc_df,
   roster_sessions
 )
-#> [1] "File does not exist: /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/library/zoomstudentengagement/extdata/section_names_lookup.csv"
 
 clean_names_df
 #> # A tibble: 10 × 38
@@ -529,7 +632,7 @@ make_names_to_clean_df(clean_names_df)
     `preferred_name`, `formal_name`, and `student_id` values.
 3.  Save the section_names_lookup.csv file.
 
-## 5. Repeat Step 1 as until the only names
+## 5. Repeat Step 1 as necessary until the only names left are intentionally unmatched to students on the roster.
 
 # Results
 
@@ -928,7 +1031,57 @@ run_student_reports <-
 # ) 
 ```
 
-# Walkthrough of key steps
+# `fliwc()` a single transcript file:
+
+## 1. fliwc()
+
+1.  Run `fliwc()` to process a Zoom recording transcript and return
+    summary metrics by speaker.
+
+``` r
+
+recording_transcript_file_path <-
+  paste0(
+    data_folder_input,
+    '/',
+    transcripts_folder_input,
+    '/',
+    'GMT20240124-202901_Recording.transcript.vtt'
+  )
+
+
+fliwc_transcript_df2 <- fliwc(
+  transcript_file_path = recording_transcript_file_path,
+  names_exclude = c("dead_air"),
+  # consolidate_comments = TRUE,
+  # max_pause_sec = 1,
+  # add_dead_air = TRUE,
+  # dead_air_name = 'dead_air',
+  # na_name = 'unknown',
+  # transcript_df = processed_zoom_transcript_df
+)
+#> Rows: 306 Columns: 1
+#> ── Column specification ────────────────────────────────────────────────────────
+#> Delimiter: "\t"
+#> chr (1): WEBVTT
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+fliwc_transcript_df2
+#> # A tibble: 6 × 9
+#>   name         n duration wordcount comments n_perc duration_perc wordcount_perc
+#>   <chr>    <int>    <dbl>     <dbl> <list>    <dbl>         <dbl>          <dbl>
+#> 1 Conor H…    30   8.08        1418 <chr>     66.7         72.2          74.2   
+#> 2 Srijani…     8   1.15         213 <chr>     17.8         10.3          11.1   
+#> 3 Shreeha…     3   0.722         86 <chr>      6.67         6.45          4.50  
+#> 4 Dr. Mel…     2   0.712         98 <chr>      4.44         6.36          5.13  
+#> 5 Ryan Sl…     1   0.521         95 <chr>      2.22         4.65          4.97  
+#> 6 unknown      1   0.0113         1 <chr>      2.22         0.101         0.0523
+#> # ℹ 1 more variable: wpm <dbl>
+```
+
+# Walkthrough of key steps in `fliwc()`
 
 ## 1. load_zoom_transcript()
 
@@ -973,8 +1126,8 @@ single_zoom_transcript_df
 
 ## 2. process_zoom_transcript()
 
-1.  Run `process_zoom_transcript()` to get a tibble containing the
-    comments from a Zoom recording transcript.
+1.  Run `process_zoom_transcript()` with given parameters to get a
+    tibble containing the comments from a Zoom recording transcript.
 
 ``` r
 processed_zoom_transcript_df <- process_zoom_transcript(
