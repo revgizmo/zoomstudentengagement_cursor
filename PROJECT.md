@@ -144,16 +144,24 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - TODO: Diagnose and fix shell environment issue with `gh` CLI output formatting
 - Note: Project board management currently requires using GitHub web interface due to authentication scope issues with `gh` CLI
 
+- [ ] Troubleshoot and fix IDE shell environment issue affecting gh CLI output
+    - Issue: gh CLI output is broken in IDE terminal but works in plain terminal
+    - Possible causes: conda initialization block in .zshrc, PATH changes, shell wrappers
+    - Steps to test: 
+        - Comment out conda init block in .zshrc and restart IDE terminal
+        - Test gh CLI output
+        - If unresolved, comment out PATH export and retest
+        - Review .zshrc for other customizations
+    - Goal: Ensure gh CLI output works in IDE terminal as it does in plain terminal
+
 ## Continuous Integration & Deployment
-- [ ] Set up GitHub Actions for:
-  - R CMD check
-  - Test coverage reporting
-  - Documentation building
-  - Vignette building
-  - CRAN checks
-- [ ] Configure automated testing on multiple platforms
-- [ ] Set up automated documentation deployment
-- [ ] Plan for automated CRAN submission process
+
+### CI/CD Plan
+- **Stage 1:** Set up basic GitHub Actions workflow to run R CMD check and testthat tests on push/PR (Ubuntu, latest R)
+- **Stage 2:** Add code coverage reporting (covr)
+- **Stage 3:** Add code style/linting checks (lintr)
+- **Stage 4:** Add automated documentation builds (pkgdown)
+- **Stage 5:** Expand to multiple OSes (macOS, Windows) and R versions as needed
 
 ## Accessibility & Internationalization
 - [ ] Ensure colorblind-friendly plotting
