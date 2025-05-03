@@ -7,7 +7,8 @@
 plot_users_by_metric(
   transcripts_summary_df,
   metric = "session_ct",
-  metrics_lookup_df = make_metrics_lookup_df()
+  metrics_lookup_df = make_metrics_lookup_df(),
+  student_col_name = "preferred_name"
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ plot_users_by_metric(
 \item{metric}{Label of the metric to plot. Defaults to 'session_ct'.}
 
 \item{metrics_lookup_df}{A tibble including metric labels and metric descriptions.  Defaults to run `make_metrics_lookup_df()`}
+
+\item{student_col_name}{Column name from which to get student names. Defaults to 'preferred_name'.}
 }
 \value{
 A ggplot of the provided metrics by students from the provided tibble

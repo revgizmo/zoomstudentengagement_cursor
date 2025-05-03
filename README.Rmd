@@ -140,8 +140,8 @@ instructor_name_input = 'Conor Healy'
 
 ### student_summary_report
 student_summary_report_input <- 'Zoom Student Engagement Analysis - student summary report'
+student_summary_report_folder_input <- system.file("",  package="zoomstudentengagement")
 # student_summary_report used in run_student_reports()
-
 
 cat(paste0("+ `data_folder_input`:  '", data_folder_input, "'\n", 
           "+ `transcripts_folder_input` = '", transcripts_folder_input, "'\n", 
@@ -585,14 +585,15 @@ plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
 run_student_reports <-
   function(df_sections = sections_df,
            df_roster = roster_df,
-           data_folder = 'data',
+           data_folder = data_folder_input,
            transcripts_session_summary_file = 'transcripts_session_summary.csv',
            transcripts_summary_file = 'transcripts_summary.csv',
+           student_summary_report_folder = 'inst',
            student_summary_report =
              'Zoom Student Engagement Analysis - student summary report')
   {
     student_summary_report_rmd <-
-      paste0(student_summary_report, '.Rmd')
+      paste0(student_summary_report_folder, '/', student_summary_report, '.Rmd')
     
     for (section in df_sections$section) {
       print(section)
@@ -645,15 +646,27 @@ run_student_reports <-
 ### Run run_student_reports()
 
 ```{r}
-# run_student_reports(
-#   df_sections = sections_df,
-#   df_roster = roster_df,
-#   data_folder = data_folder_input,
-#   transcripts_session_summary_file = transcripts_session_summary_file_input,
-#   transcripts_summary_file = transcripts_summary_file_input,
-#   student_summary_report = student_summary_report_input
-#   
-# ) 
+run_student_reports(
+  df_sections = sections_df,
+  df_roster = roster_df,
+  data_folder = data_folder_input,
+  # data_folder =  'inst/extdata',
+  transcripts_session_summary_file = transcripts_session_summary_file_input,
+  transcripts_summary_file = transcripts_summary_file_input,
+student_summary_report_folder = ,
+  student_summary_report = student_summary_report_input
+
+)
+
+
+list.files(
+system.file(package="zoomstudentengagement")
+)
+
+list.files(
+system.file("extdata",  package="zoomstudentengagement")
+)
+
 
 ```
 

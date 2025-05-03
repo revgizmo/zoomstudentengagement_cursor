@@ -1,0 +1,354 @@
+---
+output: pdf_document
+params: 
+    target_section: "008"
+    target_student: "All Students"
+    data_folder: "data"
+    transcripts_session_summary_file: "transcripts_session_summary.csv"
+    transcripts_summary_file: "transcripts_summary.csv"
+
+    
+title: "Zoom Student Engagement Analysis - Section `r params$target_section`"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(data.table)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(hms)
+library(ggtext)
+
+```
+
+
+
+```{r chunk1}
+transcripts_summary_df <- read_csv(paste0(params$data_folder, '/', params$transcripts_summary_file))
+
+transcripts_session_summary_df <- read_csv(paste0(params$data_folder, '/', params$transcripts_session_summary_file))
+
+target_section <- params$target_section
+target_transcript_section <- 23 + (as.numeric(params$target_section)/100)
+
+sec_transcripts_summary_df <-
+  transcripts_summary_df %>%
+  filter(section == target_section)
+
+target_student <- params$target_student
+# target_student <- "All Students"
+# target_student <- sec_transcripts_summary_df$preferred_name[3]
+
+
+
+section_session_summary_df <- 
+  transcripts_session_summary_df %>% 
+    filter(section == target_section,
+           transcript_section == target_transcript_section
+           ) %>% 
+  group_by(section,	day, time,	session_num) %>% 
+  summarise() %>% 
+  ungroup()
+```
+
+
+# Section `r target_section`
+
+
+```{r chunk2}
+# sec_transcripts_summary_df %>%
+  # filter(preferred_name == target_student)
+
+
+target_transcripts_session_summary_df <- transcripts_session_summary_df %>% 
+  filter(preferred_name == target_student) %>% 
+  mutate(student = preferred_name) %>%
+  select(section,	day,	time,	student,	session_num,	n,	duration,	wordcount) %>% 
+  left_join(section_session_summary_df, 
+            ., 
+            by = join_by(section,	day,	time, session_num)) %>% 
+  mutate(student = target_student) 
+
+
+target_student_session_summary_total_df <- 
+  target_transcripts_session_summary_df %>% 
+  mutate(session_num = !is.na(n)) %>% 
+  group_by(section,	day,	time, student) %>%
+  summarise(session_num = sum(!is.na(duration)),
+            n = sum(n, na.rm = T),
+            duration = sum(duration, na.rm = T),
+            wordcount = sum(wordcount, na.rm = T)) %>% 
+  ungroup() %>% 
+  mutate(section = 'Total',	
+         day = NA,	
+         time = NA) %>% 
+  select(section,	day,	time,	student,	session_num,	n,	duration,	wordcount)
+  
+
+
+ # target_transcripts_session_summary_df %>% 
+ #   bind_rows(target_student_session_summary_total_df) %>% 
+ #  mutate(
+ #    duration = format(duration, digits = 1, nsmall = 1),
+ #    wordcount = format(wordcount, big.mark = ','),
+ #  ) %>% 
+ #  knitr::kable()
+```
+
+
+# Semester-to-date Zoom Transcript Analysis
+
+### Students by Duration
+
+```{r chunk3, results='asis'}
+sec_transcripts_summary_df %>%
+  # group_by(section) %>%
+# mutate(row_number = row_number(session_ct),
+#          student = paste('student', str_pad(row_number(session_ct), width = 2, pad = "0"), sep = '_'),
+#          student = if_else(preferred_name == target_student, target_student, student),
+#          student = factor(row_number, levels = row_number, labels = student),
+#          target_student = if_else(preferred_name == target_student, TRUE, FALSE)
+#          ) %>%
+  mutate(row_number = row_number(coalesce(duration, -Inf)),
+         # student = paste('student', str_pad(row_number(duration), width = 2, pad = "0"), sep = '_'),
+         student = preferred_name,
+         student = if_else(preferred_name == target_student, paste0('**', target_student, '**'), student),
+         student = factor(row_number, levels = row_number, labels = student),
+         target_student = if_else(preferred_name == target_student, TRUE, FALSE),
+         # ) %>%
+
+      # mutate(
+    #   duration_row_number = row_number(duration),
+    # rank_by_duration = paste('student', str_pad(row_number(duration), width = 2, pad = "0"), sep = '_'),
+    # rank_by_duration = if_else(preferred_name == target_student, target_student, rank_by_duration),
+    #      rank_by_duration = factor(duration_row_number, levels = duration_row_number, labels = rank_by_duration),
+    duration = format(duration, digits = 1, nsmall = 1),
+    wordcount = format(wordcount, big.mark = ','),
+    wpm = format(wpm, digits = 1, nsmall = 1),
+    perc_n = format(perc_n, digits = 1, nsmall = 1),
+    perc_duration = format(perc_duration, digits = 1, nsmall = 1),
+    perc_wordcount = format(perc_wordcount, digits = 1, nsmall = 1)
+  ) %>%
+  arrange(desc(row_number)
+          # desc(duration)
+          ,
+        # target_student,
+        # student
+        ) %>%
+  select(student, session_ct:wordcount, wpm:perc_wordcount) %>%
+  # rename(session1 = session_1,
+  #        session2 = session_2,
+  #        session3 = session_3,
+  #        session4 = session_4,
+  #        session5 = session_5
+  # ) %>% 
+    # `student\nrank\nby\nduration` = student_rank_by_duration,
+  #        `perc\nduration` = perc_duration,
+  #        `perc\nwordcount` = perc_wordcount) %>% 
+ 
+  knitr::kable(format = 'pipe')
+# %>% 
+#   kableExtra::kable_styling(full_width = FALSE)
+
+# transcripts_session_summary_df %>% 
+#     # filter(section == target_section) %>% 
+#   group_by(section,	day, time,	session_num) %>% 
+#   summarise() %>% 
+#   group_by(section,	day, time) %>% 
+#   mutate(n = n()) %>% 
+#   group_by(section) %>% 
+#   filter(n == max(n))
+
+```
+
+
+
+
+<!-- # metric_labels_df -->
+
+```{r chunk4}
+
+metric_labels_df <- tribble(
+  ~metric,  ~label, 
+  'session_ct', ': Number of sesessions in which Zoom captured \na verbal comment',
+  'n', ': Number of separate verbal comments captured \nby Zoom',
+  'perc_n', ': Percent of separate verbal comments captured \nby Zoom',
+  'duration', ': Total duration in minutes of verbal comments \ncaptured by Zoom',
+  'perc_duration', ': Percent of total duration in minutes of verbal \ncomments captured by Zoom, across all students',
+  'wordcount', ': Total wordcount of verbal comments captured \nby Zoom',
+  'perc_wordcount', ': Percent of total wordcount of verbal comments \ncaptured by Zoom, across all students',
+  'wpm', ': Average words per minute within verbal comments \ncaptured by Zoom, across all students'
+  )
+
+# metric_labels_df
+
+```
+
+
+
+<!-- # student_session_graph Function -->
+
+
+```{r chunk5}
+
+# df <- section_transcripts_session_summary_df
+# target_student2 <- target_student
+student_session_graph <- function(df, metric_name = 'n', target_student2 = "All Students", metric_labels_df2 = metric_labels_df) {
+  
+  # flag the appropriate metric label  
+  metric_label <- metric_labels_df2 %>% filter(metric == metric_name) %>% .$label
+  
+  if (metric_name == 'session_ct') {
+    
+    # student session_ct plot
+    
+    p <- df %>% 
+      group_by(preferred_name) %>% 
+      summarise(metric = (sum(n > 0))) %>% 
+      ungroup() %>% 
+      arrange(metric,
+              preferred_name == target_student2) %>% 
+      mutate(metric = factor(metric),
+             row_number = row_number(metric),
+             # student = paste('student', str_pad(row_number(metric), width = 2, pad = "0"), sep = '_'),
+             student = preferred_name,
+             student = if_else(preferred_name == target_student2, paste0('**', target_student2, '**'), student),
+             student = factor(row_number, levels = row_number, labels = student),
+             target_student2 = if_else(preferred_name == target_student2, TRUE, FALSE)
+      ) %>% 
+      ggplot(aes(x = student, 
+                 y=metric, 
+                 label = metric)) + 
+      geom_point(aes( alpha = metric
+                      , 
+                      # color = metric
+                      fill = metric), size = 4,pch=21
+                 ,
+                 fill = 'blue'
+      ) +
+      coord_flip() + 
+      ggtitle(paste0(target_student2, metric_label)) +
+      scale_alpha_ordinal(range = c(0.25, 0.7), name = metric_name) + 
+      guides(fill="legend") +
+      ylab(metric_name)  +
+      theme(axis.text.y = element_markdown())
+    
+    
+  } else {
+    
+    # create column for metric
+    df[['metric']] <- df[[metric_name]]
+    # df
+    
+    # metric_label
+    
+    # student session plot
+    p <- df %>% 
+      group_by(preferred_name) %>% 
+      mutate(total_metric = sum(metric),
+             session_ct = sum(n > 0)) %>% 
+      ungroup() %>% 
+      select(preferred_name, session_num, metric, session_ct, total_metric) %>%
+      nest(data = c(session_num, metric)) %>% 
+      arrange(total_metric,
+              preferred_name == target_student2,
+              preferred_name) %>% 
+      mutate(
+        # session_num = factor(session_num),
+        row_number = row_number(total_metric),
+        # student = paste('student', str_pad(row_number, width = 2, pad = "0"), sep = '_'),
+        student = preferred_name,
+        student = if_else(preferred_name == target_student2, paste0('**', target_student2, '**'), student),
+        student = factor(row_number, levels = row_number, labels = student),
+        target_student_flag = if_else(preferred_name == target_student2, TRUE, FALSE)
+      ) %>% 
+      unnest(data) %>% 
+      mutate(
+        session_num = factor(session_num)) %>% 
+      
+      
+      
+      ggplot(aes(x = student, 
+                 y=metric, 
+                 label = session_num)) + 
+      geom_point(aes( alpha = session_num
+                      , 
+                      # color = session_num
+                      fill = session_num), size = 4,pch=21
+                 ,
+                 fill = 'blue'
+      ) +
+      geom_text(hjust=0.5, vjust=0.5, size = 2) +
+      coord_flip() + 
+      ggtitle(paste0(target_student2, metric_label)) +
+      scale_alpha_ordinal(range = c(0.25, 0.7)) + 
+      guides(fill="legend") +
+      ylab(metric_name)  +
+      theme(axis.text.y = element_markdown())
+    # +
+    # theme(axis.text.x = element_text(face = if_else(plot_df$target_student_flag==TRUE, "bold", "plain"))) 
+    
+  }
+  
+  p
+  
+}
+
+```
+
+
+
+
+<!-- ## student_session_graphs -->
+
+```{r chunk6}
+
+
+
+# target_section <- params$target_section
+# target_transcript_section <- 201 + (as.numeric(params$target_section)/100)
+
+
+transcripts_session_summary_df <- 
+  transcripts_session_summary_df %>% 
+  mutate(
+    # session_num = factor(session_num),
+         n = replace_na(n, 0),
+         duration = replace_na(duration, 0),
+         wordcount = replace_na(wordcount, 0),
+         wpm = if_else(duration == 0, 0, wordcount / duration)
+         ) %>% 
+  group_by(section, session_num) %>% 
+  mutate(perc_n = 100 * n / sum(n),
+         perc_duration = 100 * duration / sum(duration),
+         perc_wordcount = 100 * wordcount / sum(wordcount)) %>% 
+  ungroup() 
+
+
+# filter target_section
+section_transcripts_session_summary_df <- 
+transcripts_session_summary_df %>%
+  filter(section == target_section) 
+
+
+
+
+
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'session_ct', target_student2 = target_student)
+
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'n', target_student2 = target_student)
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'perc_n', target_student2 = target_student)
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'duration', target_student2 = target_student)
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'perc_duration', target_student2 = target_student)
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'wordcount', target_student2 = target_student)
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'perc_wordcount', target_student2 = target_student)
+student_session_graph(section_transcripts_session_summary_df, metric_name = 'wpm', target_student2 = target_student)
+  
+```
+
+
+

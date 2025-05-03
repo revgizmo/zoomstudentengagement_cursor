@@ -43,9 +43,9 @@ make_transcripts_summary_df <-
         dplyr::group_by(section, preferred_name) %>%
         dplyr::summarise(
           session_ct = sum(!is.na(duration)),
-          n = sum(n),
-          duration = sum(duration),
-          wordcount = sum(wordcount)
+          n = sum(n, na.rm = TRUE),
+          duration = sum(duration, na.rm = TRUE),
+          wordcount = sum(wordcount, na.rm = TRUE)
         ) %>%
         dplyr::ungroup() %>%
         dplyr::group_by(section) %>%

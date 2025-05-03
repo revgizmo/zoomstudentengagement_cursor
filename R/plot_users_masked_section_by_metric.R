@@ -32,23 +32,30 @@
 plot_users_masked_section_by_metric <-
   function(df,
            metric = 'session_ct') {
-    row_num <- preferred_name <- section <- NULL
+    . <- row_num <- preferred_name <- section <- NULL
 
     if (tibble::is_tibble(df)) {
       metric_col <- df[metric]
       df$metric_col <- metric_col[[1]]
       metric_col_name <- names(metric_col)
 
+
       df %>%
-        # dplyr::group_by(section) %>%
-        dplyr::mutate(
-          row_num = dplyr::row_number(dplyr::coalesce(metric_col,-Inf)),
-          preferred_name = paste('student', stringr::str_pad(
-            row_num, width = 2, pad = "0"
-          )),
-          sep = '_'
-        ) %>%
-        zoomstudentengagement::plot_users_by_metric(metric = metric_col_name)
+        zoomstudentengagement::mask_user_names_by_metric(.,
+                 metric = 'session_ct',
+                 target_student = '') %>%
+#
+#       df %>%
+#         # dplyr::group_by(section) %>%
+#         dplyr::mutate(
+#           row_num = dplyr::row_number(dplyr::coalesce(metric_col,-Inf)),
+#           preferred_name = paste('student', stringr::str_pad(
+#             row_num, width = 2, pad = "0"
+#           )),
+#           sep = '_'
+#         ) %>%
+        zoomstudentengagement::plot_users_by_metric(metric = metric_col_name,
+                                                    student_col = 'student')
     }
   }
 

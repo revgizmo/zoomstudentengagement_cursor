@@ -56,9 +56,17 @@ load_zoom_recorded_sessions_list <-
              ),
            zoom_recorded_sessions_csv_names_pattern =
              "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
-           zoom_recorded_sessions_csv_col_names =
-"Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed",
-           dept = "LTF",
+           zoom_recorded_sessions_csv_col_names = paste(
+             "Topic",
+             "ID",
+             "Start Time",
+             "File Size (MB)",
+             "File Count",
+             "Total Views",
+             "Total Downloads",
+             "Last Accessed",
+             sep = ','
+           ),            dept = "LTF",
            semester_start_mdy = "Jan 01, 2024",
            scheduled_session_length_hours = 1.5
 
