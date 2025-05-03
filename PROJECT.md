@@ -50,11 +50,14 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **Assignees & Milestones:** Assign issues to yourself or collaborators, and link them to milestones (e.g., "CRAN Submission").
 - **Checklists:** Use markdown checklists for multi-step tasks.
 
-### GitHub Projects
-- **Create a Project:** Go to the "Projects" tab and click "New project." Choose "Board" for a Kanban-style layout.
-- **Columns:** Set up columns like "Backlog", "To Do", "In Progress", "Review", "Done".
-- **Add Issues/PRs:** Drag and drop issues or pull requests onto the board, or create new cards directly.
-- **Track Progress:** Move cards as work progresses. You can filter by assignee, label, or milestone.
+### GitHub Projects (Projects v2)
+- [x] Create project board (Projects v2)
+- [x] Add initial issues to project board
+- [x] Set up columns (To Do, In Progress, Review, Done)
+- [ ] Manual management: Move issues/cards between columns as work progresses
+- [ ] Contributors: Update project status manually when working on or closing issues/PRs
+- Note: Projects v2 does not currently support built-in automation (e.g., auto-move on PR merge/close). Monitor GitHub updates for future automation features.
+- Not recommended: Classic Projects (deprecated by GitHub)
 
 ### Workflow Example
 1. **Break down your project plan into issues:**  
@@ -88,62 +91,58 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 
 ### Initial Setup
 - [ ] Create new GitHub repository
-- [ ] Set up repository settings:
-  - Branch protection rules
-  - Required status checks
-  - Code review requirements
-  - Issue templates
-  - Pull request templates
-- [ ] Configure git locally:
-  - Set up git config
-  - Create .gitignore
+  - Name: zoomstudentengagement_cursor
+  - Description: R package for analyzing student engagement in Zoom sessions
+  - Public visibility
+  - No README, .gitignore, or license (will add manually)
+- [ ] Configure repository settings
+  - Enable branch protection for main
+  - Set up GitHub Actions
+  - Configure issue templates
+- [ ] Set up local git environment
+  - Configure user name and email
+  - Set up SSH keys
   - Initialize repository
-  - Add remote origin
-- [ ] Set up development environment:
-  - RStudio project
-  - Git integration
-  - R package structure
+  - Add remote
 
 ### Branching Strategy
-- [ ] Main branches:
-  - `main`: Production-ready code
-  - `develop`: Integration branch for features
-- [ ] Feature branches:
-  - Naming convention: `feature/description`
-  - Created from `develop`
-  - Merged back to `develop`
-- [ ] Release branches:
-  - Naming convention: `release/vX.Y.Z`
-  - Created from `develop`
-  - Merged to `main` and `develop`
-- [ ] Hotfix branches:
-  - Naming convention: `hotfix/description`
-  - Created from `main`
-  - Merged to `main` and `develop`
+- main: Production-ready code
+- develop: Integration branch
+- feature/*: New features
+- release/*: Release preparation
+- hotfix/*: Emergency fixes
 
 ### Git Workflow
-- [ ] Commit conventions:
-  - Type: feat, fix, docs, style, refactor, test, chore
-  - Scope: package, function, or component
-  - Description: imperative, present tense
-- [ ] Pull request process:
-  - Create from feature branch to develop
-  - Required reviews
-  - Required checks
-  - Squash merge
-- [ ] Release process:
-  - Create release branch
-  - Version bump
-  - Update documentation
-  - Create tag
-  - Merge to main
+- Commit conventions
+  - feat: New feature
+  - fix: Bug fix
+  - docs: Documentation changes
+  - style: Code style changes
+  - refactor: Code refactoring
+  - test: Test-related changes
+  - chore: Maintenance tasks
+- Pull request process
+  - Create from feature branch
+  - Link to issues
+  - Review checklist
+  - CI checks
+- Release process
+  - Version tagging
+  - Changelog updates
+  - Documentation updates
 
 ### Repository Maintenance
-- [ ] Regular branch cleanup
-- [ ] Documentation updates
-- [ ] Dependency updates
-- [ ] Security scanning
-- [ ] Performance monitoring
+- Regular cleanup of stale branches
+- Issue triage
+- Documentation updates
+- Dependency updates
+
+#### GitHub CLI Workaround
+- Current shell environment has issues with default `gh` CLI output formatting
+- Workaround: Use `gh` with `--json` flag and pipe to `jq` for formatting
+- Example: `gh issue list --repo revgizmo/zoomstudentengagement_cursor --json number,title,state | jq`
+- TODO: Diagnose and fix shell environment issue with `gh` CLI output formatting
+- Note: Project board management currently requires using GitHub web interface due to authentication scope issues with `gh` CLI
 
 ## Continuous Integration & Deployment
 - [ ] Set up GitHub Actions for:
