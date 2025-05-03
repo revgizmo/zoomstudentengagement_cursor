@@ -138,21 +138,11 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - Dependency updates
 
 #### GitHub CLI Workaround
-- Current shell environment has issues with default `gh` CLI output formatting
-- Workaround: Use `gh` with `--json` flag and pipe to `jq` for formatting
-- Example: `gh issue list --repo revgizmo/zoomstudentengagement_cursor --json number,title,state | jq`
-- TODO: Diagnose and fix shell environment issue with `gh` CLI output formatting
-- Note: Project board management currently requires using GitHub web interface due to authentication scope issues with `gh` CLI
-
-- [ ] Troubleshoot and fix IDE shell environment issue affecting gh CLI output
-    - Issue: gh CLI output is broken in IDE terminal but works in plain terminal
-    - Possible causes: conda initialization block in .zshrc, PATH changes, shell wrappers
-    - Steps to test: 
-        - Comment out conda init block in .zshrc and restart IDE terminal
-        - Test gh CLI output
-        - If unresolved, comment out PATH export and retest
-        - Review .zshrc for other customizations
-    - Goal: Ensure gh CLI output works in IDE terminal as it does in plain terminal
+- [x] Troubleshoot and fix IDE shell environment issue affecting gh CLI output
+    - Issue: gh CLI output was broken in IDE terminal but worked in plain terminal
+    - Resolution: Cleaned up .zshrc configuration, particularly the conda initialization block
+    - Current status: gh CLI now works correctly in both IDE and plain terminals
+    - All gh CLI functionality is now available without workarounds
 
 ## Continuous Integration & Deployment
 
