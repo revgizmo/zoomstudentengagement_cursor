@@ -29,6 +29,7 @@ load_section_names_lookup <- function(data_folder = "data",
   } else {
     # File doesn't exist, handle the situation accordingly
     print(paste("File does not exist:", file_path))
+    print('placeholder df created.')
     data <- make_blank_section_names_lookup_csv()
   }
 

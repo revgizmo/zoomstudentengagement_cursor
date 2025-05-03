@@ -20,7 +20,8 @@
 
 make_template_rmd <-
   function(new_template_file_name = 'README.Rmd',
-           template_file = "README.Rmd") {
+           template_file = paste0(system.file("",  package="zoomstudentengagement"), 'README.Rmd')
+           ) {
     template_file <- new_template_file_name <- NULL
 
 

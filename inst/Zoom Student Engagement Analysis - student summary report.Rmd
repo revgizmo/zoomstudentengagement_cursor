@@ -1,6 +1,7 @@
 ---
 output: pdf_document
 params: 
+    target_course: "201"
     target_section: "008"
     target_student: "All Students"
     data_folder: "data"
@@ -32,8 +33,10 @@ transcripts_summary_df <- read_csv(paste0(params$data_folder, '/', params$transc
 
 transcripts_session_summary_df <- read_csv(paste0(params$data_folder, '/', params$transcripts_session_summary_file))
 
+
+target_course <- params$target_course
 target_section <- params$target_section
-target_transcript_section <- 23 + (as.numeric(params$target_section)/100)
+target_transcript_section <- as.numeric(target_course) + (as.numeric(params$target_section)/100)
 
 sec_transcripts_summary_df <-
   transcripts_summary_df %>%
