@@ -1,0 +1,46 @@
+name: CRAN Submission Task
+description: Checklist for CRAN submission preparation
+title: '[CRAN] '
+labels: [CRAN]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this checklist to prepare for CRAN submission.
+  - type: checkboxes
+    id: pre_submission
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: Version number updated in DESCRIPTION
+        - label: Documentation up-to-date
+        - label: All exports documented
+        - label: Examples run without errors
+        - label: Tests passing locally
+        - label: R CMD check passing with no errors/warnings/notes
+        - label: Vignettes building correctly
+        - label: NEWS.md updated
+        - label: Spell check completed
+  - type: checkboxes
+    id: cran_policy
+    attributes:
+      label: CRAN Policy Compliance
+      options:
+        - label: DESCRIPTION file formatted correctly
+        - label: Authors@R field complete
+        - label: Dependencies listed correctly
+        - label: License specification accurate
+        - label: Package size within limits
+  - type: checkboxes
+    id: additional_tasks
+    attributes:
+      label: Additional Tasks
+      options:
+        - label: Reverse dependency checks (if applicable)
+        - label: Platform-specific checks
+        - label: Performance benchmarks reviewed
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Any additional context or notes about the submission. 

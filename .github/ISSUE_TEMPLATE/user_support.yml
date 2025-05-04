@@ -1,0 +1,34 @@
+name: User Support
+description: Get help using the package
+title: '[SUPPORT] '
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help? Please fill out the details below so we can assist you.
+  - type: input
+    id: goal
+    attributes:
+      label: What are you trying to do?
+      description: Describe your goal with the package.
+  - type: textarea
+    id: what_tried
+    attributes:
+      label: What have you tried?
+      description: Share the code you've attempted and any error messages.
+  - type: textarea
+    id: course_context
+    attributes:
+      label: Course Context
+      description: Course type (e.g., lecture, discussion, lab), class size, recording frequency, other relevant details.
+  - type: textarea
+    id: technical_env
+    attributes:
+      label: Technical Environment
+      description: OS and version, R version, package version, Zoom recording format.
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any other information that might help us assist you. 

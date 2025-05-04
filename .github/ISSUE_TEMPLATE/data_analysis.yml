@@ -1,0 +1,34 @@
+name: Data Analysis
+description: Questions or tasks related to analyzing student engagement data
+title: '[ANALYSIS] '
+labels: [analysis]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide details about your data analysis question or request.
+  - type: input
+    id: research_question
+    attributes:
+      label: Research Question
+      description: What specific aspect of student engagement are you investigating?
+  - type: textarea
+    id: data_context
+    attributes:
+      label: Data Context
+      description: Course type/setting, number of students, time period, other relevant context.
+  - type: textarea
+    id: analysis_requirements
+    attributes:
+      label: Analysis Requirements
+      description: Specific metrics, visualization preferences, comparison requirements, statistical tests needed.
+  - type: textarea
+    id: expected_output
+    attributes:
+      label: Expected Output
+      description: What form should the results take? (tables, plots, summary statistics, written report)
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information about the analysis request. 
