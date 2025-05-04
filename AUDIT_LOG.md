@@ -221,6 +221,112 @@ Before continuing with the function naming/API refactor, we will restore the tes
 
 This approach follows best practices for reliability and maintainability.
 
+### [2024-06-11] Test Implementation Strategy
+
+Based on the codebase audit, we've developed a systematic approach to test implementation:
+
+1. **Test Organization:**
+   - Group tests by functionality (plotting, data loading, transformation, etc.)
+   - Each test file focuses on a related set of functions
+   - Helper functions in `helper-zoomstudentengagement.R` provide test data
+
+2. **Test Coverage Priorities:**
+   - Core data transformation functions (e.g., `make_clean_names_df`)
+   - Visualization functions (plotting)
+   - Data loading functions (`load_*`)
+   - File writing functions (`write_*`)
+
+3. **Test Structure:**
+   Each test should cover:
+   - Happy path (normal operation)
+   - Edge cases (empty data, missing data)
+   - Error conditions
+   - Data validation
+   - Return type verification
+
+4. **Current Progress:**
+   - ✅ Initial test infrastructure setup
+   - ✅ Test data helpers updated
+   - ✅ Basic tests for `make_clean_names_df`
+   - ✅ Initial plotting function tests
+   - 🔄 In progress: Completing plotting function tests
+   - ⏳ Pending: Data loading function tests
+   - ⏳ Pending: Data transformation function tests
+   - ⏳ Pending: File writing function tests
+
+5. **Next Steps:**
+   1. Complete plotting function tests with comprehensive assertions
+   2. Implement tests for data loading functions
+   3. Add tests for data transformation functions
+   4. Add tests for file writing functions
+   5. Review and improve test coverage
+
+This strategy ensures we build a solid foundation of tests while maintaining focus on the most critical functionality first.
+
+## Test Implementation Plan
+
+### Current Status (2024-06-11)
+
+#### ✅ Completed Tests
+1. `process_zoom_transcript.R` - Full test coverage with proper time handling
+2. `plot_users_by_metric.R` and `plot_users_masked_section_by_metric.R` - Comprehensive plotting tests
+3. `make_clean_names_df.R` - Basic tests (though with warnings to clean up)
+4. `consolidate_transcript.R` and `add_dead_air_rows.R` - Covered through `process_zoom_transcript` tests
+
+#### 🔄 In Progress
+1. `make_clean_names_df.R` - Tests exist but need warning cleanup (tracked in issue)
+
+#### ❌ Missing Tests
+1. Data Loading Functions:
+   - `load_zoom_transcript.R`
+   - `load_roster.R`
+   - `load_cancelled_classes.R`
+   - `load_section_names_lookup.R`
+   - `load_zoom_recorded_sessions_list.R`
+   - `load_transcript_files_list.R`
+
+2. Data Transformation Functions:
+   - `fliwc.R`
+   - `fliwc_transcript_files.R`
+   - `make_transcripts_summary_df.R`
+   - `make_transcripts_session_summary_df.R`
+   - `make_students_only_transcripts_summary_df.R`
+   - `make_names_to_clean_df.R`
+   - `make_student_roster_sessions.R`
+   - `make_roster_small.R`
+   - `make_sections_df.R`
+   - `make_semester_df.R`
+   - `make_metrics_lookup_df.R`
+
+3. File Writing Functions:
+   - `write_transcripts_summary.R`
+   - `write_transcripts_session_summary.R`
+   - `write_section_names_lookup.R`
+   - `make_template_rmd.R`
+   - `make_blank_section_names_lookup_csv.R`
+   - `make_blank_cancelled_classes_df.R`
+
+4. Utility Functions:
+   - `mask_user_names_by_metric.R`
+   - `join_transcripts_list.R`
+
+### Implementation Order
+1. Data Loading Functions (highest priority as they're foundational)
+2. Data Transformation Functions
+3. File Writing Functions
+4. Utility Functions
+
+### Test Structure Guidelines
+- Each test file should cover:
+  - Happy path (normal operation)
+  - Edge cases (empty data, missing data)
+  - Error conditions
+  - Data validation
+  - Return type verification
+- Use helper functions in `helper-zoomstudentengagement.R` for test data
+- Follow testthat best practices
+- Document test assumptions and requirements
+
 ---
 
 Refer to the [Master Tracking Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) for the audit checklist and sub-issues. 
