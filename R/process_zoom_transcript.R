@@ -61,10 +61,18 @@ process_zoom_transcript <- function(transcript_file_path = '',
   }
 
   if (tibble::is_tibble(transcript_df)) {
+    # Ensure time columns are of type Period
     transcript_df <- transcript_df %>%
       dplyr::mutate(
-        begin = dplyr::lag(end, order_by = start, default = hms::hms(0)),
-        prior_dead_air = start - begin,
+        start = lubridate::as.period(start),
+        end = lubridate::as.period(end)
+      )
+
+    # Add begin time and prior speaker info
+    transcript_df <- transcript_df %>%
+      dplyr::mutate(
+        begin = dplyr::lag(end, order_by = start, default = lubridate::period(0)),
+        prior_dead_air = as.numeric(start - begin, "seconds"),
         prior_speaker = dplyr::lag(name, order_by = start, default = NA)
       ) %>%
       dplyr::select(
@@ -97,7 +105,7 @@ process_zoom_transcript <- function(transcript_file_path = '',
           dplyr::case_when(is.na(name) ~ na_name_, TRUE ~ name)
       )
 
-    return_df
+    return(return_df)
 
   }
 
