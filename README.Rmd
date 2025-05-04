@@ -6,6 +6,8 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+> **Note:** This README.md is automatically generated from README.Rmd. After making changes to README.Rmd, run `devtools::build_readme()` to update the README.md. If you encounter build errors, check that all code chunks run successfully and all referenced files/data exist.
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -76,7 +78,7 @@ library(zoomstudentengagement)
 
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 library(dplyr)
 
 ```
@@ -246,8 +248,8 @@ transcript_files_df
 
     
     3. Load / Make Cancelled Classes CSV
-        1. "`r cancelled_classes_file_input`" file:
-            1. If you have an existing "`r cancelled_classes_file_input`", update it as necessary, or
+        1. "`*r cancelled_classes_file_input`" file:
+            1. If you have an existing "`*r cancelled_classes_file_input`", update it as necessary, or
             2. Run `make_blank_cancelled_classes_df()` and save it as a .csv file.
         2. Run `load_cancelled_classes()` to get a tibble from a provided csv file of cancelled class sessions for scheduled classes where a zoom recording is not expected. 
     
@@ -388,7 +390,7 @@ clean_names_df
 
 ## 2. Write Section Names Lookup
 
-1. Run `write_section_names_lookup()` to save subset of `clean_names_df` as a csv file with the specified file name (`r names_lookup_file_input`) to the specified data folder (`r data_folder_input`).
+1. Run `write_section_names_lookup()` to save subset of `clean_names_df` as a csv file with the specified file name (`*r names_lookup_file_input`) to the specified data folder (`*r data_folder_input`).
 
 ```{r}
 write_section_names_lookup(
@@ -411,11 +413,11 @@ make_names_to_clean_df(clean_names_df)
 
 
 
-## 4. Manually edit `r names_lookup_file_input` to clear names needing cleaning
+## 4. Manually edit `*r names_lookup_file_input` to clear names needing cleaning
 
-1. Open `r names_lookup_file_input` in your editor of choice.
+1. Open `*r names_lookup_file_input` in your editor of choice.
 2. For each `transcript_name` that should be updated (because the user changed their name in Zoom, they were a guest, etc.), update the `preferred_name`, `formal_name`, and `student_id` values. 
-3. Save the `r names_lookup_file_input` file.
+3. Save the `*r names_lookup_file_input` file.
 
 ## 5. Repeat Step 1 as necessary until the only names left are intentionally unmatched to students on the roster.
 
@@ -438,7 +440,7 @@ transcripts_session_summary_df
 
 ### 1B. Write Transcripts Session Summary
 
-1. Run `write_transcripts_session_summary()` to save the summary results at the level of the session and preferred student name as a csv file with the specified file name (`r transcripts_session_summary_file_input`) to the specified data folder (`r data_folder_input`).
+1. Run `write_transcripts_session_summary()` to save the summary results at the level of the session and preferred student name as a csv file with the specified file name (`*r transcripts_session_summary_file_input`) to the specified data folder (`*r data_folder_input`).
 
 ```{r}
 write_transcripts_session_summary(
@@ -468,7 +470,7 @@ transcripts_summary_df
 
 ### 2B. Write Transcripts Summary
 
-1. Run `write_transcripts_summary()` to save the summary results at the level of the class section and preferred student name as a csv file with the specified file name (`r transcripts_summary_file_input`) to the specified data folder (`r data_folder_input`).
+1. Run `write_transcripts_summary()` to save the summary results at the level of the class section and preferred student name as a csv file with the specified file name (`*r transcripts_summary_file_input`) to the specified data folder (`*r data_folder_input`).
 
 ```{r}
 write_transcripts_summary(
@@ -653,7 +655,7 @@ run_student_reports(
   # data_folder =  'inst/extdata',
   transcripts_session_summary_file = transcripts_session_summary_file_input,
   transcripts_summary_file = transcripts_summary_file_input,
-student_summary_report_folder = ,
+student_summary_report_folder = student_summary_report_folder_input,
   student_summary_report = student_summary_report_input
 
 )
