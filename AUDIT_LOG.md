@@ -81,9 +81,109 @@ This log tracks findings, decisions, and progress during the 2024-06 codebase au
 - `write_transcripts_summary()`
   - **Status:** Name is clear and follows tidyverse style.
   - **Arguments:** OK, but check for consistency with other write/save functions.
+- `add_dead_air_rows()`
+  - **Status:** Name follows tidyverse style but could be more descriptive.
+  - **Recommendation:** Consider renaming to `add_silence_intervals()` for clarity.
+- `consolidate_transcript()`
+  - **Status:** Name is clear and follows tidyverse style.
+  - **Arguments:** Consistent with other transcript processing functions.
+- `fliwc_transcript_files()`
+  - **Status:** Name contains acronym and is inconsistent with other function names.
+  - **Recommendation:** Rename to `summarize_transcript_files()` for consistency.
+- `join_transcripts_list()`
+  - **Status:** Name follows tidyverse style but could be more specific.
+  - **Recommendation:** Consider renaming to `join_transcript_metadata()` to better describe its purpose.
+- `load_and_process_zoom_transcript()`
+  - **Status:** Name is descriptive but function is marked as deprecated.
+  - **Recommendation:** Remove from exports as it's replaced by `process_zoom_transcript()`.
+- `load_cancelled_classes()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other load functions.
+- `load_roster()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other load functions.
+- `load_section_names_lookup()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other load functions.
+- `load_transcript_files_list()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `load_transcript_metadata()`.
+- `load_zoom_recorded_sessions_list()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `load_session_metadata()`.
+- `load_zoom_transcript()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other load functions.
+- `make_blank_cancelled_classes_df()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `create_cancelled_classes_template()`.
+- `make_blank_section_names_lookup_csv()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `create_names_lookup_template()`.
+- `make_clean_names_df()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other make functions.
+- `make_metrics_lookup_df()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other make functions.
+- `make_names_to_clean_df()`
+  - **Status:** Name follows tidyverse style but could be more descriptive.
+  - **Recommendation:** Consider renaming to `filter_unmatched_names()`.
+- `make_roster_small()`
+  - **Status:** Name follows tidyverse style but could be more descriptive.
+  - **Recommendation:** Consider renaming to `filter_active_students()`.
+- `make_sections_df()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other make functions.
+- `make_semester_df()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other make functions.
+- `make_student_roster_sessions()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `create_student_sessions()`.
+- `make_students_only_transcripts_summary_df()`
+  - **Status:** Name follows tidyverse style but is too long.
+  - **Recommendation:** Consider renaming to `filter_student_metrics()`.
+- `make_template_rmd()`
+  - **Status:** Name follows tidyverse style but could be more descriptive.
+  - **Recommendation:** Consider renaming to `create_report_template()`.
+- `make_transcripts_session_summary_df()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `summarize_session_metrics()`.
+- `make_transcripts_summary_df()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `summarize_student_metrics()`.
+- `plot_users_by_metric()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other plot functions.
+- `plot_users_masked_section_by_metric()`
+  - **Status:** Name follows tidyverse style but is too long.
+  - **Recommendation:** Consider renaming to `plot_anonymous_section_metrics()`.
+- `process_zoom_transcript()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other process functions.
+- `write_section_names_lookup()`
+  - **Status:** Name follows tidyverse style and is clear.
+  - **Arguments:** Consistent with other write functions.
+- `write_transcripts_session_summary()`
+  - **Status:** Name follows tidyverse style but could be more concise.
+  - **Recommendation:** Consider renaming to `write_session_metrics()`.
 
 ### [2024-06-10]
 - Started function naming and API audit. Logged initial findings for first five exported functions. Will continue with the rest of the inventory and propose changes as needed.
+
+### [2024-06-10]
+- Completed inventory of all exported functions. Identified several areas for improvement:
+  1. Acronym usage (e.g., `fliwc` should be `summarize_transcript_metrics`)
+  2. Function name length (several functions have overly long names)
+  3. Consistency in naming patterns (e.g., `make_` vs `create_` vs `filter_`)
+  4. Deprecated functions that should be removed
+  5. Argument naming consistency across similar functions
+
+Next steps:
+1. Create issues for each category of changes
+2. Prioritize changes based on impact and effort
+3. Begin implementing changes in order of priority
 
 ## Progress Log
 
