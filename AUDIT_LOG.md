@@ -193,6 +193,34 @@ Next steps:
 ### [Date]
 - [ ] Finding/decision/action
 
+### [2024-06-10] Test Suite Restoration Plan
+
+Before continuing with the function naming/API refactor, we will restore the test suite to a green (passing) state. This ensures a solid foundation for future changes and makes it easier to catch regressions. The plan is as follows:
+
+1. **Checkpoint Current Work:**
+   - All WIP changes have been committed to the audit branch.
+   - A new branch (`bugfix/tests-green`) has been created for test restoration.
+
+2. **Run All Tests:**
+   - Run the full test suite and review errors/warnings.
+
+3. **Fix Test Data and Signatures:**
+   - Update test data helpers to include all required columns.
+   - Ensure all test calls match current function signatures.
+
+4. **Iterate:**
+   - Re-run tests after each fix, addressing the next most foundational error.
+   - Commit after each meaningful fix or set of related fixes.
+
+5. **No Refactoring Until Green:**
+   - Pause all renaming/refactoring until the test suite passes.
+
+6. **Document and Review:**
+   - Use clear commit messages and document changes in AUDIT_LOG.md.
+   - Once green, resume refactor work incrementally.
+
+This approach follows best practices for reliability and maintainability.
+
 ---
 
 Refer to the [Master Tracking Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) for the audit checklist and sub-issues. 

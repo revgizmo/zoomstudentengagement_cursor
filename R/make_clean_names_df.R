@@ -88,10 +88,7 @@ make_clean_names_df <- function(data_folder = "data",
       ) %>%
       # fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
       dplyr::mutate(
-        formal_name = dplyr::if_else(is.na(formal_name),
-          transcript_name,
-          formal_name
-        )
+        formal_name = dplyr::coalesce(formal_name, transcript_name)
       ) %>%
       # join to the roster of enrolled students
       dplyr::full_join(
@@ -107,7 +104,7 @@ make_clean_names_df <- function(data_folder = "data",
       ) %>%
       # fill in any preferred_name values that weren't on the roster of enrolled students
       dplyr::mutate(
-        preferred_name = dplyr::if_else(!is.na(preferred_name), preferred_name, formal_name)
+        preferred_name = dplyr::coalesce(preferred_name, formal_name)
       ) %>%
       dplyr::select(
         preferred_name,

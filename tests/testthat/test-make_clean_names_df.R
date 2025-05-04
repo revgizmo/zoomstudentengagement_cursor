@@ -11,8 +11,8 @@ test_that("make_clean_names_df correctly matches names", {
     section_names_lookup_file = sample_lookup
   )
   
-  # Check that names are correctly matched
-  expect_true(all(result$name %in% sample_roster$name))
+  # Check that preferred_name is correctly matched
+  expect_true(all(result$preferred_name %in% sample_roster$preferred_name))
 })
 
 test_that("make_clean_names_df handles unmatched names", {
@@ -29,29 +29,15 @@ test_that("make_clean_names_df handles unmatched names", {
     section_names_lookup_file = sample_lookup
   )
   
-  # Check that unmatched names are preserved
-  expect_true("UnmatchedName" %in% result$name)
+  # Check that unmatched names are preserved in transcript_name
+  expect_true("UnmatchedName" %in% result$transcript_name)
 })
 
 test_that("make_clean_names_df handles empty input", {
   # Create empty data frames
-  empty_transcript <- tibble::tibble(
-    begin = lubridate::hms(),
-    end = lubridate::hms(),
-    name = character(),
-    text = character(),
-    duration = numeric()
-  )
-  empty_roster <- tibble::tibble(
-    student_id = character(),
-    name = character(),
-    section = character()
-  )
-  empty_lookup <- tibble::tibble(
-    transcript_name = character(),
-    roster_name = character(),
-    section = character()
-  )
+  empty_transcript <- create_sample_transcript()[0,]
+  empty_roster <- create_sample_roster()[0,]
+  empty_lookup <- create_sample_section_names_lookup()[0,]
   
   # Test with empty input
   result <- make_clean_names_df(
@@ -68,7 +54,7 @@ test_that("make_clean_names_df preserves section information", {
   sample_transcript <- create_sample_transcript()
   sample_roster <- create_sample_roster()
   sample_lookup <- create_sample_section_names_lookup()
-  sample_lookup$section[1] <- "B"  # Change section for one student
+  sample_lookup$transcript_section[1] <- "B"  # Change section for one student
   
   # Test section preservation
   result <- make_clean_names_df(
@@ -77,6 +63,6 @@ test_that("make_clean_names_df preserves section information", {
     section_names_lookup_file = sample_lookup
   )
   
-  # Check that section information is preserved
-  expect_true("section" %in% names(result))
+  # Check that transcript_section information is preserved
+  expect_true("transcript_section" %in% names(result))
 }) 
