@@ -56,8 +56,67 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - [x] Set up columns (To Do, In Progress, Review, Done)
 - [ ] Manual management: Move issues/cards between columns as work progresses
 - [ ] Contributors: Update project status manually when working on or closing issues/PRs
+- [ ] Set up issue templates for different types of work (bug, enhancement, documentation)
+- [ ] Create labels for better issue categorization
+- [ ] Set up automation rules for issue/PR status updates
+- [ ] Document project board workflow in CONTRIBUTING.md
 - Note: Projects v2 does not currently support built-in automation (e.g., auto-move on PR merge/close). Monitor GitHub updates for future automation features.
 - Not recommended: Classic Projects (deprecated by GitHub)
+
+### Project Board Workflow
+1. **Issue Creation**
+   - Use appropriate issue template
+   - Add relevant labels
+   - Assign to appropriate milestone
+   - Add to project board in "To Do" column
+
+2. **Work Progress**
+   - Move issue to "In Progress" when starting work
+   - Update issue with progress comments
+   - Link PRs to issues using "Fixes #X" or "Closes #X"
+   - Move to "Review" when PR is ready
+
+3. **Review Process**
+   - Reviewers: Check PR against acceptance criteria
+   - Move to "Done" after successful review and merge
+   - Close related issues automatically via PR merge
+
+4. **Regular Maintenance**
+   - Weekly review of project board
+   - Update issue priorities
+   - Clean up stale issues
+   - Update project status in team meetings
+
+### Issue Templates
+Create the following issue templates:
+- Bug Report
+- Feature Request
+- Documentation Update
+- Test Enhancement
+- CRAN Submission Task
+
+### Labels
+Set up the following label categories:
+- Priority: High, Medium, Low
+- Type: Bug, Enhancement, Documentation, Test
+- Status: Blocked, In Progress, Needs Review
+- Area: Core, UI, Testing, Documentation
+- CRAN: Submission, Review, Compliance
+
+### Automation Rules
+Set up the following automation rules:
+- When PR is opened: Move linked issue to "Review"
+- When PR is merged: Move linked issue to "Done"
+- When issue is closed: Remove from project board
+- When issue is reopened: Add back to "To Do"
+
+### Project Board Metrics
+Track the following metrics:
+- Issue completion rate
+- Average time in each column
+- Number of issues per milestone
+- Contributor activity
+- PR review time
 
 ### Workflow Example
 1. **Break down your project plan into issues:**  
