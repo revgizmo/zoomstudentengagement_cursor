@@ -229,6 +229,7 @@ This approach follows best practices for reliability and maintainability.
 3. `make_clean_names_df.R` - Basic tests (though with warnings to clean up)
 4. `consolidate_transcript.R` and `add_dead_air_rows.R` - Covered through `process_zoom_transcript` tests
 5. Data Loading Functions (`load_zoom_transcript.R`, `load_roster.R`, `load_cancelled_classes.R`, `load_section_names_lookup.R`, `load_zoom_recorded_sessions_list.R`) - All tests present and passing
+6. `make_students_only_transcripts_summary_df.R` - Tests added and passing
 
 #### 🔄 In Progress
 1. `make_clean_names_df.R` - Tests exist but need warning cleanup (tracked in issue)
@@ -241,7 +242,6 @@ This approach follows best practices for reliability and maintainability.
    - `fliwc_transcript_files.R`
    - `make_transcripts_summary_df.R`
    - `make_transcripts_session_summary_df.R`
-   - `make_students_only_transcripts_summary_df.R`
    - `make_names_to_clean_df.R`
    - `make_student_roster_sessions.R`
    - `make_roster_small.R`
@@ -261,6 +261,9 @@ This approach follows best practices for reliability and maintainability.
 
 ### [2024-06-12]
 - Test suite is green: all data loading, plotting, and transcript processing tests are present and passing. Only warnings remain (to be addressed separately). Ready to proceed to data transformation and file writing function tests.
+
+### [2024-06-13]
+- Added tests for `make_students_only_transcripts_summary_df.R` and standardized on "Guests" (plural) in function documentation and tests. All tests passing.
 
 ---
 
