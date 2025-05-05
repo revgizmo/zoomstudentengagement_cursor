@@ -34,23 +34,34 @@
 #'   )
 #' )
 make_transcripts_session_summary_df <- function(clean_names_df) {
-  day <-
-    duration <-
-    n <-
-    preferred_name <-
-    section <-
-    session_num <- time <- transcript_section <- wordcount <- NULL
-
-  if (tibble::is_tibble(clean_names_df)
-  ) {
-    clean_names_df %>%
-      # group_by(section, day, time, session_num, preferred_name) %>%
-      dplyr::group_by(section, day, time, session_num, preferred_name, transcript_section) %>%
-      dplyr::summarise(
-        n = sum(n, na.rm = F),
-        duration = sum(duration, na.rm = F),
-        wordcount = sum(wordcount, na.rm = F)
-      ) %>%
-      dplyr::ungroup()
+  if (is.null(clean_names_df)) {
+    return(NULL)
   }
+  if (!tibble::is_tibble(clean_names_df)) {
+    stop("clean_names_df must be a tibble or NULL.")
+  }
+  # Define expected columns
+  expected_cols <- c("section", "day", "time", "session_num", "preferred_name", "transcript_section", "wordcount", "duration")
+  # Filter to only use columns that are present
+  available_cols <- intersect(expected_cols, names(clean_names_df))
+  if (length(available_cols) == 0) {
+    stop("clean_names_df must contain at least one of the expected columns: section, day, time, session_num, preferred_name, transcript_section, wordcount, duration.")
+  }
+  # Group by available columns and compute summary metrics
+  result <- clean_names_df %>%
+    dplyr::group_by(!!!rlang::syms(available_cols)) %>%
+    dplyr::summarise(
+      n = dplyr::n(),
+      duration = sum(duration, na.rm = TRUE),
+      wordcount = sum(wordcount, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      n_perc = n / sum(n) * 100,
+      duration_perc = duration / sum(duration) * 100,
+      wordcount_perc = wordcount / sum(wordcount) * 100,
+      wpm = wordcount / duration
+    )
+  return(result)
 }
