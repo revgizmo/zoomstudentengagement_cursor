@@ -37,16 +37,22 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
     time_flag <- timestamp <- wordcount <- prior_speaker <- NULL
 
   if (tibble::is_tibble(df)) {
+    # Ensure time columns are of type Period
+    df <- df %>%
+      dplyr::mutate(
+        start = lubridate::as.period(start),
+        end = lubridate::as.period(end)
+      )
 
     df %>%
       dplyr::mutate(
-        prev_end = dplyr::lag(end, order_by = start, default = hms::hms(0)),
-        prior_dead_air = start - prev_end,
+        prev_end = dplyr::lag(end, order_by = start, default = lubridate::period(0)),
+        prior_dead_air = as.numeric(start - prev_end, "seconds"),
         prior_speaker = dplyr::lag(name, order_by = start, default = dplyr::first(name))
       ) %>%
       dplyr::mutate(
         name_flag = ((name != prior_speaker) | is.na(name) | is.na(prior_speaker)),
-        time_flag = difftime(start, prev_end, units = "secs") > max_pause_sec,
+        time_flag = prior_dead_air > max_pause_sec,
         comment_num = cumsum(name_flag | time_flag)
       ) %>%
       dplyr::group_by(comment_num) %>%
@@ -54,11 +60,11 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
         name = dplyr::first(name),
         comment = paste(comment, collapse = " "),
         start = dplyr::first(start),
-        end = dplyr::last(end)
+        end = dplyr::last(end),
+        .groups = "drop"
       ) %>%
-      dplyr::ungroup() %>%
       dplyr::mutate(
-        duration = end - start,
+        duration = as.numeric(end - start, "seconds"),
         wordcount = comment %>% sapply(function(x) {
           strsplit(x, " +")[[1]] %>% length()
         })
