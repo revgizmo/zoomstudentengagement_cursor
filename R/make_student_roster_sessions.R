@@ -38,41 +38,80 @@ make_student_roster_sessions <-
       session_num <-
       start_time_local <- student_id <- transcript_section <- NULL
 
-    if (tibble::is_tibble(transcripts_list_df) &&
-      tibble::is_tibble(roster_small_df)
-    ) {
-      transcripts_list_df %>%
-        dplyr::rename(transcript_section = section) %>%
-        tidyr::separate(
-          col = transcript_section,
-          into = c("course_num_transcript", "section_transcript"),
-          sep = "\\.",
-          remove = F
-        ) %>%
-        dplyr::mutate(
-          dept_transcript = toupper(dept),
-          dept = NULL
-        ) %>%
-        dplyr::cross_join(roster_small_df, ., suffix = c("_roster", "_transcript")) %>%
-        # mutate(section = as.integer(section),
-        #        section_y = as.integer((as.numeric(section_y) - 201) * 100)) %>%
-        dplyr::filter(
-          dept == dept_transcript,
-          as.integer(course_num) == as.integer(course_num_transcript),
-          as.integer(section) == as.integer(section_transcript)
-        ) %>%
-        dplyr::select(
-          student_id,
-          first_last,
-          preferred_name,
-          dept,
-          course_num,
-          section,
-          session_num,
-          start_time_local,
-          transcript_section
-          # ,
-          # everything()
-        )
+    # Defensive: check for valid tibbles with required columns
+    if (!tibble::is_tibble(transcripts_list_df) || !tibble::is_tibble(roster_small_df)) {
+      return(NULL)
     }
+    if (nrow(transcripts_list_df) == 0 || nrow(roster_small_df) == 0) {
+      # Return empty tibble with correct columns
+      return(tibble::tibble(
+        student_id = integer(),
+        first_last = character(),
+        preferred_name = character(),
+        dept = character(),
+        course_num = integer(),
+        section = integer(),
+        session_num = integer(),
+        start_time_local = as.POSIXct(character()),
+        transcript_section = character()
+      ))
+    }
+    if (!all(c("dept", "course_num", "section") %in% names(transcripts_list_df)) ||
+        !all(c("student_id", "first_last", "preferred_name", "dept", "course_num", "section") %in% names(roster_small_df))) {
+      return(NULL)
+    }
+
+    result <- transcripts_list_df %>%
+      dplyr::rename(transcript_section = section) %>%
+      tidyr::separate(
+        col = transcript_section,
+        into = c("course_num_transcript", "section_transcript"),
+        sep = "\\.",
+        remove = FALSE
+      ) %>%
+      dplyr::mutate(
+        dept_transcript = toupper(dept),
+        dept = NULL
+      ) %>%
+      dplyr::cross_join(roster_small_df, ., suffix = c("_roster", "_transcript"))
+
+    # Defensive: check for required columns after join
+    if (!all(c("dept", "dept_transcript", "course_num", "course_num_transcript", "section", "section_transcript") %in% names(result))) {
+      return(NULL)
+    }
+
+    result <- result %>%
+      dplyr::filter(
+        dept == dept_transcript,
+        as.integer(course_num) == as.integer(course_num_transcript),
+        as.integer(section) == as.integer(section_transcript)
+      )
+
+    if (nrow(result) == 0) {
+      # Return empty tibble with correct columns
+      return(tibble::tibble(
+        student_id = integer(),
+        first_last = character(),
+        preferred_name = character(),
+        dept = character(),
+        course_num = integer(),
+        section = integer(),
+        session_num = integer(),
+        start_time_local = as.POSIXct(character()),
+        transcript_section = character()
+      ))
+    }
+
+    result %>%
+      dplyr::select(
+        student_id,
+        first_last,
+        preferred_name,
+        dept,
+        course_num,
+        section,
+        session_num,
+        start_time_local,
+        transcript_section
+      )
   }
