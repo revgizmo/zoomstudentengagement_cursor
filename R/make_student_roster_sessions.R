@@ -42,66 +42,65 @@ make_student_roster_sessions <-
     if (!tibble::is_tibble(transcripts_list_df) || !tibble::is_tibble(roster_small_df)) {
       return(NULL)
     }
-    if (nrow(transcripts_list_df) == 0 || nrow(roster_small_df) == 0) {
-      # Return empty tibble with correct columns
-      return(tibble::tibble(
-        student_id = integer(),
-        first_last = character(),
-        preferred_name = character(),
-        dept = character(),
-        course_num = integer(),
-        section = integer(),
-        session_num = integer(),
-        start_time_local = as.POSIXct(character()),
-        transcript_section = character()
-      ))
-    }
-    if (!all(c("dept", "course_num", "section") %in% names(transcripts_list_df)) ||
-        !all(c("student_id", "first_last", "preferred_name", "dept", "course_num", "section") %in% names(roster_small_df))) {
+
+    # Check for required columns
+    required_transcript_cols <- c("dept", "course_num", "section", "session_num", "start_time_local")
+    required_roster_cols <- c("student_id", "first_last", "preferred_name", "dept", "course_num", "section")
+
+    if (!all(required_transcript_cols %in% names(transcripts_list_df)) ||
+        !all(required_roster_cols %in% names(roster_small_df))) {
       return(NULL)
     }
 
-    result <- transcripts_list_df %>%
+    # Handle empty input
+    if (nrow(transcripts_list_df) == 0 || nrow(roster_small_df) == 0) {
+      return(NULL)
+    }
+
+    # Process transcripts list
+    transcripts_processed <- transcripts_list_df %>%
       dplyr::rename(transcript_section = section) %>%
       tidyr::separate(
         col = transcript_section,
         into = c("course_num_transcript", "section_transcript"),
         sep = "\\.",
-        remove = FALSE
+        remove = FALSE,
+        fill = "right"  # Handle cases where separator isn't found
       ) %>%
       dplyr::mutate(
         dept_transcript = toupper(dept),
-        dept = NULL
-      ) %>%
-      dplyr::cross_join(roster_small_df, ., suffix = c("_roster", "_transcript"))
+        dept = NULL,
+        # Ensure numeric types for comparison
+        course_num_transcript = as.integer(course_num_transcript),
+        section_transcript = as.integer(section_transcript)
+      )
 
-    # Defensive: check for required columns after join
-    if (!all(c("dept", "dept_transcript", "course_num", "course_num_transcript", "section", "section_transcript") %in% names(result))) {
+    # Process roster
+    roster_processed <- roster_small_df %>%
+      dplyr::mutate(
+        # Ensure numeric types for comparison
+        course_num = as.integer(course_num),
+        section = as.integer(section),
+        dept = toupper(dept)
+      )
+
+    # Join and filter
+    result <- dplyr::inner_join(
+      roster_processed,
+      transcripts_processed,
+      by = dplyr::join_by(
+        dept == dept_transcript,
+        course_num == course_num_transcript,
+        section == section_transcript
+      )
+    )
+
+    # If no matches found after joining, return NULL
+    if (nrow(result) == 0) {
       return(NULL)
     }
 
-    result <- result %>%
-      dplyr::filter(
-        dept == dept_transcript,
-        as.integer(course_num) == as.integer(course_num_transcript),
-        as.integer(section) == as.integer(section_transcript)
-      )
-
-    if (nrow(result) == 0) {
-      # Return empty tibble with correct columns
-      return(tibble::tibble(
-        student_id = integer(),
-        first_last = character(),
-        preferred_name = character(),
-        dept = character(),
-        course_num = integer(),
-        section = integer(),
-        session_num = integer(),
-        start_time_local = as.POSIXct(character()),
-        transcript_section = character()
-      ))
-    }
-
+    # Select and arrange final columns
     result %>%
       dplyr::select(
         student_id,
@@ -113,5 +112,7 @@ make_student_roster_sessions <-
         session_num,
         start_time_local,
         transcript_section
-      )
+      ) %>%
+      # Ensure tibble class
+      tibble::as_tibble()
   }
