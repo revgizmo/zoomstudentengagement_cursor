@@ -65,14 +65,15 @@ process_zoom_transcript <- function(transcript_file_path = '',
     transcript_df <- transcript_df %>%
       dplyr::mutate(
         start = lubridate::as.period(start),
-        end = lubridate::as.period(end)
+        end = lubridate::as.period(end),
+        duration = as.numeric(duration)
       )
 
     # Add begin time and prior speaker info
     transcript_df <- transcript_df %>%
       dplyr::mutate(
         begin = dplyr::lag(end, order_by = start, default = lubridate::period(0)),
-        prior_dead_air = as.numeric(start - begin, "seconds"),
+        prior_dead_air = as.numeric(lubridate::as.duration(start - begin)),
         prior_speaker = dplyr::lag(name, order_by = start, default = NA)
       ) %>%
       dplyr::select(

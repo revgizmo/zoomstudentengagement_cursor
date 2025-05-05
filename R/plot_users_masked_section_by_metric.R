@@ -13,7 +13,7 @@
 #'       clean_names_df = make_clean_names_df(
 #'         data_folder = "data",
 #'         section_names_lookup_file = "section_names_lookup.csv",
-#'         transcripts_fliwc_df = summarize_transcript_files(df_transcript_list = NULL),
+#'         transcripts_metrics_df = summarize_transcript_files(df_transcript_list = NULL),
 #'         roster_sessions = make_student_roster_sessions(
 #'           transcripts_list_df = join_transcripts_list(
 #'             df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
@@ -35,27 +35,21 @@ plot_users_masked_section_by_metric <-
     . <- row_num <- preferred_name <- section <- NULL
 
     if (tibble::is_tibble(df)) {
-      metric_col <- df[metric]
-      df$metric_col <- metric_col[[1]]
-      metric_col_name <- names(metric_col)
-
-
+      # Validate metric exists in the data
+      if (!metric %in% names(df)) {
+        stop(sprintf("Metric '%s' not found in data", metric))
+      }
+      
+      # Mask user names and create plot
       df %>%
-        zoomstudentengagement::mask_user_names_by_metric(.,
-                 metric = 'session_ct',
-                 target_student = '') %>%
-#
-#       df %>%
-#         # dplyr::group_by(section) %>%
-#         dplyr::mutate(
-#           row_num = dplyr::row_number(dplyr::coalesce(metric_col,-Inf)),
-#           preferred_name = paste('student', stringr::str_pad(
-#             row_num, width = 2, pad = "0"
-#           )),
-#           sep = '_'
-#         ) %>%
-        zoomstudentengagement::plot_users_by_metric(metric = metric_col_name,
-                                                    student_col = 'student')
+        zoomstudentengagement::mask_user_names_by_metric(
+          metric = metric,
+          target_student = ''
+        ) %>%
+        zoomstudentengagement::plot_users_by_metric(
+          metric = metric,
+          student_col_name = 'student'
+        )
     }
   }
 

@@ -6,7 +6,7 @@ test_that("make_clean_names_df correctly matches names", {
   
   # Test name matching
   result <- make_clean_names_df(
-    transcripts_fliwc_df = sample_transcript,
+    transcripts_metrics_df = sample_transcript,
     roster_sessions = sample_roster,
     section_names_lookup_file = sample_lookup
   )
@@ -24,7 +24,7 @@ test_that("make_clean_names_df handles unmatched names", {
   
   # Test handling of unmatched names
   result <- make_clean_names_df(
-    transcripts_fliwc_df = sample_transcript,
+    transcripts_metrics_df = sample_transcript,
     roster_sessions = sample_roster,
     section_names_lookup_file = sample_lookup
   )
@@ -41,7 +41,7 @@ test_that("make_clean_names_df handles empty input", {
   
   # Test with empty input
   result <- make_clean_names_df(
-    transcripts_fliwc_df = empty_transcript,
+    transcripts_metrics_df = empty_transcript,
     roster_sessions = empty_roster,
     section_names_lookup_file = empty_lookup
   )
@@ -58,7 +58,7 @@ test_that("make_clean_names_df preserves section information", {
   
   # Test section preservation
   result <- make_clean_names_df(
-    transcripts_fliwc_df = sample_transcript,
+    transcripts_metrics_df = sample_transcript,
     roster_sessions = sample_roster,
     section_names_lookup_file = sample_lookup
   )

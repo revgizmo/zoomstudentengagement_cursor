@@ -5,14 +5,14 @@
 #' by speaker for all class sessions (and placeholders for missing sections)
 #' from the joining of:
 #' * a tibble of customized student names by section (`section_names_lookup_file` in the `data_folder` folder),
-#' * a tibble containing session details and summary metrics by speaker for all class sessions (`transcripts_fliwc_df`), and
+#' * a tibble containing session details and summary metrics by speaker for all class sessions (`transcripts_metrics_df`), and
 #' * a tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student (`roster_sessions`) into a single tibble.
 #'
 #' @param data_folder overall data folder for your recordings. Defaults to
 #'   'data'
 #' @param section_names_lookup_file File name of the csv file of customized
 #'   student names by section Defaults to 'section_names_lookup.csv'
-#' @param transcripts_fliwc_df A tibble containing session details and summary
+#' @param transcripts_metrics_df A tibble containing session details and summary
 #'   metrics by speaker for all class sessions in the tibble provided.
 #' @param roster_sessions A tibble listing the students enrolled in the class or
 #'   classes, with rows for each recorded class section for each student.
@@ -27,7 +27,7 @@
 #' make_clean_names_df(
 #'   data_folder = "data",
 #'   section_names_lookup_file = "section_names_lookup.csv",
-#'   transcripts_fliwc_df = summarize_transcript_files(df_transcript_list = NULL),
+#'   transcripts_metrics_df = summarize_transcript_files(df_transcript_list = NULL),
 #'   roster_sessions = make_student_roster_sessions(
 #'     transcripts_list_df = join_transcripts_list(
 #'       df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
@@ -42,7 +42,7 @@
 #'
 make_clean_names_df <- function(data_folder = "data",
                                 section_names_lookup_file = "section_names_lookup.csv",
-                                transcripts_fliwc_df,
+                                transcripts_metrics_df,
                                 roster_sessions) {
   comments <-
     day <-
@@ -64,10 +64,10 @@ make_clean_names_df <- function(data_folder = "data",
     transcript_name <-
     transcript_section <- wordcount <- wordcount_perc <- wpm <- NULL
 
-  if (tibble::is_tibble(transcripts_fliwc_df) &&
+  if (tibble::is_tibble(transcripts_metrics_df) &&
     tibble::is_tibble(roster_sessions)
   ) {
-    transcripts_fliwc_df %>%
+    transcripts_metrics_df %>%
       dplyr::rename(
         transcript_name = name,
         transcript_section = section
