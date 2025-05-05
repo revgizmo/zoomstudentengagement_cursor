@@ -232,6 +232,8 @@ This approach follows best practices for reliability and maintainability.
 6. `make_students_only_transcripts_summary_df.R` - Tests added and passing
 7. `summarize_transcript_metrics.R` (formerly `fliwc.R`) - Tests present and passing
 8. `summarize_transcript_files.R` (formerly `fliwc_transcript_files.R`) - Tests present and passing
+9. `make_transcripts_summary_df.R` - Tests present and passing
+10. `make_transcripts_session_summary_df.R` - Tests present and passing
 
 #### 🔄 In Progress
 1. `make_clean_names_df.R` - Tests exist but need warning cleanup (tracked in issue)
@@ -240,8 +242,6 @@ This approach follows best practices for reliability and maintainability.
 1. Data Loading Functions:
    - `load_transcript_files_list.R`
 2. Data Transformation Functions:
-   - `make_transcripts_summary_df.R`
-   - `make_transcripts_session_summary_df.R`
    - `make_names_to_clean_df.R`
    - `make_student_roster_sessions.R`
    - `make_roster_small.R`
@@ -259,12 +259,8 @@ This approach follows best practices for reliability and maintainability.
    - `mask_user_names_by_metric.R`
    - `join_transcripts_list.R`
 
-### [2024-06-12]
-- Test suite is green: all data loading, plotting, and transcript processing tests are present and passing. Only warnings remain (to be addressed separately). Ready to proceed to data transformation and file writing function tests.
-
 ### [2024-06-13]
-- Added tests for `make_students_only_transcripts_summary_df.R` and standardized on "Guests" (plural) in function documentation and tests. All tests passing.
-- Verified that both `summarize_transcript_metrics.R` and `summarize_transcript_files.R` have comprehensive tests in place.
+- Added/moved `make_transcripts_summary_df.R` and `make_transcripts_session_summary_df.R` to completed tests; both have tests and are passing.
 
 ---
 
