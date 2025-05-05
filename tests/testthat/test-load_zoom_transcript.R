@@ -30,7 +30,7 @@ test_that("load_zoom_transcript loads valid VTT file correctly", {
   expect_equal(nrow(result), 3)
   expect_equal(result$name, c("Student1", "Student2", "Student1"))
   expect_equal(result$comment, c("Hello", "Hi there", "How are you?"))
-  expect_equal(result$wordcount, c(1, 2, 3))
+  expect_equal(unname(result$wordcount), c(1, 2, 3))
   
   # Check time handling
   expect_s3_class(result$start, "hms")
@@ -43,7 +43,8 @@ test_that("load_zoom_transcript loads valid VTT file correctly", {
 
 test_that("load_zoom_transcript handles non-existent file", {
   # Test with non-existent file
-  expect_error(load_zoom_transcript("nonexistent_file.vtt"), "file.exists(transcript_file_path) is not TRUE")
+  expect_error(load_zoom_transcript("nonexistent_file.vtt"),
+               "file.exists\\(transcript_file_path\\) is not TRUE")
 })
 
 test_that("load_zoom_transcript handles malformed VTT file", {
