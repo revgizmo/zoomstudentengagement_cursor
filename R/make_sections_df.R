@@ -13,8 +13,27 @@
 make_sections_df <- function(roster_df) {
   dept <- course_num <- section <- NULL
 
-  if (tibble::is_tibble(roster_df)) {
-    roster_df %>%
-      dplyr::count(dept, course_num, section)
+  # Defensive: check for valid input
+  if (!tibble::is_tibble(roster_df)) {
+    stop("roster_df must be a tibble")
   }
+
+  # Defensive: check for required columns
+  required_cols <- c("dept", "course_num", "section")
+  if (!all(required_cols %in% names(roster_df))) {
+    stop("roster_df must contain columns: ", paste(required_cols, collapse = ", "))
+  }
+
+  # Handle empty input
+  if (nrow(roster_df) == 0) {
+    return(tibble::tibble(
+      dept = character(),
+      course_num = integer(),
+      section = integer(),
+      n = integer()
+    ))
+  }
+
+  roster_df %>%
+    dplyr::count(dept, course_num, section)
 }
