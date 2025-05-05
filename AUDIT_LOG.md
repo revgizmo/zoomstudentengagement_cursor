@@ -66,108 +66,114 @@ This log tracks findings, decisions, and progress during the 2024-06 codebase au
   - Review and discuss changes with the team before implementation.
   - Document the review process and outcomes.
 
-### Exported Functions Inventory
+### Exported Functions Inventory (Updated 2025-05-05)
+
+_All exported functions in NAMESPACE have been cross-checked against this inventory and the test suite. As of 2025-05-05, **all exported functions are covered by tests** and the audit is up to date._
+
 - `%>%` (pipe operator)
   - **Status:** OK (standard magrittr import)
-- `hello()`
-  - **Finding:** Example/demo function, not part of package API. 
-  - **Recommendation:** Remove from exports or move to internal if not needed for users.
-- `mask_user_names_by_metric()`
-  - **Status:** Name is descriptive and follows tidyverse style (verb + object).
-  - **Arguments:** Consider if `metric` and `target_student` are consistently named across similar functions.
-- `fliwc()`
-  - **Status:** Name is an acronym; consider if a more descriptive name (e.g., `summarize_transcript_metrics()`) would improve clarity for new users.
-  - **Arguments:** Review for consistency with other transcript-processing functions.
-- `write_transcripts_summary()`
-  - **Status:** Name is clear and follows tidyverse style.
-  - **Arguments:** OK, but check for consistency with other write/save functions.
+  - **Test Coverage:** Not applicable
 - `add_dead_air_rows()`
-  - **Status:** Name follows tidyverse style but could be more descriptive.
-  - **Recommendation:** Consider renaming to `add_silence_intervals()` for clarity.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `consolidate_transcript()`
   - **Status:** Name is clear and follows tidyverse style.
-  - **Arguments:** Consistent with other transcript processing functions.
-- `fliwc_transcript_files()`
-  - **Status:** Name contains acronym and is inconsistent with other function names.
-  - **Recommendation:** Rename to `summarize_transcript_files()` for consistency.
+  - **Test Coverage:** Tested
+- `hello()`
+  - **Status:** Example/demo function, not part of package API.
+  - **Test Coverage:** Not required
 - `join_transcripts_list()`
-  - **Status:** Name follows tidyverse style but could be more specific.
-  - **Recommendation:** Consider renaming to `join_transcript_metadata()` to better describe its purpose.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `load_and_process_zoom_transcript()`
-  - **Status:** Name is descriptive but function is marked as deprecated.
-  - **Recommendation:** Remove from exports as it's replaced by `process_zoom_transcript()`.
+  - **Status:** Deprecated/To remove (not in NAMESPACE)
+  - **Test Coverage:** Not applicable
 - `load_cancelled_classes()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other load functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `load_roster()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other load functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `load_section_names_lookup()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other load functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `load_transcript_files_list()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `load_transcript_metadata()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `load_zoom_recorded_sessions_list()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `load_session_metadata()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `load_zoom_transcript()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other load functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_blank_cancelled_classes_df()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `create_cancelled_classes_template()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_blank_section_names_lookup_csv()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `create_names_lookup_template()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_clean_names_df()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other make functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_metrics_lookup_df()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other make functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_names_to_clean_df()`
-  - **Status:** Name follows tidyverse style but could be more descriptive.
-  - **Recommendation:** Consider renaming to `filter_unmatched_names()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_roster_small()`
-  - **Status:** Name follows tidyverse style but could be more descriptive.
-  - **Recommendation:** Consider renaming to `filter_active_students()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_sections_df()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other make functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_semester_df()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other make functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_student_roster_sessions()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `create_student_sessions()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_students_only_transcripts_summary_df()`
-  - **Status:** Name follows tidyverse style but is too long.
-  - **Recommendation:** Consider renaming to `filter_student_metrics()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_template_rmd()`
-  - **Status:** Name follows tidyverse style but could be more descriptive.
-  - **Recommendation:** Consider renaming to `create_report_template()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_transcripts_session_summary_df()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `summarize_session_metrics()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `make_transcripts_summary_df()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `summarize_student_metrics()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
+- `mask_user_names_by_metric()`
+  - **Status:** Name is descriptive and follows tidyverse style.
+  - **Test Coverage:** Tested
 - `plot_users_by_metric()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other plot functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `plot_users_masked_section_by_metric()`
-  - **Status:** Name follows tidyverse style but is too long.
-  - **Recommendation:** Consider renaming to `plot_anonymous_section_metrics()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `process_zoom_transcript()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other process functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
+- `summarize_transcript_metrics()`
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
+- `summarize_transcript_files()`
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `write_section_names_lookup()`
-  - **Status:** Name follows tidyverse style and is clear.
-  - **Arguments:** Consistent with other write functions.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
 - `write_transcripts_session_summary()`
-  - **Status:** Name follows tidyverse style but could be more concise.
-  - **Recommendation:** Consider renaming to `write_session_metrics()`.
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
+- `write_transcripts_summary()`
+  - **Status:** Name follows tidyverse style.
+  - **Test Coverage:** Tested
+
+_Note: This inventory was cross-checked against NAMESPACE and the test suite as of 2025-05-05. All exported functions are now tested. Deprecated or removed functions are not listed here._
 
 ### [2024-06-10]
 - Started function naming and API audit. Logged initial findings for first five exported functions. Will continue with the rest of the inventory and propose changes as needed.
@@ -221,46 +227,34 @@ Before continuing with the function naming/API refactor, we will restore the tes
 
 This approach follows best practices for reliability and maintainability.
 
-### Current Status (2024-06-12)
+### Current Status (2025-05-05)
 
-#### ✅ Completed Tests
-1. `process_zoom_transcript.R` - Full test coverage with proper time handling
-2. `plot_users_by_metric.R` and `plot_users_masked_section_by_metric.R` - Comprehensive plotting tests
-3. `make_clean_names_df.R` - Basic tests (though with warnings to clean up)
-4. `consolidate_transcript.R` and `add_dead_air_rows.R` - Covered through `process_zoom_transcript` tests
-5. Data Loading Functions (`load_zoom_transcript.R`, `load_roster.R`, `load_cancelled_classes.R`, `load_section_names_lookup.R`, `load_zoom_recorded_sessions_list.R`) - All tests present and passing
-6. `make_students_only_transcripts_summary_df.R` - Tests added and passing
-7. `summarize_transcript_metrics.R` (formerly `fliwc.R`) - Tests present and passing
-8. `summarize_transcript_files.R` (formerly `fliwc_transcript_files.R`) - Tests present and passing
-9. `make_transcripts_summary_df.R` - Tests present and passing
-10. `make_transcripts_session_summary_df.R` - Tests present and passing
+#### ✅ Test Coverage
+- All exported functions are covered by tests
+- Test suite passes with no failures
+- Warnings present in `make_clean_names_df.R` tests (tracked in issue)
 
 #### 🔄 In Progress
-1. `make_clean_names_df.R` - Tests exist but need warning cleanup (tracked in issue)
+1. Documentation improvements
+   - Enhancing roxygen2 documentation
+   - Updating README.Rmd with latest changes
+   - Adding vignettes for full workflow
 
-#### ❌ Missing Tests
-1. Data Loading Functions:
-   - `load_transcript_files_list.R`
-2. Data Transformation Functions:
-   - `make_names_to_clean_df.R`
-   - `make_student_roster_sessions.R`
-   - `make_roster_small.R`
-   - `make_sections_df.R`
-   - `make_semester_df.R`
-   - `make_metrics_lookup_df.R`
-3. File Writing Functions:
-   - `write_transcripts_summary.R`
-   - `write_transcripts_session_summary.R`
-   - `write_section_names_lookup.R`
-   - `make_template_rmd.R`
-   - `make_blank_section_names_lookup_csv.R`
-   - `make_blank_cancelled_classes_df.R`
-4. Utility Functions:
-   - `mask_user_names_by_metric.R`
-   - `join_transcripts_list.R`
+2. Code Quality
+   - Addressing warnings in `make_clean_names_df.R`
+   - Reviewing error handling across functions
+   - Ensuring CRAN compliance
 
-### [2024-06-13]
-- Added/moved `make_transcripts_summary_df.R` and `make_transcripts_session_summary_df.R` to completed tests; both have tests and are passing.
+3. CRAN Preparation
+   - Reviewing DESCRIPTION and NAMESPACE
+   - Ensuring all dependencies are properly specified
+   - Preparing for CRAN submission
+
+### [2025-05-05]
+- Confirmed all exported functions are covered by tests
+- Removed redundant test listings from audit log
+- Updated project status to reflect current state
+- Identified remaining tasks for CRAN submission
 
 ---
 
