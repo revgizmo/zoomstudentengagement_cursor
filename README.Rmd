@@ -6,6 +6,8 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+> **Note:** This README.md is automatically generated from README.Rmd. After making changes to README.Rmd, run `devtools::build_readme()` to update the README.md. If you encounter build errors, check that all code chunks run successfully and all referenced files/data exist.
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -77,7 +79,7 @@ library(zoomstudentengagement)
 
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 library(dplyr)
 
 ```
@@ -654,7 +656,7 @@ run_student_reports(
   # data_folder =  'inst/extdata',
   transcripts_session_summary_file = transcripts_session_summary_file_input,
   transcripts_summary_file = transcripts_summary_file_input,
-student_summary_report_folder = ,
+student_summary_report_folder = student_summary_report_folder_input,
   student_summary_report = student_summary_report_input
 
 )

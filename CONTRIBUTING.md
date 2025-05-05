@@ -129,4 +129,27 @@ tests/
 If you have questions about contributing, please:
 1. Check the documentation
 2. Search existing issues
-3. Create a new issue with the "question" label 
+3. Create a new issue with the "question" label
+
+### Creating Issues
+
+1. Go to the GitHub repository
+2. Click on "Issues" tab
+3. Click "New issue"
+4. Choose the appropriate template from the list
+5. Fill in the template with your issue details
+6. Add appropriate labels
+7. Submit the issue
+
+For bug reports, include:
+- Clear description of the bug
+- Steps to reproduce
+- Expected behavior
+- Minimal reproducible example
+- Environment details
+
+For feature requests, include:
+- Clear description of the feature
+- Use case and benefits
+- Implementation suggestions (if any)
+- Related issues (if any) 

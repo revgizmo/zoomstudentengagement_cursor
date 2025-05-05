@@ -1,4 +1,3 @@
-
 - <a href="#zoomstudentengagement"
   id="toc-zoomstudentengagement">zoomstudentengagement</a>
   - <a href="#installation" id="toc-installation">Installation</a>
@@ -112,6 +111,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+> **Note:** This README.md is automatically generated from README.Rmd.
+> After making changes to README.Rmd, run `devtools::build_readme()` to
+> update the README.md. If you encounter build errors, check that all
+> code chunks run successfully and all referenced files/data exist.
+
 # zoomstudentengagement
 
 <!-- badges: start -->
@@ -121,7 +125,7 @@ The goal of `zoomstudentengagement` is to allow instructors to gain
 insights into student engagement, with a particular focus on
 participation equity, from Zoom transcripts of recorded course sessions.
 
-In it’s current form, the `zoomstudentengagement` library is useful for
+In it's current form, the `zoomstudentengagement` library is useful for
 4 related things:
 
 1.  **Load Zoom transcripts**
@@ -131,7 +135,7 @@ In it’s current form, the `zoomstudentengagement` library is useful for
     2.  `process_zoom_transcript()` process a Zoom transcript with given
         parameters to get a tibble containing the comments, including
         consolidating consecutive comments from the same speaker and
-        adding rows for “dead_air”.
+        adding rows for "dead_air".
 2.  **Calculate summary metrics** by speaker from a Zoom recording
     transcript or transcripts
     1.  `summarize_transcript_metrics()` calculates summary metrics by
@@ -284,15 +288,15 @@ library(zoomstudentengagement)
     1.  Go to <https://www.zoom.us/recording>
     2.  Export the Cloud Recordings
     3.  Copy the cloud recording csv (naming convention:
-        ’zoomus_recordings\_\_\d{8}.csv’) to ‘data/transcripts/’
+        'zoomus_recordings\_\_\d{8}.csv') to 'data/transcripts/'
 2.  Download Transcripts
     1.  Go to <https://www.zoom.us/recording>
     2.  Click on each individual record to go to the page for that
         recording
     3.  Download the Audio Transcript and Chat File for each
-        - Chat: ’GMT\d{8}-\d{6}\_Recording.cc.vtt’
-        - Transcript: ’GMT\d{8}-\d{6}\_Recording.transcript.vtt’
-    4.  Copy the Audio Transcript and Chat Files to ‘data/transcripts/’
+        - Chat: 'GMT\d{8}-\d{6}\_Recording.cc.vtt'
+        - Transcript: 'GMT\d{8}-\d{6}\_Recording.transcript.vtt'
+    4.  Copy the Audio Transcript and Chat Files to 'data/transcripts/'
 
 ## 4. Load the list of Zoom Recordings Transcripts
 
@@ -396,7 +400,7 @@ transcripts_metrics_df %>% count(name)
 ## 1. Load Roster of Students from a CSV file
 
 0.  Run Students.Rmd to create roster.csv. (Which is based on the course
-    roster output from UC Berkeley’s BCourses implementation of Canvas.)
+    roster output from UC Berkeley's BCourses implementation of Canvas.)
 1.  Run `load_roster()` to get a tibble from a provided csv file of
     students enrolled in the class or classes.
 
@@ -435,9 +439,9 @@ roster_small_df
 ## 4. Make the `roster_sessions` data frame of the Student Roster With Rows for Each Recorded Class Section
 
 1.  Run `make_student_roster_sessions()` to get a tibble from a provided
-    tibble students enrolled in the class or classes (‘roster_small_df’)
+    tibble students enrolled in the class or classes ('roster_small_df')
     and a tibble of class sessions with corresponding transcript files
-    or placeholders for cancelled classes (‘transcripts_list_df’).
+    or placeholders for cancelled classes ('transcripts_list_df').
 
 ``` r
 roster_sessions <- make_student_roster_sessions(
@@ -452,12 +456,12 @@ roster_sessions
 # Clean Names
 
 - Run the `clean_names` code block
-- If any names except “dead_air”, “unknown”, or the instructor’s name
+- If any names except "dead_air", "unknown", or the instructor's name
   are listed, resolve them.
   - Update students with their formal name from the roster
   - If appropriate, update `Students.Rmd` with a corresponding
     `preferred_name`
-  - Any guest students, label them as “Guests”
+  - Any guest students, label them as "Guests"
 
 ## 1. Make Clean Names DF of joined student names from the roster and transcripts
 
@@ -634,7 +638,7 @@ plot_users_by_metric(students_only_transcripts_summary_df,
 ## 3. Plot Students with names masked by key metrics
 
 1.  Run `plot_users_masked_section_by_metric()` for the key metrics to
-    output said plots, but with student names masked by “Student \_“.
+    output said plots, but with student names masked by "Student \_".
 
 ``` r
 plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df, 
@@ -739,7 +743,7 @@ run_student_reports(
   # data_folder =  'inst/extdata',
   transcripts_session_summary_file = transcripts_session_summary_file_input,
   transcripts_summary_file = transcripts_summary_file_input,
-student_summary_report_folder = ,
+student_summary_report_folder = student_summary_report_folder_input,
   student_summary_report = student_summary_report_input
 
 )
@@ -865,16 +869,16 @@ fliwc_transcript_df
         1.  Go to <https://www.zoom.us/recording>
         2.  Export the Cloud Recordings
         3.  Copy the cloud recording csv (naming convention:
-            ’zoomus_recordings\_\_\d{8}.csv’) to ‘data/transcripts/’
+            'zoomus_recordings\_\_\d{8}.csv') to 'data/transcripts/'
     2.  Download Transcripts
         1.  Go to <https://www.zoom.us/recording>
         2.  Click on each individual record to go to the page for that
             recording
         3.  Download the Audio Transcript and Chat File for each
-            - Chat: ’GMT\d{8}-\d{6}\_Recording.cc.vtt’
-            - Transcript: ’GMT\d{8}-\d{6}\_Recording.transcript.vtt’
+            - Chat: 'GMT\d{8}-\d{6}\_Recording.cc.vtt'
+            - Transcript: 'GMT\d{8}-\d{6}\_Recording.transcript.vtt'
         4.  Copy the Audio Transcript and Chat Files to
-            ‘data/transcripts/’
+            'data/transcripts/'
 4.  Load the list of Zoom Recordings Transcripts
     1.  Run `load_zoom_recorded_sessions_list()` to get a tibble from a
         provided csv file of Zoom recordings.
@@ -904,10 +908,10 @@ You can include R chunks like so:
 summary(cars)
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
+You'll still need to render `README.Rmd` regularly, to keep `README.md`
 up-to-date. `devtools::build_readme()` is handy for this.
 
 You can also embed plots, for example:
 
-In that case, don’t forget to commit and push the resulting figure
+In that case, don't forget to commit and push the resulting figure
 files, so they display on GitHub and CRAN.

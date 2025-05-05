@@ -2,9 +2,9 @@
 output: pdf_document
 params: 
     target_course: "201"
-    target_section: "008"
+    target_section: "24"
     target_student: "All Students"
-    data_folder: "data"
+    data_folder: "extdata"
     transcripts_session_summary_file: "transcripts_session_summary.csv"
     transcripts_summary_file: "transcripts_summary.csv"
 
