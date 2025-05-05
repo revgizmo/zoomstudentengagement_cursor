@@ -16,16 +16,23 @@
 #' add_dead_air_rows(df = "NULL")
 #'
 add_dead_air_rows <- function(df, dead_air_name = 'dead_air') {
-
   . <- comment_num <- end <- prev_end <- prior_dead_air <- start <- NULL
 
   if (tibble::is_tibble(df)) {
-    df %>%
+    # Ensure time columns are of type Period
+    df <- df %>%
+      dplyr::mutate(
+        start = lubridate::as.period(start),
+        end = lubridate::as.period(end)
+      )
+
+    # Create dead air rows
+    dead_air_rows <- df %>%
       dplyr::mutate(
         prev_end = dplyr::lag(end,
-                              order_by = start,
-                              default = hms::hms(0)),
-        prior_dead_air = start - prev_end,
+                             order_by = start,
+                             default = lubridate::period(0)),
+        prior_dead_air = as.numeric(start - prev_end, "seconds"),
         name = dead_air_name,
         comment = NA,
         duration = prior_dead_air,
@@ -36,10 +43,10 @@ add_dead_air_rows <- function(df, dead_air_name = 'dead_air') {
         wordcount = NA,
         prior_dead_air = NULL,
         prev_end = NULL
-        # ,
-        # comment_num = paste("dead_air", comment_num)
-      ) %>%
-      dplyr::bind_rows(df, .)
+      )
+
+    # Combine original and dead air rows
+    dplyr::bind_rows(df, dead_air_rows)
   }
 }
 

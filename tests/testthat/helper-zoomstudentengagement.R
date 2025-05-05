@@ -57,6 +57,18 @@ create_sample_section_names_lookup <- function() {
   )
 }
 
+# Create sample metrics lookup for testing
+create_sample_metrics_lookup <- function() {
+  tibble::tibble(
+    metric = c("duration", "wordcount", "wpm"),
+    description = c(
+      "Total duration of speaking time",
+      "Total number of words spoken",
+      "Average words per minute"
+    )
+  )
+}
+
 # Helper function to create a temporary test file
 create_temp_test_file <- function(content, ext = ".txt") {
   temp_file <- tempfile(fileext = ext)

@@ -109,9 +109,9 @@ load_zoom_recorded_sessions_list <-
       # Return an empty tibble with the correct columns
       return(tibble::tibble(
         Topic = character(),
-        ID = character(),  # Changed from numeric to character to match actual data
+        ID = character(),
         `Start Time` = character(),
-        `File Size (MB)` = character(),
+        `File Size (MB)` = numeric(),
         `File Count` = numeric(),
         `Total Views` = numeric(),
         `Total Downloads` = numeric(),
@@ -121,8 +121,8 @@ load_zoom_recorded_sessions_list <-
         day = character(),
         time = character(),
         instructor = character(),
-        match_start_time = as.POSIXct(character()),
-        match_end_time = as.POSIXct(character())
+        match_start_time = as.POSIXct(character(), tz = "America/Los_Angeles"),
+        match_end_time = as.POSIXct(character(), tz = "America/Los_Angeles")
       ))
     }
 
@@ -165,6 +165,12 @@ load_zoom_recorded_sessions_list <-
     # Debug print statements
     print("After summarise:")
     print(result)
+
+    result <- result %>%
+      dplyr::mutate(
+        `File Size (MB)` = suppressWarnings(as.numeric(`File Size (MB)`)),
+        `Last Accessed` = as.character(`Last Accessed`)
+      )
 
     result <- result %>%
       dplyr::mutate(
