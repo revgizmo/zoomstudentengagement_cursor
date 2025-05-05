@@ -48,7 +48,7 @@ make_names_to_clean_df <- function(clean_names_df) {
   ) {
     clean_names_df %>%
       dplyr::group_by(student_id, preferred_name, transcript_name) %>%
-      dplyr::summarise(n = n()) %>%
+      dplyr::summarise(n = dplyr::n()) %>%
       dplyr::filter(!is.na(transcript_name)) %>%
       dplyr::filter(is.na(student_id))
   }
