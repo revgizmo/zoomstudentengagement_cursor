@@ -230,6 +230,8 @@ This approach follows best practices for reliability and maintainability.
 4. `consolidate_transcript.R` and `add_dead_air_rows.R` - Covered through `process_zoom_transcript` tests
 5. Data Loading Functions (`load_zoom_transcript.R`, `load_roster.R`, `load_cancelled_classes.R`, `load_section_names_lookup.R`, `load_zoom_recorded_sessions_list.R`) - All tests present and passing
 6. `make_students_only_transcripts_summary_df.R` - Tests added and passing
+7. `summarize_transcript_metrics.R` (formerly `fliwc.R`) - Tests present and passing
+8. `summarize_transcript_files.R` (formerly `fliwc_transcript_files.R`) - Tests present and passing
 
 #### 🔄 In Progress
 1. `make_clean_names_df.R` - Tests exist but need warning cleanup (tracked in issue)
@@ -238,8 +240,6 @@ This approach follows best practices for reliability and maintainability.
 1. Data Loading Functions:
    - `load_transcript_files_list.R`
 2. Data Transformation Functions:
-   - `fliwc.R`
-   - `fliwc_transcript_files.R`
    - `make_transcripts_summary_df.R`
    - `make_transcripts_session_summary_df.R`
    - `make_names_to_clean_df.R`
@@ -264,6 +264,7 @@ This approach follows best practices for reliability and maintainability.
 
 ### [2024-06-13]
 - Added tests for `make_students_only_transcripts_summary_df.R` and standardized on "Guests" (plural) in function documentation and tests. All tests passing.
+- Verified that both `summarize_transcript_metrics.R` and `summarize_transcript_files.R` have comprehensive tests in place.
 
 ---
 
