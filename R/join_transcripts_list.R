@@ -46,8 +46,10 @@ join_transcripts_list <- function(
   }
 
   # Return empty tibble if any required column is missing
-  required_cols <- c("section", "match_start_time", "match_end_time", "start_time_local")
-  if (!all(required_cols %in% names(df_zoom_recorded_sessions))) {
+  zoom_recorded_sessions_required_cols <- c("section", "match_start_time", "match_end_time")
+  transcript_files_required_cols <- c("start_time_local")
+
+  if (!all(zoom_recorded_sessions_required_cols %in% names(df_zoom_recorded_sessions) & transcript_files_required_cols %in% names(df_transcript_files))) {
     return(tibble::tibble(
       section = character(),
       match_start_time = as.POSIXct(character()),
