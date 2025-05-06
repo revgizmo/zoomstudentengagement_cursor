@@ -38,23 +38,35 @@ make_student_roster_sessions <-
       session_num <-
       start_time_local <- student_id <- transcript_section <- NULL
 
-    # Defensive: check for valid tibbles with required columns
+    # Defensive: check for valid tibbles
     if (!tibble::is_tibble(transcripts_list_df) || !tibble::is_tibble(roster_small_df)) {
+      stop("Input must be tibbles")
+    }
+
+    # Handle empty input first
+    if (nrow(transcripts_list_df) == 0 || nrow(roster_small_df) == 0) {
+      warning("Empty input data provided")
       return(NULL)
     }
 
     # Check for required columns
-    required_transcript_cols <- c("dept", "course_num", "section", "session_num", "start_time_local")
+    required_transcript_cols <- c("dept", "section", "session_num", "start_time_local")
     required_roster_cols <- c("student_id", "first_last", "preferred_name", "dept", "course_num", "section")
 
-    if (!all(required_transcript_cols %in% names(transcripts_list_df)) ||
-        !all(required_roster_cols %in% names(roster_small_df))) {
-      return(NULL)
+    missing_transcript_cols <- setdiff(required_transcript_cols, names(transcripts_list_df))
+    missing_roster_cols <- setdiff(required_roster_cols, names(roster_small_df))
+
+    if (length(missing_transcript_cols) > 0 || length(missing_roster_cols) > 0) {
+      stop(sprintf(
+        "Missing required columns:\nTranscripts: %s\nRoster: %s",
+        paste(missing_transcript_cols, collapse = ", "),
+        paste(missing_roster_cols, collapse = ", ")
+      ))
     }
 
-    # Handle empty input
-    if (nrow(transcripts_list_df) == 0 || nrow(roster_small_df) == 0) {
-      return(NULL)
+    # Validate data types
+    if (!is.numeric(transcripts_list_df$course_num) || !is.numeric(roster_small_df$course_num)) {
+      stop("course_num must be numeric in both data frames")
     }
 
     # Process transcripts list
@@ -70,10 +82,15 @@ make_student_roster_sessions <-
       dplyr::mutate(
         dept_transcript = toupper(dept),
         dept = NULL,
-        # Ensure numeric types for comparison
-        course_num_transcript = as.integer(course_num_transcript),
-        section_transcript = as.integer(section_transcript)
+        # Ensure numeric types for comparison with validation
+        course_num_transcript = suppressWarnings(as.integer(course_num_transcript)),
+        section_transcript = suppressWarnings(as.integer(section_transcript))
       )
+
+    # Validate section numbers after conversion
+    if (any(is.na(transcripts_processed$section_transcript))) {
+      warning("Some section numbers could not be converted to integers")
+    }
 
     # Process roster
     roster_processed <- roster_small_df %>%
@@ -95,8 +112,9 @@ make_student_roster_sessions <-
       )
     )
 
-    # If no matches found after joining, return NULL
+    # If no matches found after joining, return NULL with warning
     if (nrow(result) == 0) {
+      warning("No matching records found between transcripts and roster")
       return(NULL)
     }
 
