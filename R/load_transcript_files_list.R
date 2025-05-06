@@ -82,12 +82,11 @@ load_transcript_files_list <-
               "closed_caption_file",
             .default = "chat_file"
           ),
-          recording_start = readr::parse_datetime(stringr::str_extract(file_name, recording_start_pattern),
-            format = recording_start_format
+          recording_start = lubridate::parse_date_time(stringr::str_extract(file_name, recording_start_pattern),
+            orders = recording_start_format
           ),
-          start_time_local = lubridate::with_tz(recording_start,
-            tzone = start_time_local_tzone
-          )
+          recording_start = as.POSIXct(recording_start, tz = "UTC"),
+          start_time_local = lubridate::with_tz(recording_start, tzone = start_time_local_tzone)
         ) %>%
         tidyr::pivot_wider(
           names_from = file_type,

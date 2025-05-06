@@ -1,0 +1,31 @@
+test_that("make_blank_cancelled_classes_df returns correct structure and is empty", {
+  result <- make_blank_cancelled_classes_df()
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 0)
+  expect_true(all(c(
+    "dept", "section", "day", "time", "instructor", "Topic", "ID", "Start Time", "File Size (MB)",
+    "File Count", "Total Views", "Total Downloads", "Last Accessed", "match_start_time", "match_end_time",
+    "dt", "recording_start", "start_time_local", "transcript_file", "chat_file", "closed_caption_file"
+  ) %in% names(result)))
+  expect_type(result$dept, "character")
+  expect_type(result$section, "character")
+  expect_type(result$day, "character")
+  expect_type(result$time, "character")
+  expect_type(result$instructor, "character")
+  expect_type(result$Topic, "character")
+  expect_type(result$ID, "character")
+  expect_type(result$`Start Time`, "character")
+  expect_type(result$`File Size (MB)`, "double")
+  expect_type(result$`File Count`, "integer")
+  expect_type(result$`Total Views`, "integer")
+  expect_type(result$`Total Downloads`, "integer")
+  expect_type(result$`Last Accessed`, "character")
+  expect_true(inherits(result$match_start_time, "POSIXct"))
+  expect_true(inherits(result$match_end_time, "POSIXct"))
+  expect_type(result$dt, "character")
+  expect_true(inherits(result$recording_start, "POSIXct"))
+  expect_true(inherits(result$start_time_local, "POSIXct"))
+  expect_type(result$transcript_file, "character")
+  expect_type(result$chat_file, "character")
+  expect_type(result$closed_caption_file, "character")
+}) 

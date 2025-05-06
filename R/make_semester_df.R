@@ -20,10 +20,18 @@ make_semester_df <- function(semester_units = 14,
                              class_duration_min = 90) {
   start_time_gmt <- end_time_gmt <- NULL
 
+  if (semester_units <= 0) {
+    return(tibble::tibble(
+      unit = integer(),
+      start_time_gmt = hms::as_hms(character()),
+      end_time_gmt = hms::as_hms(character()),
+      duration = as.difftime(numeric(), units = "secs"),
+      d2 = as.difftime(numeric(), units = "mins")
+    ))
+  }
+
   class_start_time_gmt <- hms::as_hms(class_start_time_gmt)
-
   class_end_time_gmt <- hms::as_hms(class_start_time_gmt + (class_duration_min * 60))
-
 
   tibble::tibble(
     unit = 1:semester_units,
