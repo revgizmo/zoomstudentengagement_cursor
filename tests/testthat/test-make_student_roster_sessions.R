@@ -49,6 +49,6 @@ test_that("make_student_roster_sessions handles NA values", {
 })
 
 test_that("make_student_roster_sessions handles invalid input gracefully", {
-  expect_silent(make_student_roster_sessions(NULL, NULL))
-  expect_silent(make_student_roster_sessions(list(a = 1), list(b = 2)))
+  expect_error(make_student_roster_sessions(NULL, NULL), "Input must be tibbles")
+  expect_error(make_student_roster_sessions(list(a = 1), list(b = 2)), "Input must be tibbles")
 }) 
