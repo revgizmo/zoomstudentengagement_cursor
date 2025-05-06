@@ -2,11 +2,11 @@ test_that("join_transcripts_list joins and filters correctly", {
   df_zoom_recorded_sessions <- tibble::tibble(
     section = c("A", "B"),
     match_start_time = as.POSIXct(c("2023-01-01 09:00", "2023-01-02 09:00")),
-    match_end_time = as.POSIXct(c("2023-01-01 10:00", "2023-01-02 10:00")),
-    start_time_local = as.POSIXct(c("2023-01-01 09:30", "2023-01-02 09:30"))
+    match_end_time = as.POSIXct(c("2023-01-01 10:00", "2023-01-02 10:00"))
   )
   df_transcript_files <- tibble::tibble(
-    transcript_file = c("file1.vtt", "file2.vtt")
+    transcript_file = c("file1.vtt", "file2.vtt"),
+    start_time_local = as.POSIXct(c("2023-01-01 09:30", "2023-01-02 09:30"))
   )
   df_cancelled_classes <- tibble::tibble(
     section = "C",
@@ -37,10 +37,12 @@ test_that("join_transcripts_list handles NA values", {
   df_zoom_recorded_sessions <- tibble::tibble(
     section = c(NA, "B"),
     match_start_time = as.POSIXct(c(NA, "2023-01-02 09:00")),
-    match_end_time = as.POSIXct(c(NA, "2023-01-02 10:00")),
-    start_time_local = as.POSIXct(c(NA, "2023-01-02 09:30"))
+    match_end_time = as.POSIXct(c(NA, "2023-01-02 10:00"))
   )
-  df_transcript_files <- tibble::tibble(transcript_file = c("file1.vtt"))
+  df_transcript_files <- tibble::tibble(
+    transcript_file = c("file1.vtt"),
+    start_time_local = as.POSIXct(c("2023-01-02 09:30"))
+  )
   df_cancelled_classes <- tibble::tibble()
   result <- join_transcripts_list(df_zoom_recorded_sessions, df_transcript_files, df_cancelled_classes)
   expect_s3_class(result, "tbl_df")
