@@ -23,8 +23,6 @@ make_blank_cancelled_classes_df <- function() {
       start_time_local = lubridate::with_tz(recording_start, tzone = "America/Los_Angeles"),
       transcript_file = as.character(transcript_file),
       chat_file = as.character(chat_file),
-      closed_caption_file = as.character(closed_caption_file),
-      duration = as.numeric(NA),
-      wordcount = as.numeric(NA)
+      closed_caption_file = as.character(closed_caption_file)
     )
 }

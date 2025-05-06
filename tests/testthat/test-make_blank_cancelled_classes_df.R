@@ -5,8 +5,7 @@ test_that("make_blank_cancelled_classes_df returns correct structure and is empt
   expect_true(all(c(
     "dept", "section", "day", "time", "instructor", "Topic", "ID", "Start Time", "File Size (MB)",
     "File Count", "Total Views", "Total Downloads", "Last Accessed", "match_start_time", "match_end_time",
-    "dt", "recording_start", "start_time_local", "transcript_file", "chat_file", "closed_caption_file",
-    "duration", "wordcount"
+    "dt", "recording_start", "start_time_local", "transcript_file", "chat_file", "closed_caption_file"
   ) %in% names(result)))
   expect_type(result$dept, "character")
   expect_type(result$section, "character")
@@ -29,6 +28,4 @@ test_that("make_blank_cancelled_classes_df returns correct structure and is empt
   expect_type(result$transcript_file, "character")
   expect_type(result$chat_file, "character")
   expect_type(result$closed_caption_file, "character")
-  expect_type(result$duration, "double")
-  expect_type(result$wordcount, "double")
 }) 
