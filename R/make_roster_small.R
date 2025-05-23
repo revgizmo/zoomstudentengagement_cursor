@@ -49,5 +49,5 @@ make_roster_small <- function(roster_df) {
 
   # Select and return required columns
   roster_df %>%
-    dplyr::select(student_id, first_last, preferred_name, dept, course_num, section)
+    dplyr::select("student_id", "first_last", "preferred_name", "dept", "course_num", "section")
 }
