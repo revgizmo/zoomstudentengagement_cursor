@@ -84,3 +84,8 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Cursor AI
+.cursor/*
+!.cursor/context.md
+.cursor.json
