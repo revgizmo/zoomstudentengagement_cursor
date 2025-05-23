@@ -1,4 +1,4 @@
-test_that("load_section_names_lookup loads valid file and removes specified columns", {
+test_that("load_section_names_lookup loads valid file with all required columns", {
   # Minimal valid data: all columns, one row
   lookup_content <- "section,student_id,preferred_name,other_col1,other_col2,other_col3,other_col4,other_col5\nA,123,John,foo,bar,1,2,3"
   temp_dir <- tempdir()
@@ -13,9 +13,9 @@ test_that("load_section_names_lookup loads valid file and removes specified colu
 
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 1)
-  expect_false("section" %in% names(result))
-  expect_false("student_id" %in% names(result))
-  expect_false("preferred_name" %in% names(result))
+  expect_true("section" %in% names(result))
+  expect_true("student_id" %in% names(result))
+  expect_true("preferred_name" %in% names(result))
   expect_true(all(c("other_col1", "other_col2", "other_col3", "other_col4", "other_col5") %in% names(result)))
 
   unlink(temp_file)
@@ -47,9 +47,9 @@ test_that("load_section_names_lookup returns tibble with correct columns for emp
 
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 0)
-  expect_false("section" %in% names(result))
-  expect_false("student_id" %in% names(result))
-  expect_false("preferred_name" %in% names(result))
+  expect_true("section" %in% names(result))
+  expect_true("student_id" %in% names(result))
+  expect_true("preferred_name" %in% names(result))
   expect_true(all(c("other_col1", "other_col2", "other_col3", "other_col4", "other_col5") %in% names(result)))
 
   unlink(temp_file)

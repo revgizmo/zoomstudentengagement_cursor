@@ -56,6 +56,9 @@ of `wordcount`, `wordcount_perc`, and `wpm` by Brooks Ambrose:
 https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246
 }
 \examples{
-process_zoom_transcript(transcript_file_path = "NULL")
+# Load a sample transcript from the package's extdata directory
+transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+                             package = "zoomstudentengagement")
+process_zoom_transcript(transcript_file_path = transcript_file)
 
 }

@@ -6,7 +6,7 @@
 #' @param data_folder overall data folder for your recordings
 #' @param names_lookup_file File name of the csv file of customized student names by section
 #'   Defaults to 'section_names_lookup.csv'
-#' @param section_names_lookup_col_types column types in the csv file of customized student names by section. Defaults to 'cccdcccd'
+#' @param section_names_lookup_col_types column types in the csv file of customized student names by section. Defaults to 'cccccccc'
 #'
 #' @return A tibble of customized student names by section.
 #' @export
@@ -16,7 +16,7 @@
 #'
 load_section_names_lookup <- function(data_folder = "data",
                                       names_lookup_file = "section_names_lookup.csv",
-                                      section_names_lookup_col_types = "cccdcccd") {
+                                      section_names_lookup_col_types = "cccccccc") {
   preferred_name <- section <- student_id <- NULL
 
   # Input validation
@@ -44,6 +44,5 @@ load_section_names_lookup <- function(data_folder = "data",
     data <- make_blank_section_names_lookup_csv()
   }
 
-  data %>%
-    dplyr::select(-section, -student_id, -preferred_name)
+  data
 }

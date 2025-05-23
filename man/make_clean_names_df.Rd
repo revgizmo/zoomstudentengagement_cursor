@@ -40,20 +40,40 @@ from the joining of:
 }
 }
 \examples{
+# Create sample data for demonstration
+sample_transcripts <- tibble::tibble(
+  name = c("John Smith", "Jane Doe"),
+  section = c("A", "B"),
+  day = c("Monday", "Tuesday"),
+  time = c("10:00", "11:00"),
+  n = c(10, 15),
+  duration = c(300, 450),
+  wordcount = c(500, 750),
+  comments = c("Good", "Excellent"),
+  n_perc = c(0.1, 0.15),
+  duration_perc = c(0.1, 0.15),
+  wordcount_perc = c(0.1, 0.15),
+  wpm = c(100, 100),
+  name_raw = c("John Smith", "Jane Doe"),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+  dept = c("CS", "CS"),
+  session_num = c(1, 1)
+)
+
+sample_roster <- tibble::tibble(
+  first_last = c("John Smith", "Jane Doe"),
+  dept = c("CS", "CS"),
+  transcript_section = c("A", "B"),
+  session_num = c(1, 1),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+  student_id = c("12345", "67890")
+)
+
 make_clean_names_df(
   data_folder = "data",
   section_names_lookup_file = "section_names_lookup.csv",
-  transcripts_metrics_df = summarize_transcript_files(df_transcript_list = NULL),
-  roster_sessions = make_student_roster_sessions(
-    transcripts_list_df = join_transcripts_list(
-      df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-      df_transcript_files = load_transcript_files_list(),
-      df_cancelled_classes = load_cancelled_classes()
-    ),
-    roster_small_df = make_roster_small(
-      roster_df = load_roster()
-    )
-  )
+  transcripts_metrics_df = sample_transcripts,
+  roster_sessions = sample_roster
 )
 
 }

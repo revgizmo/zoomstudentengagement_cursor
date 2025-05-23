@@ -24,20 +24,40 @@
 #' @md
 #'
 #' @examples
+#' # Create sample data for demonstration
+#' sample_transcripts <- tibble::tibble(
+#'   name = c("John Smith", "Jane Doe"),
+#'   section = c("A", "B"),
+#'   day = c("Monday", "Tuesday"),
+#'   time = c("10:00", "11:00"),
+#'   n = c(10, 15),
+#'   duration = c(300, 450),
+#'   wordcount = c(500, 750),
+#'   comments = c("Good", "Excellent"),
+#'   n_perc = c(0.1, 0.15),
+#'   duration_perc = c(0.1, 0.15),
+#'   wordcount_perc = c(0.1, 0.15),
+#'   wpm = c(100, 100),
+#'   name_raw = c("John Smith", "Jane Doe"),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+#'   dept = c("CS", "CS"),
+#'   session_num = c(1, 1)
+#' )
+#'
+#' sample_roster <- tibble::tibble(
+#'   first_last = c("John Smith", "Jane Doe"),
+#'   dept = c("CS", "CS"),
+#'   transcript_section = c("A", "B"),
+#'   session_num = c(1, 1),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+#'   student_id = c("12345", "67890")
+#' )
+#'
 #' make_clean_names_df(
 #'   data_folder = "data",
 #'   section_names_lookup_file = "section_names_lookup.csv",
-#'   transcripts_metrics_df = summarize_transcript_files(df_transcript_list = NULL),
-#'   roster_sessions = make_student_roster_sessions(
-#'     transcripts_list_df = join_transcripts_list(
-#'       df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-#'       df_transcript_files = load_transcript_files_list(),
-#'       df_cancelled_classes = load_cancelled_classes()
-#'     ),
-#'     roster_small_df = make_roster_small(
-#'       roster_df = load_roster()
-#'     )
-#'   )
+#'   transcripts_metrics_df = sample_transcripts,
+#'   roster_sessions = sample_roster
 #' )
 #'
 make_clean_names_df <- function(data_folder = "data",
@@ -85,15 +105,17 @@ make_clean_names_df <- function(data_folder = "data",
   section_names_lookup <- load_section_names_lookup(
     data_folder = data_folder,
     names_lookup_file = section_names_lookup_file,
-    section_names_lookup_col_types = "cccdcccd"
+    section_names_lookup_col_types = "cccccccc"  # Changed to all character columns
   )
 
   # Process the data
-  transcripts_metrics_df %>%
+  result <- transcripts_metrics_df %>%
     dplyr::rename(
       transcript_name = name,
       transcript_section = section
     ) %>%
+    # Ensure time column is character
+    dplyr::mutate(time = as.character(time)) %>%
     # join section_names_lookup to add any manually corrected formal_name values
     dplyr::left_join(
       section_names_lookup,
@@ -120,15 +142,27 @@ make_clean_names_df <- function(data_folder = "data",
       ),
       keep = FALSE
     ) %>%
-    # fill in any preferred_name values that weren't on the roster of enrolled students
+    # Ensure preferred_name and formal_name columns exist and are the correct length
     dplyr::mutate(
-      preferred_name = dplyr::coalesce(preferred_name, formal_name)
+      preferred_name = if (!"preferred_name" %in% names(.)) NA_character_ else preferred_name,
+      formal_name = if (!"formal_name" %in% names(.)) NA_character_ else formal_name
+    ) %>%
+    tidyr::replace_na(list(preferred_name = NA_character_, formal_name = NA_character_)) %>%
+    dplyr::mutate(
+      formal_name = dplyr::coalesce(formal_name, NA_character_),
+      preferred_name = dplyr::case_when(
+        is.na(preferred_name) & !is.na(formal_name) ~ as.character(formal_name),
+        TRUE ~ as.character(preferred_name)
+      ),
+      student_id = dplyr::coalesce(student_id, NA_character_),
+      section = dplyr::coalesce(transcript_section, NA_character_)
     ) %>%
     dplyr::select(
       preferred_name,
       formal_name,
       transcript_name,
       student_id,
+      section,
       transcript_section,
       session_num,
       n,
@@ -145,4 +179,16 @@ make_clean_names_df <- function(data_folder = "data",
       tidyselect::everything()
     ) %>%
     dplyr::arrange(student_id, formal_name)
+
+  # Only fill formal_name if transcript_name is not NA (preserve NA otherwise)
+  result <- result %>%
+    dplyr::mutate(
+      formal_name = dplyr::if_else(is.na(formal_name) & !is.na(transcript_name), transcript_name, formal_name)
+    )
+
+  # Ensure all names are unique
+  result <- result %>%
+    dplyr::distinct(preferred_name, formal_name, transcript_name, .keep_all = TRUE)
+
+  result
 }
