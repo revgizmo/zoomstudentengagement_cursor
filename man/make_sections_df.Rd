@@ -7,15 +7,26 @@
 make_sections_df(roster_df)
 }
 \arguments{
-\item{roster_df}{A tibble listing the students enrolled in the class or classes.}
+\item{roster_df}{A tibble listing the students enrolled in the class or classes.
+Must contain the following columns:
+- dept: character
+- course_num: integer
+- section: integer}
 }
 \value{
-A tibble including metric labels and metric descriptions
+A tibble with the following columns:
+  - dept: character
+  - course_num: integer
+  - section: integer
+  - n: integer (count of students in each section)
 }
 \description{
-This function creates a tibble that includes rows for each section (grouped by dept and course number) and student count in each
+This function creates a tibble that includes rows for each section (grouped by dept and course number) and student count in each.
 }
 \examples{
-make_sections_df(roster_df = load_roster())
+# Load a sample roster from the package's extdata directory
+roster_file <- system.file("extdata/roster.csv", package = "zoomstudentengagement")
+roster_df <- readr::read_csv(roster_file, show_col_types = FALSE)
+make_sections_df(roster_df = roster_df)
 }
 \keyword{sections}

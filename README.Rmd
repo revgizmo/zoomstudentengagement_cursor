@@ -13,7 +13,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  eval = FALSE
 )
 ```
 
@@ -32,15 +33,15 @@ In it's current form, the `zoomstudentengagement` library is useful for 4 relate
     1. `load_zoom_transcript()` takes a Zoom transcript .vtt file and load it into a rectangular format without additions or modifications.
     2. `process_zoom_transcript()` process a Zoom transcript with given parameters to get a tibble containing the comments, including consolidating consecutive comments from the same speaker and adding rows for "dead_air".
 2. **Calculate summary metrics** by speaker from a Zoom recording transcript or transcripts
-    1. `fliwc()` calculates summary metrics by speaker from a Zoom recording transcript.
-    2. `fliwc_transcript_files()` calculates summary metrics by speaker from multiple Zoom recording transcripts.
+    1. `summarize_transcript_metrics()` calculates summary metrics by speaker from a Zoom recording transcript.
+    2. `summarize_transcript_files()` calculates summary metrics by speaker from multiple Zoom recording transcripts.
 3. **Do some housekeeping** to load and clean the student roster.
     1. `load_roster()` loads a Roster of Students from a CSV file (`roster.csv`)
     2. `make_sections_df()` generates a tibble that includes rows for each section (grouped by dept and course number) and student count in each.
     3. `make_roster_small()` gets a tibble that includes rows for each students enrolled in the class or classes, with a small subset of the roster columns.
     4. `make_student_roster_sessions()` generates a tibble from the and list of transcript files.
     5. Clean up the names in the transcript.
-        1. `make_clean_names_df()` joins the student names by section (from `make_student_roster_sessions()`) and the session details and transcript summary by speaker for all class sessions (from `fliwc_transcript_files()`).
+        1. `make_clean_names_df()` joins the student names by section (from `make_student_roster_sessions()`) and the session details and transcript summary by speaker for all class sessions (from `summarize_transcript_files()`).
         2. `write_section_names_lookup()` saves a subset of the clean names df to a csv file so it can be updated manually.
         3. `make_names_to_clean_df()` returns a tibble containing only the records in the clean names df that have transcript recordings but no matching student id (so they can be manually updated if necessary_.
         4. Manually edit the section names lookup csv to clear names needing cleaning.
@@ -166,8 +167,8 @@ cat(paste0("+ `data_folder_input`:  '", data_folder_input, "'\n",
         
 ## 2. Load the zoomstudentengagement library
 
-+ ` r devtools::install_github("revgizmo/zoomstudentengagement") `
-+ ` r library(zoomstudentengagement) `
++ `*r devtools::install_github("revgizmo/zoomstudentengagement") `
++ `*r library(zoomstudentengagement) `
     
 ```{r}
 library(zoomstudentengagement)
@@ -281,10 +282,10 @@ transcripts_list_df
 
 ## 5. Load Zoom Transcript files and Run Faculty Linguistic Inquiry and Word Count on those sessions.
 
-1. Run `fliwc_transcript_files()`.
+1. Run `summarize_transcript_files()`.
 
 ```{r}
-transcripts_fliwc_df <- fliwc_transcript_files(
+transcripts_metrics_df <- summarize_transcript_files(
   transcripts_list_df,
   data_folder = data_folder_input,
   transcripts_folder = "transcripts",
@@ -292,9 +293,9 @@ transcripts_fliwc_df <- fliwc_transcript_files(
 )
 
 
-transcripts_fliwc_df
+transcripts_metrics_df
 
-transcripts_fliwc_df %>% count(name)
+transcripts_metrics_df %>% count(name)
 ```
 
 
@@ -370,14 +371,14 @@ roster_sessions
 
 1. Run `make_clean_names_df()` to get a tibble containing session details and summary metrics by speaker for all class sessions (and placeholders for missing sections) from the joining of::
     * a tibble of customized student names by section (`section_names_lookup_file` in the `data_folder` folder),
-    * a tibble containing session details and summary metrics by speaker for all class sessions (`transcripts_fliwc_df`), and
+    * a tibble containing session details and summary metrics by speaker for all class sessions (`transcripts_metrics_df`), and
     * a tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student (`roster_sessions`) into a single tibble.
 
 ```{r}
 clean_names_df <- make_clean_names_df(
   data_folder = data_folder_input,
   section_names_lookup_file = names_lookup_file_input,
-  transcripts_fliwc_df,
+  transcripts_metrics_df,
   roster_sessions
 )
 
@@ -675,11 +676,11 @@ system.file("extdata",  package="zoomstudentengagement")
 
 
 
-# `fliwc()` a single transcript file:
+# `summarize_transcript_metrics()` a single transcript file:
 
-## 1. fliwc()
+## 1. summarize_transcript_metrics()
 
-1. Run `fliwc()` to process a Zoom recording transcript and return summary metrics by speaker.
+1. Run `summarize_transcript_metrics()` to process a Zoom recording transcript and return summary metrics by speaker.
 
 ```{r}
 
@@ -693,7 +694,7 @@ recording_transcript_file_path <-
   )
 
 
-fliwc_transcript_df2 <- fliwc(
+fliwc_transcript_df2 <- summarize_transcript_metrics(
   transcript_file_path = recording_transcript_file_path,
   names_exclude = c("dead_air"),
   # consolidate_comments = TRUE,
@@ -710,7 +711,7 @@ fliwc_transcript_df2
 
 
 
-# Walkthrough of key steps in `fliwc()`
+# Walkthrough of key steps in `summarize_transcript_metrics()`
 
 ## 1. load_zoom_transcript()
 
@@ -755,12 +756,12 @@ processed_zoom_transcript_df
 
 
 
-## 3. fliwc()
+## 3. summarize_transcript_metrics()
 
-1. Run `fliwc()` to process a Zoom recording transcript and return summary metrics by speaker.
+1. Run `summarize_transcript_metrics()` to process a Zoom recording transcript and return summary metrics by speaker.
 
 ```{r}
-fliwc_transcript_df <- fliwc(
+fliwc_transcript_df <- summarize_transcript_metrics(
   # transcript_file_path = '',
   names_exclude = c("dead_air"),
   # consolidate_comments = TRUE,
@@ -787,8 +788,8 @@ fliwc_transcript_df
         + `names_exclude_input`
         + etc
 2. Load the zoomstudentengagement library
-    + ` r devtools::install_github("revgizmo/zoomstudentengagement") `
-    + ` r library(zoomstudentengagement) `
+    + ` *r devtools::install_github("revgizmo/zoomstudentengagement") `
+    + ` *r library(zoomstudentengagement) `
 3. Download the Zoom Recording Transcripts
     1. Download Zoom csv file with list of recordings and transcripts
         1. Go to [https://www.zoom.us/recording](https://www.zoom.us/recording)
@@ -819,7 +820,7 @@ load_zoom_recorded_sessions_list(data_folder = system.file("extdata",  package="
         2. Run `make_blank_cancelled_classes_df()` and save it as a .csv file.
     4. Run `join_transcripts_list()` to get a tibble from the joining of the listing of session recordings loaded from the cloud recording csvs ('df_zoom_recorded_sessions'), the list of transcript files ('df_transcript_files'), and the list of cancelled classes ('df_cancelled_classes') into a single tibble.
 5. Load Zoom Transcript files and Run Faculty Linguistic Inquiry and Word Count on those sessions.
-    1. Run `fliwc_transcript_files()`.
+    1. Run `summarize_transcript_files()`.
 
 
 # Old

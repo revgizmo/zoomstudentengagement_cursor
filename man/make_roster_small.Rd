@@ -8,7 +8,13 @@ make_roster_small(roster_df)
 }
 \arguments{
 \item{roster_df}{A tibble listing the students enrolled in the class or
-classes with a small subset of the roster columns.}
+classes with a small subset of the roster columns. Must contain the following columns:
+- student_id: integer
+- first_last: character
+- preferred_name: character
+- dept: character
+- course_num: integer
+- section: integer}
 }
 \value{
 A tibble listing the students enrolled in the class or classes with a
@@ -19,6 +25,9 @@ This function creates a tibble that includes rows for each students enrolled
 in the class or classes, with a small subset of the roster columns.
 }
 \examples{
-make_roster_small(roster_df = load_roster())
+# Load a sample roster from the package's extdata directory
+roster_file <- system.file("extdata/roster.csv", package = "zoomstudentengagement")
+roster_df <- readr::read_csv(roster_file, show_col_types = FALSE)
+make_roster_small(roster_df = roster_df)
 }
 \keyword{roster}

@@ -9,23 +9,44 @@
 #' @export
 #'
 #' @examples
+#' # Create sample transcript list
+#' sample_transcript_list <- tibble::tibble(
+#'   name = c("John Smith", "Jane Doe", "Unknown"),
+#'   section = c("CS101", "CS101", "CS101"),
+#'   day = c("2024-01-01", "2024-01-01", "2024-01-01"),
+#'   time = c("10:00", "10:00", "10:00"),
+#'   n = c(5, 3, 1),
+#'   duration = c(300, 180, 60),
+#'   wordcount = c(500, 300, 100),
+#'   comments = c(10, 5, 2),
+#'   n_perc = c(0.5, 0.3, 0.1),
+#'   duration_perc = c(0.5, 0.3, 0.1),
+#'   wordcount_perc = c(0.5, 0.3, 0.1),
+#'   wpm = c(100, 100, 100),
+#'   name_raw = c("John Smith", "Jane Doe", "Unknown"),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+#'   dept = c("CS", "CS", "CS"),
+#'   session_num = c(1, 1, 1)
+#' )
+#'
+#' # Create sample roster
+#' sample_roster <- tibble::tibble(
+#'   first_last = c("John Smith", "Jane Doe"),
+#'   dept = c("CS", "CS"),
+#'   transcript_section = c("CS101", "CS101"),
+#'   session_num = c(1, 1),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+#'   student_id = c("12345", "67890")
+#' )
+#'
 #' plot_users_by_metric(
 #'   make_transcripts_summary_df(
 #'     make_transcripts_session_summary_df(
 #'       clean_names_df = make_clean_names_df(
 #'         data_folder = "data",
 #'         section_names_lookup_file = "section_names_lookup.csv",
-#'         transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-#'         roster_sessions = make_student_roster_sessions(
-#'           transcripts_list_df = join_transcripts_list(
-#'             df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-#'             df_transcript_files = load_transcript_files_list(),
-#'             df_cancelled_classes = load_cancelled_classes()
-#'           ),
-#'           roster_small_df = make_roster_small(
-#'             roster_df = load_roster()
-#'           )
-#'         )
+#'         transcripts_metrics_df = sample_transcript_list,
+#'         roster_sessions = sample_roster
 #'       )
 #'     )
 #'   )
@@ -36,25 +57,28 @@ plot_users_by_metric <- function(transcripts_summary_df,
                                  student_col_name = 'preferred_name') {
   . <- preferred_name <- section <- student_col <- NULL
 
-  if (tibble::is_tibble(transcripts_summary_df) && tibble::is_tibble(metrics_lookup_df)
-  ) {
-    metric_col <- transcripts_summary_df[metric]
-    transcripts_summary_df$metric_col <- metric_col[[1]]
-    metric_col_name <- names(metric_col)
-    transcripts_summary_df$student_col <- transcripts_summary_df[student_col_name][[1]]
-
-    metric_desc <- metrics_lookup_df %>%
-      dplyr::filter(metric == metric_col_name) %>%
-      .$description %>%
-      stringr::str_wrap(width = 59)
-
-    transcripts_summary_df %>%
-      ggplot2::ggplot(ggplot2::aes(x = student_col, y = metric_col)) +
+  if (tibble::is_tibble(transcripts_summary_df) && tibble::is_tibble(metrics_lookup_df)) {
+    # Validate metric exists in the data
+    if (!metric %in% names(transcripts_summary_df)) {
+      stop(sprintf("Metric '%s' not found in data", metric))
+    }
+    
+    # Create plot
+    p <- transcripts_summary_df %>%
+      ggplot2::ggplot(ggplot2::aes(x = .data[[student_col_name]], y = .data[[metric]])) +
       ggplot2::geom_point() +
       ggplot2::coord_flip() +
-      ggplot2::facet_wrap(ggplot2::vars(section), ncol = 1, scales = "free") +
-      ggplot2::labs(y = metric_col_name, x = student_col_name) +
-      ggplot2::ggtitle(metric_desc) +
+      ggplot2::facet_wrap(ggplot2::vars(section), ncol = 1, scales = "free_y") +
+      ggplot2::labs(
+        y = metric,
+        x = student_col_name,
+        title = metrics_lookup_df %>%
+          dplyr::filter(metric == !!metric) %>%
+          dplyr::pull(description) %>%
+          stringr::str_wrap(width = 59)
+      ) +
       ggplot2::ylim(c(0, NA))
+    
+    return(p)
   }
 }

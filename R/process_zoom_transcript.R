@@ -38,7 +38,10 @@
 #' @export
 #'
 #' @examples
-#' process_zoom_transcript(transcript_file_path = "NULL")
+#' # Load a sample transcript from the package's extdata directory
+#' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+#'                              package = "zoomstudentengagement")
+#' process_zoom_transcript(transcript_file_path = transcript_file)
 #'
 process_zoom_transcript <- function(transcript_file_path = '',
                                              consolidate_comments = TRUE,
@@ -61,10 +64,19 @@ process_zoom_transcript <- function(transcript_file_path = '',
   }
 
   if (tibble::is_tibble(transcript_df)) {
+    # Ensure time columns are of type Period
     transcript_df <- transcript_df %>%
       dplyr::mutate(
-        begin = dplyr::lag(end, order_by = start, default = hms::hms(0)),
-        prior_dead_air = start - begin,
+        start = lubridate::as.period(start),
+        end = lubridate::as.period(end),
+        duration = as.numeric(duration)
+      )
+
+    # Add begin time and prior speaker info
+    transcript_df <- transcript_df %>%
+      dplyr::mutate(
+        begin = dplyr::lag(end, order_by = start, default = lubridate::period(0)),
+        prior_dead_air = as.numeric(lubridate::as.duration(start - begin)),
         prior_speaker = dplyr::lag(name, order_by = start, default = NA)
       ) %>%
       dplyr::select(
@@ -97,7 +109,7 @@ process_zoom_transcript <- function(transcript_file_path = '',
           dplyr::case_when(is.na(name) ~ na_name_, TRUE ~ name)
       )
 
-    return_df
+    return(return_df)
 
   }
 

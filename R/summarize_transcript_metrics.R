@@ -1,4 +1,4 @@
-#' Faculty Linguistic Inquiry and Word Count
+#' Summarize Transcript Metrics
 #'
 #' Process a Zoom recording transcript and return summary metrics by speaker
 #'
@@ -39,9 +39,12 @@
 #' @export
 #'
 #' @examples
-#' fliwc(transcript_file_path = "NULL")
+#' # Load a sample transcript from the package's extdata directory
+#' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+#'                              package = "zoomstudentengagement")
+#' summarize_transcript_metrics(transcript_file_path = transcript_file)
 #'
-fliwc <- function(transcript_file_path = '',
+summarize_transcript_metrics <- function(transcript_file_path = '',
                   names_exclude = c("dead_air"),
                   consolidate_comments = TRUE,
                   max_pause_sec = 1,

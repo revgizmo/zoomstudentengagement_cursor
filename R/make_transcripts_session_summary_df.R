@@ -16,41 +16,73 @@
 #' @export
 #'
 #' @examples
+#' # Create sample transcript list
+#' sample_transcript_list <- tibble::tibble(
+#'   name = c("John Smith", "Jane Doe", "Unknown"),
+#'   section = c("CS101", "CS101", "CS101"),
+#'   day = c("2024-01-01", "2024-01-01", "2024-01-01"),
+#'   time = c("10:00", "10:00", "10:00"),
+#'   n = c(5, 3, 1),
+#'   duration = c(300, 180, 60),
+#'   wordcount = c(500, 300, 100),
+#'   comments = c(10, 5, 2),
+#'   n_perc = c(0.5, 0.3, 0.1),
+#'   duration_perc = c(0.5, 0.3, 0.1),
+#'   wordcount_perc = c(0.5, 0.3, 0.1),
+#'   wpm = c(100, 100, 100),
+#'   name_raw = c("John Smith", "Jane Doe", "Unknown"),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+#'   dept = c("CS", "CS", "CS"),
+#'   session_num = c(1, 1, 1)
+#' )
+#'
+#' # Create sample roster
+#' sample_roster <- tibble::tibble(
+#'   first_last = c("John Smith", "Jane Doe"),
+#'   dept = c("CS", "CS"),
+#'   transcript_section = c("CS101", "CS101"),
+#'   session_num = c(1, 1),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+#'   student_id = c("12345", "67890")
+#' )
+#'
 #' make_transcripts_session_summary_df(
 #'   clean_names_df = make_clean_names_df(
 #'     data_folder = "data",
 #'     section_names_lookup_file = "section_names_lookup.csv",
-#'     transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-#'     roster_sessions = make_student_roster_sessions(
-#'       transcripts_list_df = join_transcripts_list(
-#'         df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-#'         df_transcript_files = load_transcript_files_list(),
-#'         df_cancelled_classes = load_cancelled_classes()
-#'       ),
-#'       roster_small_df = make_roster_small(
-#'         roster_df = load_roster()
-#'       )
-#'     )
+#'     transcripts_metrics_df = sample_transcript_list,
+#'     roster_sessions = sample_roster
 #'   )
 #' )
 make_transcripts_session_summary_df <- function(clean_names_df) {
-  day <-
-    duration <-
-    n <-
-    preferred_name <-
-    section <-
-    session_num <- time <- transcript_section <- wordcount <- NULL
-
-  if (tibble::is_tibble(clean_names_df)
-  ) {
-    clean_names_df %>%
-      # group_by(section, day, time, session_num, preferred_name) %>%
-      dplyr::group_by(section, day, time, session_num, preferred_name, transcript_section) %>%
-      dplyr::summarise(
-        n = sum(n, na.rm = F),
-        duration = sum(duration, na.rm = F),
-        wordcount = sum(wordcount, na.rm = F)
-      ) %>%
-      dplyr::ungroup()
+  if (is.null(clean_names_df)) {
+    return(NULL)
   }
+  if (!tibble::is_tibble(clean_names_df)) {
+    stop("clean_names_df must be a tibble or NULL.")
+  }
+  # Define expected columns
+  expected_cols <- c("section", "day", "time", "session_num", "preferred_name", "transcript_section", "wordcount", "duration")
+  # Filter to only use columns that are present
+  available_cols <- intersect(expected_cols, names(clean_names_df))
+  if (length(available_cols) == 0) {
+    stop("clean_names_df must contain at least one of the expected columns: section, day, time, session_num, preferred_name, transcript_section, wordcount, duration.")
+  }
+  # Group by available columns and compute summary metrics
+  result <- clean_names_df %>%
+    dplyr::group_by(!!!rlang::syms(available_cols)) %>%
+    dplyr::summarise(
+      n = dplyr::n(),
+      duration = sum(duration, na.rm = TRUE),
+      wordcount = sum(wordcount, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      n_perc = n / sum(n) * 100,
+      duration_perc = duration / sum(duration) * 100,
+      wordcount_perc = wordcount / sum(wordcount) * 100,
+      wpm = wordcount / duration
+    )
+  return(result)
 }

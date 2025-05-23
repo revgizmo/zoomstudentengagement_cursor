@@ -32,25 +32,55 @@ and saves it as a csv file with the specified file name
 (`data_folder`).
 }
 \examples{
+# Create sample data
+sample_transcript_list <- tibble::tibble(
+  name = c("Student A", "Student B", "Student C"),
+  section = c("Section 1", "Section 1", "Section 2"),
+  day = c("Monday", "Monday", "Tuesday"),
+  time = c("9:00 AM", "9:00 AM", "10:00 AM"),
+  n = c(10, 8, 12),
+  duration = c(300, 240, 360),
+  wordcount = c(500, 400, 600),
+  comments = c("Good", "Excellent", "Average"),
+  n_perc = c(0.4, 0.3, 0.5),
+  duration_perc = c(0.4, 0.3, 0.5),
+  wordcount_perc = c(0.4, 0.3, 0.5),
+  wpm = c(100, 100, 100),
+  name_raw = c("Student A", "Student B", "Student C"),
+  start_time_local = c("2024-01-01 09:00:00", "2024-01-01 09:00:00", "2024-01-02 10:00:00"),
+  dept = c("CS", "CS", "CS"),
+  session_num = c(1, 1, 2)
+)
+
+sample_roster <- tibble::tibble(
+  first_last = c("Student A", "Student B", "Student C"),
+  dept = c("CS", "CS", "CS"),
+  transcript_section = c("Section 1", "Section 1", "Section 2"),
+  session_num = c(1, 1, 2),
+  start_time_local = c("2024-01-01 09:00:00", "2024-01-01 09:00:00", "2024-01-02 10:00:00"),
+  student_id = c("A123", "B456", "C789")
+)
+
+# Create a temporary directory for the example
+temp_dir <- tempfile("example")
+dir.create(temp_dir)
+
+# Run the example with the temporary directory
 write_transcripts_summary(
   make_transcripts_summary_df(
     make_transcripts_session_summary_df(
       clean_names_df = make_clean_names_df(
-        data_folder = "data",
+        data_folder = temp_dir,
         section_names_lookup_file = "section_names_lookup.csv",
-        transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-        roster_sessions = make_student_roster_sessions(
-          transcripts_list_df = join_transcripts_list(
-            df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-            df_transcript_files = load_transcript_files_list(),
-            df_cancelled_classes = load_cancelled_classes()
-          ),
-          roster_small_df = make_roster_small(
-            roster_df = load_roster()
-          )
-        )
+        transcripts_metrics_df = sample_transcript_list,
+        roster_sessions = sample_roster
       )
     )
-  )
+  ),
+  data_folder = temp_dir,
+  transcripts_summary_file = "transcripts_summary.csv"
 )
+
+# Clean up
+unlink(temp_dir, recursive = TRUE)
 }

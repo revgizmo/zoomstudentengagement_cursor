@@ -5,14 +5,14 @@
 #' by speaker for all class sessions (and placeholders for missing sections)
 #' from the joining of:
 #' * a tibble of customized student names by section (`section_names_lookup_file` in the `data_folder` folder),
-#' * a tibble containing session details and summary metrics by speaker for all class sessions (`transcripts_fliwc_df`), and
+#' * a tibble containing session details and summary metrics by speaker for all class sessions (`transcripts_metrics_df`), and
 #' * a tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student (`roster_sessions`) into a single tibble.
 #'
 #' @param data_folder overall data folder for your recordings. Defaults to
 #'   'data'
 #' @param section_names_lookup_file File name of the csv file of customized
 #'   student names by section Defaults to 'section_names_lookup.csv'
-#' @param transcripts_fliwc_df A tibble containing session details and summary
+#' @param transcripts_metrics_df A tibble containing session details and summary
 #'   metrics by speaker for all class sessions in the tibble provided.
 #' @param roster_sessions A tibble listing the students enrolled in the class or
 #'   classes, with rows for each recorded class section for each student.
@@ -24,25 +24,45 @@
 #' @md
 #'
 #' @examples
+#' # Create sample data for demonstration
+#' sample_transcripts <- tibble::tibble(
+#'   name = c("John Smith", "Jane Doe"),
+#'   section = c("A", "B"),
+#'   day = c("Monday", "Tuesday"),
+#'   time = c("10:00", "11:00"),
+#'   n = c(10, 15),
+#'   duration = c(300, 450),
+#'   wordcount = c(500, 750),
+#'   comments = c("Good", "Excellent"),
+#'   n_perc = c(0.1, 0.15),
+#'   duration_perc = c(0.1, 0.15),
+#'   wordcount_perc = c(0.1, 0.15),
+#'   wpm = c(100, 100),
+#'   name_raw = c("John Smith", "Jane Doe"),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+#'   dept = c("CS", "CS"),
+#'   session_num = c(1, 1)
+#' )
+#'
+#' sample_roster <- tibble::tibble(
+#'   first_last = c("John Smith", "Jane Doe"),
+#'   dept = c("CS", "CS"),
+#'   transcript_section = c("A", "B"),
+#'   session_num = c(1, 1),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+#'   student_id = c("12345", "67890")
+#' )
+#'
 #' make_clean_names_df(
 #'   data_folder = "data",
 #'   section_names_lookup_file = "section_names_lookup.csv",
-#'   transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-#'   roster_sessions = make_student_roster_sessions(
-#'     transcripts_list_df = join_transcripts_list(
-#'       df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-#'       df_transcript_files = load_transcript_files_list(),
-#'       df_cancelled_classes = load_cancelled_classes()
-#'     ),
-#'     roster_small_df = make_roster_small(
-#'       roster_df = load_roster()
-#'     )
-#'   )
+#'   transcripts_metrics_df = sample_transcripts,
+#'   roster_sessions = sample_roster
 #' )
 #'
 make_clean_names_df <- function(data_folder = "data",
                                 section_names_lookup_file = "section_names_lookup.csv",
-                                transcripts_fliwc_df,
+                                transcripts_metrics_df,
                                 roster_sessions) {
   comments <-
     day <-
@@ -64,71 +84,111 @@ make_clean_names_df <- function(data_folder = "data",
     transcript_name <-
     transcript_section <- wordcount <- wordcount_perc <- wpm <- NULL
 
-  if (tibble::is_tibble(transcripts_fliwc_df) &&
-    tibble::is_tibble(roster_sessions)
-  ) {
-    transcripts_fliwc_df %>%
-      dplyr::rename(
-        transcript_name = name,
-        transcript_section = section
-      ) %>%
-      # join section_names_lookup to add any manually corrected formal_name values:
-      # (section_names_lookup_file is also the file to update to resolve add incorrect names)
-      dplyr::left_join(
-        load_section_names_lookup(
-          data_folder = data_folder,
-          names_lookup_file = section_names_lookup_file
-        ),
-        by = dplyr::join_by(
-          transcript_name,
-          transcript_section,
-          day,
-          time
-        )
-      ) %>%
-      # fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
-      dplyr::mutate(
-        formal_name = dplyr::if_else(is.na(formal_name),
-          transcript_name,
-          formal_name
-        )
-      ) %>%
-      # join to the roster of enrolled students
-      dplyr::full_join(
-        roster_sessions,
-        by = dplyr::join_by(
-          formal_name == first_last,
-          dept,
-          transcript_section,
-          session_num,
-          start_time_local
-        ),
-        keep = FALSE
-      ) %>%
-      # fill in any preferred_name values that weren't on the roster of enrolled students
-      dplyr::mutate(
-        preferred_name = dplyr::if_else(!is.na(preferred_name), preferred_name, formal_name)
-      ) %>%
-      dplyr::select(
-        preferred_name,
-        formal_name,
+  # Input validation
+  if (!tibble::is_tibble(transcripts_metrics_df)) {
+    stop("transcripts_metrics_df must be a tibble")
+  }
+  if (!tibble::is_tibble(roster_sessions)) {
+    stop("roster_sessions must be a tibble")
+  }
+  if (!is.character(data_folder) || length(data_folder) != 1) {
+    stop("data_folder must be a single character string")
+  }
+  if (!is.character(section_names_lookup_file) || length(section_names_lookup_file) != 1) {
+    stop("section_names_lookup_file must be a single character string")
+  }
+
+  # Create the file path
+  file_path <- file.path(data_folder, section_names_lookup_file)
+
+  # Load the section names lookup
+  section_names_lookup <- load_section_names_lookup(
+    data_folder = data_folder,
+    names_lookup_file = section_names_lookup_file,
+    section_names_lookup_col_types = "cccccccc"  # Changed to all character columns
+  )
+
+  # Process the data
+  result <- transcripts_metrics_df %>%
+    dplyr::rename(
+      transcript_name = name,
+      transcript_section = section
+    ) %>%
+    # Ensure time column is character
+    dplyr::mutate(time = as.character(time)) %>%
+    # join section_names_lookup to add any manually corrected formal_name values
+    dplyr::left_join(
+      section_names_lookup,
+      by = dplyr::join_by(
         transcript_name,
-        student_id,
+        transcript_section,
+        day,
+        time
+      )
+    ) %>%
+    # fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
+    dplyr::mutate(
+      formal_name = dplyr::coalesce(formal_name, transcript_name)
+    ) %>%
+    # join to the roster of enrolled students
+    dplyr::full_join(
+      roster_sessions,
+      by = dplyr::join_by(
+        formal_name == first_last,
+        dept,
         transcript_section,
         session_num,
-        n,
-        duration,
-        wordcount,
-        comments,
-        n_perc,
-        duration_perc,
-        wordcount_perc,
-        wpm,
-        transcript_name,
-        name_raw,
-        start_time_local,
-        tidyselect::everything()
-      ) %>%
-      dplyr::arrange(student_id, formal_name)
-  }
+        start_time_local
+      ),
+      keep = FALSE
+    ) %>%
+    # Ensure preferred_name and formal_name columns exist and are the correct length
+    dplyr::mutate(
+      preferred_name = if (!"preferred_name" %in% names(.)) NA_character_ else preferred_name,
+      formal_name = if (!"formal_name" %in% names(.)) NA_character_ else formal_name
+    ) %>%
+    tidyr::replace_na(list(preferred_name = NA_character_, formal_name = NA_character_)) %>%
+    dplyr::mutate(
+      formal_name = dplyr::coalesce(formal_name, NA_character_),
+      preferred_name = dplyr::case_when(
+        is.na(preferred_name) & !is.na(formal_name) ~ as.character(formal_name),
+        TRUE ~ as.character(preferred_name)
+      ),
+      student_id = dplyr::coalesce(student_id, NA_character_),
+      section = dplyr::coalesce(transcript_section, NA_character_)
+    ) %>%
+    dplyr::select(
+      preferred_name,
+      formal_name,
+      transcript_name,
+      student_id,
+      section,
+      transcript_section,
+      session_num,
+      n,
+      duration,
+      wordcount,
+      comments,
+      n_perc,
+      duration_perc,
+      wordcount_perc,
+      wpm,
+      transcript_name,
+      name_raw,
+      start_time_local,
+      tidyselect::everything()
+    ) %>%
+    dplyr::arrange(student_id, formal_name)
+
+  # Only fill formal_name if transcript_name is not NA (preserve NA otherwise)
+  result <- result %>%
+    dplyr::mutate(
+      formal_name = dplyr::if_else(is.na(formal_name) & !is.na(transcript_name), transcript_name, formal_name)
+    )
+
+  # Ensure all names are unique
+  result <- result %>%
+    dplyr::distinct(preferred_name, formal_name, transcript_name, .keep_all = TRUE)
+
+  result
 }

@@ -4,10 +4,15 @@
 \alias{make_students_only_transcripts_summary_df}
 \title{Make Students Only Transcripts Summary}
 \usage{
-make_students_only_transcripts_summary_df(transcripts_session_summary_df)
+make_students_only_transcripts_summary_df(
+  transcripts_session_summary_df,
+  preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")
+)
 }
 \arguments{
 \item{transcripts_session_summary_df}{A tibble that summarizes results at the level of the class section and preferred student name.}
+
+\item{preferred_name_exclude_cv}{A character vector of names to exclude from the results. Defaults to c("dead_air", "Instructor Name", "Guests", "unknown").}
 }
 \value{
 A tibble that summarizes results at the level of the class section and preferred student name for only the students enrolled in the class.
@@ -17,23 +22,45 @@ This function creates a tibble from summary results at the
 level of the class section and preferred student name after filtering for only the students enrolled in the class.
 }
 \examples{
-make_transcripts_summary_df(
+# Create sample transcript list
+sample_transcript_list <- tibble::tibble(
+  name = c("John Smith", "Jane Doe", "Unknown"),
+  section = c("CS101", "CS101", "CS101"),
+  day = c("2024-01-01", "2024-01-01", "2024-01-01"),
+  time = c("10:00", "10:00", "10:00"),
+  n = c(5, 3, 1),
+  duration = c(300, 180, 60),
+  wordcount = c(500, 300, 100),
+  comments = c(10, 5, 2),
+  n_perc = c(0.5, 0.3, 0.1),
+  duration_perc = c(0.5, 0.3, 0.1),
+  wordcount_perc = c(0.5, 0.3, 0.1),
+  wpm = c(100, 100, 100),
+  name_raw = c("John Smith", "Jane Doe", "Unknown"),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+  dept = c("CS", "CS", "CS"),
+  session_num = c(1, 1, 1)
+)
+
+# Create sample roster
+sample_roster <- tibble::tibble(
+  first_last = c("John Smith", "Jane Doe"),
+  dept = c("CS", "CS"),
+  transcript_section = c("CS101", "CS101"),
+  session_num = c(1, 1),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+  student_id = c("12345", "67890")
+)
+
+make_students_only_transcripts_summary_df(
   make_transcripts_session_summary_df(
     clean_names_df = make_clean_names_df(
       data_folder = "data",
       section_names_lookup_file = "section_names_lookup.csv",
-      transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-      roster_sessions = make_student_roster_sessions(
-        transcripts_list_df = join_transcripts_list(
-          df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-          df_transcript_files = load_transcript_files_list(),
-          df_cancelled_classes = load_cancelled_classes()
-        ),
-        roster_small_df = make_roster_small(
-          roster_df = load_roster()
-        )
-      )
+      transcripts_metrics_df = sample_transcript_list,
+      roster_sessions = sample_roster
     )
-  )
+  ),
+  preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")
 )
 }

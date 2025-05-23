@@ -6,7 +6,8 @@
 \usage{
 make_template_rmd(
   new_template_file_name = "README.Rmd",
-  template_file = "README.Rmd"
+  template_file = paste0(system.file("", package = "zoomstudentengagement"),
+    "README.Rmd")
 )
 }
 \arguments{
@@ -16,7 +17,7 @@ make_template_rmd(
 `Readme.Rmd` file in the `zoomstudentengagment` documentation.}
 }
 \value{
-Nothing. (printed message and saved file as side effects.)
+TRUE if the file was copied, FALSE otherwise.
 }
 \description{
 This function a template file (generally the `Readme.Rmd` file in the

@@ -7,7 +7,7 @@
 make_clean_names_df(
   data_folder = "data",
   section_names_lookup_file = "section_names_lookup.csv",
-  transcripts_fliwc_df,
+  transcripts_metrics_df,
   roster_sessions
 )
 }
@@ -18,7 +18,7 @@ make_clean_names_df(
 \item{section_names_lookup_file}{File name of the csv file of customized
 student names by section Defaults to 'section_names_lookup.csv'}
 
-\item{transcripts_fliwc_df}{A tibble containing session details and summary
+\item{transcripts_metrics_df}{A tibble containing session details and summary
 metrics by speaker for all class sessions in the tibble provided.}
 
 \item{roster_sessions}{A tibble listing the students enrolled in the class or
@@ -35,25 +35,45 @@ by speaker for all class sessions (and placeholders for missing sections)
 from the joining of:
 \itemize{
 \item a tibble of customized student names by section (\code{section_names_lookup_file} in the \code{data_folder} folder),
-\item a tibble containing session details and summary metrics by speaker for all class sessions (\code{transcripts_fliwc_df}), and
+\item a tibble containing session details and summary metrics by speaker for all class sessions (\code{transcripts_metrics_df}), and
 \item a tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student (\code{roster_sessions}) into a single tibble.
 }
 }
 \examples{
+# Create sample data for demonstration
+sample_transcripts <- tibble::tibble(
+  name = c("John Smith", "Jane Doe"),
+  section = c("A", "B"),
+  day = c("Monday", "Tuesday"),
+  time = c("10:00", "11:00"),
+  n = c(10, 15),
+  duration = c(300, 450),
+  wordcount = c(500, 750),
+  comments = c("Good", "Excellent"),
+  n_perc = c(0.1, 0.15),
+  duration_perc = c(0.1, 0.15),
+  wordcount_perc = c(0.1, 0.15),
+  wpm = c(100, 100),
+  name_raw = c("John Smith", "Jane Doe"),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+  dept = c("CS", "CS"),
+  session_num = c(1, 1)
+)
+
+sample_roster <- tibble::tibble(
+  first_last = c("John Smith", "Jane Doe"),
+  dept = c("CS", "CS"),
+  transcript_section = c("A", "B"),
+  session_num = c(1, 1),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
+  student_id = c("12345", "67890")
+)
+
 make_clean_names_df(
   data_folder = "data",
   section_names_lookup_file = "section_names_lookup.csv",
-  transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-  roster_sessions = make_student_roster_sessions(
-    transcripts_list_df = join_transcripts_list(
-      df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-      df_transcript_files = load_transcript_files_list(),
-      df_cancelled_classes = load_cancelled_classes()
-    ),
-    roster_small_df = make_roster_small(
-      roster_df = load_roster()
-    )
-  )
+  transcripts_metrics_df = sample_transcripts,
+  roster_sessions = sample_roster
 )
 
 }

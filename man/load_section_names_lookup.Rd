@@ -7,7 +7,7 @@
 load_section_names_lookup(
   data_folder = "data",
   names_lookup_file = "section_names_lookup.csv",
-  section_names_lookup_col_types = "cccdcccd"
+  section_names_lookup_col_types = "cccccccc"
 )
 }
 \arguments{
@@ -16,7 +16,7 @@ load_section_names_lookup(
 \item{names_lookup_file}{File name of the csv file of customized student names by section
 Defaults to 'section_names_lookup.csv'}
 
-\item{section_names_lookup_col_types}{column types in the csv file of customized student names by section. Defaults to 'cccdcccd'}
+\item{section_names_lookup_col_types}{column types in the csv file of customized student names by section. Defaults to 'cccccccc'}
 }
 \value{
 A tibble of customized student names by section.

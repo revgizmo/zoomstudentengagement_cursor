@@ -26,9 +26,9 @@ load_zoom_recorded_sessions_list(
 will store the cloud recording csvs}
 
 \item{topic_split_pattern}{REGEX pattern used to parse the `Topic` from the
-csvs and extract useful columns. Defaults to `paste0("^(?<dept>\\\\S+)
-(?<section>\\\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\\\S+\\\\s*\\\\S+)
-(?<instructor>\\\\(.*?\\\\))")` (Note: this REGEX pattern is formatted here
+csvs and extract useful columns. Defaults to `paste0("^(?<dept>\\S+)
+(?<section>\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+)
+(?<instructor>\\(.*?\\))")` (Note: this REGEX pattern is formatted here
 as paste0() rather than a single string to stay beneath the 90 character
 line limit in the code checker.  A single string works just as well as this
 combined one)}
@@ -36,7 +36,7 @@ combined one)}
 \item{zoom_recorded_sessions_csv_names_pattern}{REGEX pattern used to parse
 the csv file names from the cloud recording csvs and extract useful
 columns. Defaults to
-'zoomus_recordings__\\\\d{8}(?:\\\\s+copy\\\\s*\\\\d*)?\\\\.csv'}
+'zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv'}
 
 \item{zoom_recorded_sessions_csv_col_names}{Comma separated string of column
 names in the cloud recording csvs. Zoom tends to save the file with an
@@ -58,7 +58,9 @@ in hours.  Defaults to 1.5}
 }
 \value{
 A tibble listing the session recordings loaded from the cloud
-  recording csvs.
+  recording csvs. Returns NULL if the transcripts folder doesn't exist,
+  or an empty tibble with the correct column structure if no matching
+  files are found.
 }
 \description{
 This function creates a tibble from a provided csv file of Zoom recordings.
@@ -69,9 +71,17 @@ This function creates a tibble from a provided csv file of Zoom recordings.
 1. Go to [https://www.zoom.us/recording](https://www.zoom.us/recording)
 
 2. Export the Cloud Recordings 3. Copy the cloud recording csv (naming
-convention: 'zoomus_recordings__\\\\d{8}.csv') to 'data/transcripts/' (or
+convention: 'zoomus_recordings__\\d{8}.csv') to 'data/transcripts/' (or
 whatever path you identify in the `data_folder` and `transcripts_folder`
 parameters).
+}
+\note{
+The function handles several legacy and edge cases:
+- Trailing commas in CSV headers (common in Zoom exports)
+- Multiple recordings of the same session (takes the most recent)
+- Timezone handling for session start/end times
+- Department filtering for targeted recordings
+- Date format variations in Zoom exports
 }
 \examples{
 load_zoom_recorded_sessions_list()

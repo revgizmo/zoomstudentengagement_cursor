@@ -7,23 +7,44 @@
 #' @export
 #'
 #' @examples
+#' # Create sample transcript list
+#' sample_transcript_list <- tibble::tibble(
+#'   name = c("John Smith", "Jane Doe", "Unknown"),
+#'   section = c("CS101", "CS101", "CS101"),
+#'   day = c("2024-01-01", "2024-01-01", "2024-01-01"),
+#'   time = c("10:00", "10:00", "10:00"),
+#'   n = c(5, 3, 1),
+#'   duration = c(300, 180, 60),
+#'   wordcount = c(500, 300, 100),
+#'   comments = c(10, 5, 2),
+#'   n_perc = c(0.5, 0.3, 0.1),
+#'   duration_perc = c(0.5, 0.3, 0.1),
+#'   wordcount_perc = c(0.5, 0.3, 0.1),
+#'   wpm = c(100, 100, 100),
+#'   name_raw = c("John Smith", "Jane Doe", "Unknown"),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+#'   dept = c("CS", "CS", "CS"),
+#'   session_num = c(1, 1, 1)
+#' )
+#'
+#' # Create sample roster
+#' sample_roster <- tibble::tibble(
+#'   first_last = c("John Smith", "Jane Doe"),
+#'   dept = c("CS", "CS"),
+#'   transcript_section = c("CS101", "CS101"),
+#'   session_num = c(1, 1),
+#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+#'   student_id = c("12345", "67890")
+#' )
+#'
 #' plot_users_masked_section_by_metric(
 #'   make_transcripts_summary_df(
 #'     make_transcripts_session_summary_df(
 #'       clean_names_df = make_clean_names_df(
 #'         data_folder = "data",
 #'         section_names_lookup_file = "section_names_lookup.csv",
-#'         transcripts_fliwc_df = fliwc_transcript_files(df_transcript_list = NULL),
-#'         roster_sessions = make_student_roster_sessions(
-#'           transcripts_list_df = join_transcripts_list(
-#'             df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
-#'             df_transcript_files = load_transcript_files_list(),
-#'             df_cancelled_classes = load_cancelled_classes()
-#'           ),
-#'           roster_small_df = make_roster_small(
-#'             roster_df = load_roster()
-#'           )
-#'         )
+#'         transcripts_metrics_df = sample_transcript_list,
+#'         roster_sessions = sample_roster
 #'       )
 #'     )
 #'   )
@@ -35,27 +56,21 @@ plot_users_masked_section_by_metric <-
     . <- row_num <- preferred_name <- section <- NULL
 
     if (tibble::is_tibble(df)) {
-      metric_col <- df[metric]
-      df$metric_col <- metric_col[[1]]
-      metric_col_name <- names(metric_col)
-
-
+      # Validate metric exists in the data
+      if (!metric %in% names(df)) {
+        stop(sprintf("Metric '%s' not found in data", metric))
+      }
+      
+      # Mask user names and create plot
       df %>%
-        zoomstudentengagement::mask_user_names_by_metric(.,
-                 metric = 'session_ct',
-                 target_student = '') %>%
-#
-#       df %>%
-#         # dplyr::group_by(section) %>%
-#         dplyr::mutate(
-#           row_num = dplyr::row_number(dplyr::coalesce(metric_col,-Inf)),
-#           preferred_name = paste('student', stringr::str_pad(
-#             row_num, width = 2, pad = "0"
-#           )),
-#           sep = '_'
-#         ) %>%
-        zoomstudentengagement::plot_users_by_metric(metric = metric_col_name,
-                                                    student_col = 'student')
+        zoomstudentengagement::mask_user_names_by_metric(
+          metric = metric,
+          target_student = ''
+        ) %>%
+        zoomstudentengagement::plot_users_by_metric(
+          metric = metric,
+          student_col_name = 'student'
+        )
     }
   }
 
