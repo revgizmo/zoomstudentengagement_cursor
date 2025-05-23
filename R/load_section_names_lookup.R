@@ -19,17 +19,28 @@ load_section_names_lookup <- function(data_folder = "data",
                                       section_names_lookup_col_types = "cccdcccd") {
   preferred_name <- section <- student_id <- NULL
 
-  file_path <- paste0(data_folder, "/", names_lookup_file)
+  # Input validation
+  if (!is.character(data_folder) || length(data_folder) != 1) {
+    stop("data_folder must be a single character string")
+  }
+  if (!is.character(names_lookup_file) || length(names_lookup_file) != 1) {
+    stop("names_lookup_file must be a single character string")
+  }
+  if (!is.character(section_names_lookup_col_types) || length(section_names_lookup_col_types) != 1) {
+    stop("section_names_lookup_col_types must be a single character string")
+  }
+
+  # Create the file path
+  file_path <- file.path(data_folder, names_lookup_file)
 
   # Check if the file exists
   if (file.exists(file_path)) {
     # File exists, proceed with importing it
     data <- readr::read_csv(file_path, col_types = section_names_lookup_col_types)
-    # Your import or processing logic here
   } else {
     # File doesn't exist, handle the situation accordingly
-    print(paste("File does not exist:", file_path))
-    print('placeholder df created.')
+    warning(paste("File does not exist:", file_path))
+    warning("Creating empty lookup table.")
     data <- make_blank_section_names_lookup_csv()
   }
 

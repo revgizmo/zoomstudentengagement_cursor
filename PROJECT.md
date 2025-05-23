@@ -207,10 +207,65 @@ Track the following metrics:
 
 ### CI/CD Plan
 - **Stage 1:** Set up basic GitHub Actions workflow to run R CMD check and testthat tests on push/PR (Ubuntu, latest R)
+  - [x] Initial workflow setup with R-CMD-check.yaml
+  - [ ] Optimize dependency installation:
+    - [ ] Add R package caching using `actions/cache`
+    - [ ] Use `r-lib/actions/setup-r-dependencies@v2` for efficient dependency management
+    - [ ] Configure dependency installation to only install necessary packages
+    - [ ] Add caching for system dependencies
+  - [ ] Monitor and optimize workflow performance:
+    - [ ] Track installation times
+    - [ ] Identify bottlenecks
+    - [ ] Document optimization strategies
 - **Stage 2:** Add code coverage reporting (covr)
 - **Stage 3:** Add code style/linting checks (lintr)
 - **Stage 4:** Add automated documentation builds (pkgdown)
 - **Stage 5:** Expand to multiple OSes (macOS, Windows) and R versions as needed
+
+### GitHub Actions Optimization
+- **Current Issues:**
+  - Long dependency installation times (7+ minutes)
+  - Inefficient package caching
+  - Redundant dependency installations
+
+- **Optimization Strategy:**
+  1. **Package Caching:**
+     - Implement R package caching using `actions/cache`
+     - Cache both CRAN and GitHub packages
+     - Set appropriate cache keys and paths
+
+  2. **Dependency Management:**
+     - Replace manual dependency installation with `r-lib/actions/setup-r-dependencies@v2`
+     - Configure to install only necessary dependencies
+     - Use `dependencies: c("Depends", "Imports", "LinkingTo")` instead of `TRUE`
+
+  3. **System Dependencies:**
+     - Cache system package installations
+     - Optimize apt-get update/install commands
+     - Consider using pre-built Docker images
+
+  4. **Workflow Structure:**
+     - Separate dependency installation from testing
+     - Use matrix builds for different R versions
+     - Implement conditional steps based on changes
+
+  5. **Monitoring:**
+     - Add timing information to workflow steps
+     - Track cache hit rates
+     - Monitor workflow performance metrics
+
+- **Implementation Steps:**
+  1. Create new branch for workflow optimization
+  2. Update R-CMD-check.yaml with optimized configuration
+  3. Test workflow performance
+  4. Document optimization results
+  5. Create pull request with changes
+
+- **Expected Benefits:**
+  - Reduced workflow execution time
+  - More reliable dependency installation
+  - Better resource utilization
+  - Improved developer experience
 
 ## Accessibility & Internationalization
 - [ ] Ensure colorblind-friendly plotting

@@ -1,9 +1,10 @@
 test_that("plot_users_by_metric creates valid ggplot object with correct properties", {
   # Create sample data
   clean_names <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = create_sample_transcript(),
-    roster_sessions = create_sample_roster(),
-    section_names_lookup_file = create_sample_section_names_lookup()
+    roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
     make_transcripts_session_summary_df(clean_names)
@@ -36,9 +37,10 @@ test_that("plot_users_by_metric creates valid ggplot object with correct propert
 test_that("plot_users_masked_section_by_metric masks names correctly and creates valid plot", {
   # Create sample data
   clean_names <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = create_sample_transcript(),
-    roster_sessions = create_sample_roster(),
-    section_names_lookup_file = create_sample_section_names_lookup()
+    roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
     make_transcripts_session_summary_df(clean_names)
@@ -70,9 +72,10 @@ test_that("plot_users_masked_section_by_metric masks names correctly and creates
 test_that("plotting functions handle empty data gracefully", {
   # Create empty data frames
   clean_names <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = create_sample_transcript()[0,],
-    roster_sessions = create_sample_roster()[0,],
-    section_names_lookup_file = create_sample_section_names_lookup()[0,]
+    roster_sessions = create_sample_roster()[0,]
   )
   summary_df <- make_transcripts_summary_df(
     make_transcripts_session_summary_df(clean_names)
@@ -98,9 +101,10 @@ test_that("plotting functions handle empty data gracefully", {
 test_that("plotting functions handle different metrics correctly", {
   # Create sample data
   clean_names <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = create_sample_transcript(),
-    roster_sessions = create_sample_roster(),
-    section_names_lookup_file = create_sample_section_names_lookup()
+    roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
     make_transcripts_session_summary_df(clean_names)
@@ -129,9 +133,10 @@ test_that("plotting functions handle different metrics correctly", {
 test_that("plotting functions handle invalid metrics gracefully", {
   # Create sample data
   clean_names <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = create_sample_transcript(),
-    roster_sessions = create_sample_roster(),
-    section_names_lookup_file = create_sample_section_names_lookup()
+    roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
     make_transcripts_session_summary_df(clean_names)

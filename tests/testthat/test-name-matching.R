@@ -7,9 +7,10 @@ test_that("make_clean_names_df handles basic cases", {
   section_names_lookup_file <- create_sample_section_names_lookup()
   
   result <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = transcripts_metrics_df,
-    roster_sessions = roster_sessions,
-    section_names_lookup_file = section_names_lookup_file
+    roster_sessions = roster_sessions
   )
   
   expect_s3_class(result, "data.frame")
@@ -28,9 +29,10 @@ test_that("make_clean_names_df handles special characters", {
   section_names_lookup_file$transcript_name <- c("José García", "O'Connor", "Professor")
   
   result <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = transcripts_metrics_df,
-    roster_sessions = roster_sessions,
-    section_names_lookup_file = section_names_lookup_file
+    roster_sessions = roster_sessions
   )
   
   expect_s3_class(result, "data.frame")
@@ -48,9 +50,10 @@ test_that("make_clean_names_df handles missing values", {
   section_names_lookup_file$transcript_name[3] <- NA
   
   result <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = transcripts_metrics_df,
-    roster_sessions = roster_sessions,
-    section_names_lookup_file = section_names_lookup_file
+    roster_sessions = roster_sessions
   )
   
   expect_s3_class(result, "data.frame")

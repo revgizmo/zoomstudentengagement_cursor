@@ -6,9 +6,10 @@ test_that("make_clean_names_df correctly matches names", {
   
   # Test name matching
   result <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = sample_transcript,
-    roster_sessions = sample_roster,
-    section_names_lookup_file = sample_lookup
+    roster_sessions = sample_roster
   )
   
   # Check that preferred_name is correctly matched
@@ -24,9 +25,10 @@ test_that("make_clean_names_df handles unmatched names", {
   
   # Test handling of unmatched names
   result <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = sample_transcript,
-    roster_sessions = sample_roster,
-    section_names_lookup_file = sample_lookup
+    roster_sessions = sample_roster
   )
   
   # Check that unmatched names are preserved in transcript_name
@@ -41,9 +43,10 @@ test_that("make_clean_names_df handles empty input", {
   
   # Test with empty input
   result <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = empty_transcript,
-    roster_sessions = empty_roster,
-    section_names_lookup_file = empty_lookup
+    roster_sessions = empty_roster
   )
   
   expect_equal(nrow(result), 0)
@@ -58,9 +61,10 @@ test_that("make_clean_names_df preserves section information", {
   
   # Test section preservation
   result <- make_clean_names_df(
+    data_folder = "data",
+    section_names_lookup_file = "section_names_lookup.csv",
     transcripts_metrics_df = sample_transcript,
-    roster_sessions = sample_roster,
-    section_names_lookup_file = sample_lookup
+    roster_sessions = sample_roster
   )
   
   # Check that transcript_section information is preserved

@@ -53,7 +53,8 @@ create_sample_section_names_lookup <- function() {
     time = c("09:00", "09:00", "09:00"),
     formal_name = c("Student1", "Student2", "Professor"),
     preferred_name = c("Student1", "Student2", "Professor"),
-    student_id = c("S001", "S002", "P001")
+    student_id = c("S001", "S002", "P001"),
+    section = c("A", "A", "A")
   )
 }
 
