@@ -15,6 +15,7 @@ test_that("make_clean_names_df handles basic cases", {
   expect_s3_class(result, "data.frame")
   expect_true("preferred_name" %in% names(result))
   expect_true("student_id" %in% names(result))
+  expect_true(all(result$preferred_name %in% c(roster_sessions$preferred_name, transcripts_metrics_df$name)))
 })
 
 test_that("make_clean_names_df handles special characters", {
@@ -34,6 +35,7 @@ test_that("make_clean_names_df handles special characters", {
   
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 3)
+  expect_true(all(result$preferred_name %in% c(roster_sessions$first_last, transcripts_metrics_df$name)))
 })
 
 test_that("make_clean_names_df handles missing values", {
@@ -53,4 +55,7 @@ test_that("make_clean_names_df handles missing values", {
   
   expect_s3_class(result, "data.frame")
   expect_true(any(is.na(result$preferred_name)))
+  expect_true(all(result$preferred_name[!is.na(result$preferred_name)] %in% 
+                 c(roster_sessions$first_last[!is.na(roster_sessions$first_last)], 
+                   transcripts_metrics_df$name[!is.na(transcripts_metrics_df$name)])))
 }) 

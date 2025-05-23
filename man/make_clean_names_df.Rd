@@ -7,7 +7,7 @@
 make_clean_names_df(
   data_folder = "data",
   section_names_lookup_file = "section_names_lookup.csv",
-  transcripts_fliwc_df,
+  transcripts_metrics_df,
   roster_sessions
 )
 }
@@ -18,7 +18,7 @@ make_clean_names_df(
 \item{section_names_lookup_file}{File name of the csv file of customized
 student names by section Defaults to 'section_names_lookup.csv'}
 
-\item{transcripts_fliwc_df}{A tibble containing session details and summary
+\item{transcripts_metrics_df}{A tibble containing session details and summary
 metrics by speaker for all class sessions in the tibble provided.}
 
 \item{roster_sessions}{A tibble listing the students enrolled in the class or
@@ -35,7 +35,7 @@ by speaker for all class sessions (and placeholders for missing sections)
 from the joining of:
 \itemize{
 \item a tibble of customized student names by section (\code{section_names_lookup_file} in the \code{data_folder} folder),
-\item a tibble containing session details and summary metrics by speaker for all class sessions (\code{transcripts_fliwc_df}), and
+\item a tibble containing session details and summary metrics by speaker for all class sessions (\code{transcripts_metrics_df}), and
 \item a tibble listing the students enrolled in the class or classes, with rows for each recorded class section for each student (\code{roster_sessions}) into a single tibble.
 }
 }
@@ -43,7 +43,7 @@ from the joining of:
 make_clean_names_df(
   data_folder = "data",
   section_names_lookup_file = "section_names_lookup.csv",
-  transcripts_fliwc_df = summarize_transcript_files(df_transcript_list = NULL),
+  transcripts_metrics_df = summarize_transcript_files(df_transcript_list = NULL),
   roster_sessions = make_student_roster_sessions(
     transcripts_list_df = join_transcripts_list(
       df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),

@@ -12,7 +12,7 @@ transcript.}
 }
 \value{
 A tibble containing the comments from a Zoom recording
-  transcript
+  transcript, or NULL if the file is empty
 }
 \description{
 Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
@@ -24,6 +24,9 @@ of `wordcount` by Brooks Ambrose:
 https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246
 }
 \examples{
-load_zoom_transcript(transcript_file_path = "NULL")
+# Load a sample transcript from the package's extdata directory
+transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+                             package = "zoomstudentengagement")
+load_zoom_transcript(transcript_file_path = transcript_file)
 
 }

@@ -39,7 +39,10 @@
 #' @export
 #'
 #' @examples
-#' summarize_transcript_metrics(transcript_file_path = "NULL")
+#' # Load a sample transcript from the package's extdata directory
+#' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+#'                              package = "zoomstudentengagement")
+#' summarize_transcript_metrics(transcript_file_path = transcript_file)
 #'
 summarize_transcript_metrics <- function(transcript_file_path = '',
                   names_exclude = c("dead_air"),

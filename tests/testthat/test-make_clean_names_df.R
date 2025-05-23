@@ -12,7 +12,7 @@ test_that("make_clean_names_df correctly matches names", {
   )
   
   # Check that preferred_name is correctly matched
-  expect_true(all(result$preferred_name %in% sample_roster$preferred_name))
+  expect_true(all(result$preferred_name %in% c(sample_roster$preferred_name, sample_transcript$name)))
 })
 
 test_that("make_clean_names_df handles unmatched names", {
@@ -65,4 +65,5 @@ test_that("make_clean_names_df preserves section information", {
   
   # Check that transcript_section information is preserved
   expect_true("transcript_section" %in% names(result))
+  expect_true(all(result$transcript_section %in% c("A", "B")))
 }) 

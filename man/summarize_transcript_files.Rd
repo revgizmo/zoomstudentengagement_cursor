@@ -29,8 +29,7 @@ A tibble containing session details and summary metrics by speaker
   for all class sessions in the tibble provided.
 }
 \description{
-Load Zoom Transcript file and Run Faculty Linguistic Inquiry and Word Count
-on those sessions
+Summarize Transcript Files
 }
 \examples{
 summarize_transcript_files(df_transcript_list = NULL)

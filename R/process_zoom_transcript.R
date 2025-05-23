@@ -38,7 +38,10 @@
 #' @export
 #'
 #' @examples
-#' process_zoom_transcript(transcript_file_path = "NULL")
+#' # Load a sample transcript from the package's extdata directory
+#' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+#'                              package = "zoomstudentengagement")
+#' process_zoom_transcript(transcript_file_path = transcript_file)
 #'
 process_zoom_transcript <- function(transcript_file_path = '',
                                              consolidate_comments = TRUE,

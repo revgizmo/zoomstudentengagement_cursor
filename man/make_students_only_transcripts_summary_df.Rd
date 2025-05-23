@@ -4,10 +4,15 @@
 \alias{make_students_only_transcripts_summary_df}
 \title{Make Students Only Transcripts Summary}
 \usage{
-make_students_only_transcripts_summary_df(transcripts_session_summary_df)
+make_students_only_transcripts_summary_df(
+  transcripts_session_summary_df,
+  preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")
+)
 }
 \arguments{
 \item{transcripts_session_summary_df}{A tibble that summarizes results at the level of the class section and preferred student name.}
+
+\item{preferred_name_exclude_cv}{A character vector of names to exclude from the results. Defaults to c("dead_air", "Instructor Name", "Guests", "unknown").}
 }
 \value{
 A tibble that summarizes results at the level of the class section and preferred student name for only the students enrolled in the class.
@@ -17,12 +22,12 @@ This function creates a tibble from summary results at the
 level of the class section and preferred student name after filtering for only the students enrolled in the class.
 }
 \examples{
-make_transcripts_summary_df(
+make_students_only_transcripts_summary_df(
   make_transcripts_session_summary_df(
     clean_names_df = make_clean_names_df(
       data_folder = "data",
       section_names_lookup_file = "section_names_lookup.csv",
-      transcripts_fliwc_df = summarize_transcript_files(df_transcript_list = NULL),
+      transcripts_metrics_df = summarize_transcript_files(df_transcript_list = NULL),
       roster_sessions = make_student_roster_sessions(
         transcripts_list_df = join_transcripts_list(
           df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
@@ -34,6 +39,7 @@ make_transcripts_summary_df(
         )
       )
     )
-  )
+  ),
+  preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")
 )
 }
