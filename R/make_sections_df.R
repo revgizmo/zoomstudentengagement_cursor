@@ -17,7 +17,10 @@
 #' @export
 #'
 #' @examples
-#' make_sections_df(roster_df = load_roster())
+#' # Load a sample roster from the package's extdata directory
+#' roster_file <- system.file("extdata/roster.csv", package = "zoomstudentengagement")
+#' roster_df <- readr::read_csv(roster_file, show_col_types = FALSE)
+#' make_sections_df(roster_df = roster_df)
 make_sections_df <- function(roster_df) {
   # Defensive: check for valid input
   if (!tibble::is_tibble(roster_df)) {

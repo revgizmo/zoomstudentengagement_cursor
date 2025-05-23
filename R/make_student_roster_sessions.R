@@ -13,15 +13,16 @@
 #' @export
 #'
 #' @examples
+#' # Load a sample roster from the package's extdata directory
+#' roster_file <- system.file("extdata/roster.csv", package = "zoomstudentengagement")
+#' roster_df <- readr::read_csv(roster_file, show_col_types = FALSE)
 #' make_student_roster_sessions(
 #'   transcripts_list_df = join_transcripts_list(
 #'     df_zoom_recorded_sessions = load_zoom_recorded_sessions_list(),
 #'     df_transcript_files = load_transcript_files_list(),
 #'     df_cancelled_classes = load_cancelled_classes()
 #'   ),
-#'   roster_small_df = make_roster_small(
-#'     roster_df = load_roster()
-#'   )
+#'   roster_small_df = make_roster_small(roster_df = roster_df)
 #' )
 make_student_roster_sessions <-
   function(transcripts_list_df,
