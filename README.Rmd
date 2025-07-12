@@ -667,7 +667,7 @@ run_student_reports(
   df_sections = sections_df,
   df_roster = roster_df,
   data_folder = data_folder_input,
-  data_folder =  'inst/extdata',
+  # data_folder =  'inst/extdata',
   transcripts_session_summary_file = transcripts_session_summary_file_input,
   transcripts_summary_file = transcripts_summary_file_input,
 student_summary_report_folder = student_summary_report_folder_input,

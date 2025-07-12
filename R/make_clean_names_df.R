@@ -70,7 +70,6 @@ make_clean_names_df <- function(data_folder = "data",
                                 transcripts_metrics_df,
                                 roster_sessions) {
   comments <-
-    course_num <-
     day <-
     dept <-
     duration <-
@@ -174,7 +173,6 @@ make_clean_names_df <- function(data_folder = "data",
       ),
       keep = FALSE
     ) %>%
-
     # Ensure preferred_name and formal_name columns exist and are the correct length
     dplyr::mutate(
       preferred_name = if (!"preferred_name" %in% names(.)) NA_character_ else preferred_name,
