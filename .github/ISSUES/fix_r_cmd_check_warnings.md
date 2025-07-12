@@ -5,7 +5,7 @@ The package currently has several R-CMD-check warnings that should be addressed.
 
 ## Current Warnings
 1. Non-portable file name:
-   - `inst/Zoom Student Engagement Analysis - student summary report.Rmd`
+   - `inst/Zoom_Student_Engagement_Analysis_student_summary_report.Rmd`
    - Should be renamed to use underscores instead of spaces
 
 2. Non-standard license specification:

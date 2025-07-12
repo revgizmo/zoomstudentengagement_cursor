@@ -1,3 +1,11 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+.cursor/
+.github/
+AUDIT_LOG.md
+CONTRIBUTING.md
+CRAN_CHECKLIST.md
+FUNCTION_INVENTORY.md
+PROJECT.md
+test_script.R

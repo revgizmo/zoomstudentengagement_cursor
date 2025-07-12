@@ -2,13 +2,15 @@ test_that("make_blank_cancelled_classes_df returns correct structure and is empt
   result <- make_blank_cancelled_classes_df()
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 0)
-  expect_true(all(c(
-    "dept", "section", "day", "time", "instructor", "Topic", "ID", "Start Time", "File Size (MB)",
-    "File Count", "Total Views", "Total Downloads", "Last Accessed", "match_start_time", "match_end_time",
-    "dt", "recording_start", "start_time_local", "transcript_file", "chat_file", "closed_caption_file"
-  ) %in% names(result)))
+  expected_cols <- c("dept", "course_section", "course", "section", "day", "time", "instructor", 
+                     "Topic", "ID", "Start Time", "File Size (MB)", "File Count", "Total Views", 
+                     "Total Downloads", "Last Accessed", "match_start_time", "match_end_time", 
+                     "date_extract", "recording_start", "start_time_local", "transcript_file", "chat_file", "closed_caption_file")
+  expect_true(all(expected_cols %in% names(result)))
   expect_type(result$dept, "character")
-  expect_type(result$section, "character")
+  expect_type(result$course_section, "double")
+  expect_type(result$course, "integer")
+  expect_type(result$section, "integer")
   expect_type(result$day, "character")
   expect_type(result$time, "character")
   expect_type(result$instructor, "character")
@@ -22,10 +24,10 @@ test_that("make_blank_cancelled_classes_df returns correct structure and is empt
   expect_type(result$`Last Accessed`, "character")
   expect_true(inherits(result$match_start_time, "POSIXct"))
   expect_true(inherits(result$match_end_time, "POSIXct"))
-  expect_type(result$dt, "character")
+  expect_type(result$date_extract, "character")
   expect_true(inherits(result$recording_start, "POSIXct"))
   expect_true(inherits(result$start_time_local, "POSIXct"))
   expect_type(result$transcript_file, "character")
   expect_type(result$chat_file, "character")
   expect_type(result$closed_caption_file, "character")
-}) 
+})

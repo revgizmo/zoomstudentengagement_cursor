@@ -27,6 +27,8 @@
 #' # Create sample data for demonstration
 #' sample_transcripts <- tibble::tibble(
 #'   name = c("John Smith", "Jane Doe"),
+#'   course_section = c("101.A", "101.B"),
+#'   course = c(101, 101),
 #'   section = c("A", "B"),
 #'   day = c("Monday", "Tuesday"),
 #'   time = c("10:00", "11:00"),
@@ -46,11 +48,14 @@
 #'
 #' sample_roster <- tibble::tibble(
 #'   first_last = c("John Smith", "Jane Doe"),
+#'   preferred_name = c("John Smith", "Jane Doe"),
+#'   course_num = c(101, 101),
+#'   section = c("A", "B"),
+#'   student_id = c("12345", "67890"),
 #'   dept = c("CS", "CS"),
-#'   transcript_section = c("A", "B"),
 #'   session_num = c(1, 1),
 #'   start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
-#'   student_id = c("12345", "67890")
+#'   transcript_section = c("101.A", "101.B")
 #' )
 #'
 #' make_clean_names_df(
@@ -65,6 +70,7 @@ make_clean_names_df <- function(data_folder = "data",
                                 transcripts_metrics_df,
                                 roster_sessions) {
   comments <-
+    course_num <-
     day <-
     dept <-
     duration <-
@@ -105,25 +111,46 @@ make_clean_names_df <- function(data_folder = "data",
   section_names_lookup <- load_section_names_lookup(
     data_folder = data_folder,
     names_lookup_file = section_names_lookup_file,
-    section_names_lookup_col_types = "cccccccc"  # Changed to all character columns
+    section_names_lookup_col_types = "ccccccccc"  # Changed to all character columns
   )
 
+  # Clean the roster_sessions df
+  roster_sessions_clean <- roster_sessions %>%
+    dplyr::mutate(
+      # Ensure transcript_section column is character
+      transcript_section = as.character(transcript_section),
+      course_num = as.character(course_num),
+      section = as.character(section),
+      student_id = as.character(student_id)
+    )
+
   # Process the data
-  result <- transcripts_metrics_df %>%
+  result <-
+    transcripts_metrics_df %>%
     dplyr::rename(
       transcript_name = name,
-      transcript_section = section
+      transcript_section = course_section
     ) %>%
-    # Ensure time column is character
-    dplyr::mutate(time = as.character(time)) %>%
+    dplyr::mutate(
+      # Ensure time column is character
+      time = as.character(time),
+      # Ensure transcript_section column is character
+      transcript_section = as.character(transcript_section),
+      course = as.character(course),
+      section = as.character(section)
+    ) %>%
     # join section_names_lookup to add any manually corrected formal_name values
     dplyr::left_join(
       section_names_lookup,
       by = dplyr::join_by(
         transcript_name,
         transcript_section,
+        course,
+        section,
         day,
         time
+        # ,
+        # preferred_name
       )
     ) %>%
     # fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
@@ -131,17 +158,23 @@ make_clean_names_df <- function(data_folder = "data",
       formal_name = dplyr::coalesce(formal_name, transcript_name)
     ) %>%
     # join to the roster of enrolled students
+
     dplyr::full_join(
-      roster_sessions,
+      roster_sessions_clean,
       by = dplyr::join_by(
+        preferred_name,
         formal_name == first_last,
         dept,
         transcript_section,
+        course == course_num,
+        section,
         session_num,
-        start_time_local
+        start_time_local,
+        student_id
       ),
       keep = FALSE
     ) %>%
+
     # Ensure preferred_name and formal_name columns exist and are the correct length
     dplyr::mutate(
       preferred_name = if (!"preferred_name" %in% names(.)) NA_character_ else preferred_name,
@@ -173,6 +206,15 @@ make_clean_names_df <- function(data_folder = "data",
       duration_perc,
       wordcount_perc,
       wpm,
+      #
+      # all_of(n),
+      # all_of(duration),
+      # all_of(wordcount),
+      # all_of(comments),
+      # all_of(n_perc),
+      # all_of(duration_perc),
+      # all_of(wordcount_perc),
+      # all_of(wpm),
       transcript_name,
       name_raw,
       start_time_local,

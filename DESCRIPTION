@@ -7,10 +7,10 @@ Maintainer: Conor Healy <conorhealy@berkeley.edu>
 Description: Takes Zoom transcripts and student rosters,
     converts them for analysis, and
     analyzes the results for student engagement, with a particular focus on participation equity.
-License: TBD Open Source
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports: 
     data.table,
     dplyr,

@@ -5,6 +5,7 @@ test_that("write_section_names_lookup writes a CSV and returns a tibble", {
     transcript_section = c("A", "B"),
     day = c("Mon", "Tue"),
     time = c("09:00", "10:00"),
+    course= c(101L, 201L),
     section = c("A", "B"),
     preferred_name = c("Alice", "Bob"),
     formal_name = c("Alice Smith", "Bob Jones"),
@@ -26,6 +27,7 @@ test_that("write_section_names_lookup handles empty input", {
     transcript_section = character(),
     day = character(),
     time = character(),
+    course = integer(),
     section = character(),
     preferred_name = character(),
     formal_name = character(),
@@ -41,4 +43,4 @@ test_that("write_section_names_lookup handles empty input", {
 
 test_that("write_section_names_lookup handles invalid input gracefully", {
   expect_silent(write_section_names_lookup(NULL, data_folder = tempdir(), section_names_lookup_file = "should_not_exist.csv"))
-}) 
+})

@@ -90,7 +90,7 @@ load_zoom_recorded_sessions_list <-
       `Total Downloads` <- `Total Downloads` <- `Last Accessed` <- match_start_time <- NULL
 
     # Handle trailing comma in column names
-    zoom_recorded_sessions_csv_col_names_vector <- 
+    zoom_recorded_sessions_csv_col_names_vector <-
       strsplit(zoom_recorded_sessions_csv_col_names, ",")[[1]] %>%
       stringr::str_trim() %>%
       Filter(function(x) x != "", .)
@@ -176,7 +176,11 @@ load_zoom_recorded_sessions_list <-
       dplyr::mutate(
         matches = stringr::str_match(Topic, topic_split_pattern),
         dept = matches[, 2],
-        section = matches[, 3],
+        course_section = as.double(matches[, 3]),
+        # course = stringr::str_extract(Topic, "(?<=\\s)\\d+(?=\\.)"),
+        # section = stringr::str_extract(Topic, "(?<=\\.)\\d+"),
+        course = as.integer(stringr::str_extract(course_section, "\\d+(?=\\.)")),
+        section = as.integer(stringr::str_extract(course_section, "(?<=\\.)\\d+")),
         day = matches[, 4],
         time = matches[, 5],
         instructor = matches[, 6]
@@ -193,11 +197,13 @@ load_zoom_recorded_sessions_list <-
     print(result$`Start Time`)
 
     result <- result %>%
+      # dplyr::select(`Start Time`)
       dplyr::mutate(
         # Parse date with explicit format to handle Zoom's format
+
         match_start_time = lubridate::parse_date_time(
           `Start Time`,
-          orders = c("b d, Y I:M:S p", "b d, Y I:M p"),
+          orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
           tz = "America/Los_Angeles"
         ),
         match_end_time = match_start_time + lubridate::hours(scheduled_session_length_hours + 0.5)

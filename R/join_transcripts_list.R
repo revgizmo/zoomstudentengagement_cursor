@@ -65,6 +65,7 @@ join_transcripts_list <- function(
       match_start_time <= start_time_local,
       match_end_time >= start_time_local
     ) %>%
+    # names() %>% paste0(collapse = ",")
     dplyr::bind_rows(df_cancelled_classes) %>%
     dplyr::arrange(start_time_local) %>%
     dplyr::group_by(section) %>%

@@ -17,7 +17,9 @@
 #' # Create sample transcript list
 #' sample_transcript_list <- tibble::tibble(
 #'   name = c("John Smith", "Jane Doe", "Unknown"),
-#'   section = c("CS101", "CS101", "CS101"),
+#'   course_section = c("101.A", "101.A", "101.A"),
+#'   course = c(101, 101, 101),
+#'   section = c("A", "A", "A"),
 #'   day = c("2024-01-01", "2024-01-01", "2024-01-01"),
 #'   time = c("10:00", "10:00", "10:00"),
 #'   n = c(5, 3, 1),
@@ -37,11 +39,14 @@
 #' # Create sample roster
 #' sample_roster <- tibble::tibble(
 #'   first_last = c("John Smith", "Jane Doe"),
+#'   preferred_name = c("John Smith", "Jane Doe"),
+#'   course_num = c(101, 101),
+#'   section = c("A", "A"),
+#'   student_id = c("12345", "67890"),
 #'   dept = c("CS", "CS"),
-#'   transcript_section = c("CS101", "CS101"),
 #'   session_num = c(1, 1),
 #'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
-#'   student_id = c("12345", "67890")
+#'   transcript_section = c("101.A", "101.A")
 #' )
 #'
 #' mask_user_names_by_metric(
@@ -54,7 +59,8 @@
 #'         roster_sessions = sample_roster
 #'       )
 #'     )
-#'   )
+#'   ),
+#'   metric = "session_ct"
 #' )
 #'
 mask_user_names_by_metric <-

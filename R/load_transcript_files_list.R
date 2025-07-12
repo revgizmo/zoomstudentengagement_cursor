@@ -67,8 +67,8 @@ load_transcript_files_list <-
         data.table::data.table("file_name" = .) %>%
         # filter(!grepl(zoom_recorded_sessions_csv_names_pattern, file_name)) %>%
         dplyr::mutate(
-          dt = stringr::str_extract(file_name, dt_extract_pattern),
-          # session_num = dense_rank(dt),
+          date_extract = stringr::str_extract(file_name, dt_extract_pattern),
+          # session_num = dense_rank(date_extract),
           file_type = dplyr::case_when(
             grepl(transcript_file_extension_pattern,
               file_name,

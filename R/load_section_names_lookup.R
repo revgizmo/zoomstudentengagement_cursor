@@ -16,7 +16,7 @@
 #'
 load_section_names_lookup <- function(data_folder = "data",
                                       names_lookup_file = "section_names_lookup.csv",
-                                      section_names_lookup_col_types = "cccccccc") {
+                                      section_names_lookup_col_types = "ccccccccc") {
   preferred_name <- section <- student_id <- NULL
 
   # Input validation

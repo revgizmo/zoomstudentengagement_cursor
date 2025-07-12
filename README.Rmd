@@ -71,7 +71,7 @@ devtools::install_github("revgizmo/zoomstudentengagement")
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
-library(zoomstudentengagement)
+# library(zoomstudentengagement)
 
 ```
 
@@ -142,7 +142,7 @@ instructor_name_input = 'Conor Healy'
 
 
 ### student_summary_report
-student_summary_report_input <- 'Zoom Student Engagement Analysis - student summary report'
+student_summary_report_input <- 'Zoom_Student_Engagement_Analysis_student_summary_report'
 student_summary_report_folder_input <- system.file("",  package="zoomstudentengagement")
 # student_summary_report used in run_student_reports()
 
@@ -171,8 +171,9 @@ cat(paste0("+ `data_folder_input`:  '", data_folder_input, "'\n",
 + `*r library(zoomstudentengagement) `
     
 ```{r}
-library(zoomstudentengagement)
+# library(zoomstudentengagement)
 
+devtools::load_all()
 # devtools::load_all('../zoomstudentengagement')
 # devtools::install_github("revgizmo/zoomstudentengagement")
 
@@ -225,7 +226,20 @@ zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
 #   scheduled_session_length_hours = 1.5
 # )
 
-zoom_recorded_sessions_df
+zoom_recorded_sessions_df 
+# %>%
+#   select(course_section) %>%
+#   mutate(
+#         #   course = stringr::str_split(course_section, "\\.")[[1]][1],
+#         # section = stringr::str_split(course_section, "\\.")[[1]][2]
+#         # course = strsplit(course_section, ".", fixed = TRUE)[[1]][1],
+#         # section = strsplit(course_section, ".", fixed = TRUE)[[1]][2],
+#         course = stringr::str_extract(course_section, "\\d+(?=\\.)"),
+#         section = stringr::str_extract(course_section, "(?<=\\.)\\d+"),
+# 
+#   )
+
+  
 ```
     
     
@@ -258,7 +272,7 @@ transcript_files_df
 cancelled_classes_df <- load_cancelled_classes(
   data_folder = data_folder_input,
   cancelled_classes_file = cancelled_classes_file_input,
-  cancelled_classes_col_types = "ccccccccnnnncTTcTTccci"
+  cancelled_classes_col_types = "ciiiccccccdiiicTTcTTccci"
 )
 
 cancelled_classes_df
@@ -286,7 +300,7 @@ transcripts_list_df
 
 ```{r}
 transcripts_metrics_df <- summarize_transcript_files(
-  transcripts_list_df,
+  df_transcript_list = transcripts_list_df,
   data_folder = data_folder_input,
   transcripts_folder = "transcripts",
   names_to_exclude = NULL
@@ -593,7 +607,7 @@ run_student_reports <-
            transcripts_summary_file = 'transcripts_summary.csv',
            student_summary_report_folder = 'inst',
            student_summary_report =
-             'Zoom Student Engagement Analysis - student summary report')
+             'Zoom_Student_Engagement_Analysis_student_summary_report')
   {
     student_summary_report_rmd <-
       paste0(student_summary_report_folder, '/', student_summary_report, '.Rmd')
@@ -653,14 +667,13 @@ run_student_reports(
   df_sections = sections_df,
   df_roster = roster_df,
   data_folder = data_folder_input,
-  # data_folder =  'inst/extdata',
+  data_folder =  'inst/extdata',
   transcripts_session_summary_file = transcripts_session_summary_file_input,
   transcripts_summary_file = transcripts_summary_file_input,
 student_summary_report_folder = student_summary_report_folder_input,
   student_summary_report = student_summary_report_input
 
 )
-
 
 list.files(
 system.file(package="zoomstudentengagement")

@@ -43,6 +43,8 @@ from the joining of:
 # Create sample data for demonstration
 sample_transcripts <- tibble::tibble(
   name = c("John Smith", "Jane Doe"),
+  course_section = c("101.A", "101.B"),
+  course = c(101, 101),
   section = c("A", "B"),
   day = c("Monday", "Tuesday"),
   time = c("10:00", "11:00"),
@@ -62,11 +64,14 @@ sample_transcripts <- tibble::tibble(
 
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
+  preferred_name = c("John Smith", "Jane Doe"),
+  course_num = c(101, 101),
+  section = c("A", "B"),
+  student_id = c("12345", "67890"),
   dept = c("CS", "CS"),
-  transcript_section = c("A", "B"),
   session_num = c(1, 1),
   start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
-  student_id = c("12345", "67890")
+  transcript_section = c("101.A", "101.B")
 )
 
 make_clean_names_df(

@@ -24,7 +24,9 @@
 #' # Create sample data
 #' sample_transcript_list <- tibble::tibble(
 #'   name = c("Student A", "Student B", "Student C"),
-#'   section = c("Section 1", "Section 1", "Section 2"),
+#'   course_section = c("101.A", "101.A", "101.B"),
+#'   course = c(101, 101, 101),
+#'   section = c("A", "A", "B"),
 #'   day = c("Monday", "Monday", "Tuesday"),
 #'   time = c("9:00 AM", "9:00 AM", "10:00 AM"),
 #'   n = c(10, 8, 12),
@@ -43,11 +45,14 @@
 #'
 #' sample_roster <- tibble::tibble(
 #'   first_last = c("Student A", "Student B", "Student C"),
+#'   preferred_name = c("Student A", "Student B", "Student C"),
+#'   course_num = c(101, 101, 101),
+#'   section = c("A", "A", "B"),
+#'   student_id = c("A123", "B456", "C789"),
 #'   dept = c("CS", "CS", "CS"),
-#'   transcript_section = c("Section 1", "Section 1", "Section 2"),
 #'   session_num = c(1, 1, 2),
 #'   start_time_local = c("2024-01-01 09:00:00", "2024-01-01 09:00:00", "2024-01-02 10:00:00"),
-#'   student_id = c("A123", "B456", "C789")
+#'   transcript_section = c("101.A", "101.A", "101.B")
 #' )
 #'
 #' # Create a temporary directory for the example
@@ -72,7 +77,8 @@ write_section_names_lookup <-
   function(clean_names_df,
            data_folder = "data",
            section_names_lookup_file = "section_names_lookup.csv") {
-    day <-
+    course <-
+      day <-
       formal_name <-
       n <-
       preferred_name <-
@@ -87,6 +93,7 @@ write_section_names_lookup <-
           transcript_section,
           day,
           time,
+          course,
           section,
           preferred_name,
           formal_name,

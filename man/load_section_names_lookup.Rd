@@ -7,7 +7,7 @@
 load_section_names_lookup(
   data_folder = "data",
   names_lookup_file = "section_names_lookup.csv",
-  section_names_lookup_col_types = "cccccccc"
+  section_names_lookup_col_types = "ccccccccc"
 )
 }
 \arguments{

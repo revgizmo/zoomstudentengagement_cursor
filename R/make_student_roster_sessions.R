@@ -51,7 +51,7 @@ make_student_roster_sessions <-
     }
 
     # Check for required columns
-    required_transcript_cols <- c("dept", "section", "session_num", "start_time_local")
+    required_transcript_cols <- c("dept", "course", "section", "session_num", "start_time_local")
     required_roster_cols <- c("student_id", "first_last", "preferred_name", "dept", "course_num", "section")
 
     missing_transcript_cols <- setdiff(required_transcript_cols, names(transcripts_list_df))
@@ -66,13 +66,14 @@ make_student_roster_sessions <-
     }
 
     # Validate data types
-    if (!is.numeric(transcripts_list_df$course_num) || !is.numeric(roster_small_df$course_num)) {
+    if (!is.numeric(transcripts_list_df$course) || !is.numeric(roster_small_df$course_num)) {
       stop("course_num must be numeric in both data frames")
     }
 
     # Process transcripts list
-    transcripts_processed <- transcripts_list_df %>%
-      dplyr::rename(transcript_section = section) %>%
+    transcripts_processed <-
+      transcripts_list_df %>%
+      dplyr::rename(transcript_section = course_section) %>%
       tidyr::separate(
         col = transcript_section,
         into = c("course_num_transcript", "section_transcript"),
@@ -80,6 +81,7 @@ make_student_roster_sessions <-
         remove = FALSE,
         fill = "right"  # Handle cases where separator isn't found
       ) %>%
+
       dplyr::mutate(
         dept_transcript = toupper(dept),
         dept = NULL,

@@ -3,7 +3,7 @@ test_that("plot_users_by_metric creates valid ggplot object with correct propert
   clean_names <- make_clean_names_df(
     data_folder = "data",
     section_names_lookup_file = "section_names_lookup.csv",
-    transcripts_metrics_df = create_sample_transcript(),
+    transcripts_metrics_df = create_sample_transcript_metrics(),
     roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
@@ -39,7 +39,7 @@ test_that("plot_users_masked_section_by_metric masks names correctly and creates
   clean_names <- make_clean_names_df(
     data_folder = "data",
     section_names_lookup_file = "section_names_lookup.csv",
-    transcripts_metrics_df = create_sample_transcript(),
+    transcripts_metrics_df = create_sample_transcript_metrics(),
     roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
@@ -74,7 +74,7 @@ test_that("plotting functions handle empty data gracefully", {
   clean_names <- make_clean_names_df(
     data_folder = "data",
     section_names_lookup_file = "section_names_lookup.csv",
-    transcripts_metrics_df = create_sample_transcript()[0,],
+    transcripts_metrics_df = create_sample_transcript_metrics()[0,],
     roster_sessions = create_sample_roster()[0,]
   )
   summary_df <- make_transcripts_summary_df(
@@ -103,7 +103,7 @@ test_that("plotting functions handle different metrics correctly", {
   clean_names <- make_clean_names_df(
     data_folder = "data",
     section_names_lookup_file = "section_names_lookup.csv",
-    transcripts_metrics_df = create_sample_transcript(),
+    transcripts_metrics_df = create_sample_transcript_metrics(),
     roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
@@ -135,7 +135,7 @@ test_that("plotting functions handle invalid metrics gracefully", {
   clean_names <- make_clean_names_df(
     data_folder = "data",
     section_names_lookup_file = "section_names_lookup.csv",
-    transcripts_metrics_df = create_sample_transcript(),
+    transcripts_metrics_df = create_sample_transcript_metrics(),
     roster_sessions = create_sample_roster()
   )
   summary_df <- make_transcripts_summary_df(
