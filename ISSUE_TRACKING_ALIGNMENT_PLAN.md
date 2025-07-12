@@ -13,49 +13,86 @@
 - **Local Issue Tracking**: `.github/ISSUES/` with 2 documented issues
   - `fix_r_cmd_check_warnings.md` - CRAN compliance issues
   - `make_clean_names_df_test_warnings.md` - Test hygiene issues
+- **Existing GitHub Issues**: 26 open issues (including master audit issue #15)
 - **Comprehensive Documentation**: PROJECT.md, CRAN_CHECKLIST.md, AUDIT_LOG.md, CONTRIBUTING.md
 - **Clean Repository**: No open PRs, well-structured package
 - **Good Test Coverage**: 341 tests passing, 100% coverage
 
 ### What's Missing
-- **GitHub Issues**: No native GitHub issues created
-- **Project Board**: No GitHub Projects for task management
 - **Issue Integration**: Documentation references local files instead of GitHub issues
+- **Project Board**: No GitHub Projects for task management
+- **Issue Consolidation**: Some overlap between local and GitHub issues
 - **Automation**: No GitHub Actions integration with issues
 
-## Action Plan
+## Existing GitHub Issues Analysis
 
-### Phase 1: GitHub Issues Creation (30 minutes)
-**Objective**: Create GitHub issues from local `.github/ISSUES/` files
+### Master Tracking Issue (#15)
+- **Title**: "Codebase Audit: Master Tracking Issue"
+- **Status**: Open, tracks comprehensive codebase audit
+- **Sub-issues**: 16-34 (various audit tasks)
+- **Relevance**: This is the main audit tracking issue referenced in AUDIT_LOG.md
 
-#### Step 1.1: Create Primary Issues
-1. **Issue #1: Fix R-CMD-check warnings for CRAN compliance**
-   - Source: `.github/ISSUES/fix_r_cmd_check_warnings.md`
-   - Labels: `cran`, `compliance`, `high-priority`
-   - Assignee: [Maintainer]
-   - Milestone: "CRAN v1.0 Release"
+### Key Existing Issues
+- **#15**: Master audit tracking (priority:high, audit)
+- **#16**: Function naming and API consistency (priority:high, audit)
+- **#17**: Refactor duplicated code (priority:high, audit, refactor)
+- **#18**: Improve error messages (priority:high, audit)
+- **#19**: Update documentation (documentation, priority:high, audit)
+- **#20**: Increase test coverage (priority:high, test, audit)
+- **#21**: Review dependencies and CRAN readiness (priority:high, audit)
+- **#22**: Address technical debt (priority:medium, audit)
+- **#23**: Replace acronyms in exported functions (priority:high, audit, refactor)
+- **#24**: Restore passing test suite (bug, priority:high, audit)
+- **#28-34**: Various refactoring and documentation tasks
+- **#36**: Cross-reference issues and track progress (documentation)
+- **#39**: Optimize GitHub Actions workflow (enhancement)
 
-2. **Issue #2: Clean up make_clean_names_df test warnings**
-   - Source: `.github/ISSUES/make_clean_names_df_test_warnings.md`
-   - Labels: `testing`, `medium-priority`
-   - Assignee: [Maintainer]
-   - Milestone: "CRAN v1.0 Release"
+### Issue Overlap Analysis
+- **Local `fix_r_cmd_check_warnings.md`** ↔ **GitHub #21** (CRAN readiness)
+- **Local `make_clean_names_df_test_warnings.md`** ↔ **GitHub #24** (test suite)
+- **PROJECT.md CRAN issues** ↔ **GitHub #21** (CRAN readiness)
 
-#### Step 1.2: Create Additional Issues from PROJECT.md
-3. **Issue #3: Complete roxygen2 documentation**
-   - Title: "Complete roxygen2 documentation for all exported functions"
-   - Labels: `documentation`, `cran`, `high-priority`
-   - Description: Many functions have incomplete `@examples` sections
+## Revised Action Plan
 
-4. **Issue #4: Fix license specification**
-   - Title: "Replace 'TBD Open Source' with proper MIT license"
-   - Labels: `cran`, `compliance`, `high-priority`
-   - Description: Current license "TBD Open Source" is not acceptable for CRAN
+### Phase 0: Existing Issues Assessment (15 minutes)
+**Objective**: Analyze existing GitHub issues and identify overlaps/conflicts
 
-5. **Issue #5: Remove deprecated functions**
-   - Title: "Remove deprecated load_and_process_zoom_transcript function"
-   - Labels: `cleanup`, `medium-priority`
-   - Description: Function is deprecated but still present in codebase
+#### Step 0.1: Map Local Issues to GitHub Issues
+1. **Local `fix_r_cmd_check_warnings.md`** → **GitHub #21** (CRAN readiness)
+   - **Action**: Update GitHub #21 with local content, then archive local file
+   - **Status**: Consolidate, don't duplicate
+
+2. **Local `make_clean_names_df_test_warnings.md`** → **GitHub #24** (test suite)
+   - **Action**: Update GitHub #24 with local content, then archive local file
+   - **Status**: Consolidate, don't duplicate
+
+#### Step 0.2: Identify Missing Issues
+- **License specification**: Not covered in existing issues
+- **Deprecated function removal**: Partially covered in #28
+- **Documentation completeness**: Covered in #19, #32, #35
+
+#### Step 0.3: Update Existing Issues
+- **GitHub #21**: Add CRAN-specific checklist items
+- **GitHub #24**: Add specific test warning details
+- **GitHub #19**: Add roxygen2 documentation requirements
+
+### Phase 1: Issue Consolidation (30 minutes)
+**Objective**: Consolidate local issues into existing GitHub issues instead of creating duplicates
+
+#### Step 1.1: Update GitHub #21 (CRAN Readiness)
+- Add content from `fix_r_cmd_check_warnings.md`
+- Add specific CRAN compliance checklist
+- Update labels: add `cran`, `compliance`
+
+#### Step 1.2: Update GitHub #24 (Test Suite)
+- Add content from `make_clean_names_df_test_warnings.md`
+- Add specific test warning details
+- Update labels: add `testing`
+
+#### Step 1.3: Create Missing Issues (if needed)
+- **Issue #40**: "Replace 'TBD Open Source' with proper MIT license"
+  - Labels: `cran`, `compliance`, `high-priority`
+  - Milestone: "CRAN v1.0 Release"
 
 ### Phase 2: GitHub Project Board Setup (15 minutes)
 **Objective**: Create organized project board for task management
@@ -72,8 +109,10 @@
 4. **Done** (Completed)
 
 #### Step 2.3: Add Issues to Board
-- Move all 5 issues to "To Do" column
-- Set up initial priorities
+- Add all existing audit issues (#15-34)
+- Add workflow optimization issue (#39)
+- Add new CRAN compliance issues
+- Organize by priority and milestone
 
 ### Phase 3: Documentation Updates (45 minutes)
 **Objective**: Update all documentation to reference GitHub issues instead of local files
@@ -83,7 +122,7 @@
 - Add "Current Status (Updated: [Current Date])"
 - Replace local issue references with GitHub issue numbers
 - Update timeline with realistic dates
-- Add "Active Issues" section with links
+- Add "Active Issues" section with links to existing GitHub issues
 
 #### Step 3.2: Update CRAN_CHECKLIST.md
 - Mark completed items with ✅
@@ -93,9 +132,10 @@
 
 #### Step 3.3: Update AUDIT_LOG.md
 - Add current date entry with status update
-- Reference new GitHub issue numbers
+- Reference existing GitHub issue numbers (#15-34)
 - Mark completed audit items
 - Update "Current Status" section
+- Link to master tracking issue #15
 
 #### Step 3.4: Update CONTRIBUTING.md
 - Ensure references to GitHub workflow are current
@@ -109,6 +149,7 @@
 - Create `.github/ISSUES/archive/` directory
 - Move existing `.md` files to archive
 - Add note about migration to GitHub issues
+- Document which GitHub issues contain the consolidated content
 
 #### Step 4.2: Update README.Rmd
 - Remove references to local issue files
@@ -119,11 +160,11 @@
 **Objective**: Set up GitHub repository for better issue management
 
 #### Step 5.1: Configure Labels
-- **Priority**: High, Medium, Low
-- **Type**: Bug, Enhancement, Documentation, Test
+- **Priority**: High, Medium, Low (already exists)
+- **Type**: Bug, Enhancement, Documentation, Test (already exists)
 - **Status**: Blocked, In Progress, Needs Review
 - **Area**: Core, UI, Testing, Documentation
-- **CRAN**: Submission, Review, Compliance
+- **CRAN**: Submission, Review, Compliance (new)
 
 #### Step 5.2: Set up Milestones
 - **CRAN v1.0 Release** (Target: [Date])
@@ -151,14 +192,20 @@
 
 ## Success Criteria
 
+### Phase 0 Success
+- [ ] Local issues mapped to existing GitHub issues
+- [ ] No duplicate issues created
+- [ ] Existing issues updated with local content
+
 ### Phase 1 Success
-- [ ] 5 GitHub issues created with proper labels
-- [ ] All issues assigned to appropriate milestone
-- [ ] Issues contain all relevant information from local files
+- [ ] GitHub #21 updated with CRAN compliance details
+- [ ] GitHub #24 updated with test warning details
+- [ ] Missing issues created (if needed)
+- [ ] All issues properly labeled and assigned
 
 ### Phase 2 Success
 - [ ] Project board created and configured
-- [ ] All issues added to board
+- [ ] All existing issues added to board
 - [ ] Board is publicly accessible
 
 ### Phase 3 Success
@@ -182,29 +229,31 @@
 - [ ] Clear path to CRAN submission
 - [ ] Improved collaboration workflow
 - [ ] Better project visibility
+- [ ] No duplicate or conflicting issues
 
 ## Risk Mitigation
 
 ### Potential Issues
-1. **Issue Duplication**: Ensure local files are archived, not deleted
-2. **Broken References**: Test all documentation links after updates
+1. **Issue Duplication**: Consolidate instead of creating duplicates
+2. **Information Loss**: Preserve all information from local files in existing issues
 3. **Workflow Disruption**: Maintain existing workflow during transition
-4. **Information Loss**: Preserve all information from local files
+4. **Conflicting Information**: Ensure consistency between local and GitHub content
 
 ### Mitigation Strategies
-1. **Backup**: Keep local files in archive
-2. **Testing**: Verify all links and references work
-3. **Gradual Transition**: Update one document at a time
-4. **Documentation**: Maintain clear migration notes
+1. **Consolidation**: Update existing issues instead of creating new ones
+2. **Backup**: Keep local files in archive with migration notes
+3. **Testing**: Verify all links and references work
+4. **Gradual Transition**: Update one document at a time
+5. **Documentation**: Maintain clear migration notes
 
 ## Timeline
 
 ### Week 1
-- **Day 1**: Phases 1-2 (GitHub setup)
-- **Day 2**: Phase 3 (Documentation updates)
-- **Day 3**: Phase 4 (Cleanup)
-- **Day 4**: Phase 5 (Configuration)
-- **Day 5**: Review and testing
+- **Day 1**: Phases 0-1 (Issue consolidation)
+- **Day 2**: Phase 2 (Project board setup)
+- **Day 3**: Phase 3 (Documentation updates)
+- **Day 4**: Phase 4 (Cleanup)
+- **Day 5**: Phase 5 (Configuration)
 
 ### Week 2
 - **Optional**: Phase 6 (Automation)
