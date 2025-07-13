@@ -12,4 +12,4 @@ test_that("make_metrics_lookup_df returns same result on repeated calls", {
   result1 <- make_metrics_lookup_df()
   result2 <- make_metrics_lookup_df()
   expect_equal(result1, result2)
-}) 
+})

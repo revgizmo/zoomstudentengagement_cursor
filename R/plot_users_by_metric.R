@@ -59,7 +59,7 @@
 plot_users_by_metric <- function(transcripts_summary_df,
                                  metric = "session_ct",
                                  metrics_lookup_df = make_metrics_lookup_df(),
-                                 student_col_name = 'preferred_name') {
+                                 student_col_name = "preferred_name") {
   . <- preferred_name <- section <- student_col <- description <- NULL
 
   if (tibble::is_tibble(transcripts_summary_df) && tibble::is_tibble(metrics_lookup_df)) {
@@ -67,7 +67,7 @@ plot_users_by_metric <- function(transcripts_summary_df,
     if (!metric %in% names(transcripts_summary_df)) {
       stop(sprintf("Metric '%s' not found in data", metric))
     }
-    
+
     # Create plot
     p <- transcripts_summary_df %>%
       ggplot2::ggplot(ggplot2::aes(x = .data[[student_col_name]], y = .data[[metric]])) +
@@ -83,7 +83,7 @@ plot_users_by_metric <- function(transcripts_summary_df,
           stringr::str_wrap(width = 59)
       ) +
       ggplot2::ylim(c(0, NA))
-    
+
     return(p)
   }
 }

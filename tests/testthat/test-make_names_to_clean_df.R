@@ -39,4 +39,4 @@ test_that("make_names_to_clean_df handles NA values", {
 test_that("make_names_to_clean_df handles invalid input gracefully", {
   expect_silent(make_names_to_clean_df(NULL))
   expect_silent(make_names_to_clean_df(list(a = 1)))
-}) 
+})

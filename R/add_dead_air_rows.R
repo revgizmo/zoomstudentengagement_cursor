@@ -15,7 +15,7 @@
 #' @examples
 #' add_dead_air_rows(df = "NULL")
 #'
-add_dead_air_rows <- function(df, dead_air_name = 'dead_air') {
+add_dead_air_rows <- function(df, dead_air_name = "dead_air") {
   . <- comment_num <- end <- prev_end <- prior_dead_air <- start <- NULL
 
   if (tibble::is_tibble(df)) {
@@ -30,8 +30,9 @@ add_dead_air_rows <- function(df, dead_air_name = 'dead_air') {
     dead_air_rows <- df %>%
       dplyr::mutate(
         prev_end = dplyr::lag(end,
-                             order_by = start,
-                             default = lubridate::period(0)),
+          order_by = start,
+          default = lubridate::period(0)
+        ),
         prior_dead_air = as.numeric(start - prev_end, "seconds"),
         name = dead_air_name,
         comment = NA,
@@ -57,4 +58,3 @@ add_dead_air_rows <- function(df, dead_air_name = 'dead_air') {
 #   prior_dead_air <-
 #   time_flag <- timestamp <- wordcount <- prior_speaker <-
 #
-

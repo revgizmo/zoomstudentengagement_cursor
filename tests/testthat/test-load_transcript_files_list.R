@@ -60,4 +60,4 @@ test_that("load_transcript_files_list handles empty folder gracefully", {
   )
   expect_true(is.data.frame(result) && nrow(result) == 0)
   unlink(transcripts_dir, recursive = TRUE)
-}) 
+})

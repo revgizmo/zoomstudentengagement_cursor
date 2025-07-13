@@ -79,9 +79,8 @@ make_student_roster_sessions <-
         into = c("course_num_transcript", "section_transcript"),
         sep = "\\.",
         remove = FALSE,
-        fill = "right"  # Handle cases where separator isn't found
+        fill = "right" # Handle cases where separator isn't found
       ) %>%
-
       dplyr::mutate(
         dept_transcript = toupper(dept),
         dept = NULL,

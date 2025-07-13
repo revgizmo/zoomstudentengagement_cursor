@@ -2,10 +2,12 @@ test_that("make_blank_cancelled_classes_df returns correct structure and is empt
   result <- make_blank_cancelled_classes_df()
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 0)
-  expected_cols <- c("dept", "course_section", "course", "section", "day", "time", "instructor", 
-                     "Topic", "ID", "Start Time", "File Size (MB)", "File Count", "Total Views", 
-                     "Total Downloads", "Last Accessed", "match_start_time", "match_end_time", 
-                     "date_extract", "recording_start", "start_time_local", "transcript_file", "chat_file", "closed_caption_file")
+  expected_cols <- c(
+    "dept", "course_section", "course", "section", "day", "time", "instructor",
+    "Topic", "ID", "Start Time", "File Size (MB)", "File Count", "Total Views",
+    "Total Downloads", "Last Accessed", "match_start_time", "match_end_time",
+    "date_extract", "recording_start", "start_time_local", "transcript_file", "chat_file", "closed_caption_file"
+  )
   expect_true(all(expected_cols %in% names(result)))
   expect_type(result$dept, "character")
   expect_type(result$course_section, "double")

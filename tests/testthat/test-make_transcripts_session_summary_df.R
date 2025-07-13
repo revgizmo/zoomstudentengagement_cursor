@@ -37,4 +37,4 @@ test_that("make_transcripts_session_summary_df handles NA values", {
 test_that("make_transcripts_session_summary_df returns NULL for invalid input", {
   result <- make_transcripts_session_summary_df(NULL)
   expect_null(result)
-}) 
+})

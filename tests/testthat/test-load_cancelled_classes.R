@@ -44,4 +44,4 @@ test_that("load_cancelled_classes returns tibble with correct columns for empty 
   expect_true("meeting_status" %in% names(result))
 
   unlink(temp_file)
-}) 
+})

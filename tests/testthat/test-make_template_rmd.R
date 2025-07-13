@@ -24,4 +24,4 @@ test_that("make_template_rmd handles missing template file gracefully", {
   expect_false(file.exists(new_template_file))
   expect_false(make_template_rmd(new_template_file_name = new_template_file, template_file = missing_file))
   expect_false(file.exists(new_template_file))
-}) 
+})

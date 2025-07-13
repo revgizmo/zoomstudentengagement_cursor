@@ -74,12 +74,11 @@ load_zoom_recorded_sessions_list <-
              "Total Views",
              "Total Downloads",
              "Last Accessed",
-             sep = ','
+             sep = ","
            ),
            dept = "LTF",
            semester_start_mdy = "Jan 01, 2024",
-           scheduled_session_length_hours = 1.5
-           ) {
+           scheduled_session_length_hours = 1.5) {
     . <-
       `Topic` <-
       `ID` <-
@@ -137,7 +136,7 @@ load_zoom_recorded_sessions_list <-
         col_names = zoom_recorded_sessions_csv_col_names_vector,
         col_types = readr::cols(
           Topic = readr::col_character(),
-          ID = readr::col_character(),  # Changed from numeric to character
+          ID = readr::col_character(), # Changed from numeric to character
           `Start Time` = readr::col_character(),
           `File Size (MB)` = readr::col_character(),
           `File Count` = readr::col_double(),
@@ -146,7 +145,7 @@ load_zoom_recorded_sessions_list <-
           `Last Accessed` = readr::col_character()
         ),
         skip = 1,
-        quote = "\""  # Ensure quotes are handled correctly
+        quote = "\"" # Ensure quotes are handled correctly
       )
 
     # Debug print statements
@@ -200,7 +199,6 @@ load_zoom_recorded_sessions_list <-
       # dplyr::select(`Start Time`)
       dplyr::mutate(
         # Parse date with explicit format to handle Zoom's format
-
         match_start_time = lubridate::parse_date_time(
           `Start Time`,
           orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),

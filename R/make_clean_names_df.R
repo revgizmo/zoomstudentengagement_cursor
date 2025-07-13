@@ -110,7 +110,7 @@ make_clean_names_df <- function(data_folder = "data",
   section_names_lookup <- load_section_names_lookup(
     data_folder = data_folder,
     names_lookup_file = section_names_lookup_file,
-    section_names_lookup_col_types = "ccccccccc"  # Changed to all character columns
+    section_names_lookup_col_types = "ccccccccc" # Changed to all character columns
   )
 
   # Clean the roster_sessions df

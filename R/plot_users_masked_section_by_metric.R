@@ -58,7 +58,7 @@
 #'
 plot_users_masked_section_by_metric <-
   function(df,
-           metric = 'session_ct') {
+           metric = "session_ct") {
     . <- row_num <- preferred_name <- section <- NULL
 
     if (tibble::is_tibble(df)) {
@@ -66,17 +66,16 @@ plot_users_masked_section_by_metric <-
       if (!metric %in% names(df)) {
         stop(sprintf("Metric '%s' not found in data", metric))
       }
-      
+
       # Mask user names and create plot
       df %>%
         zoomstudentengagement::mask_user_names_by_metric(
           metric = metric,
-          target_student = ''
+          target_student = ""
         ) %>%
         zoomstudentengagement::plot_users_by_metric(
           metric = metric,
-          student_col_name = 'student'
+          student_col_name = "student"
         )
     }
   }
-

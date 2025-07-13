@@ -43,4 +43,4 @@ test_that("make_students_only_transcripts_summary_df filters out NA values", {
 test_that("make_students_only_transcripts_summary_df handles invalid input gracefully", {
   expect_silent(make_students_only_transcripts_summary_df(NULL))
   expect_silent(make_students_only_transcripts_summary_df(list(a = 1)))
-}) 
+})

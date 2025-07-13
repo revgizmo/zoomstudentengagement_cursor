@@ -53,4 +53,4 @@ test_that("load_section_names_lookup returns tibble with correct columns for emp
   expect_true(all(c("other_col1", "other_col2", "other_col3", "other_col4", "other_col5") %in% names(result)))
 
   unlink(temp_file)
-}) 
+})

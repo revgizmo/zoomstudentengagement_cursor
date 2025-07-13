@@ -50,4 +50,4 @@ test_that("summarize_transcript_metrics handles NA names as 'unknown'", {
 
 test_that("summarize_transcript_metrics returns NULL for completely invalid input", {
   expect_null(suppressWarnings(summarize_transcript_metrics(transcript_df = NULL)))
-}) 
+})

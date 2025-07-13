@@ -52,4 +52,4 @@ test_that("join_transcripts_list handles NA values", {
 test_that("join_transcripts_list handles invalid input gracefully", {
   expect_silent(join_transcripts_list(NULL, NULL, NULL))
   expect_silent(join_transcripts_list(list(a = 1), list(b = 2), list(c = 3)))
-}) 
+})

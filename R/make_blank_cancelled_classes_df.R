@@ -26,4 +26,3 @@ make_blank_cancelled_classes_df <- function() {
       closed_caption_file = as.character(closed_caption_file)
     )
 }
-

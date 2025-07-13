@@ -15,4 +15,4 @@ dir.create(test_dir)
 # Clean up after tests
 teardown({
   unlink(test_dir, recursive = TRUE)
-}) 
+})

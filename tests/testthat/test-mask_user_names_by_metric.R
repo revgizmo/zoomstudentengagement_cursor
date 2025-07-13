@@ -26,4 +26,4 @@ test_that("mask_user_names_by_metric handles empty input", {
   result <- mask_user_names_by_metric(df, metric = "session_ct")
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 0)
-}) 
+})

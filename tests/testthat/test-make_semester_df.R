@@ -20,4 +20,4 @@ test_that("make_semester_df handles edge cases (zero or one unit)", {
   expect_equal(nrow(result_zero), 0)
   result_one <- make_semester_df(semester_units = 1)
   expect_equal(nrow(result_one), 1)
-}) 
+})

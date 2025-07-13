@@ -37,9 +37,9 @@ test_that("make_clean_names_df handles unmatched names", {
 
 test_that("make_clean_names_df handles empty input", {
   # Create empty data frames
-  empty_transcript_metrics <- create_sample_transcript_metrics()[0,]
-  empty_roster <- create_sample_roster()[0,]
-  empty_lookup <- create_sample_section_names_lookup()[0,]
+  empty_transcript_metrics <- create_sample_transcript_metrics()[0, ]
+  empty_roster <- create_sample_roster()[0, ]
+  empty_lookup <- create_sample_section_names_lookup()[0, ]
 
   # Test with empty input
   result <- make_clean_names_df(
@@ -63,8 +63,8 @@ test_that("make_clean_names_df preserves section information", {
 
   # Create sample lookup with modified section
   sample_lookup <- create_sample_section_names_lookup()
-  sample_lookup$transcript_section[1] <- "101.B"  # Change section for one student
-  sample_lookup$section[1] <- "B"  # Change section for one student
+  sample_lookup$transcript_section[1] <- "101.B" # Change section for one student
+  sample_lookup$section[1] <- "B" # Change section for one student
 
   # Write the lookup to a temporary CSV file
   write_section_names_lookup(

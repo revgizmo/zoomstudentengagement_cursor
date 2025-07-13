@@ -8,14 +8,14 @@ test_that("process_zoom_transcript handles basic transcript processing", {
     end = lubridate::period(c(3, 8, 13), "seconds"),
     duration = c(3, 3, 3)
   )
-  
+
   # Test basic processing
   result <- process_zoom_transcript(
     transcript_df = sample_transcript,
     consolidate_comments = FALSE,
     add_dead_air = FALSE
   )
-  
+
   # Check basic structure
   expect_s3_class(result, "tbl_df")
   expect_true(all(c("begin", "end", "name", "comment", "duration") %in% names(result)))
@@ -32,7 +32,7 @@ test_that("process_zoom_transcript consolidates comments correctly", {
     end = lubridate::period(c(3, 8, 13), "seconds"),
     duration = c(3, 3, 3)
   )
-  
+
   # Test comment consolidation
   result <- process_zoom_transcript(
     transcript_df = sample_transcript,
@@ -40,9 +40,9 @@ test_that("process_zoom_transcript consolidates comments correctly", {
     max_pause_sec = 2,
     add_dead_air = FALSE
   )
-  
+
   # Check that comments are not consolidated since the gap is too large
-  expect_equal(nrow(result), 3)  # Should have 3 rows since gap between Student1's comments is 7s > max_pause_sec of 2s
+  expect_equal(nrow(result), 3) # Should have 3 rows since gap between Student1's comments is 7s > max_pause_sec of 2s
 })
 
 test_that("process_zoom_transcript adds dead air correctly", {
@@ -55,14 +55,14 @@ test_that("process_zoom_transcript adds dead air correctly", {
     end = lubridate::period(c(3, 8, 13), "seconds"),
     duration = c(3, 3, 3)
   )
-  
+
   # Test dead air addition
   result <- process_zoom_transcript(
     transcript_df = sample_transcript,
     consolidate_comments = FALSE,
     add_dead_air = TRUE
   )
-  
+
   # Check that dead air rows are added
   expect_true(any(result$name == "dead_air"))
 })
@@ -77,7 +77,7 @@ test_that("process_zoom_transcript handles NA names correctly", {
     end = lubridate::period(c(3, 8, 13), "seconds"),
     duration = c(3, 3, 3)
   )
-  
+
   # Test NA name handling
   result <- process_zoom_transcript(
     transcript_df = sample_transcript,
@@ -85,7 +85,7 @@ test_that("process_zoom_transcript handles NA names correctly", {
     add_dead_air = FALSE,
     na_name = "unknown"
   )
-  
+
   # Check that NA names are replaced
   expect_equal(result$name[1], "unknown")
 })
@@ -100,12 +100,12 @@ test_that("process_zoom_transcript handles empty input gracefully", {
     end = lubridate::period(),
     duration = numeric()
   )
-  
+
   result <- process_zoom_transcript(
     transcript_df = empty_df,
     consolidate_comments = FALSE,
     add_dead_air = FALSE
   )
-  
+
   expect_equal(nrow(result), 0)
-}) 
+})

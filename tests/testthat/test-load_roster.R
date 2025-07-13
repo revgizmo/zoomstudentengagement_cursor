@@ -48,4 +48,4 @@ test_that("load_roster returns all students if all are enrolled", {
   expect_true(all(result$enrolled))
 
   unlink(temp_file)
-}) 
+})
