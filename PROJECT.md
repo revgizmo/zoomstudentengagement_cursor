@@ -8,7 +8,7 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - Improve documentation and usability
 - Ensure robust testing and error handling
 
-## Current Status (Updated: July 4, 2025)
+## Current Status (Updated: January 2025)
 **Package Status: Development Phase - Pre-CRAN Preparation**
 
 ### What's Working ✅
@@ -17,32 +17,40 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **Test Infrastructure**: 30+ test files with good coverage of exported functions
 - **Basic Documentation**: README.md with comprehensive workflow examples (918 lines)
 - **Repository Setup**: Clean main branch, no open PRs, proper git workflow
+- **Issue Tracking**: GitHub issues consolidated and organized with proper labels
 
 ### What Needs Work ❌
-- **Documentation Completeness**: Many functions have incomplete roxygen2 documentation
-- **Test Quality**: Some test warnings in `make_clean_names_df.R` need resolution
-- **CRAN Compliance**: License specification incomplete ("TBD Open Source")
-- **Code Quality**: Need style consistency and error handling improvements
+- **Documentation Completeness**: Many functions have incomplete roxygen2 documentation ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19))
+- **Test Quality**: Some test warnings in `make_clean_names_df.R` need resolution ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24))
+- **CRAN Compliance**: License specification and R-CMD-check warnings ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21))
+- **Code Quality**: Need style consistency and error handling improvements ([Issue #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15))
 
-## CRAN Readiness Audit Results (July 2025)
+## CRAN Readiness Audit Results (January 2025)
 
 ### Critical Issues (Block CRAN submission)
-1. **Incomplete Documentation**: Many functions have `@examples` tags but no actual examples
-2. **Test Warnings**: `make_clean_names_df.R` has test warnings that need resolution
-3. **License Specification**: "TBD Open Source" is not acceptable for CRAN
-4. **R CMD Check**: Need to verify no errors/warnings/notes
+1. **Incomplete Documentation**: Many functions have `@examples` tags but no actual examples ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19))
+2. **Test Warnings**: `make_clean_names_df.R` has test warnings that need resolution ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24))
+3. **License Specification**: "TBD Open Source" is not acceptable for CRAN ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21))
+4. **R CMD Check**: Need to verify no errors/warnings/notes ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21))
+
+### Active Issues for CRAN Submission
+- **[Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Master audit tracking issue
+- **[Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)**: Documentation updates (Priority: HIGH)
+- **[Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21)**: CRAN compliance and R-CMD-check (Priority: HIGH)
+- **[Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)**: Test suite cleanup (Priority: HIGH)
+- **[Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Code quality and refactoring tasks
 
 ### Immediate Action Items
-1. **Documentation Fixes** (Priority: HIGH)
+1. **Documentation Fixes** (Priority: HIGH) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
    - Audit all 33 exported functions for complete roxygen2 documentation
    - Fix functions with incomplete `@examples` sections
    - Ensure all examples are runnable
 
-2. **Test Resolution** (Priority: HIGH)
+2. **Test Resolution** (Priority: HIGH) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)
    - Investigate and fix `make_clean_names_df.R` test warnings
    - Verify all tests pass without warnings
 
-3. **CRAN Compliance** (Priority: HIGH)
+3. **CRAN Compliance** (Priority: HIGH) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21)
    - Replace "TBD Open Source" with proper MIT license
    - Run full `devtools::check()` to verify compliance
 
@@ -61,11 +69,11 @@ styler::style_pkg()                  # Check code style
 ```
 
 ## Milestones & Timeline
-- [ ] Codebase audit (by MM/DD)
-- [ ] Documentation overhaul (by MM/DD)
-- [ ] Expand test coverage (by MM/DD)
-- [ ] CRAN compliance check (by MM/DD)
-- [ ] Submit to CRAN (by MM/DD)
+- [x] Codebase audit (January 2025) - [Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)
+- [ ] Documentation overhaul (Target: January 2025) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
+- [ ] Test suite cleanup (Target: January 2025) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)
+- [ ] CRAN compliance check (Target: January 2025) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21)
+- [ ] Submit to CRAN (Target: February 2025)
 
 ## Task Breakdown
 
