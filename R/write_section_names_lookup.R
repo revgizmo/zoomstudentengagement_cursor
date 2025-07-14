@@ -14,7 +14,7 @@
 #' @param section_names_lookup_file File name of the csv file of customized
 #'   student names by section Defaults to 'section_names_lookup.csv'
 #'
-#' @return A tibble coresponding to the csv file saved, which is a sorted subset
+#' @return A tibble corresponding to the csv file saved, which is a sorted subset
 #'   of the provided tibble containing session details and summary metrics by
 #'   speaker for all class sessions (and placeholders for missing sections),
 #'   including customized student names.

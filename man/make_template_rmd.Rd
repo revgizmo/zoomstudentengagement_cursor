@@ -14,13 +14,13 @@ make_template_rmd(
 \item{new_template_file_name}{The file name of the created report template.}
 
 \item{template_file}{The file name of the template file. This defaults to the
-`Readme.Rmd` file in the `zoomstudentengagement` documentation.}
+`README.Rmd` file in the `zoomstudentengagement` documentation.}
 }
 \value{
 TRUE if the file was copied, FALSE otherwise.
 }
 \description{
-This function a template file (generally the `Readme.Rmd` file in the
+This function a template file (generally the `README.Rmd` file in the
 `zoomstudentengagement` documentation) and saves it as a .Rmd file that can be
 used to run analyses with the `zoomstudentengagement` library.
 }
