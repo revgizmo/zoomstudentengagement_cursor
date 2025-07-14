@@ -15,8 +15,11 @@
 #' @examples
 #' add_dead_air_rows(df = "NULL")
 #'
+
+# CRAN compliance: global variables handled in package file
+
 add_dead_air_rows <- function(df, dead_air_name = "dead_air") {
-  . <- comment_num <- end <- prev_end <- prior_dead_air <- start <- NULL
+  # Removed local NULL assignments; handled by globalVariables above.
 
   if (tibble::is_tibble(df)) {
     # Ensure time columns are of type Period

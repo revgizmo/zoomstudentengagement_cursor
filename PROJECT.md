@@ -55,18 +55,49 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
    - Run full `devtools::check()` to verify compliance
 
 ### Verification Commands
+
+#### Development Phase (Quick checks)
 ```r
-# Quick checks during development
+# Load and test during development
 devtools::load_all()           # Load package
 devtools::test()               # Run tests
 devtools::check_man()          # Check documentation
-
-# Pre-CRAN submission checks
-devtools::check()                    # Full package check
-covr::package_coverage()             # Check test coverage
-devtools::check_examples()           # Check examples run
-styler::style_pkg()                  # Check code style
+devtools::spell_check()        # Check for typos
 ```
+
+#### Pre-CRAN Submission (Comprehensive checks)
+```r
+# Phase 1: Code Quality
+styler::style_pkg()                  # Ensure consistent code formatting
+lintr::lint_package()               # Check code quality (optional)
+
+# Phase 2: Documentation
+devtools::document()                 # Update all roxygen2 documentation
+devtools::build_readme()             # Rebuild README.md from README.Rmd
+devtools::spell_check()              # Check for typos in documentation
+
+# Phase 3: Testing
+devtools::test()                     # Run all tests
+covr::package_coverage()             # Check test coverage (aim for >90%)
+devtools::check_examples()           # Verify all examples run correctly
+
+# Phase 4: Final Validation
+devtools::check()                    # Full package check (should be 0 errors, 0 warnings, minimal notes)
+devtools::build()                    # Create distributable package
+
+# Phase 5: Optional Advanced Checks
+devtools::revdep_check()             # Check reverse dependencies (if any)
+```
+
+#### CRAN Submission Checklist
+- [ ] All tests pass (`devtools::test()`)
+- [ ] Code coverage >90% (`covr::package_coverage()`)
+- [ ] No spelling errors (`devtools::spell_check()`)
+- [ ] All examples run (`devtools::check_examples()`)
+- [ ] R CMD check passes with 0 errors, 0 warnings (`devtools::check()`)
+- [ ] Package builds successfully (`devtools::build()`)
+- [ ] Documentation is complete and up-to-date
+- [ ] README.md is current (`devtools::build_readme()`)
 
 ## Milestones & Timeline
 - [x] Codebase audit (January 2025) - [Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)

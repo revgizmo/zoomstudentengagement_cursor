@@ -25,6 +25,8 @@ This function a template file (generally the `Readme.Rmd` file in the
 used to run analyses with the `zoomstudentengagment` library.
 }
 \examples{
-make_template_rmd(new_template_file_name = 'README.Rmd',
-template_file = "README.Rmd")
+make_template_rmd(
+  new_template_file_name = "README.Rmd",
+  template_file = "README.Rmd"
+)
 }
