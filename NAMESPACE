@@ -3,7 +3,6 @@
 export("%>%")
 export(add_dead_air_rows)
 export(consolidate_transcript)
-export(hello)
 export(join_transcripts_list)
 export(load_and_process_zoom_transcript)
 export(load_cancelled_classes)
