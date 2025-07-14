@@ -1,6 +1,11 @@
 #' Load and Process Zoom Transcript
 #'
-#' DEPRECATED - Use process_zoom_transcript() instead. - Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
+#' **DEPRECATED**: This function is deprecated and will be removed in a future version.
+#' Use `process_zoom_transcript()` instead.
+#'
+#' Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
+#'
+#' @keywords internal
 
 #'
 #' Original code posted by Conor Healy:
@@ -37,11 +42,13 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Load a sample transcript from the package's extdata directory
 #' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
 #'   package = "zoomstudentengagement"
 #' )
 #' load_and_process_zoom_transcript(transcript_file_path = transcript_file)
+#' }
 #'
 load_and_process_zoom_transcript <- function(transcript_file_path,
                                              consolidate_comments = TRUE,
@@ -49,12 +56,14 @@ load_and_process_zoom_transcript <- function(transcript_file_path,
                                              add_dead_air = TRUE,
                                              dead_air_name = "dead_air",
                                              na_name = "unknown") {
+  .Deprecated("process_zoom_transcript")
+  
   process_zoom_transcript(transcript_file_path,
-    consolidate_comments = TRUE,
-    max_pause_sec = 1,
-    add_dead_air = TRUE,
-    dead_air_name = "dead_air",
-    na_name = "unknown"
+    consolidate_comments = consolidate_comments,
+    max_pause_sec = max_pause_sec,
+    add_dead_air = add_dead_air,
+    dead_air_name = dead_air_name,
+    na_name = na_name
   )
 
   # . <-
