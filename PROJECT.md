@@ -79,7 +79,6 @@ devtools::spell_check()              # Check for typos in documentation
 # Phase 3: Testing
 devtools::test()                     # Run all tests
 covr::package_coverage()             # Check test coverage (aim for >90%)
-devtools::check_examples()           # Verify all examples run correctly
 
 # Phase 4: Final Validation
 devtools::check()                    # Full package check (should be 0 errors, 0 warnings, minimal notes)
