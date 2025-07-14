@@ -1,6 +1,6 @@
 #' Add Dead Air Rows
 #'
-#' Take a tibble containing the comments from a Zoom recording transcript and return a tibble that adds rows for any time between transcribed comments, labeled with the `dead_air_name` provided (or the default value of 'dead_air').  The resuting tibble will have rows accounting for the time from the beginning of the first comment to the end of the last one.
+#' Take a tibble containing the comments from a Zoom recording transcript and return a tibble that adds rows for any time between transcribed comments, labeled with the `dead_air_name` provided (or the default value of 'dead_air').  The resulting tibble will have rows accounting for the time from the beginning of the first comment to the end of the last one.
 #'
 
 
@@ -15,8 +15,9 @@
 #' @examples
 #' add_dead_air_rows(df = "NULL")
 #'
+# CRAN compliance: global variables handled in package file
 add_dead_air_rows <- function(df, dead_air_name = "dead_air") {
-  . <- comment_num <- end <- prev_end <- prior_dead_air <- start <- NULL
+  # Removed local NULL assignments; handled by globalVariables above.
 
   if (tibble::is_tibble(df)) {
     # Ensure time columns are of type Period

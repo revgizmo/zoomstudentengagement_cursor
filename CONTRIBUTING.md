@@ -124,6 +124,20 @@ tests/
 6. Merge to `main` and tag release
 7. Merge back to `develop`
 
+### Development Workflow
+
+For detailed pre-CRAN development workflow, including pre-PR validation, PR creation, and merge processes, see the [Pre-CRAN Development Workflow section in PROJECT.md](PROJECT.md#pre-cran-development-workflow).
+
+Key points:
+- Follow the 4-phase pre-PR validation before creating PRs
+- Use `devtools::check()` for final validation
+- Consider bypassing branch protection when confident in changes
+- Link PRs to issues using `Fixes #X` or `Closes #X`
+
+### CRAN Submission (Future)
+
+For CRAN submission workflow when the package is ready for CRAN, see the [CRAN Submission Workflow section in PROJECT.md](PROJECT.md#cran-submission-workflow-future).
+
 ## Questions?
 
 If you have questions about contributing, please:

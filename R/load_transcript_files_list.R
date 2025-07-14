@@ -17,9 +17,9 @@
 #' @param transcripts_folder specific subfolder of the data folder where you
 #'   will store the cloud recording csvs and transcripts
 #' @param transcript_files_names_pattern REGEX pattern used to match the
-#'   transcriipt file names. Defaults to 'GMT\\d{8}-\\d{6}_Recording'
+#'   transcript file names. Defaults to 'GMT\\d{8}-\\d{6}_Recording'
 #' @param dt_extract_pattern REGEX pattern used to extract the date of the
-#'   transcript from the transcriipt file name. Defaults to '(?<=GMT)\\d{8}'
+#'   transcript from the transcript file name. Defaults to '(?<=GMT)\\d{8}'
 #' @param transcript_file_extension_pattern REGEX pattern used to identify
 #'   transcript files (as opposed to chat or closed caption files). Defaults to
 #'   '.transcript'
@@ -27,7 +27,7 @@
 #'   closed caption files (as opposed to chat or transcript files). Defaults to
 #'   '.cc'
 #' @param recording_start_pattern REGEX pattern used to extract the recording
-#'   start time of the transcript from the transcriipt file name. Defaults to
+#'   start time of the transcript from the transcript file name. Defaults to
 #'   '(?<=GMT)\\d{8}-\\d{6}'
 #' @param recording_start_format Pattern used to parse the format of the
 #'   recording start time of the transcript. Defaults to '\%Y\%m\%d-\%H\%M\%S'

@@ -35,7 +35,7 @@ comments is larger, they will not be consolidated. Defaults to 1.}
 
 \item{add_dead_air}{Set to `TRUE` to adds rows for any time between
 transcribed comments, labeled with the `dead_air_name` provided (or the
-default value of 'dead_air').  The resuting tibble will have rows
+default value of 'dead_air').  The resulting tibble will have rows
 accounting for the time from the beginning of the first comment to the end
 of the last one. Defaults to `TRUE`.}
 
@@ -63,7 +63,8 @@ https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246
 \examples{
 # Load a sample transcript from the package's extdata directory
 transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-                             package = "zoomstudentengagement")
+  package = "zoomstudentengagement"
+)
 summarize_transcript_metrics(transcript_file_path = transcript_file)
 
 }

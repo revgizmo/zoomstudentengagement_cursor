@@ -59,7 +59,7 @@
 plot_users_masked_section_by_metric <-
   function(df,
            metric = "session_ct") {
-    . <- row_num <- preferred_name <- section <- NULL
+    # CRAN compliance: global variables handled in package file
 
     if (tibble::is_tibble(df)) {
       # Validate metric exists in the data

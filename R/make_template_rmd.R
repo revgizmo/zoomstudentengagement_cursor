@@ -1,12 +1,12 @@
 #' Write Section Names Lookup
 #'
-#' This function a template file (generally the `Readme.Rmd` file in the
-#' `zoomstudentengagment` documentation) and saves it as a .Rmd file that can be
-#' used to run analyses with the `zoomstudentengagment` library.
+#' This function a template file (generally the `README.Rmd` file in the
+#' `zoomstudentengagement` documentation) and saves it as a .Rmd file that can be
+#' used to run analyses with the `zoomstudentengagement` library.
 #'
 #' @param new_template_file_name The file name of the created report template.
 #' @param template_file The file name of the template file. This defaults to the
-#'   `Readme.Rmd` file in the `zoomstudentengagment` documentation.
+#'   `README.Rmd` file in the `zoomstudentengagement` documentation.
 #'
 #' @return TRUE if the file was copied, FALSE otherwise.
 #' @export
