@@ -98,6 +98,206 @@ devtools::revdep_check()             # Check reverse dependencies (if any)
 - [ ] Documentation is complete and up-to-date
 - [ ] README.md is current (`devtools::build_readme()`)
 
+## Pre-CRAN Development Workflow
+
+### Pre-PR Validation (Development Phase)
+
+#### Phase 1: Code Quality (5-10 minutes)
+```r
+# Ensure consistent code formatting
+styler::style_pkg()
+
+# Check code quality (optional - can be overridden for acceptable issues)
+lintr::lint_package()
+```
+
+#### Phase 2: Documentation (2-5 minutes)
+```r
+# Update all roxygen2 documentation
+devtools::document()
+
+# Rebuild README.md from README.Rmd
+devtools::build_readme()
+
+# Check for typos in documentation
+devtools::spell_check()
+```
+
+#### Phase 3: Testing (3-5 minutes)
+```r
+# Run all tests
+devtools::test()
+
+# Check test coverage (aim for >90%)
+covr::package_coverage()
+```
+
+#### Phase 4: Final Validation (5-10 minutes)
+```r
+# Full package check (should be 0 errors, 0 warnings, minimal notes)
+devtools::check()
+
+# Create distributable package
+devtools::build()
+```
+
+### PR and Merge Workflow
+
+#### Before Creating PR
+1. **Complete all 4 phases** of pre-PR validation above
+2. **Ensure all checks pass** locally
+3. **Update branch** with latest changes from main
+
+#### PR Creation and Review
+1. **Create PR** with descriptive title and description
+2. **Link to issues** using `Fixes #X` or `Closes #X`
+3. **Request review** from maintainers
+4. **Address feedback** and update PR as needed
+
+#### Merge Process
+- **Normal merge**: When PR passes all checks and reviews
+- **Bypass merge**: When confident in changes and all local checks pass (see bypass guidelines below)
+
+### Bypassing Branch Protection for Auto-Merge
+
+#### When It's Safe to Bypass
+- All local checks pass (`devtools::check()` with 0 errors, 0 warnings)
+- Tests pass (`devtools::test()`)
+- Code coverage is adequate (>90%)
+- Documentation is complete
+- No spelling errors
+
+#### GitHub CLI Method
+```bash
+# Bypass branch protection for auto-merge
+gh pr merge --auto --delete-branch --admin
+```
+
+#### Admin Override Method
+1. Go to PR on GitHub
+2. Click "Merge pull request" (admin override option)
+3. Select merge strategy
+4. Confirm merge
+
+#### Responsible Bypassing
+- Only bypass when you're confident in the changes
+- Document why bypass was necessary
+- Consider adding comments to PR explaining the bypass
+- Use bypass sparingly - prefer normal review process when possible
+
+## CRAN Submission Workflow (Future)
+
+*Note: This section is for when the package is ready for CRAN submission. Currently, we're in the pre-CRAN development phase.*
+
+### CRAN Submission Process
+
+#### Step 1: Prepare Submission Files
+1. **Create submission tarball:**
+   ```r
+   devtools::build()
+   ```
+
+2. **Verify package structure:**
+   - Check that `DESCRIPTION` has correct version, license, and dependencies
+   - Ensure `NAMESPACE` is properly generated
+   - Verify all documentation files are present
+
+#### Step 2: Submit to CRAN
+1. **Go to CRAN submission form:** https://cran.r-project.org/submit.html
+2. **Upload package tarball** (`.tar.gz` file from `devtools::build()`)
+3. **Fill out submission form:**
+   - Package name: `zoomstudentengagement`
+   - Version: Current version from `DESCRIPTION`
+   - License: MIT
+   - Title: "Analyze Student Engagement from Zoom Transcripts"
+   - Description: Brief description of package functionality
+   - Author: Your name and email
+   - Maintainer: Your name and email
+
+#### Step 3: Post-Submission
+1. **Monitor CRAN email** for feedback or approval
+2. **Address any issues** if CRAN requests changes
+3. **Resubmit** if necessary with updated version number
+4. **Update repository** with final CRAN version
+
+### Speeding Up R CMD Check
+
+#### Development vs Production Checks
+- **`devtools::check()`**: Most conservative, includes all checks (recommended for CRAN)
+- **`devtools::check_built()`**: Faster, checks built package
+- **`devtools::check_rhub()`**: Test on multiple platforms
+
+#### Parallel Processing
+```r
+# Use parallel processing for faster checks
+devtools::check(parallel = TRUE)
+
+# Specify number of cores
+devtools::check(parallel = 4)
+```
+
+#### Selective Checking
+```r
+# Skip specific checks for faster development
+devtools::check(
+  document = FALSE,  # Skip documentation checks
+  manual = FALSE,    # Skip manual generation
+  vignettes = FALSE  # Skip vignette building
+)
+```
+
+### Bypassing Branch Protection for Auto-Merge
+
+#### When It's Safe to Bypass
+- All local checks pass (`devtools::check()` with 0 errors, 0 warnings)
+- Tests pass (`devtools::test()`)
+- Code coverage is adequate (>90%)
+- Documentation is complete
+- No spelling errors
+
+#### GitHub CLI Method
+```bash
+# Bypass branch protection for auto-merge
+gh pr merge --auto --delete-branch --admin
+```
+
+#### Admin Override Method
+1. Go to PR on GitHub
+2. Click "Merge pull request" (admin override option)
+3. Select merge strategy
+4. Confirm merge
+
+#### Responsible Bypassing
+- Only bypass when you're confident in the changes
+- Document why bypass was necessary
+- Consider adding comments to PR explaining the bypass
+- Use bypass sparingly - prefer normal review process when possible
+
+### Post-CRAN Release
+
+#### Update Repository
+1. **Tag the release:**
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+
+2. **Create GitHub release:**
+   ```bash
+   gh release create v1.0.0 --title "CRAN Release v1.0.0" --notes "Initial CRAN submission"
+   ```
+
+3. **Update documentation:**
+   - Add CRAN badge to README
+   - Update installation instructions
+   - Update NEWS.md
+
+#### Monitor and Maintain
+1. **Monitor CRAN feedback** for any issues
+2. **Address user issues** reported via GitHub
+3. **Plan next release** based on feedback and roadmap
+4. **Update dependencies** as needed
+
 ## Milestones & Timeline
 - [x] Codebase audit (January 2025) - [Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)
 - [ ] Documentation overhaul (Target: January 2025) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
