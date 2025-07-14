@@ -35,4 +35,4 @@ test_that("write_transcripts_session_summary handles empty input", {
 
 test_that("write_transcripts_session_summary handles invalid input gracefully", {
   expect_silent(write_transcripts_session_summary(NULL, data_folder = tempdir(), transcripts_session_summary_file = "should_not_exist.csv"))
-}) 
+})

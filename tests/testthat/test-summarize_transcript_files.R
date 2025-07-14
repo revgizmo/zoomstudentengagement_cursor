@@ -40,4 +40,4 @@ test_that("summarize_transcript_files handles NA transcript_file", {
 test_that("summarize_transcript_files returns NULL for completely invalid input", {
   result <- summarize_transcript_files(df_transcript_list = NULL, data_folder = ".", transcripts_folder = "test_transcripts")
   expect_null(result)
-}) 
+})

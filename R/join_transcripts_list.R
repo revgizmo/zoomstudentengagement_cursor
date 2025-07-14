@@ -34,8 +34,8 @@ join_transcripts_list <- function(
 
   # Return empty tibble with correct structure if any input is invalid
   if (!tibble::is_tibble(df_zoom_recorded_sessions) ||
-      !tibble::is_tibble(df_transcript_files) ||
-      !tibble::is_tibble(df_cancelled_classes)) {
+    !tibble::is_tibble(df_transcript_files) ||
+    !tibble::is_tibble(df_cancelled_classes)) {
     return(tibble::tibble(
       section = character(),
       match_start_time = as.POSIXct(character()),

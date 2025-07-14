@@ -23,7 +23,7 @@
 #' make_sections_df(roster_df = roster_df)
 make_sections_df <- function(roster_df) {
   dept <- course_num <- section <- n <- NULL
-  
+
   # Defensive: check for valid input
   if (!tibble::is_tibble(roster_df)) {
     stop("roster_df must be a tibble")

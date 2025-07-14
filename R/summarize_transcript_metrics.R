@@ -41,17 +41,18 @@
 #' @examples
 #' # Load a sample transcript from the package's extdata directory
 #' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-#'                              package = "zoomstudentengagement")
+#'   package = "zoomstudentengagement"
+#' )
 #' summarize_transcript_metrics(transcript_file_path = transcript_file)
 #'
-summarize_transcript_metrics <- function(transcript_file_path = '',
-                  names_exclude = c("dead_air"),
-                  consolidate_comments = TRUE,
-                  max_pause_sec = 1,
-                  add_dead_air = TRUE,
-                  dead_air_name = 'dead_air',
-                  na_name = 'unknown',
-                  transcript_df = NULL) {
+summarize_transcript_metrics <- function(transcript_file_path = "",
+                                         names_exclude = c("dead_air"),
+                                         consolidate_comments = TRUE,
+                                         max_pause_sec = 1,
+                                         add_dead_air = TRUE,
+                                         dead_air_name = "dead_air",
+                                         na_name = "unknown",
+                                         transcript_df = NULL) {
   . <-
     begin <-
     comment_num <-

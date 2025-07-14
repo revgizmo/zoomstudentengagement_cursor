@@ -64,9 +64,11 @@ make_students_only_transcripts_summary_df <-
     if (tibble::is_tibble(transcripts_session_summary_df)
     ) {
       transcripts_session_summary_df %>%
-        dplyr::filter(!is.na(section),
-                      !preferred_name %in% preferred_name_exclude_cv,
-                      !is.na(preferred_name)) %>%
+        dplyr::filter(
+          !is.na(section),
+          !preferred_name %in% preferred_name_exclude_cv,
+          !is.na(preferred_name)
+        ) %>%
         make_transcripts_summary_df()
     }
   }

@@ -46,18 +46,18 @@ test_that("load_zoom_recorded_sessions_list loads valid CSV and returns expected
   expect_equal(nrow(result), 2)
   expect_true("Topic" %in% names(result))
   expect_true(all(result$dept == "LTF"))
-  
+
   # Verify date parsing for both formats
   expected_times <- c(
     lubridate::parse_date_time("Jan 15, 2024 10:00:00 AM", "b d, Y I:M:S p", tz = "America/Los_Angeles"),
     lubridate::parse_date_time("Jan 16, 2024 10:00 AM", "b d, Y I:M p", tz = "America/Los_Angeles")
   )
   expect_equal(result$match_start_time, expected_times)
-  
+
   # Verify end times are correctly calculated
   expect_equal(
     result$match_end_time,
-    expected_times + lubridate::hours(2)  # 1.5 hours + 0.5 buffer
+    expected_times + lubridate::hours(2) # 1.5 hours + 0.5 buffer
   )
 
   unlink(csv_path)
@@ -84,4 +84,4 @@ test_that("load_zoom_recorded_sessions_list returns empty tibble if no matching 
   )
   expect_true(is.null(result) || (is.data.frame(result) && nrow(result) == 0))
   unlink(transcripts_dir, recursive = TRUE)
-}) 
+})

@@ -4,9 +4,9 @@ test_that("make_sections_df groups sections and counts students correctly", {
     course_num = c(101, 101, 201, 101),
     section = c(1, 1, 1, 2)
   )
-  
+
   result <- make_sections_df(roster_df)
-  
+
   expect_s3_class(result, "tbl_df")
   expect_equal(names(result), c("dept", "course_num", "section", "n"))
   expect_equal(nrow(result), 3)
@@ -21,9 +21,9 @@ test_that("make_sections_df handles empty input", {
     course_num = integer(),
     section = integer()
   )
-  
+
   result <- make_sections_df(empty_df)
-  
+
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 0)
   expect_equal(names(result), c("dept", "course_num", "section", "n"))
@@ -35,11 +35,11 @@ test_that("make_sections_df handles NA values", {
     course_num = c(101, 101, 201),
     section = c(1, 1, 1)
   )
-  
+
   result <- make_sections_df(roster_df)
-  
+
   expect_s3_class(result, "tbl_df")
-  expect_equal(nrow(result), 3)  # NA values should be treated as a separate group
+  expect_equal(nrow(result), 3) # NA values should be treated as a separate group
 })
 
 test_that("make_sections_df handles invalid input type", {
@@ -51,7 +51,7 @@ test_that("make_sections_df handles missing required columns", {
     student_id = c(1, 2),
     name = c("Alice", "Bob")
   )
-  
+
   expect_error(make_sections_df(roster_df), "roster_df must contain columns: dept, course_num, section")
 })
 
@@ -63,7 +63,7 @@ test_that("make_sections_df preserves column types", {
     student_id = c(1L, 2L)
   )
   result <- make_sections_df(roster_df)
-  
+
   expect_type(result$dept, "character")
   expect_type(result$course_num, "integer")
   expect_type(result$section, "integer")
@@ -76,4 +76,4 @@ test_that("make_sections_df handles missing columns", {
     student_id = c(1, 2)
   )
   expect_error(make_sections_df(roster_df), "roster_df must contain columns: course_num, section")
-}) 
+})

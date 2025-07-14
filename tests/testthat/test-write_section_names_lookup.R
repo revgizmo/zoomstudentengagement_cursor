@@ -5,7 +5,7 @@ test_that("write_section_names_lookup writes a CSV and returns a tibble", {
     transcript_section = c("A", "B"),
     day = c("Mon", "Tue"),
     time = c("09:00", "10:00"),
-    course= c(101L, 201L),
+    course = c(101L, 201L),
     section = c("A", "B"),
     preferred_name = c("Alice", "Bob"),
     formal_name = c("Alice Smith", "Bob Jones"),

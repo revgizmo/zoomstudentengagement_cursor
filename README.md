@@ -207,7 +207,7 @@ This is a basic example which shows you how to solve a common problem:
 # data_folder_input <- 'data_lft'
 
 # library(zoomstudentengagement)
-data_folder_input <- system.file("extdata",  package="zoomstudentengagement")
+data_folder_input <- system.file("extdata", package = "zoomstudentengagement")
 
 
 
@@ -225,50 +225,50 @@ scheduled_session_length_hours_input <- 1.5
 
 
 ### roster_file
-roster_file_input = 'roster.csv'
+roster_file_input <- "roster.csv"
 # roster_file used in load_roster()
 
 
 ### cancelled_classes_file
-cancelled_classes_file_input <- 'cancelled_classes.csv'
+cancelled_classes_file_input <- "cancelled_classes.csv"
 # cancelled_classes_file used in load_cancelled_classes()
 
 
 ### names_lookup_file
-names_lookup_file_input <- 'section_names_lookup.csv'
+names_lookup_file_input <- "section_names_lookup.csv"
 # names_lookup_file used in load_section_names_lookup(), make_clean_names_df()
 
 
 ### transcripts_session_summary_file_input
-transcripts_session_summary_file_input <- 'transcripts_session_summary.csv'
+transcripts_session_summary_file_input <- "transcripts_session_summary.csv"
 # transcripts_session_summary_file_input used in write_transcripts_session_summary()
 
 
 ### transcripts_summary_file_input
-transcripts_summary_file_input <- 'transcripts_summary.csv'
+transcripts_summary_file_input <- "transcripts_summary.csv"
 # transcripts_summary_file_input used in write_transcripts_summary()
 
 
 ### instructor_name_input
-instructor_name_input = 'Conor Healy'
+instructor_name_input <- "Conor Healy"
 # instructor_name_input used in make_students_only_transcripts_summary_df()
 
 
 ### student_summary_report
-student_summary_report_input <- 'Zoom_Student_Engagement_Analysis_student_summary_report'
-student_summary_report_folder_input <- system.file("",  package="zoomstudentengagement")
+student_summary_report_input <- "Zoom_Student_Engagement_Analysis_student_summary_report"
+student_summary_report_folder_input <- system.file("", package = "zoomstudentengagement")
 # student_summary_report used in run_student_reports()
 
-cat(paste0("+ `data_folder_input`:  '", data_folder_input, "'\n", 
-          "+ `transcripts_folder_input` = '", transcripts_folder_input, "'\n", 
-          "+ `dept_input`: '", dept_input, "'\n", 
-          "+ `semester_start_mdy_input`: '", semester_start_mdy_input, "'\n", 
-          "+ `topic_split_pattern_input`: '", topic_split_pattern_input, "'\n", 
-          "+ `zoom_recorded_sessions_csv_names_pattern_input`: '", zoom_recorded_sessions_csv_names_pattern_input, "'\n", 
-          "+ `scheduled_session_length_hours_input`: '", scheduled_session_length_hours_input, "'\n", 
-          "+ `roster_file_input`: '", roster_file_input, "'"
-)
-)
+cat(paste0(
+  "+ `data_folder_input`:  '", data_folder_input, "'\n",
+  "+ `transcripts_folder_input` = '", transcripts_folder_input, "'\n",
+  "+ `dept_input`: '", dept_input, "'\n",
+  "+ `semester_start_mdy_input`: '", semester_start_mdy_input, "'\n",
+  "+ `topic_split_pattern_input`: '", topic_split_pattern_input, "'\n",
+  "+ `zoom_recorded_sessions_csv_names_pattern_input`: '", zoom_recorded_sessions_csv_names_pattern_input, "'\n",
+  "+ `scheduled_session_length_hours_input`: '", scheduled_session_length_hours_input, "'\n",
+  "+ `roster_file_input`: '", roster_file_input, "'"
+))
 ```
 
 ## 2. Load the zoomstudentengagement library
@@ -330,7 +330,7 @@ zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
 #   scheduled_session_length_hours = 1.5
 # )
 
-zoom_recorded_sessions_df 
+zoom_recorded_sessions_df
 # %>%
 #   select(course_section) %>%
 #   mutate(
@@ -340,10 +340,8 @@ zoom_recorded_sessions_df
 #         # section = strsplit(course_section, ".", fixed = TRUE)[[1]][2],
 #         course = stringr::str_extract(course_section, "\\d+(?=\\.)"),
 #         section = stringr::str_extract(course_section, "(?<=\\.)\\d+"),
-# 
+#
 #   )
-
-  
 ```
 
     2. Run `load_transcript_files_list()` to get a data.table from a provided folder including transcript files of Zoom recordings.
@@ -422,7 +420,8 @@ transcripts_metrics_df %>% count(name)
 ``` r
 roster_df <- load_roster(
   data_folder = data_folder_input,
-  roster_file = roster_file_input)
+  roster_file = roster_file_input
+)
 
 roster_df
 ```
@@ -463,7 +462,7 @@ roster_sessions <- make_student_roster_sessions(
   transcripts_list_df,
   roster_small_df
 )
-  
+
 
 roster_sessions
 ```
@@ -513,7 +512,8 @@ clean_names_df
 write_section_names_lookup(
   clean_names_df,
   data_folder = data_folder_input,
-  section_names_lookup_file = names_lookup_file_input)
+  section_names_lookup_file = names_lookup_file_input
+)
 ```
 
 ## 3. Make Names to Clean
@@ -523,7 +523,7 @@ write_section_names_lookup(
     matching student id.
 
 ``` r
-make_names_to_clean_df(clean_names_df) 
+make_names_to_clean_df(clean_names_df)
 ```
 
 ## 4. Manually edit `*r names_lookup_file_input` to clear names needing cleaning
@@ -562,7 +562,8 @@ transcripts_session_summary_df
 write_transcripts_session_summary(
   transcripts_session_summary_df,
   data_folder = data_folder_input,
-  transcripts_session_summary_file = transcripts_session_summary_file_input)
+  transcripts_session_summary_file = transcripts_session_summary_file_input
+)
 ```
 
 ## 2. Make Transcripts Summary
@@ -574,9 +575,10 @@ write_transcripts_session_summary(
 
 ``` r
 transcripts_summary_df <- make_transcripts_summary_df(
-  transcripts_session_summary_df)
+  transcripts_session_summary_df
+)
 
-transcripts_summary_df 
+transcripts_summary_df
 ```
 
 ### 2B. Write Transcripts Summary
@@ -590,7 +592,8 @@ transcripts_summary_df
 write_transcripts_summary(
   transcripts_summary_df,
   data_folder = data_folder_input,
-  transcripts_summary_file = transcripts_summary_file_input)
+  transcripts_summary_file = transcripts_summary_file_input
+)
 ```
 
 ## 2. Plot Users by key metrics
@@ -600,14 +603,14 @@ write_transcripts_summary(
 
 ``` r
 # plot_users_by_metric()
-plot_users_by_metric(transcripts_summary_df, metric = 'session_ct')
-plot_users_by_metric(transcripts_summary_df, metric = 'n')
-plot_users_by_metric(transcripts_summary_df, metric = 'perc_n')
-plot_users_by_metric(transcripts_summary_df, metric = 'duration')
-plot_users_by_metric(transcripts_summary_df, metric = 'perc_duration')
-plot_users_by_metric(transcripts_summary_df, metric = 'wordcount')
-plot_users_by_metric(transcripts_summary_df, metric = 'perc_wordcount')
-plot_users_by_metric(transcripts_summary_df, metric = 'wpm')
+plot_users_by_metric(transcripts_summary_df, metric = "session_ct")
+plot_users_by_metric(transcripts_summary_df, metric = "n")
+plot_users_by_metric(transcripts_summary_df, metric = "perc_n")
+plot_users_by_metric(transcripts_summary_df, metric = "duration")
+plot_users_by_metric(transcripts_summary_df, metric = "perc_duration")
+plot_users_by_metric(transcripts_summary_df, metric = "wordcount")
+plot_users_by_metric(transcripts_summary_df, metric = "perc_wordcount")
+plot_users_by_metric(transcripts_summary_df, metric = "wpm")
 ```
 
 # Students Only
@@ -621,7 +624,8 @@ plot_users_by_metric(transcripts_summary_df, metric = 'wpm')
 
 ``` r
 students_only_transcripts_summary_df <- make_students_only_transcripts_summary_df(
-  transcripts_session_summary_df)
+  transcripts_session_summary_df
+)
 
 students_only_transcripts_summary_df
 ```
@@ -633,21 +637,29 @@ students_only_transcripts_summary_df
 
 ``` r
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'session_ct')
+  metric = "session_ct"
+)
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'n')
+  metric = "n"
+)
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'perc_n')
+  metric = "perc_n"
+)
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'duration')
+  metric = "duration"
+)
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'perc_duration')
+  metric = "perc_duration"
+)
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'wordcount')
+  metric = "wordcount"
+)
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'perc_wordcount')
+  metric = "perc_wordcount"
+)
 plot_users_by_metric(students_only_transcripts_summary_df,
-                     metric = 'wpm')
+  metric = "wpm"
+)
 ```
 
 ## 3. Plot Students with names masked by key metrics
@@ -656,22 +668,38 @@ plot_users_by_metric(students_only_transcripts_summary_df,
     output said plots, but with student names masked by “Student \_“.
 
 ``` r
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df, 
-                                    metric = 'session_ct')
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
-                                    metric = 'n')
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
-                                    metric = 'perc_n')
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
-                                    metric = 'duration')
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
-                                    metric = 'perc_duration')
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
-                                    metric = 'wordcount')
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
-                                    metric = 'perc_wordcount')
-plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
-                                    metric = 'wpm')
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "session_ct"
+)
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "n"
+)
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "perc_n"
+)
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "duration"
+)
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "perc_duration"
+)
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "wordcount"
+)
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "perc_wordcount"
+)
+plot_users_masked_section_by_metric(
+  df = students_only_transcripts_summary_df,
+  metric = "wpm"
+)
 ```
 
 # Student Reports
@@ -686,49 +714,45 @@ plot_users_masked_section_by_metric(df = students_only_transcripts_summary_df,
 ## run_student_reports()
 
 ``` r
-
-
 run_student_reports <-
   function(df_sections = sections_df,
            df_roster = roster_df,
            data_folder = data_folder_input,
-           transcripts_session_summary_file = 'transcripts_session_summary.csv',
-           transcripts_summary_file = 'transcripts_summary.csv',
-           student_summary_report_folder = 'inst',
+           transcripts_session_summary_file = "transcripts_session_summary.csv",
+           transcripts_summary_file = "transcripts_summary.csv",
+           student_summary_report_folder = "inst",
            student_summary_report =
-             'Zoom_Student_Engagement_Analysis_student_summary_report')
-  {
+             "Zoom_Student_Engagement_Analysis_student_summary_report") {
     student_summary_report_rmd <-
-      paste0(student_summary_report_folder, '/', student_summary_report, '.Rmd')
-    
+      paste0(student_summary_report_folder, "/", student_summary_report, ".Rmd")
+
     for (section in df_sections$section) {
       print(section)
-      
+
       target_section <- section
-      
+
       target_students <- df_roster %>%
         filter(section == target_section) %>%
         .$preferred_name %>%
-        c('All Students', .)
-      
+        c("All Students", .)
+
       # target_student <- 'All Students'
-      
+
       for (target_student in target_students) {
         print(target_student)
-        
+
         student_summary_report_output_file <-
           paste0(
             data_folder,
-            '/',
+            "/",
             student_summary_report,
-            ' - section ',
+            " - section ",
             target_section,
-            ' - ',
+            " - ",
             target_student,
-            '.pdf'
+            ".pdf"
           )
-        
-        
+
         rmarkdown::render(
           student_summary_report_rmd,
           params = list(
@@ -741,9 +765,7 @@ run_student_reports <-
           output_file = student_summary_report_output_file
         )
         print(student_summary_report_output_file)
-        
       }
-      
     }
   }
 ```
@@ -758,17 +780,16 @@ run_student_reports(
   # data_folder =  'inst/extdata',
   transcripts_session_summary_file = transcripts_session_summary_file_input,
   transcripts_summary_file = transcripts_summary_file_input,
-student_summary_report_folder = student_summary_report_folder_input,
+  student_summary_report_folder = student_summary_report_folder_input,
   student_summary_report = student_summary_report_input
-
 )
 
 list.files(
-system.file(package="zoomstudentengagement")
+  system.file(package = "zoomstudentengagement")
 )
 
 list.files(
-system.file("extdata",  package="zoomstudentengagement")
+  system.file("extdata", package = "zoomstudentengagement")
 )
 ```
 
@@ -780,14 +801,13 @@ system.file("extdata",  package="zoomstudentengagement")
     transcript and return summary metrics by speaker.
 
 ``` r
-
 recording_transcript_file_path <-
   paste0(
     data_folder_input,
-    '/',
+    "/",
     transcripts_folder_input,
-    '/',
-    'GMT20240124-202901_Recording.transcript.vtt'
+    "/",
+    "GMT20240124-202901_Recording.transcript.vtt"
   )
 
 
@@ -803,7 +823,6 @@ fliwc_transcript_df2 <- summarize_transcript_metrics(
 )
 
 fliwc_transcript_df2
-                              
 ```
 
 # Walkthrough of key steps in `summarize_transcript_metrics()`
@@ -817,10 +836,10 @@ fliwc_transcript_df2
 single_zoom_transcript_df <- load_zoom_transcript(
   transcript_file_path = paste0(
     data_folder_input,
-    '/',
+    "/",
     transcripts_folder_input,
-    '/',
-    'GMT20240124-202901_Recording.transcript.vtt'
+    "/",
+    "GMT20240124-202901_Recording.transcript.vtt"
   )
 )
 
@@ -898,9 +917,7 @@ fliwc_transcript_df
         provided csv file of Zoom recordings.
 
 ``` r
-
-load_zoom_recorded_sessions_list(data_folder = system.file("extdata",  package="zoomstudentengagement")
-)
+load_zoom_recorded_sessions_list(data_folder = system.file("extdata", package = "zoomstudentengagement"))
 ```
 
     2. Run `load_transcript_files_list()` to get a data.table from a provided folder including transcript files of Zoom recordings.

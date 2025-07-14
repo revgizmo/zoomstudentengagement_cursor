@@ -55,4 +55,4 @@ test_that("make_transcripts_summary_df handles NA values", {
 test_that("make_transcripts_summary_df handles invalid input gracefully", {
   expect_silent(make_transcripts_summary_df(NULL))
   expect_silent(make_transcripts_summary_df(list(a = 1)))
-}) 
+})

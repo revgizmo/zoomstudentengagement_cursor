@@ -71,4 +71,3 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
       )
   }
 }
-

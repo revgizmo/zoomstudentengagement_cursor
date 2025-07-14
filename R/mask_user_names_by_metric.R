@@ -65,8 +65,8 @@
 #'
 mask_user_names_by_metric <-
   function(df,
-           metric = 'session_ct',
-           target_student = '') {
+           metric = "session_ct",
+           target_student = "") {
     row_num <- preferred_name <- section <- NULL
 
     if (tibble::is_tibble(df)) {
@@ -82,11 +82,11 @@ mask_user_names_by_metric <-
           ))),
           student = dplyr::if_else(
             preferred_name == target_student,
-            paste0('**', target_student, '**'),
+            paste0("**", target_student, "**"),
             paste(
-              'Student',
+              "Student",
               stringr::str_pad(row_num, width = 2, pad = "0"),
-              sep = ' '
+              sep = " "
             )
           )
         )

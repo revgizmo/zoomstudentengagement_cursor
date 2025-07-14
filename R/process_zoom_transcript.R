@@ -40,16 +40,17 @@
 #' @examples
 #' # Load a sample transcript from the package's extdata directory
 #' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-#'                              package = "zoomstudentengagement")
+#'   package = "zoomstudentengagement"
+#' )
 #' process_zoom_transcript(transcript_file_path = transcript_file)
 #'
-process_zoom_transcript <- function(transcript_file_path = '',
-                                             consolidate_comments = TRUE,
-                                             max_pause_sec = 1,
-                                             add_dead_air = TRUE,
-                                             dead_air_name = 'dead_air',
-                                             na_name = 'unknown',
-                                             transcript_df = NULL) {
+process_zoom_transcript <- function(transcript_file_path = "",
+                                    consolidate_comments = TRUE,
+                                    max_pause_sec = 1,
+                                    add_dead_air = TRUE,
+                                    dead_air_name = "dead_air",
+                                    na_name = "unknown",
+                                    transcript_df = NULL) {
   . <- begin <- comment_num <- duration <- end <- name <- prior_dead_air <-
     start <- NULL
 
@@ -60,7 +61,6 @@ process_zoom_transcript <- function(transcript_file_path = '',
 
   if (file.exists(transcript_file_path)) {
     transcript_df <- zoomstudentengagement::load_zoom_transcript(transcript_file_path)
-
   }
 
   if (tibble::is_tibble(transcript_df)) {
@@ -110,15 +110,5 @@ process_zoom_transcript <- function(transcript_file_path = '',
       )
 
     return(return_df)
-
   }
-
-
-
-
 }
-
-
-
-
-

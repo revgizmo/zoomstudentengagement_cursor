@@ -20,7 +20,8 @@
 #' @examples
 #' # Load a sample transcript from the package's extdata directory
 #' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-#'                              package = "zoomstudentengagement")
+#'   package = "zoomstudentengagement"
+#' )
 #' load_zoom_transcript(transcript_file_path = transcript_file)
 #'
 load_zoom_transcript <- function(transcript_file_path) {
@@ -37,7 +38,7 @@ load_zoom_transcript <- function(transcript_file_path) {
   }
 
   transcript_vtt <- readr::read_tsv(transcript_file_path)
-  
+
   # Return NULL for empty files
   if (nrow(transcript_vtt) == 0) {
     return(NULL)
@@ -45,28 +46,28 @@ load_zoom_transcript <- function(transcript_file_path) {
 
   # Process the transcript
   transcript_cols <- c("comment_num", "timestamp", "comment")
-  
+
   # Calculate how many complete entries we have
   n_entries <- floor(nrow(transcript_vtt) / 3)
   if (n_entries == 0) {
     return(NULL)
   }
-  
+
   # Create a data frame with the correct number of rows
   transcript_df <- tibble::tibble(
     comment_num = character(n_entries),
     timestamp = character(n_entries),
     comment = character(n_entries)
   )
-  
+
   # Fill in the data
   for (i in 1:n_entries) {
-    start_idx <- (i-1)*3 + 1
+    start_idx <- (i - 1) * 3 + 1
     transcript_df$comment_num[i] <- transcript_vtt$WEBVTT[start_idx]
     transcript_df$timestamp[i] <- transcript_vtt$WEBVTT[start_idx + 1]
     transcript_df$comment[i] <- transcript_vtt$WEBVTT[start_idx + 2]
   }
-  
+
   # Process the data
   result <- transcript_df %>%
     tidyr::separate(col = comment, into = c("name", "comment"), sep = ": ", extra = "merge", fill = "left") %>%
@@ -76,7 +77,9 @@ load_zoom_transcript <- function(transcript_file_path) {
       end = hms::as_hms(end),
       duration = end - start,
       wordcount = sapply(comment, function(x) {
-        if (is.na(x) || x == "") return(0)
+        if (is.na(x) || x == "") {
+          return(0)
+        }
         length(strsplit(x, " +")[[1]])
       })
     ) %>%
@@ -89,15 +92,14 @@ load_zoom_transcript <- function(transcript_file_path) {
       duration,
       wordcount
     )
-  
+
   # Filter out any rows with missing timestamps or comments
   result <- result %>%
     dplyr::filter(!is.na(start) & !is.na(end) & !is.na(comment) & comment != "")
-  
+
   if (nrow(result) == 0) {
     return(NULL)
   }
-  
+
   result
 }
-
