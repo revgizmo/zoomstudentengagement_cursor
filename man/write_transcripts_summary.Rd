@@ -21,7 +21,7 @@ results at the level of the class section and preferred student name. Defaults t
 'transcripts_summary.csv'}
 }
 \value{
-A tibble coresponding to the csv file saved, which is a sorted subset
+A tibble corresponding to the csv file saved, which is a sorted subset
   of the provided tibble containing summary metrics by
   speaker for all class sections, including customized student names.
 }
