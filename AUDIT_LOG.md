@@ -66,9 +66,9 @@ This log tracks findings, decisions, and progress during the 2024-06 codebase au
   - Review and discuss changes with the team before implementation.
   - Document the review process and outcomes.
 
-### Exported Functions Inventory (Updated 2025-05-05)
+### Exported Functions Inventory (Updated 2025-07-14)
 
-_All exported functions in NAMESPACE have been cross-checked against this inventory and the test suite. As of 2025-05-05, **all exported functions are covered by tests** and the audit is up to date._
+_All exported functions in NAMESPACE have been cross-checked against this inventory and the test suite. As of 2025-07-14, **all exported functions are covered by tests** and the audit is up to date._
 
 - `%>%` (pipe operator)
   - **Status:** OK (standard magrittr import)
@@ -191,6 +191,12 @@ Next steps:
 2. Prioritize changes based on impact and effort
 3. Begin implementing changes in order of priority
 
+### [2025-07-14]
+- **Master Audit Completed**: Issue #15 closed - comprehensive codebase audit finished
+- **CRAN Compliance Achieved**: Issue #21 closed - license and R-CMD-check issues resolved
+- **Current Focus**: Documentation (#19) and test warnings (#24) are the remaining CRAN blockers
+- **Project Status**: Advanced development phase, near CRAN ready
+
 ## Progress Log
 
 ### [Date]
@@ -272,6 +278,9 @@ This approach follows best practices for reliability and maintainability.
 - Updated PROJECT.md, CRAN_CHECKLIST.md, and AUDIT_LOG.md with GitHub issue links
 - Achieved single source of truth for issue tracking
 - Clear path to CRAN submission established through organized GitHub issues
+
+### [2024-06-12]
+- Resolved load_roster parameter mismatch in example/test. Function now returns empty tibble if file does not exist. Test updated. All tests/examples pass.
 
 ---
 

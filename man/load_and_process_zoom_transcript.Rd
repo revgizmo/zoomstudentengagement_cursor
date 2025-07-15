@@ -44,19 +44,36 @@ the transcript `name` is `NA`. Defaults to 'unknown'.}
 A tibble containing the comments from a Zoom recording transcript
 }
 \description{
-DEPRECATED - Use process_zoom_transcript() instead. - Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
+**DEPRECATED**: This function is deprecated and will be removed in a future version.
+Use `process_zoom_transcript()` instead.
 }
 \details{
-Original code posted by Conor Healy:
-https://ucbischool.slack.com/archives/C02A36407K9/p1631855705002000 Addition
-of `wordcount`, `wordcount_perc`, and `wpm` by Brooks Ambrose:
-https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246
+Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
 }
 \examples{
+\dontrun{
 # Load a sample transcript from the package's extdata directory
 transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
   package = "zoomstudentengagement"
 )
 load_and_process_zoom_transcript(transcript_file_path = transcript_file)
+}
 
 }
+\keyword{Addition}
+\keyword{Ambrose:}
+\keyword{Brooks}
+\keyword{Conor}
+\keyword{Healy:}
+\keyword{Original}
+\keyword{`wordcount_perc`,}
+\keyword{`wordcount`,}
+\keyword{`wpm`}
+\keyword{and}
+\keyword{by}
+\keyword{code}
+\keyword{https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246}
+\keyword{https://ucbischool.slack.com/archives/C02A36407K9/p1631855705002000}
+\keyword{internal}
+\keyword{of}
+\keyword{posted}

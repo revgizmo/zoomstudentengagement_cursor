@@ -1,11 +1,16 @@
 #' Make Metrics Lookup DF
 #'
-#' This function creates a tibble for the metrics that will be analyzed in the
-#' analysis, with text descriptions to go along with the metric labels
-#' @keywords metrics
-#' @return A tibble including metric labels and metric descriptions
-
+#' Create a tibble describing all metrics used in the analysis.
+#'
+#' This function returns a tibble with metric labels and their descriptions, which are used throughout the package for reporting and plotting.
+#'
+#' @return A tibble with two columns:
+#'   \describe{
+#'     \item{metric}{Character. The metric label used in the package.}
+#'     \item{description}{Character. A human-readable description of the metric.}
+#'   }
 #' @export
+#'
 #' @examples
 #' make_metrics_lookup_df()
 make_metrics_lookup_df <- function() {

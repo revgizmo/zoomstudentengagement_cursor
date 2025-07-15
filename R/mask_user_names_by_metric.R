@@ -14,55 +14,25 @@
 #' @export
 #'
 #' @examples
-#' # Create sample transcript list
-#' sample_transcript_list <- tibble::tibble(
-#'   name = c("John Smith", "Jane Doe", "Unknown"),
-#'   course_section = c("101.A", "101.A", "101.A"),
-#'   course = c(101, 101, 101),
-#'   section = c("A", "A", "A"),
-#'   day = c("2024-01-01", "2024-01-01", "2024-01-01"),
-#'   time = c("10:00", "10:00", "10:00"),
-#'   n = c(5, 3, 1),
-#'   duration = c(300, 180, 60),
-#'   wordcount = c(500, 300, 100),
-#'   comments = c(10, 5, 2),
-#'   n_perc = c(0.5, 0.3, 0.1),
-#'   duration_perc = c(0.5, 0.3, 0.1),
-#'   wordcount_perc = c(0.5, 0.3, 0.1),
-#'   wpm = c(100, 100, 100),
-#'   name_raw = c("John Smith", "Jane Doe", "Unknown"),
-#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00", "2024-01-01 10:00:00"),
-#'   dept = c("CS", "CS", "CS"),
-#'   session_num = c(1, 1, 1)
+#' \dontrun{
+#' # Create sample transcripts summary data
+#' sample_summary <- tibble::tibble(
+#'   section = c("101.A", "101.A", "101.A"),
+#'   preferred_name = c("John Smith", "Jane Doe", "Bob Wilson"),
+#'   session_ct = c(5, 3, 8),
+#'   duration = c(300, 180, 480),
+#'   wordcount = c(500, 300, 800)
 #' )
 #'
-#' # Create sample roster
-#' sample_roster <- tibble::tibble(
-#'   first_last = c("John Smith", "Jane Doe"),
-#'   preferred_name = c("John Smith", "Jane Doe"),
-#'   course_num = c(101, 101),
-#'   section = c("A", "A"),
-#'   student_id = c("12345", "67890"),
-#'   dept = c("CS", "CS"),
-#'   session_num = c(1, 1),
-#'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
-#'   transcript_section = c("101.A", "101.A")
-#' )
+#' # Mask student names by session count (default metric)
+#' mask_user_names_by_metric(sample_summary)
 #'
-#' mask_user_names_by_metric(
-#'   make_transcripts_summary_df(
-#'     make_transcripts_session_summary_df(
-#'       clean_names_df = make_clean_names_df(
-#'         data_folder = "data",
-#'         section_names_lookup_file = "section_names_lookup.csv",
-#'         transcripts_metrics_df = sample_transcript_list,
-#'         roster_sessions = sample_roster
-#'       )
-#'     )
-#'   ),
-#'   metric = "session_ct"
-#' )
+#' # Mask student names by duration metric
+#' mask_user_names_by_metric(sample_summary, metric = "duration")
 #'
+#' # Highlight a specific student while masking others
+#' mask_user_names_by_metric(sample_summary, target_student = "Jane Doe")
+#' }
 mask_user_names_by_metric <-
   function(df,
            metric = "session_ct",

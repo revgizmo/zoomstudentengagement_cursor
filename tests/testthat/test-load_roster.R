@@ -15,10 +15,11 @@ test_that("load_roster loads valid roster file and filters enrolled students", {
   unlink(temp_file)
 })
 
-test_that("load_roster returns NULL if file does not exist", {
+test_that("load_roster returns empty tibble if file does not exist", {
   temp_dir <- tempdir()
   result <- load_roster(data_folder = temp_dir, roster_file = "nonexistent.csv")
-  expect_null(result)
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 0)
 })
 
 test_that("load_roster returns empty tibble if no students are enrolled", {

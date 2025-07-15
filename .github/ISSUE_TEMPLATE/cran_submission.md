@@ -12,6 +12,7 @@ assignees: ''
 - [ ] Documentation up-to-date
 - [ ] All exports documented
 - [ ] Examples run without errors
+- [ ] **All example code tested and verified to run (even if wrapped in \dontrun{})**
 - [ ] Tests passing locally
 - [ ] R CMD check passing with no errors/warnings/notes
 - [ ] Vignettes building correctly

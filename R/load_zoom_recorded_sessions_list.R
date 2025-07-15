@@ -54,7 +54,14 @@
 #' @export
 #'
 #' @examples
-#' load_zoom_recorded_sessions_list()
+#' \dontrun{
+#' # Requires a Zoom cloud recordings CSV in the appropriate folder, e.g.:
+#' # inst/extdata/transcripts/zoomus_recordings__20240124.csv
+#' load_zoom_recorded_sessions_list(
+#'   data_folder = system.file("extdata", package = "zoomstudentengagement"),
+#'   transcripts_folder = "transcripts"
+#' )
+#' }
 load_zoom_recorded_sessions_list <-
   function(data_folder = "data",
            transcripts_folder = "transcripts",

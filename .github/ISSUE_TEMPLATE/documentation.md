@@ -20,3 +20,13 @@ What changes would you like to see?
 - Is this blocking your use of the package?
 - Are there related documentation issues?
 - Any examples of good documentation you'd like to reference? 
+
+---
+
+**Documentation Checklist**
+- [ ] All parameters documented
+- [ ] Return value documented
+- [ ] Examples provided
+- [ ] **All example code tested and verified to run (even if wrapped in \dontrun{})**
+- [ ] No hardcoded paths or system-specific code
+- [ ] Cross-references to related functions (if applicable) 

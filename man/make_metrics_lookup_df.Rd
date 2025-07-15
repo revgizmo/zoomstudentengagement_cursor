@@ -7,13 +7,18 @@
 make_metrics_lookup_df()
 }
 \value{
-A tibble including metric labels and metric descriptions
+A tibble with two columns:
+  \describe{
+    \item{metric}{Character. The metric label used in the package.}
+    \item{description}{Character. A human-readable description of the metric.}
+  }
 }
 \description{
-This function creates a tibble for the metrics that will be analyzed in the
-analysis, with text descriptions to go along with the metric labels
+Create a tibble describing all metrics used in the analysis.
+}
+\details{
+This function returns a tibble with metric labels and their descriptions, which are used throughout the package for reporting and plotting.
 }
 \examples{
 make_metrics_lookup_df()
 }
-\keyword{metrics}
