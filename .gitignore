@@ -90,3 +90,4 @@ rsconnect/
 .cursor/*
 !.cursor/context.md
 .cursor.json
+example_test_results.rds
