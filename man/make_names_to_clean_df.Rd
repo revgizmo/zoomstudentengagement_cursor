@@ -31,47 +31,16 @@ If any names except "dead_air", "unknown", or the instructor's name are listed, 
   + Any guest students, label them as "Guests"
 }
 \examples{
-# Create sample transcript list
-sample_transcript_list <- tibble::tibble(
-  name = c("John Smith", "Jane Doe", "Unknown"),
-  course_section = c("101.A", "101.A", "101.A"),
-  course = c(101, 101, 101),
-  section = c("A", "A", "A"),
-  day = c("2024-01-01", "2024-01-01", "2024-01-01"),
-  time = c("10:00", "10:00", "10:00"),
-  n = c(5, 3, 1),
-  duration = c(300, 180, 60),
-  wordcount = c(500, 300, 100),
-  comments = c(10, 5, 2),
-  n_perc = c(0.5, 0.3, 0.1),
-  duration_perc = c(0.5, 0.3, 0.1),
-  wordcount_perc = c(0.5, 0.3, 0.1),
-  wpm = c(100, 100, 100),
-  name_raw = c("John Smith", "Jane Doe", "Unknown"),
-  start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00", "2024-01-01 10:00:00"),
-  dept = c("CS", "CS", "CS"),
-  session_num = c(1, 1, 1)
+\dontrun{
+# Create sample clean_names_df with unmatched students
+sample_clean_names_df <- tibble::tibble(
+  student_id = c("12345", NA, "67890"),
+  preferred_name = c("John Smith", "Unknown Student", "Jane Doe"),
+  transcript_name = c("John Smith", "Unknown Student", "Jane Doe"),
+  n = c(5, 3, 8)
 )
 
-# Create sample roster
-sample_roster <- tibble::tibble(
-  first_last = c("John Smith", "Jane Doe"),
-  preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
-  section = c("A", "A"),
-  student_id = c("12345", "67890"),
-  dept = c("CS", "CS"),
-  session_num = c(1, 1),
-  start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
-  transcript_section = c("101.A", "101.A")
-)
-
-make_names_to_clean_df(
-  clean_names_df = make_clean_names_df(
-    data_folder = "data",
-    section_names_lookup_file = "section_names_lookup.csv",
-    transcripts_metrics_df = sample_transcript_list,
-    roster_sessions = sample_roster
-  )
-)
+# Find students with transcript recordings but no matching student ID
+make_names_to_clean_df(sample_clean_names_df)
+}
 }
