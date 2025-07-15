@@ -163,11 +163,10 @@ run_test("make_blank_cancelled_classes_df", "make_blank_cancelled_classes_df()")
 # Test 19: make_blank_section_names_lookup_csv (simple)
 run_test("make_blank_section_names_lookup_csv", "make_blank_section_names_lookup_csv()")
 
-# Test 20: make_template_rmd (syntax test - requires file setup)
-test_syntax("make_template_rmd", '
-make_template_rmd(
-  new_template_file_name = "README.Rmd",
-  template_file = "README.Rmd"
+# Test 20: make_new_analysis_template (syntax test - requires file setup)
+test_syntax("make_new_analysis_template", '
+make_new_analysis_template(
+  new_template_file_name = "my_analysis.Rmd"
 )
 ')
 
