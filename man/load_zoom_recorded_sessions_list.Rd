@@ -84,5 +84,12 @@ The function handles several legacy and edge cases:
 - Date format variations in Zoom exports
 }
 \examples{
-load_zoom_recorded_sessions_list()
+\dontrun{
+# Requires a Zoom cloud recordings CSV in the appropriate folder, e.g.:
+# inst/extdata/transcripts/zoomus_recordings__20240124.csv
+load_zoom_recorded_sessions_list(
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  transcripts_folder = "transcripts"
+)
+}
 }
