@@ -16,7 +16,7 @@
 #' @examples
 #' # Load required packages
 #' library(dplyr)
-#' 
+#'
 #' # Create a simple sample data frame for testing
 #' sample_data <- tibble::tibble(
 #'   section = c("A", "A", "B"),

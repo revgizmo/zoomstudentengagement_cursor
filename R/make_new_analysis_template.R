@@ -1,6 +1,6 @@
 #' Make New Analysis Template
 #'
-#' This function copies a template R Markdown file (the `new_analysis_template.Rmd` file 
+#' This function copies a template R Markdown file (the `new_analysis_template.Rmd` file
 #' from the `zoomstudentengagement` package) and saves it as a new .Rmd file that can be
 #' used as a starting point for running analyses with the `zoomstudentengagement` library.
 #'
