@@ -118,7 +118,7 @@ Functions for reading/writing files:
 4. Fix Category E functions (File I/O)
 
 ### Step 4: Package-Level Updates
-1. Create vignettes
+1. Create vignettes ([Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45))
 2. Update README.md
 3. Update NEWS.md
 4. Add function families
@@ -128,6 +128,7 @@ Functions for reading/writing files:
 2. Test all examples
 3. Validate CRAN compliance
 4. Update issue status
+5. Create verification helper script ([Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47))
 
 ## Progress Tracking
 
@@ -142,8 +143,9 @@ Functions for reading/writing files:
 - [ ] **Milestone 1**: Complete audit of all 35 functions
 - [ ] **Milestone 2**: Fix all Category A functions
 - [ ] **Milestone 3**: Fix all remaining functions
-- [ ] **Milestone 4**: Create vignettes and package-level docs
+- [ ] **Milestone 4**: Create vignettes and package-level docs ([Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45))
 - [ ] **Milestone 5**: Final validation and CRAN compliance
+- [ ] **Milestone 6**: Create verification helper script ([Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47))
 
 ## Risk Assessment
 
@@ -163,7 +165,7 @@ Issue #19 will be considered resolved when:
 - [ ] All 35 exported functions have complete roxygen2 documentation
 - [ ] All examples run without errors
 - [ ] Package passes all documentation checks
-- [ ] At least one vignette is created
+- [ ] At least one vignette is created ([Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45))
 - [ ] README.md and NEWS.md are updated
 - [ ] No hardcoded paths or system-specific code in examples
 

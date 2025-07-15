@@ -47,7 +47,7 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 
 ### Immediate Action Items
 1. **Documentation Fixes** (Priority: HIGH) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
-   - Audit all 33 exported functions for complete roxygen2 documentation
+   - Audit all 34 exported functions for complete roxygen2 documentation
    - Fix functions with incomplete `@examples` sections
    - Ensure all examples are runnable
 
@@ -58,6 +58,15 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 3. **CRAN Compliance** (Priority: HIGH) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - ✅ COMPLETED
    - Replace "TBD Open Source" with proper MIT license
    - Run full `devtools::check()` to verify compliance
+
+4. **Vignette Creation** (Priority: MEDIUM) - [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)
+   - Create Getting Started vignette
+   - Create Advanced Analysis vignette
+   - Create Troubleshooting Guide vignette
+
+5. **Development Efficiency** (Priority: LOW) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47)
+   - Create verification helper script
+   - Automate pre-CRAN validation process
 
 ### Verification Commands
 
@@ -91,6 +100,10 @@ devtools::build()                    # Create distributable package
 
 # Phase 5: Optional Advanced Checks
 devtools::revdep_check()             # Check reverse dependencies (if any)
+```
+
+```zsh
+Rscript -e "devtools::load_all(); devtools::test(); devtools::check_man(); devtools::spell_check(); styler::style_pkg(); lintr::lint_package(); devtools::document(); devtools::build_readme(); devtools::spell_check(); devtools::test(); covr::package_coverage(); devtools::check(); devtools::build()"
 ```
 
 #### CRAN Submission Checklist
@@ -308,6 +321,8 @@ gh pr merge --auto --delete-branch --admin
 - [ ] Documentation overhaul (Target: July 2025) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH
 - [ ] Test suite cleanup (Target: July 2025) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH
 - [x] CRAN compliance check (Target: July 2025) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - ✅ COMPLETED
+- [ ] Vignette creation (Target: July 2025) - [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45) - Priority: MEDIUM
+- [ ] Development efficiency tools (Target: August 2025) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47) - Priority: LOW
 - [ ] Submit to CRAN (Target: August 2025) - Blocked by #19 and #24
 
 ## Task Breakdown

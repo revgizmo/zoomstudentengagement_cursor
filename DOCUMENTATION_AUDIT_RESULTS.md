@@ -101,7 +101,7 @@ Functions with comprehensive documentation, working examples, and clear paramete
    - Reduce temporary file creation in examples
    - Enhance brief descriptions
 
-3. **Create Vignettes**:
+3. **Create Vignettes** ([Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)):
    - Basic usage vignette
    - Advanced analysis vignette
    - Troubleshooting guide
@@ -115,4 +115,5 @@ Functions with comprehensive documentation, working examples, and clear paramete
 - Prioritize fixing the 8 critical issues before CRAN submission
 - Consider simplifying examples for better user experience
 - Add more comprehensive descriptions for utility functions
-- Create vignettes to complement function documentation 
+- Create vignettes to complement function documentation ([Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45))
+- Create verification helper script for development efficiency ([Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47)) 

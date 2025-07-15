@@ -57,7 +57,7 @@ load_and_process_zoom_transcript <- function(transcript_file_path,
                                              dead_air_name = "dead_air",
                                              na_name = "unknown") {
   .Deprecated("process_zoom_transcript")
-  
+
   process_zoom_transcript(transcript_file_path,
     consolidate_comments = consolidate_comments,
     max_pause_sec = max_pause_sec,
