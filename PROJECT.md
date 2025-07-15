@@ -176,6 +176,22 @@ devtools::build()
 - **Normal merge**: When PR passes all checks and reviews
 - **Bypass merge**: When confident in changes and all local checks pass (see bypass guidelines below)
 
+### PR Creation and Merge Process
+
+#### Command-Line PR Creation and Merge
+```bash
+# 1. Create PR from command line
+gh pr create --title "Fix make_template_rmd function" --body "Fixes #X - Rename function and fix template path issues"
+
+# 2. Merge PR with admin override (bypass branch protection)
+gh pr merge --auto --delete-branch --admin
+
+# 3. Clean up local branch
+git checkout main
+git pull origin main
+git branch -d bugfix/fix-make-template-rmd-function
+```
+
 ### Bypassing Branch Protection for Auto-Merge
 
 #### When It's Safe to Bypass
