@@ -23,5 +23,8 @@ load_roster <- function(
   if (file.exists(roster_file_path)) {
     readr::read_csv(roster_file_path) %>%
       dplyr::filter(enrolled == TRUE)
+  } else {
+    # Return empty tibble with same structure if file doesn't exist
+    tibble::tibble()
   }
 }

@@ -128,7 +128,8 @@ Functions for creating templates and examples.
 Functions for loading various data sources.
 
 #### ✅ **Good Documentation**
-30. **`load_roster`** - Good documentation with working example using package data
+30. **`load_roster`** - Good documentation with working example using package data. 
+    - 2024-06-12: Parameter mismatch in example/test fixed. Function now returns an empty tibble if file does not exist (not NULL). Test updated accordingly. All tests/examples pass.
 31. **`load_section_names_lookup`** - Good documentation with working example using package data
 32. **`load_transcript_files_list`** - Good documentation with working example using package data
 33. **`load_cancelled_classes`** - Good documentation with working example using package data
