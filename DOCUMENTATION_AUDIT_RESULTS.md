@@ -70,6 +70,25 @@ Systematic audit of all 35 exported functions in the zoomstudentengagement packa
 - Focus on Category A (Core Functions) first
 - Test complex examples with proper data setup
 
+## Example Testing Results (Detailed)
+
+| Function Name                             | Example Tested | Result | Notes/Issues                         |
+|-------------------------------------------|:-------------:|:------:|--------------------------------------|
+| summarize_transcript_metrics              |      Y        |   ✅   | Works as expected                    |
+| summarize_transcript_files                |      Y        |   ✅   | Returns NULL as expected             |
+| make_transcripts_summary_df               |      Y        |   ✅   | FIXED - Now works with simplified example |
+| make_transcripts_session_summary_df       |      Y        |   ✅   | FIXED - Now works with simplified example |
+| make_students_only_transcripts_summary_df |      Y        |   ✅   | Returns NULL as expected             |
+| consolidate_transcript                    |      Y        |   ✅   | Returns NULL as expected             |
+| add_dead_air_rows                         |      Y        |   ✅   | Returns NULL as expected             |
+| join_transcripts_list                     |      Y        |   ✅   | Returns empty tibble as expected     |
+| load_roster                               |      Y        |   ✅   | Returns NULL as expected             |
+| load_section_names_lookup                 |      Y        |   ✅   | Returns empty tibble as expected     |
+| load_transcript_files_list                |      Y        |   ✅   | Returns NULL as expected             |
+| make_blank_section_names_lookup_csv        |      Y        |   ✅   | Returns empty tibble as expected     |
+
+_Add more rows as additional functions/examples are tested._
+
 ## Function Categories
 
 ### Core Functions (High Priority)
