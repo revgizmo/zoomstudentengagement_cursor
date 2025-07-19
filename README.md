@@ -203,72 +203,33 @@ This is a basic example which shows you how to solve a common problem:
 ## 1. Define Inputs:
 
 ``` r
-# data_folder_input <- 'data_201_2024_t1_spring'
-# data_folder_input <- 'data_lft'
-
-# library(zoomstudentengagement)
-data_folder_input <- system.file("extdata", package = "zoomstudentengagement")
-
-
-
-# data_folder_input <- 'data'
-
-transcripts_folder_input <- "transcripts"
-topic_split_pattern_input <- paste0(
-  "^(?<dept>\\S+) (?<section>\\S+) - ",
-  "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+# Create a configuration object for your analysis
+config <- create_analysis_config(
+  dept = "LFT",
+  semester_start_mdy = "Jan 01, 2024",
+  scheduled_session_length_hours = 1.5,
+  instructor_name = "Conor Healy",
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  transcripts_folder = "transcripts",
+  names_to_exclude = c("dead_air")
 )
-zoom_recorded_sessions_csv_names_pattern_input <- "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv"
-dept_input <- "LFT"
-semester_start_mdy_input <- "Jan 01, 2024"
-scheduled_session_length_hours_input <- 1.5
 
-
-### roster_file
-roster_file_input <- "roster.csv"
-# roster_file used in load_roster()
-
-
-### cancelled_classes_file
-cancelled_classes_file_input <- "cancelled_classes.csv"
-# cancelled_classes_file used in load_cancelled_classes()
-
-
-### names_lookup_file
-names_lookup_file_input <- "section_names_lookup.csv"
-# names_lookup_file used in load_section_names_lookup(), make_clean_names_df()
-
-
-### transcripts_session_summary_file_input
-transcripts_session_summary_file_input <- "transcripts_session_summary.csv"
-# transcripts_session_summary_file_input used in write_transcripts_session_summary()
-
-
-### transcripts_summary_file_input
-transcripts_summary_file_input <- "transcripts_summary.csv"
-# transcripts_summary_file_input used in write_transcripts_summary()
-
-
-### instructor_name_input
-instructor_name_input <- "Conor Healy"
-# instructor_name_input used in make_students_only_transcripts_summary_df()
-
-
-### student_summary_report
-student_summary_report_input <- "Zoom_Student_Engagement_Analysis_student_summary_report"
-student_summary_report_folder_input <- system.file("", package = "zoomstudentengagement")
-# student_summary_report used in run_student_reports()
-
-cat(paste0(
-  "+ `data_folder_input`:  '", data_folder_input, "'\n",
-  "+ `transcripts_folder_input` = '", transcripts_folder_input, "'\n",
-  "+ `dept_input`: '", dept_input, "'\n",
-  "+ `semester_start_mdy_input`: '", semester_start_mdy_input, "'\n",
-  "+ `topic_split_pattern_input`: '", topic_split_pattern_input, "'\n",
-  "+ `zoom_recorded_sessions_csv_names_pattern_input`: '", zoom_recorded_sessions_csv_names_pattern_input, "'\n",
-  "+ `scheduled_session_length_hours_input`: '", scheduled_session_length_hours_input, "'\n",
-  "+ `roster_file_input`: '", roster_file_input, "'"
-))
+# Display the configuration
+cat("Configuration created with the following settings:\n")
+cat("Course Information:\n")
+cat("  - Department:", config$course$dept, "\n")
+cat("  - Semester Start:", config$course$semester_start, "\n")
+cat("  - Session Length:", config$course$session_length_hours, "hours\n")
+cat("  - Instructor:", config$course$instructor_name, "\n")
+cat("\nFile Paths:\n")
+cat("  - Data Folder:", config$paths$data_folder, "\n")
+cat("  - Transcripts Folder:", config$paths$transcripts_folder, "\n")
+cat("  - Roster File:", config$paths$roster_file, "\n")
+cat("  - Cancelled Classes File:", config$paths$cancelled_classes_file, "\n")
+cat("  - Names Lookup File:", config$paths$names_lookup_file, "\n")
+cat("\nAnalysis Settings:\n")
+cat("  - Names to Exclude:", paste(config$analysis$names_to_exclude, collapse = ", "), "\n")
+cat("  - Timezone:", config$patterns$start_time_local_tzone, "\n")
 ```
 
 ## 2. Load the zoomstudentengagement library
@@ -307,12 +268,14 @@ devtools::load_all()
 
 ``` r
 zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
-  data_folder = data_folder_input,
-  transcripts_folder = transcripts_folder_input,
-  topic_split_pattern = topic_split_pattern_input,
-  zoom_recorded_sessions_csv_names_pattern = zoom_recorded_sessions_csv_names_pattern_input,
-  semester_start_mdy = semester_start_mdy_input,
-  scheduled_session_length_hours = scheduled_session_length_hours_input
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  topic_split_pattern = config$patterns$topic_split,
+  zoom_recorded_sessions_csv_names_pattern = config$patterns$zoom_recordings_csv,
+  zoom_recorded_sessions_csv_col_names = config$patterns$zoom_recordings_csv_col_names,
+  dept = config$course$dept,
+  semester_start_mdy = config$course$semester_start,
+  scheduled_session_length_hours = config$course$session_length_hours
 )
 
 # getwd()
@@ -348,15 +311,15 @@ zoom_recorded_sessions_df
 
 ``` r
 transcript_files_df <- load_transcript_files_list(
-  data_folder = data_folder_input,
-  transcripts_folder = "transcripts",
-  transcript_files_names_pattern = "GMT\\d{8}-\\d{6}_Recording",
-  dt_extract_pattern = "(?<=GMT)\\d{8}",
-  transcript_file_extension_pattern = ".transcript",
-  closed_caption_file_extension_pattern = ".cc",
-  recording_start_pattern = "(?<=GMT)\\d{8}-\\d{6}",
-  recording_start_format = "%Y%m%d-%H%M%S",
-  start_time_local_tzone = "America/Los_Angeles"
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  transcript_files_names_pattern = config$patterns$transcript_files_names,
+  dt_extract_pattern = config$patterns$dt_extract,
+  transcript_file_extension_pattern = config$patterns$transcript_file_extension,
+  closed_caption_file_extension_pattern = config$patterns$closed_caption_file_extension,
+  recording_start_pattern = config$patterns$recording_start,
+  recording_start_format = config$patterns$recording_start_format,
+  start_time_local_tzone = config$patterns$start_time_local_tzone
 )
 
 transcript_files_df
@@ -370,9 +333,9 @@ transcript_files_df
 
 ``` r
 cancelled_classes_df <- load_cancelled_classes(
-  data_folder = data_folder_input,
-  cancelled_classes_file = cancelled_classes_file_input,
-  cancelled_classes_col_types = "ciiiccccccdiiicTTcTTccci"
+  data_folder = config$paths$data_folder,
+  cancelled_classes_file = config$paths$cancelled_classes_file,
+  cancelled_classes_col_types = config$analysis$cancelled_classes_col_types
 )
 
 cancelled_classes_df
@@ -397,9 +360,9 @@ transcripts_list_df
 ``` r
 transcripts_metrics_df <- summarize_transcript_files(
   df_transcript_list = transcripts_list_df,
-  data_folder = data_folder_input,
-  transcripts_folder = "transcripts",
-  names_to_exclude = NULL
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  names_to_exclude = config$analysis$names_to_exclude
 )
 
 
@@ -419,8 +382,8 @@ transcripts_metrics_df %>% count(name)
 
 ``` r
 roster_df <- load_roster(
-  data_folder = data_folder_input,
-  roster_file = roster_file_input
+  data_folder = config$paths$data_folder,
+  roster_file = config$paths$roster_file
 )
 
 roster_df
@@ -492,8 +455,8 @@ roster_sessions
 
 ``` r
 clean_names_df <- make_clean_names_df(
-  data_folder = data_folder_input,
-  section_names_lookup_file = names_lookup_file_input,
+  data_folder = config$paths$data_folder,
+  section_names_lookup_file = config$paths$names_lookup_file,
   transcripts_metrics_df,
   roster_sessions
 )
@@ -511,8 +474,8 @@ clean_names_df
 ``` r
 write_section_names_lookup(
   clean_names_df,
-  data_folder = data_folder_input,
-  section_names_lookup_file = names_lookup_file_input
+  data_folder = config$paths$data_folder,
+  section_names_lookup_file = config$paths$names_lookup_file
 )
 ```
 
@@ -561,8 +524,8 @@ transcripts_session_summary_df
 ``` r
 write_transcripts_session_summary(
   transcripts_session_summary_df,
-  data_folder = data_folder_input,
-  transcripts_session_summary_file = transcripts_session_summary_file_input
+  data_folder = config$paths$data_folder,
+  transcripts_session_summary_file = config$paths$transcripts_session_summary_file
 )
 ```
 
@@ -591,8 +554,8 @@ transcripts_summary_df
 ``` r
 write_transcripts_summary(
   transcripts_summary_df,
-  data_folder = data_folder_input,
-  transcripts_summary_file = transcripts_summary_file_input
+  data_folder = config$paths$data_folder,
+  transcripts_summary_file = config$paths$transcripts_summary_file
 )
 ```
 
@@ -776,12 +739,11 @@ run_student_reports <-
 run_student_reports(
   df_sections = sections_df,
   df_roster = roster_df,
-  data_folder = data_folder_input,
-  # data_folder =  'inst/extdata',
-  transcripts_session_summary_file = transcripts_session_summary_file_input,
-  transcripts_summary_file = transcripts_summary_file_input,
-  student_summary_report_folder = student_summary_report_folder_input,
-  student_summary_report = student_summary_report_input
+  data_folder = config$paths$data_folder,
+  transcripts_session_summary_file = config$paths$transcripts_session_summary_file,
+  transcripts_summary_file = config$paths$transcripts_summary_file,
+  student_summary_report_folder = config$reports$student_summary_report_folder,
+  student_summary_report = config$reports$student_summary_report
 )
 
 list.files(
@@ -803,9 +765,9 @@ list.files(
 ``` r
 recording_transcript_file_path <-
   paste0(
-    data_folder_input,
+    config$paths$data_folder,
     "/",
-    transcripts_folder_input,
+    config$paths$transcripts_folder,
     "/",
     "GMT20240124-202901_Recording.transcript.vtt"
   )
@@ -835,9 +797,9 @@ fliwc_transcript_df2
 ``` r
 single_zoom_transcript_df <- load_zoom_transcript(
   transcript_file_path = paste0(
-    data_folder_input,
+    config$paths$data_folder,
     "/",
-    transcripts_folder_input,
+    config$paths$transcripts_folder,
     "/",
     "GMT20240124-202901_Recording.transcript.vtt"
   )
