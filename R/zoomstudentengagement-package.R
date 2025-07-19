@@ -20,6 +20,7 @@ if (getRversion() >= "2.15.1") {
     # Variables from load_zoom_recorded_sessions_list.R
     "Total Downloads", "Last Accessed", "match_start_time", "matches",
     "course_section", "course", "section", "day", "time", "instructor", "match_end_time",
+    "topic_matches", "section_combined",
 
     # Variables from make_clean_names_df.R
     "comments", "dept", "duration", "duration_perc", "first_last", "formal_name",

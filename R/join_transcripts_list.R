@@ -59,18 +59,71 @@ join_transcripts_list <- function(
     ))
   }
 
-  df_zoom_recorded_sessions %>%
+  joined_sessions <- df_zoom_recorded_sessions %>%
     dplyr::cross_join(df_transcript_files) %>%
     dplyr::filter(
       match_start_time <= start_time_local,
       match_end_time >= start_time_local
-    ) %>%
-    # names() %>% paste0(collapse = ",")
-    dplyr::bind_rows(df_cancelled_classes) %>%
+    )
+
+  # Get all columns needed in the final output
+  all_cols <- union(names(joined_sessions), names(df_cancelled_classes))
+
+  # Add missing columns as NA, matching type from reference data frame
+  add_missing_cols <- function(df, all_cols, ref_df) {
+    for (col in setdiff(all_cols, names(df))) {
+      if (col %in% names(ref_df)) {
+        # Match type from reference data frame
+        ref_col <- ref_df[[col]]
+        if (inherits(ref_col, "POSIXct")) {
+          # Use same timezone as reference
+          tz <- attr(ref_col, "tzone")
+          if (is.null(tz)) tz <- "UTC"
+          df[[col]] <- as.POSIXct(NA, tz = tz)
+        } else if (is.numeric(ref_col)) {
+          df[[col]] <- as.numeric(NA)
+        } else if (is.character(ref_col)) {
+          df[[col]] <- as.character(NA)
+        } else if (is.integer(ref_col)) {
+          df[[col]] <- as.integer(NA)
+        } else if (is.logical(ref_col)) {
+          df[[col]] <- as.logical(NA)
+        } else {
+          df[[col]] <- NA
+        }
+      } else {
+        # Default to logical NA
+        df[[col]] <- NA
+      }
+    }
+    df[all_cols]
+  }
+
+  joined_sessions <- add_missing_cols(joined_sessions, all_cols, df_cancelled_classes)
+  df_cancelled_classes <- add_missing_cols(df_cancelled_classes, all_cols, joined_sessions)
+
+  # Coerce 'section' to character in both data frames to avoid type mismatch
+  joined_sessions$section <- as.character(joined_sessions$section)
+  df_cancelled_classes$section <- as.character(df_cancelled_classes$section)
+
+  # Coerce file columns to character if present and not already
+  file_cols <- c("closed_caption_file", "transcript_file", "chat_file")
+  for (col in file_cols) {
+    if (col %in% names(joined_sessions)) {
+      if (is.list(joined_sessions[[col]])) joined_sessions[[col]] <- as.character(joined_sessions[[col]])
+    }
+    if (col %in% names(df_cancelled_classes)) {
+      if (is.list(df_cancelled_classes[[col]])) df_cancelled_classes[[col]] <- as.character(df_cancelled_classes[[col]])
+    }
+  }
+
+  result <- dplyr::bind_rows(joined_sessions, df_cancelled_classes) %>%
     dplyr::arrange(start_time_local) %>%
     dplyr::group_by(section) %>%
     dplyr::mutate(session_num = dplyr::dense_rank(start_time_local)) %>%
     dplyr::ungroup()
+
+  result
 }
 # join_transcripts_list(df_zoom_recorded_sessions = zoom_recorded_sessions_df,
 #                       df_transcript_files = transcript_files_df,

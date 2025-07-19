@@ -10,7 +10,7 @@ test_that("make_blank_cancelled_classes_df returns correct structure and is empt
   )
   expect_true(all(expected_cols %in% names(result)))
   expect_type(result$dept, "character")
-  expect_type(result$course_section, "double")
+  expect_type(result$course_section, "character")
   expect_type(result$course, "integer")
   expect_type(result$section, "integer")
   expect_type(result$day, "character")
