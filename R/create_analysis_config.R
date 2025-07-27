@@ -30,6 +30,8 @@
 #' @param cancelled_classes_col_types Column types specification for cancelled classes CSV.
 #' @param section_names_lookup_col_types Column types specification for section names lookup CSV.
 #' @param names_to_exclude Character vector of names to exclude from analysis (e.g., "dead_air").
+#' @param use_session_mapping If TRUE, use session mapping approach instead of regex parsing
+#' @param session_mapping_file Path to session mapping CSV file (if use_session_mapping = TRUE)
 #'
 #' @return A list containing the configuration organized into logical groups:
 #'   - course: Course-specific information
@@ -111,7 +113,11 @@ create_analysis_config <- function(
   section_names_lookup_col_types = "ccccccccc",
   
   # Analysis Parameters
-  names_to_exclude = NULL
+  names_to_exclude = NULL,
+  
+  # Session Mapping
+  use_session_mapping = FALSE,
+  session_mapping_file = "session_mapping.csv"
 ) {
   
   # Input validation
@@ -178,6 +184,11 @@ create_analysis_config <- function(
       cancelled_classes_col_types = cancelled_classes_col_types,
       section_names_lookup_col_types = section_names_lookup_col_types,
       names_to_exclude = names_to_exclude
+    ),
+    
+    session_mapping = list(
+      use_session_mapping = use_session_mapping,
+      session_mapping_file = session_mapping_file
     )
   )
 } 

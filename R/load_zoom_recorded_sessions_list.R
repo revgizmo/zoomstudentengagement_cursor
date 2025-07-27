@@ -97,6 +97,7 @@ load_zoom_recorded_sessions_list <-
       `Total Views` <-
       `Total Downloads` <- `Total Downloads` <- `Last Accessed` <- match_start_time <- NULL
 
+    dept_var <- dept
     # Handle trailing comma in column names
     zoom_recorded_sessions_csv_col_names_vector <-
       strsplit(zoom_recorded_sessions_csv_col_names, ",")[[1]] %>%
@@ -180,7 +181,8 @@ load_zoom_recorded_sessions_list <-
         `Last Accessed` = as.character(`Last Accessed`)
       )
 
-    result <- result %>%
+    result <-
+      result %>%
       dplyr::mutate(
         # General pattern: <dept> <course_section> (e.g., "DATASCI 201.006" or "LTF 101")
         topic_matches = stringr::str_match(Topic, "^(\\S+)\\s+(\\d+\\.\\d+|\\d+)"),
@@ -215,7 +217,7 @@ load_zoom_recorded_sessions_list <-
         # Parse date with explicit format to handle Zoom's format
         match_start_time = lubridate::parse_date_time(
           `Start Time`,
-          orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
+          orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y H:M:S", "b d, Y H:M"),
           tz = "America/Los_Angeles",
           quiet = TRUE  # Suppress warnings for failed parses
         ),

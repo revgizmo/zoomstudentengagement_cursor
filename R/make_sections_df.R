@@ -6,13 +6,13 @@
 #' @param roster_df A tibble listing the students enrolled in the class or classes.
 #'   Must contain the following columns:
 #'   - dept: character
-#'   - course_num: integer
-#'   - section: integer
+#'   - course: character
+#'   - section: character
 #'
 #' @return A tibble with the following columns:
 #'   - dept: character
-#'   - course_num: integer
-#'   - section: integer
+#'   - course: character
+#'   - section: character
 #'   - n: integer (count of students in each section)
 #' @export
 #'
@@ -22,7 +22,7 @@
 #' roster_df <- readr::read_csv(roster_file, show_col_types = FALSE)
 #' make_sections_df(roster_df = roster_df)
 make_sections_df <- function(roster_df) {
-  dept <- course_num <- section <- n <- NULL
+  dept <- course <- section <- n <- NULL
 
   # Defensive: check for valid input
   if (!tibble::is_tibble(roster_df)) {
@@ -30,7 +30,7 @@ make_sections_df <- function(roster_df) {
   }
 
   # Defensive: check for required columns
-  required_cols <- c("dept", "course_num", "section")
+  required_cols <- c("dept", "course", "section")
   missing_cols <- setdiff(required_cols, names(roster_df))
   if (length(missing_cols) > 0) {
     stop("roster_df must contain columns: ", paste(missing_cols, collapse = ", "))
@@ -40,8 +40,8 @@ make_sections_df <- function(roster_df) {
   if (nrow(roster_df) == 0) {
     return(tibble::tibble(
       dept = character(),
-      course_num = integer(),
-      section = integer(),
+      course = character(),
+      section = character(),
       n = integer()
     ))
   }
@@ -50,13 +50,13 @@ make_sections_df <- function(roster_df) {
   roster_df <- roster_df %>%
     dplyr::mutate(
       dept = as.character(dept),
-      course_num = as.integer(course_num),
-      section = as.integer(section)
+      course = as.character(course),
+      section = as.character(section)
     )
 
   # Count students by section, handling NA values
   roster_df %>%
-    dplyr::group_by(dept, course_num, section) %>%
+    dplyr::group_by(dept, course, section) %>%
     dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
-    dplyr::arrange(dept, course_num, section)
+    dplyr::arrange(dept, course, section)
 }

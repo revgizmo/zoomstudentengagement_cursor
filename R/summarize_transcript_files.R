@@ -1,6 +1,6 @@
 #' Summarize Transcript Files
 #'
-#' @param df_transcript_list A data.frame listing the transcript files from the
+#' @param transcript_file_names A data.frame or character vector listing the transcript files from the
 #'   zoom recordings loaded from the cloud recording csvs and transcripts.
 #' @param data_folder Overall data folder for your recordings and data. Defaults
 #'   to 'data'
@@ -16,7 +16,7 @@
 #' @examples
 #' summarize_transcript_files(df_transcript_list = NULL)
 summarize_transcript_files <-
-  function(df_transcript_list,
+  function(transcript_file_names,
            data_folder = "data",
            transcripts_folder = "transcripts",
            names_to_exclude = NULL) {
@@ -24,10 +24,15 @@ summarize_transcript_files <-
 
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
-    if (tibble::is_tibble(df_transcript_list) &&
+    if ('character' %in% class(transcript_file_names) )      {
+      transcript_file_names = tibble(transcript_file = transcript_file_names)
+    }
+
+
+    if (tibble::is_tibble(transcript_file_names) &&
       file.exists(transcripts_folder_path)
     ) {
-      df_transcript_list %>%
+      transcript_file_names %>%
         dplyr::mutate(
           transcript_path = dplyr::if_else(
             is.na(transcript_file),
