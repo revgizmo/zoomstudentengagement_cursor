@@ -23,11 +23,13 @@
 #'   will store the cloud recording csvs
 #' @param topic_split_pattern REGEX pattern used to parse the `Topic` from the
 #'   csvs and extract useful columns. Defaults to `paste0("^(?<dept>\\S+)
-#'   (?<section>\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+)
+#'   (?<course_section>\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+)
 #'   (?<instructor>\\(.*?\\))")` (Note: this REGEX pattern is formatted here
 #'   as paste0() rather than a single string to stay beneath the 90 character
 #'   line limit in the code checker.  A single string works just as well as this
-#'   combined one)
+#'   combined one). Note: The function now uses a generalized pattern that can
+#'   handle various course naming conventions including "DATASCI 201.006",
+#'   "LTF 101", and "MATH 250.001" formats.
 #' @param zoom_recorded_sessions_csv_names_pattern REGEX pattern used to parse
 #'   the csv file names from the cloud recording csvs and extract useful
 #'   columns. Defaults to
@@ -67,7 +69,7 @@ load_zoom_recorded_sessions_list <-
            transcripts_folder = "transcripts",
            topic_split_pattern =
              paste0(
-               "^(?<dept>\\S+) (?<section>\\S+) - ",
+               "^(?<dept>\\S+) (?<course_section>\\S+) - ",
                "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
              ),
            zoom_recorded_sessions_csv_names_pattern =
@@ -95,6 +97,7 @@ load_zoom_recorded_sessions_list <-
       `Total Views` <-
       `Total Downloads` <- `Total Downloads` <- `Last Accessed` <- match_start_time <- NULL
 
+    dept_var <- dept
     # Handle trailing comma in column names
     zoom_recorded_sessions_csv_col_names_vector <-
       strsplit(zoom_recorded_sessions_csv_col_names, ",")[[1]] %>%
@@ -123,7 +126,7 @@ load_zoom_recorded_sessions_list <-
         `Total Downloads` = numeric(),
         `Last Accessed` = character(),
         dept = character(),
-        section = character(),
+        course_section = character(),
         day = character(),
         time = character(),
         instructor = character(),
@@ -178,21 +181,27 @@ load_zoom_recorded_sessions_list <-
         `Last Accessed` = as.character(`Last Accessed`)
       )
 
-    result <- result %>%
+    result <-
+      result %>%
       dplyr::mutate(
-        matches = stringr::str_match(Topic, topic_split_pattern),
-        dept = matches[, 2],
-        course_section = as.double(matches[, 3]),
-        # course = stringr::str_extract(Topic, "(?<=\\s)\\d+(?=\\.)"),
-        # section = stringr::str_extract(Topic, "(?<=\\.)\\d+"),
-        course = as.integer(stringr::str_extract(course_section, "\\d+(?=\\.)")),
-        section = as.integer(stringr::str_extract(course_section, "(?<=\\.)\\d+")),
-        day = matches[, 4],
-        time = matches[, 5],
-        instructor = matches[, 6]
+        # General pattern: <dept> <course_section> (e.g., "DATASCI 201.006" or "LTF 101")
+        topic_matches = stringr::str_match(Topic, "^(\\S+)\\s+(\\d+\\.\\d+|\\d+)"),
+        dept = topic_matches[, 2],
+        course_section = topic_matches[, 3]
       ) %>%
-      dplyr::select(-matches) %>%
-      dplyr::filter(!is.na(dept) & dept == dept)
+      dplyr::select(-topic_matches) %>%
+      # Optionally filter by dept if needed
+      {
+        if (!is.null(dept) && !is.na(dept) && dept != "") dplyr::filter(., !is.na(dept) & dept == !!dept) else .
+      } %>%
+      dplyr::mutate(
+        course = suppressWarnings(as.integer(stringr::str_extract(course_section, "^\\d+"))),
+        section = suppressWarnings(as.integer(stringr::str_extract(course_section, "(?<=\\.)\\d+")))
+      )
+    # Optionally warn if section could not be extracted
+    if (any(is.na(result$section))) {
+      warning("Some Topic entries did not match the expected pattern and section could not be extracted.")
+    }
 
     # Debug print statements
     print("After topic parsing:")
@@ -208,8 +217,9 @@ load_zoom_recorded_sessions_list <-
         # Parse date with explicit format to handle Zoom's format
         match_start_time = lubridate::parse_date_time(
           `Start Time`,
-          orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
-          tz = "America/Los_Angeles"
+          orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y H:M:S", "b d, Y H:M"),
+          tz = "America/Los_Angeles",
+          quiet = TRUE  # Suppress warnings for failed parses
         ),
         match_end_time = match_start_time + lubridate::hours(scheduled_session_length_hours + 0.5)
       )

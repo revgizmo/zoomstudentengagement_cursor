@@ -7,7 +7,7 @@
 load_zoom_recorded_sessions_list(
   data_folder = "data",
   transcripts_folder = "transcripts",
-  topic_split_pattern = paste0("^(?<dept>\\\\S+) (?<section>\\\\S+) - ",
+  topic_split_pattern = paste0("^(?<dept>\\\\S+) (?<course_section>\\\\S+) - ",
     "(?<day>[A-Za-z]+) (?<time>\\\\S+\\\\s*\\\\S+) (?<instructor>\\\\(.*?\\\\))"),
   zoom_recorded_sessions_csv_names_pattern =
     "zoomus_recordings__\\\\d{8}(?:\\\\s+copy\\\\s*\\\\d*)?\\\\.csv",
@@ -27,11 +27,13 @@ will store the cloud recording csvs}
 
 \item{topic_split_pattern}{REGEX pattern used to parse the `Topic` from the
 csvs and extract useful columns. Defaults to `paste0("^(?<dept>\\S+)
-(?<section>\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+)
+(?<course_section>\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+)
 (?<instructor>\\(.*?\\))")` (Note: this REGEX pattern is formatted here
 as paste0() rather than a single string to stay beneath the 90 character
 line limit in the code checker.  A single string works just as well as this
-combined one)}
+combined one). Note: The function now uses a generalized pattern that can
+handle various course naming conventions including "DATASCI 201.006",
+"LTF 101", and "MATH 250.001" formats.}
 
 \item{zoom_recorded_sessions_csv_names_pattern}{REGEX pattern used to parse
 the csv file names from the cloud recording csvs and extract useful

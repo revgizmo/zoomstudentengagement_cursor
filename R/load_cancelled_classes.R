@@ -19,7 +19,9 @@
 load_cancelled_classes <-
   function(data_folder = "data",
            cancelled_classes_file = "cancelled_classes.csv",
-           cancelled_classes_col_types = "ccccccccnnnncTTcTTccci") {
+           cancelled_classes_col_types = "ccccccccnnnncTTcTTccci",
+           write_blank_cancelled_classes = FALSE
+           ) {
     cancelled_classes_file_path <-
       paste0(data_folder, "/", cancelled_classes_file)
 
@@ -33,6 +35,11 @@ load_cancelled_classes <-
       # File doesn't exist, handle the situation accordingly
       print(paste("File does not exist:", cancelled_classes_file_path))
       data <- zoomstudentengagement::make_blank_cancelled_classes_df()
+
+      if (write_blank_cancelled_classes & !file.exists(cancelled_classes_file_path)) {
+        data %>%
+        readr::write_csv(paste0(data_folder, "/", cancelled_classes_file))
+        }
     }
 
     data

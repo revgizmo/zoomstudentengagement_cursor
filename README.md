@@ -8,6 +8,13 @@
   zoomstudentengagement</a>
   - <a href="#1-define-inputs" id="toc-1-define-inputs">1. Define
     Inputs:</a>
+    - <a href="#option-a-traditional-regex-based-approach-current"
+      id="toc-option-a-traditional-regex-based-approach-current">Option A:
+      Traditional Regex-Based Approach (Current)</a>
+    - <a
+      href="#option-b-session-mapping-approach-recommended-for-complex-scenarios"
+      id="toc-option-b-session-mapping-approach-recommended-for-complex-scenarios">Option
+      B: Session Mapping Approach (Recommended for Complex Scenarios)</a>
   - <a href="#2-load-the-zoomstudentengagement-library"
     id="toc-2-load-the-zoomstudentengagement-library">2. Load the
     zoomstudentengagement library</a>
@@ -17,6 +24,12 @@
   - <a href="#4-load-the-list-of-zoom-recordings-transcripts"
     id="toc-4-load-the-list-of-zoom-recordings-transcripts">4. Load the list
     of Zoom Recordings Transcripts</a>
+    - <a href="#option-a-traditional-approach-regex-parsing"
+      id="toc-option-a-traditional-approach-regex-parsing">Option A:
+      Traditional Approach (Regex Parsing)</a>
+    - <a href="#option-b-session-mapping-approach-recommended"
+      id="toc-option-b-session-mapping-approach-recommended">Option B: Session
+      Mapping Approach (Recommended)</a>
   - <a
     href="#5-load-zoom-transcript-files-and-run-faculty-linguistic-inquiry-and-word-count-on-those-sessions"
     id="toc-5-load-zoom-transcript-files-and-run-faculty-linguistic-inquiry-and-word-count-on-those-sessions">5.
@@ -108,7 +121,46 @@
 - <a href="#steps-to-use-zoomstudentengagement-1"
   id="toc-steps-to-use-zoomstudentengagement-1">Steps to use
   zoomstudentengagement</a>
-- <a href="#old" id="toc-old">Old</a>
+- <a href="#new-walkthrough" id="toc-new-walkthrough">New Walkthrough</a>
+  - <a href="#1-create_analysis_config" id="toc-1-create_analysis_config">1.
+    create_analysis_config()</a>
+    - <a
+      href="#option-b-session-mapping-approach-recommended-for-complex-scenarios-1"
+      id="toc-option-b-session-mapping-approach-recommended-for-complex-scenarios-1">Option
+      B: Session Mapping Approach (Recommended for Complex Scenarios)</a>
+  - <a href="#2-load-and-summarize-transcripts"
+    id="toc-2-load-and-summarize-transcripts">2. Load and summarize
+    transcripts</a>
+    - <a
+      href="#1-run-load_zoom_recorded_sessions_list-to-get-a-tibble-from-a-provided-csv-file-of-zoom-recordings"
+      id="toc-1-run-load_zoom_recorded_sessions_list-to-get-a-tibble-from-a-provided-csv-file-of-zoom-recordings">1.
+      Run <code>load_zoom_recorded_sessions_list()</code> to get a tibble from
+      a provided csv file of Zoom recordings.</a>
+    - <a href="#2-load_transcript_files_list"
+      id="toc-2-load_transcript_files_list">2.
+      load_transcript_files_list()</a>
+    - <a href="#3-cancelled_classes_df" id="toc-3-cancelled_classes_df">3.
+      cancelled_classes_df()</a>
+    - <a href="#4-join_transcripts_list" id="toc-4-join_transcripts_list">4.
+      join_transcripts_list()</a>
+    - <a href="#5-summarize_transcript_files"
+      id="toc-5-summarize_transcript_files">5.
+      <code>summarize_transcript_files()</code>.</a>
+  - <a href="#3-load-roster-and-clean-names"
+    id="toc-3-load-roster-and-clean-names">3. Load Roster and clean
+    Names</a>
+    - <a href="#1-load-roster-of-students-from-a-csv-file-1"
+      id="toc-1-load-roster-of-students-from-a-csv-file-1">1. Load Roster of
+      Students from a CSV file</a>
+    - <a
+      href="#2-make-the-sections_df-data-frame-of-class-sections-from-the-student-roster-1"
+      id="toc-2-make-the-sections_df-data-frame-of-class-sections-from-the-student-roster-1">2.
+      Make the <code>sections_df</code> data frame of Class Sections from the
+      Student Roster</a>
+    - <a href="#3-make-the-roster_small_df-data-frame-of-the-student-roster-1"
+      id="toc-3-make-the-roster_small_df-data-frame-of-the-student-roster-1">3.
+      Make the <code>roster_small_df</code> data frame of the Student
+      Roster</a>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -202,73 +254,72 @@ This is a basic example which shows you how to solve a common problem:
 
 ## 1. Define Inputs:
 
+### Option A: Traditional Regex-Based Approach (Current)
+
 ``` r
-# data_folder_input <- 'data_201_2024_t1_spring'
-# data_folder_input <- 'data_lft'
-
-# library(zoomstudentengagement)
-data_folder_input <- system.file("extdata", package = "zoomstudentengagement")
-
-
-
-# data_folder_input <- 'data'
-
-transcripts_folder_input <- "transcripts"
-topic_split_pattern_input <- paste0(
-  "^(?<dept>\\S+) (?<section>\\S+) - ",
-  "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+# Create a configuration object for your analysis
+config <- create_analysis_config(
+  dept = "LTF",
+  semester_start_mdy = "Jan 01, 2024",
+  scheduled_session_length_hours = 1.5,
+  instructor_name = "Conor Healy",
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  transcripts_folder = "transcripts",
+  names_to_exclude = c("dead_air")
 )
-zoom_recorded_sessions_csv_names_pattern_input <- "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv"
-dept_input <- "LFT"
-semester_start_mdy_input <- "Jan 01, 2024"
-scheduled_session_length_hours_input <- 1.5
 
+# Display the configuration
+cat("Configuration created with the following settings:\n")
+cat("Course Information:\n")
+cat("  - Department:", config$course$dept, "\n")
+cat("  - Semester Start:", config$course$semester_start, "\n")
+cat("  - Session Length:", config$course$session_length_hours, "hours\n")
+cat("  - Instructor:", config$course$instructor_name, "\n")
+cat("\nFile Paths:\n")
+cat("  - Data Folder:", config$paths$data_folder, "\n")
+cat("  - Transcripts Folder:", config$paths$transcripts_folder, "\n")
+cat("  - Roster File:", config$paths$roster_file, "\n")
+cat("  - Cancelled Classes File:", config$paths$cancelled_classes_file, "\n")
+cat("  - Names Lookup File:", config$paths$names_lookup_file, "\n")
+cat("\nAnalysis Settings:\n")
+cat("  - Names to Exclude:", paste(config$analysis$names_to_exclude, collapse = ", "), "\n")
+cat("  - Timezone:", config$patterns$start_time_local_tzone, "\n")
+```
 
-### roster_file
-roster_file_input <- "roster.csv"
-# roster_file used in load_roster()
+### Option B: Session Mapping Approach (Recommended for Complex Scenarios)
 
+``` r
+# Create course information for all your courses
+course_info <- create_course_info(
+  dept = c("CS", "CS", "MATH", "LTF"),
+  course_num = c(101, 101, 250, 201),
+  section = c(1, 2, 1, 1),
+  instructor = c("Dr. Smith", "Dr. Smith", "Dr. Johnson", "Dr. Smith"),
+  session_length_hours = c(1.5, 1.5, 2.0, 1.5),
+  session_days = c("Mon", "Wed", "Tue", "Thu"),
+  session_times = c("10:00", "14:00", "09:00", "15:00")
+)
 
-### cancelled_classes_file
-cancelled_classes_file_input <- "cancelled_classes.csv"
-# cancelled_classes_file used in load_cancelled_classes()
+# Display course information
+cat("Course Information:\n")
+print(course_info)
 
+# Create configuration with session mapping enabled
+config <- create_analysis_config(
+  dept = "CS",  # Primary department (can be overridden by mapping)
+  semester_start_mdy = "Jan 15, 2024",
+  scheduled_session_length_hours = 1.5,
+  instructor_name = "Dr. Smith",
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  transcripts_folder = "transcripts",
+  names_to_exclude = c("dead_air"),
+  use_session_mapping = TRUE,
+  session_mapping_file = "session_mapping.csv"
+)
 
-### names_lookup_file
-names_lookup_file_input <- "section_names_lookup.csv"
-# names_lookup_file used in load_section_names_lookup(), make_clean_names_df()
-
-
-### transcripts_session_summary_file_input
-transcripts_session_summary_file_input <- "transcripts_session_summary.csv"
-# transcripts_session_summary_file_input used in write_transcripts_session_summary()
-
-
-### transcripts_summary_file_input
-transcripts_summary_file_input <- "transcripts_summary.csv"
-# transcripts_summary_file_input used in write_transcripts_summary()
-
-
-### instructor_name_input
-instructor_name_input <- "Conor Healy"
-# instructor_name_input used in make_students_only_transcripts_summary_df()
-
-
-### student_summary_report
-student_summary_report_input <- "Zoom_Student_Engagement_Analysis_student_summary_report"
-student_summary_report_folder_input <- system.file("", package = "zoomstudentengagement")
-# student_summary_report used in run_student_reports()
-
-cat(paste0(
-  "+ `data_folder_input`:  '", data_folder_input, "'\n",
-  "+ `transcripts_folder_input` = '", transcripts_folder_input, "'\n",
-  "+ `dept_input`: '", dept_input, "'\n",
-  "+ `semester_start_mdy_input`: '", semester_start_mdy_input, "'\n",
-  "+ `topic_split_pattern_input`: '", topic_split_pattern_input, "'\n",
-  "+ `zoom_recorded_sessions_csv_names_pattern_input`: '", zoom_recorded_sessions_csv_names_pattern_input, "'\n",
-  "+ `scheduled_session_length_hours_input`: '", scheduled_session_length_hours_input, "'\n",
-  "+ `roster_file_input`: '", roster_file_input, "'"
-))
+cat("\nConfiguration with session mapping enabled:\n")
+cat("  - Use Session Mapping:", config$session_mapping$use_session_mapping, "\n")
+cat("  - Session Mapping File:", config$session_mapping$session_mapping_file, "\n")
 ```
 
 ## 2. Load the zoomstudentengagement library
@@ -302,17 +353,21 @@ devtools::load_all()
 
 ## 4. Load the list of Zoom Recordings Transcripts
 
+### Option A: Traditional Approach (Regex Parsing)
+
 1.  Run `load_zoom_recorded_sessions_list()` to get a tibble from a
     provided csv file of Zoom recordings.
 
 ``` r
 zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
-  data_folder = data_folder_input,
-  transcripts_folder = transcripts_folder_input,
-  topic_split_pattern = topic_split_pattern_input,
-  zoom_recorded_sessions_csv_names_pattern = zoom_recorded_sessions_csv_names_pattern_input,
-  semester_start_mdy = semester_start_mdy_input,
-  scheduled_session_length_hours = scheduled_session_length_hours_input
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  topic_split_pattern = config$patterns$topic_split,
+  zoom_recorded_sessions_csv_names_pattern = config$patterns$zoom_recordings_csv,
+  zoom_recorded_sessions_csv_col_names = config$patterns$zoom_recordings_csv_col_names,
+  dept = config$course$dept,
+  semester_start_mdy = config$course$semester_start,
+  scheduled_session_length_hours = config$course$session_length_hours
 )
 
 # getwd()
@@ -344,19 +399,58 @@ zoom_recorded_sessions_df
 #   )
 ```
 
+### Option B: Session Mapping Approach (Recommended)
+
+1.  First, create a session mapping to reliably associate Zoom
+    recordings with your courses:
+
+``` r
+# Load Zoom recordings (without regex parsing)
+zoom_recordings_raw <- load_zoom_recorded_sessions_list(
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  zoom_recorded_sessions_csv_names_pattern = config$patterns$zoom_recordings_csv,
+  zoom_recorded_sessions_csv_col_names = config$patterns$zoom_recordings_csv_col_names,
+  dept = NULL,  # Don't filter by department initially
+  semester_start_mdy = config$course$semester_start,
+  scheduled_session_length_hours = config$course$session_length_hours
+)
+
+# Create session mapping
+session_mapping <- create_session_mapping(
+  zoom_recordings_df = zoom_recordings_raw,
+  course_info_df = course_info,
+  output_file = config$session_mapping$session_mapping_file,
+  auto_assign_patterns = list(
+    "CS 101" = "CS.*101",
+    "MATH 250" = "MATH.*250", 
+    "LTF 201" = "LTF.*201"
+  ),
+  interactive = TRUE  # Set to FALSE for batch processing
+)
+
+# Load the mapped recordings
+zoom_recorded_sessions_df <- load_session_mapping(
+  config$session_mapping$session_mapping_file,
+  zoom_recordings_df = zoom_recordings_raw
+)
+
+cat("Successfully mapped", nrow(zoom_recorded_sessions_df), "recordings to courses\n")
+```
+
     2. Run `load_transcript_files_list()` to get a data.table from a provided folder including transcript files of Zoom recordings.
 
 ``` r
 transcript_files_df <- load_transcript_files_list(
-  data_folder = data_folder_input,
-  transcripts_folder = "transcripts",
-  transcript_files_names_pattern = "GMT\\d{8}-\\d{6}_Recording",
-  dt_extract_pattern = "(?<=GMT)\\d{8}",
-  transcript_file_extension_pattern = ".transcript",
-  closed_caption_file_extension_pattern = ".cc",
-  recording_start_pattern = "(?<=GMT)\\d{8}-\\d{6}",
-  recording_start_format = "%Y%m%d-%H%M%S",
-  start_time_local_tzone = "America/Los_Angeles"
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  transcript_files_names_pattern = config$patterns$transcript_files_names,
+  dt_extract_pattern = config$patterns$dt_extract,
+  transcript_file_extension_pattern = config$patterns$transcript_file_extension,
+  closed_caption_file_extension_pattern = config$patterns$closed_caption_file_extension,
+  recording_start_pattern = config$patterns$recording_start,
+  recording_start_format = config$patterns$recording_start_format,
+  start_time_local_tzone = config$patterns$start_time_local_tzone
 )
 
 transcript_files_df
@@ -370,9 +464,9 @@ transcript_files_df
 
 ``` r
 cancelled_classes_df <- load_cancelled_classes(
-  data_folder = data_folder_input,
-  cancelled_classes_file = cancelled_classes_file_input,
-  cancelled_classes_col_types = "ciiiccccccdiiicTTcTTccci"
+  data_folder = config$paths$data_folder,
+  cancelled_classes_file = config$paths$cancelled_classes_file,
+  cancelled_classes_col_types = config$analysis$cancelled_classes_col_types
 )
 
 cancelled_classes_df
@@ -396,10 +490,10 @@ transcripts_list_df
 
 ``` r
 transcripts_metrics_df <- summarize_transcript_files(
-  df_transcript_list = transcripts_list_df,
-  data_folder = data_folder_input,
-  transcripts_folder = "transcripts",
-  names_to_exclude = NULL
+  transcript_file_names = transcripts_list_df,
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  names_to_exclude = config$analysis$names_to_exclude
 )
 
 
@@ -419,8 +513,8 @@ transcripts_metrics_df %>% count(name)
 
 ``` r
 roster_df <- load_roster(
-  data_folder = data_folder_input,
-  roster_file = roster_file_input
+  data_folder = config$paths$data_folder,
+  roster_file = config$paths$roster_file
 )
 
 roster_df
@@ -492,8 +586,8 @@ roster_sessions
 
 ``` r
 clean_names_df <- make_clean_names_df(
-  data_folder = data_folder_input,
-  section_names_lookup_file = names_lookup_file_input,
+  data_folder = config$paths$data_folder,
+  section_names_lookup_file = config$paths$names_lookup_file,
   transcripts_metrics_df,
   roster_sessions
 )
@@ -511,8 +605,8 @@ clean_names_df
 ``` r
 write_section_names_lookup(
   clean_names_df,
-  data_folder = data_folder_input,
-  section_names_lookup_file = names_lookup_file_input
+  data_folder = config$paths$data_folder,
+  section_names_lookup_file = config$paths$names_lookup_file
 )
 ```
 
@@ -561,8 +655,8 @@ transcripts_session_summary_df
 ``` r
 write_transcripts_session_summary(
   transcripts_session_summary_df,
-  data_folder = data_folder_input,
-  transcripts_session_summary_file = transcripts_session_summary_file_input
+  data_folder = config$paths$data_folder,
+  transcripts_session_summary_file = config$paths$transcripts_session_summary_file
 )
 ```
 
@@ -591,8 +685,8 @@ transcripts_summary_df
 ``` r
 write_transcripts_summary(
   transcripts_summary_df,
-  data_folder = data_folder_input,
-  transcripts_summary_file = transcripts_summary_file_input
+  data_folder = config$paths$data_folder,
+  transcripts_summary_file = config$paths$transcripts_summary_file
 )
 ```
 
@@ -776,12 +870,11 @@ run_student_reports <-
 run_student_reports(
   df_sections = sections_df,
   df_roster = roster_df,
-  data_folder = data_folder_input,
-  # data_folder =  'inst/extdata',
-  transcripts_session_summary_file = transcripts_session_summary_file_input,
-  transcripts_summary_file = transcripts_summary_file_input,
-  student_summary_report_folder = student_summary_report_folder_input,
-  student_summary_report = student_summary_report_input
+  data_folder = config$paths$data_folder,
+  transcripts_session_summary_file = config$paths$transcripts_session_summary_file,
+  transcripts_summary_file = config$paths$transcripts_summary_file,
+  student_summary_report_folder = config$reports$student_summary_report_folder,
+  student_summary_report = config$reports$student_summary_report
 )
 
 list.files(
@@ -803,9 +896,9 @@ list.files(
 ``` r
 recording_transcript_file_path <-
   paste0(
-    data_folder_input,
+    config$paths$data_folder,
     "/",
-    transcripts_folder_input,
+    config$paths$transcripts_folder,
     "/",
     "GMT20240124-202901_Recording.transcript.vtt"
   )
@@ -835,9 +928,9 @@ fliwc_transcript_df2
 ``` r
 single_zoom_transcript_df <- load_zoom_transcript(
   transcript_file_path = paste0(
-    data_folder_input,
+    config$paths$data_folder,
     "/",
-    transcripts_folder_input,
+    config$paths$transcripts_folder,
     "/",
     "GMT20240124-202901_Recording.transcript.vtt"
   )
@@ -930,19 +1023,207 @@ load_zoom_recorded_sessions_list(data_folder = system.file("extdata", package = 
     Word Count on those sessions.
     1.  Run `summarize_transcript_files()`.
 
-# Old
+# New Walkthrough
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## 1. create_analysis_config()
+
+### Option B: Session Mapping Approach (Recommended for Complex Scenarios)
 
 ``` r
-summary(cars)
+# Create course information for all your courses
+course_info <- create_course_info(
+  dept = c("CS", "CS", "MATH", "LTF"),
+  course_num = c(101, 101, 250, 201),
+  section = c(1, 2, 1, 1),
+  instructor = c("Dr. Smith", "Dr. Smith", "Dr. Johnson", "Dr. Smith"),
+  session_length_hours = c(1.5, 1.5, 2.0, 1.5),
+  session_days = c("Mon", "Wed", "Tue", "Thu"),
+  session_times = c("10:00", "14:00", "09:00", "15:00")
+)
+
+# Display course information
+cat("Course Information:\n")
+print(course_info)
+  
+
+
+
+# Create configuration with session mapping enabled
+config <- create_analysis_config(
+  dept = course_info[3,]$dept,  # Primary department (can be overridden by mapping)
+  semester_start_mdy = "Jan 01, 2024",
+  scheduled_session_length_hours = course_info[3,]$session_length_hours,
+  instructor_name = course_info[3,]$instructor,
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  transcripts_folder = "transcripts",
+  names_to_exclude = c("dead_air"),
+  use_session_mapping = TRUE,
+  session_mapping_file = "session_mapping.csv"
+)
+
+cat("\nConfiguration with session mapping enabled:\n")
+cat("  - Use Session Mapping:", config$session_mapping$use_session_mapping, "\n")
+cat("  - Session Mapping File:", config$session_mapping$session_mapping_file, "\n")
+
+
+# Display the configuration
+cat("Configuration created with the following settings:\n")
+cat("Course Information:\n")
+cat("  - Department:", config$course$dept, "\n")
+cat("  - Semester Start:", config$course$semester_start, "\n")
+cat("  - Session Length:", config$course$session_length_hours, "hours\n")
+cat("  - Instructor:", config$course$instructor_name, "\n")
+cat("\nFile Paths:\n")
+cat("  - Data Folder:", config$paths$data_folder, "\n")
+cat("  - Transcripts Folder:", config$paths$transcripts_folder, "\n")
+cat("  - Roster File:", config$paths$roster_file, "\n")
+cat("  - Cancelled Classes File:", config$paths$cancelled_classes_file, "\n")
+cat("  - Names Lookup File:", config$paths$names_lookup_file, "\n")
+cat("\nAnalysis Settings:\n")
+cat("  - Names to Exclude:", paste(config$analysis$names_to_exclude, collapse = ", "), "\n")
+cat("  - Timezone:", config$patterns$start_time_local_tzone, "\n")
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
+## 2. Load and summarize transcripts
 
-You can also embed plots, for example:
+### 1. Run `load_zoom_recorded_sessions_list()` to get a tibble from a provided csv file of Zoom recordings.
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+``` r
+zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  topic_split_pattern = config$patterns$topic_split,
+  zoom_recorded_sessions_csv_names_pattern = config$patterns$zoom_recordings_csv,
+  zoom_recorded_sessions_csv_col_names = config$patterns$zoom_recordings_csv_col_names,
+  dept = config$course$dept,
+  semester_start_mdy = config$course$semester_start,
+  scheduled_session_length_hours = config$course$session_length_hours
+)
+
+# getwd()
+# zoom_recorded_sessions_df <- load_zoom_recorded_sessions_list(
+#   data_folder = data_folder_input,
+#   transcripts_folder = "transcripts",
+#   topic_split_pattern = paste0(
+#     "^(?<dept>\\S+) (?<section>\\S+) - ",
+#     "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+#   ),
+#   zoom_recorded_sessions_csv_names_pattern =
+#     "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
+#   dept = "LTF",
+#   semester_start_mdy = "Jan 01, 2024",
+#   scheduled_session_length_hours = 1.5
+# )
+
+zoom_recorded_sessions_df
+```
+
+### 2. load_transcript_files_list()
+
+``` r
+transcript_files_df <- load_transcript_files_list(
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  transcript_files_names_pattern = config$patterns$transcript_files_names,
+  dt_extract_pattern = config$patterns$dt_extract,
+  transcript_file_extension_pattern = config$patterns$transcript_file_extension,
+  closed_caption_file_extension_pattern = config$patterns$closed_caption_file_extension,
+  recording_start_pattern = config$patterns$recording_start,
+  recording_start_format = config$patterns$recording_start_format,
+  start_time_local_tzone = config$patterns$start_time_local_tzone
+)
+
+
+
+
+transcript_files_df
+```
+
+### 3. cancelled_classes_df()
+
+``` r
+cancelled_classes_df <- load_cancelled_classes(
+  data_folder = config$paths$data_folder,
+  cancelled_classes_file = config$paths$cancelled_classes_file,
+  cancelled_classes_col_types = config$analysis$cancelled_classes_col_types,
+  write_blank_cancelled_classes = TRUE
+)
+
+cancelled_classes_df
+```
+
+### 4. join_transcripts_list()
+
+Run `join_transcripts_list()` to get a tibble from the joining of the
+listing of session recordings loaded from the cloud recording csvs
+(‘zoom_recorded_sessions_df’), the list of transcript files
+(‘transcript_files_df’), and the list of cancelled classes
+(‘cancelled_classes_df’) into a single tibble.
+
+``` r
+transcripts_list_df <- join_transcripts_list(
+  df_zoom_recorded_sessions = zoom_recorded_sessions_df,
+  df_transcript_files = transcript_files_df,
+  df_cancelled_classes = cancelled_classes_df
+)
+
+transcripts_list_df
+```
+
+### 5. `summarize_transcript_files()`.
+
+``` r
+transcripts_metrics_df <- summarize_transcript_files(
+  transcript_file_names = transcripts_list_df$transcript_file,
+  data_folder = config$paths$data_folder,
+  transcripts_folder = config$paths$transcripts_folder,
+  names_to_exclude = config$analysis$names_to_exclude
+)
+
+
+transcripts_metrics_df
+
+transcripts_metrics_df %>% count(name)
+```
+
+## 3. Load Roster and clean Names
+
+### 1. Load Roster of Students from a CSV file
+
+0.  Run Students.Rmd to create roster.csv. (Which is based on the course
+    roster output from UC Berkeley’s BCourses implementation of Canvas.)
+1.  Run `load_roster()` to get a tibble from a provided csv file of
+    students enrolled in the class or classes.
+
+``` r
+roster_df <- load_roster(
+  data_folder = config$paths$data_folder,
+  roster_file = config$paths$roster_file
+)
+
+roster_df
+```
+
+### 2. Make the `sections_df` data frame of Class Sections from the Student Roster
+
+1.  Run `make_sections_df()` to get a tibble that includes rows for each
+    section (grouped by dept and course number) and student count in
+    each.
+
+``` r
+sections_df <- make_sections_df(roster_df)
+
+sections_df
+```
+
+### 3. Make the `roster_small_df` data frame of the Student Roster
+
+1.  Run `make_roster_small()` to get a tibble that includes rows for
+    each students enrolled in the class or classes, with a small subset
+    of the roster columns.
+
+``` r
+roster_small_df <- make_roster_small(roster_df)
+
+roster_small_df
+```

@@ -1,0 +1,308 @@
+# Cursor Rules for zoomstudentengagement R Package
+
+## Project Overview
+This is an R package for analyzing student engagement from Zoom transcripts, with a focus on participation equity. The package is in advanced development phase and preparing for CRAN submission.
+
+## Development Environment
+
+### R Package Structure
+- Follow standard R package layout: `R/`, `man/`, `tests/`, `inst/`, `vignettes/`
+- All exported functions must be in `R/` directory
+- Documentation in `man/` (auto-generated from roxygen2)
+- Tests in `tests/testthat/`
+- Package metadata in `DESCRIPTION` and `NAMESPACE`
+
+### Key Dependencies
+- Core: data.table, dplyr, ggplot2, lubridate, magrittr, purrr, readr, rlang, stringr, tibble, tidyr, tidyselect
+- Development: testthat, covr, knitr, rmarkdown
+- Use tidyverse conventions for consistency
+
+## Code Standards
+
+### R Style Guidelines
+- Follow [tidyverse style guide](https://style.tidyverse.org/)
+- Use `styler::style_pkg()` for consistent formatting
+- Prefer `<-` for assignment over `=`
+- Use snake_case for function and variable names
+- Use camelCase for data frame column names when appropriate
+- Maximum line length: 80 characters
+- Use `#` for comments, `#'` for roxygen2 documentation
+
+### Function Design
+- All exported functions must have complete roxygen2 documentation
+- Include `@param`, `@return`, `@examples` sections
+- Use meaningful parameter names with clear descriptions
+- Provide working examples for all exported functions
+- Use `@export` tag for public functions
+- Use `@keywords internal` for internal functions
+
+### Error Handling
+- Use `stop()` for fatal errors with informative messages
+- Use `warning()` for recoverable issues
+- Use `message()` for informational output
+- Validate input parameters early in functions
+- Provide helpful error messages that guide users
+
+### Data Handling
+- Use data.table for large data operations
+- Prefer tibble over data.frame for consistency
+- Use dplyr verbs for data manipulation
+- Handle missing values explicitly
+- Validate data types and structures
+
+## Documentation Standards
+
+### Roxygen2 Documentation
+- Every exported function must have complete documentation
+- Include `@title`, `@description`, `@param`, `@return`, `@examples`
+- Use `@seealso` to link related functions
+- Use `@family` to group related functions
+- Include `@export` for public functions
+- Use `@keywords internal` for internal functions
+
+### Examples
+- All examples must be runnable
+- Use `\dontrun{}` for examples that require external data
+- Use `\donttest{}` for examples that are slow
+- Provide realistic examples with sample data
+- Test all examples with `devtools::check_examples()`
+
+### README and Vignettes
+- Keep README.md comprehensive and up-to-date
+- Create vignettes for complex workflows
+- Use `devtools::build_readme()` to rebuild README from README.Rmd
+- Include installation instructions and basic usage examples
+
+## Testing Requirements
+
+### Test Coverage
+- Aim for >90% test coverage
+- Use `testthat` framework
+- Test both positive and negative cases
+- Include edge cases and error conditions
+- Test all exported functions
+
+### Test Organization
+- One test file per R file in `tests/testthat/`
+- Use descriptive test file names: `test-function-name.R`
+- Group related tests with `describe()` blocks
+- Use `test_that()` for individual test cases
+- Use `expect_*()` functions for assertions
+
+### Test Data
+- Use `inst/extdata/` for test data files
+- Create minimal test datasets
+- Use `testthat::skip_on_cran()` for tests requiring external data
+- Document test data sources and formats
+
+## Development Workflow
+
+### Pre-PR Validation
+Before creating a pull request, run these checks:
+
+```r
+# Phase 1: Code Quality (5-10 minutes)
+styler::style_pkg()                  # Ensure consistent formatting
+lintr::lint_package()               # Check code quality
+
+# Phase 2: Documentation (2-5 minutes)
+devtools::document()                 # Update roxygen2 documentation
+devtools::build_readme()             # Rebuild README.md
+devtools::spell_check()              # Check for typos
+
+# Phase 3: Testing (3-5 minutes)
+devtools::test()                     # Run all tests
+covr::package_coverage()             # Check test coverage
+
+# Phase 4: Final Validation (5-10 minutes)
+devtools::check()                    # Full package check
+devtools::build()                    # Create distributable package
+```
+
+### Git Workflow
+- Use conventional commit messages: `type(scope): description`
+- Types: feat, fix, docs, style, refactor, test, chore
+- Create feature branches from `develop`
+- Link PRs to issues using `Fixes #X` or `Closes #X`
+- Request review before merging
+
+### Branch Protection
+- Main branch is protected
+- All checks must pass before merge
+- Use admin override sparingly and responsibly
+- Document bypass reasons when necessary
+
+## CRAN Submission Requirements
+
+### Critical Requirements
+- All tests must pass (`devtools::test()`)
+- Code coverage >90% (`covr::package_coverage()`)
+- No spelling errors (`devtools::spell_check()`)
+- All examples run (`devtools::check_examples()`)
+- R CMD check passes with 0 errors, 0 warnings (`devtools::check()`)
+- Package builds successfully (`devtools::build()`)
+
+### Documentation Completeness
+- All exported functions have complete roxygen2 documentation
+- All examples are runnable and tested
+- README.md is current and comprehensive
+- Vignettes are created for complex workflows
+- No missing documentation warnings
+
+### Package Metadata
+- `DESCRIPTION` has correct version, license (MIT), and dependencies
+- `NAMESPACE` is properly generated
+- All dependencies are specified with version constraints
+- License file is present and correct
+
+## Package-Specific Guidelines
+
+### Zoom Transcript Processing
+- Handle various Zoom transcript formats (VTT, TXT, CSV)
+- Validate transcript structure and content
+- Provide clear error messages for malformed transcripts
+- Support both individual files and batch processing
+
+### Student Engagement Analysis
+- Focus on participation equity metrics
+- Provide clear visualizations for engagement patterns
+- Support anonymization for privacy concerns
+- Include statistical summaries and comparisons
+
+### Data Privacy
+- Implement name masking functions
+- Support data anonymization
+- Document privacy considerations
+- Provide secure data handling practices
+
+## Performance Considerations
+
+### Large Data Handling
+- Use data.table for efficient operations
+- Implement chunking for large transcript files
+- Add progress indicators for long operations
+- Document memory requirements
+
+### Optimization
+- Profile functions for performance bottlenecks
+- Use vectorized operations where possible
+- Minimize memory allocations
+- Consider parallel processing for batch operations
+
+## Error Messages and User Experience
+
+### Error Messages
+- Be specific about what went wrong
+- Provide guidance on how to fix the issue
+- Include relevant parameter values in error messages
+- Use consistent error message formatting
+
+### User Guidance
+- Provide clear installation instructions
+- Include comprehensive examples in documentation
+- Create troubleshooting guides
+- Add helpful package startup messages
+
+## Maintenance and Updates
+
+### Version Management
+- Follow semantic versioning (MAJOR.MINOR.PATCH)
+- Update version in `DESCRIPTION` before releases
+- Create release notes in `NEWS.md`
+- Tag releases in git
+
+### Dependency Management
+- Regularly update dependencies
+- Test with multiple R versions
+- Document minimum version requirements
+- Monitor for deprecated functions
+
+### Issue Tracking
+- Use GitHub issues for bug reports and feature requests
+- Link issues to pull requests
+- Maintain issue templates
+- Regular issue triage and cleanup
+
+## Code Review Guidelines
+
+### Review Checklist
+- [ ] Code follows style guidelines
+- [ ] All functions have complete documentation
+- [ ] Tests are included and pass
+- [ ] Examples are runnable
+- [ ] Error handling is appropriate
+- [ ] Performance considerations addressed
+- [ ] No security or privacy issues
+
+### Review Process
+- Review for functionality and correctness
+- Check documentation completeness
+- Verify test coverage
+- Ensure CRAN compliance
+- Consider user experience impact
+
+## Continuous Integration
+
+### GitHub Actions
+- R CMD check on multiple platforms
+- Test coverage reporting
+- Documentation building
+- Spell checking
+- Style checking with lintr
+
+### Pre-commit Hooks
+- Code formatting with styler
+- Basic linting checks
+- Documentation validation
+- Test execution
+
+## Security and Privacy
+
+### Data Handling
+- Never log or expose sensitive student data
+- Implement proper data anonymization
+- Validate input data to prevent injection attacks
+- Use secure file handling practices
+
+### Privacy Compliance
+- Document data retention policies
+- Provide data deletion capabilities
+- Support GDPR compliance features
+- Include privacy notices in documentation
+
+## Troubleshooting
+
+### Common Issues
+- R CMD check failures: Check documentation and examples
+- Test failures: Verify test data and environment
+- Build failures: Check dependencies and metadata
+- Performance issues: Profile and optimize functions
+
+### Debugging
+- Use `debug()` for function debugging
+- Add logging for complex operations
+- Use `browser()` for interactive debugging
+- Document debugging procedures
+
+## Resources and References
+
+### Documentation
+- [R Packages Book](https://r-pkgs.org/)
+- [CRAN Repository Policy](https://cran.r-project.org/web/packages/policies.html)
+- [tidyverse style guide](https://style.tidyverse.org/)
+- [testthat documentation](https://testthat.r-lib.org/)
+
+### Tools
+- `devtools` for package development
+- `roxygen2` for documentation
+- `testthat` for testing
+- `styler` for code formatting
+- `lintr` for code quality
+- `covr` for test coverage
+
+### Best Practices
+- Follow R package development best practices
+- Use consistent naming conventions
+- Write comprehensive documentation
+- Maintain high test coverage
+- Regular code reviews and updates 
