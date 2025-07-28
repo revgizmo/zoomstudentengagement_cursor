@@ -76,11 +76,12 @@ summarize_transcript_files <-
       }
 
       transcript_file_names %>%
+        dplyr::rename(file_name = transcript_file) %>%
         dplyr::mutate(
           transcript_path = dplyr::if_else(
-            is.na(transcript_file),
+            is.na(file_name),
             NA,
-            paste0(transcripts_folder_path, "/", transcript_file)
+            paste0(transcripts_folder_path, "/", file_name)
           ),
           summarize_transcript_metrics = purrr::map2(
             transcript_path,
@@ -92,6 +93,31 @@ summarize_transcript_files <-
         dplyr::mutate(
           name_raw = name,
           name = stringr::str_trim(name)
-        )
+        ) %>%
+        dplyr::mutate(
+          # Check if transcript_file from summarize_transcript_metrics matches file_name
+          transcript_file_match = transcript_file == file_name
+        ) %>%
+        {
+          # Check for mismatches and warn/error
+          mismatches <- dplyr::filter(., !transcript_file_match)
+          if (nrow(mismatches) > 0) {
+            warning(paste(
+              "Found", nrow(mismatches), "rows where transcript_file from summarize_transcript_metrics",
+              "doesn't match the input file_name. This may indicate an issue in the processing pipeline."
+            ))
+            print(mismatches[, c("file_name", "transcript_file")])
+          }
+          .
+        } %>%
+        {
+          # Only remove columns if they exist
+          cols_to_remove <- c("transcript_file_match")
+          if ("transcript_file" %in% names(.)) {
+            cols_to_remove <- c(cols_to_remove, "transcript_file")
+          }
+          dplyr::select(., -all_of(cols_to_remove))
+        } %>%
+        dplyr::rename(transcript_file = file_name)
     }
   }
