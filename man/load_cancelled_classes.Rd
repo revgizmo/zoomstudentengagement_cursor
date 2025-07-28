@@ -20,6 +20,9 @@ Defaults to 'cancelled_classes.csv'}
 
 \item{cancelled_classes_col_types}{column types in the csv file of cancelled
 classes. Defaults to 'ccccccccnnnncTTcTTccci'}
+
+\item{write_blank_cancelled_classes}{Logical. If TRUE and the file doesn't exist,
+creates a blank cancelled classes file. Defaults to FALSE}
 }
 \value{
 A tibble listing the cancelled class sessions for scheduled classes

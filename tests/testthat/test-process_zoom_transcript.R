@@ -1,6 +1,7 @@
 test_that("process_zoom_transcript handles basic transcript processing", {
   # Create sample transcript data
   sample_transcript <- tibble::tibble(
+    transcript_file = "test_transcript.vtt",
     comment_num = 1:3,
     name = c("Student1", "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
@@ -25,6 +26,7 @@ test_that("process_zoom_transcript handles basic transcript processing", {
 test_that("process_zoom_transcript consolidates comments correctly", {
   # Create sample transcript data
   sample_transcript <- tibble::tibble(
+    transcript_file = "test_transcript.vtt",
     comment_num = 1:3,
     name = c("Student1", "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
@@ -48,6 +50,7 @@ test_that("process_zoom_transcript consolidates comments correctly", {
 test_that("process_zoom_transcript adds dead air correctly", {
   # Create sample transcript data
   sample_transcript <- tibble::tibble(
+    transcript_file = "test_transcript.vtt",
     comment_num = 1:3,
     name = c("Student1", "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
@@ -70,6 +73,7 @@ test_that("process_zoom_transcript adds dead air correctly", {
 test_that("process_zoom_transcript handles NA names correctly", {
   # Create sample transcript with NA names
   sample_transcript <- tibble::tibble(
+    transcript_file = "test_transcript.vtt",
     comment_num = 1:3,
     name = c(NA, "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
@@ -93,6 +97,7 @@ test_that("process_zoom_transcript handles NA names correctly", {
 test_that("process_zoom_transcript handles empty input gracefully", {
   # Test with empty data frame
   empty_df <- tibble::tibble(
+    transcript_file = character(),
     comment_num = integer(),
     name = character(),
     comment = character(),

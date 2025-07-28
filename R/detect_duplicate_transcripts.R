@@ -1,33 +1,14 @@
 #' Detect Duplicate Transcripts
 #'
-#' Analyze a list of transcript files to identify potential duplicates based on content similarity.
-#' This function helps identify when the same transcript content appears in multiple files,
-#' which can happen when the same Zoom recording is downloaded multiple times or when
-#' different sections share the same recording.
-#'
-#' @param transcript_list A tibble containing transcript file information, typically
-#'   the output of `load_transcript_files_list()` or similar functions.
-#' @param data_folder Overall data folder for your recordings and data. Defaults to 'data'
-#' @param transcripts_folder Specific subfolder of the data folder where transcript files are stored.
-#'   Defaults to 'transcripts'
-#' @param similarity_threshold Threshold for considering transcripts as duplicates (0-1).
-#'   Defaults to 0.95 (95% similarity).
-#' @param method Method for detecting duplicates. Options:
-#'   - "content": Compare actual transcript content
-#'   - "metadata": Compare file metadata (size, timestamp, etc.)
-#'   - "hybrid": Use both content and metadata
-#'   Defaults to "hybrid"
-#' @param names_to_exclude Character vector of names to exclude from content comparison.
-#'   Defaults to c("dead_air")
-#'
-#' @return A list containing:
-#'   - `duplicate_groups`: List of duplicate groups with file names
-#'   - `similarity_matrix`: Matrix of similarity scores between files
-#'   - `recommendations`: Suggested actions for each duplicate group
-#'   - `summary`: Summary statistics about duplicates found
-#'
+#' @param transcript_list A tibble containing transcript file information
+#' @param data_folder Overall data folder for your recordings and data
+#' @param transcripts_folder Specific subfolder of the data folder where transcript files are stored
+#' @param similarity_threshold Threshold for considering transcripts as duplicates (0-1)
+#' @param method Method for detecting duplicates
+#' @param names_to_exclude Character vector of names to exclude from content comparison
+#' @return A list containing duplicate detection results
 #' @export
-#'
+#' 
 #' @examples
 #' # Detect duplicates in a transcript list
 #' transcript_list <- load_transcript_files_list()
@@ -38,6 +19,7 @@
 #'
 #' # View recommendations
 #' duplicates$recommendations
+#' 
 detect_duplicate_transcripts <- function(
   transcript_list,
   data_folder = "data",
@@ -212,7 +194,11 @@ detect_duplicate_transcripts <- function(
   }
   
   # Create summary
-  total_duplicates <- sum(sapply(duplicate_groups, length) - 1)
+  total_duplicates <- if (length(duplicate_groups) > 0) {
+    sum(sapply(duplicate_groups, length) - 1)
+  } else {
+    0
+  }
   
   summary <- list(
     total_files = length(existing_names),
@@ -230,81 +216,4 @@ detect_duplicate_transcripts <- function(
   ))
 }
 
-#' Calculate Content Similarity Between Two Transcripts
-#'
-#' Internal function to calculate similarity between two transcript data frames.
-#'
-#' @param transcript1 First transcript data frame
-#' @param transcript2 Second transcript data frame  
-#' @param names_to_exclude Names to exclude from comparison
-#'
-#' @return Similarity score between 0 and 1
-calculate_content_similarity <- function(transcript1, transcript2, names_to_exclude = c("dead_air")) {
-  
-  # Handle NULL transcripts
-  if (is.null(transcript1) || is.null(transcript2)) {
-    return(0.0)
-  }
-  
-  # Filter out excluded names (only if name column exists)
-  if (!is.null(names_to_exclude) && "name" %in% names(transcript1) && "name" %in% names(transcript2)) {
-    transcript1 <- transcript1 %>% dplyr::filter(!name %in% names_to_exclude)
-    transcript2 <- transcript2 %>% dplyr::filter(!name %in% names_to_exclude)
-  }
-  
-  # If either transcript is empty after filtering, return 0
-  if (nrow(transcript1) == 0 || nrow(transcript2) == 0) {
-    return(0.0)
-  }
-  
-  # Calculate similarity metrics
-  
-  # 1. Speaker similarity (proportion of speakers in common)
-  speaker_sim <- 0.0
-  if ("name" %in% names(transcript1) && "name" %in% names(transcript2)) {
-    speakers1 <- unique(transcript1$name)
-    speakers2 <- unique(transcript2$name)
-    speaker_sim <- length(intersect(speakers1, speakers2)) / length(union(speakers1, speakers2))
-  }
-  
-  # 2. Duration similarity
-  duration_sim <- 0.0
-  if ("duration" %in% names(transcript1) && "duration" %in% names(transcript2)) {
-    total_duration1 <- sum(transcript1$duration, na.rm = TRUE)
-    total_duration2 <- sum(transcript2$duration, na.rm = TRUE)
-    if (total_duration1 > 0 || total_duration2 > 0) {
-      duration_sim <- 1 - abs(total_duration1 - total_duration2) / max(total_duration1, total_duration2)
-    }
-  }
-  
-  # 3. Word count similarity
-  word_sim <- 0.0
-  if ("wordcount" %in% names(transcript1) && "wordcount" %in% names(transcript2)) {
-    total_words1 <- sum(transcript1$wordcount, na.rm = TRUE)
-    total_words2 <- sum(transcript2$wordcount, na.rm = TRUE)
-    if (total_words1 > 0 || total_words2 > 0) {
-      word_sim <- 1 - abs(total_words1 - total_words2) / max(total_words1, total_words2)
-    }
-  }
-  
-  # 4. Comment count similarity
-  comment_sim <- 0.0
-  if (nrow(transcript1) > 0 && nrow(transcript2) > 0) {
-    comment_sim <- 1 - abs(nrow(transcript1) - nrow(transcript2)) / max(nrow(transcript1), nrow(transcript2))
-  } else if (nrow(transcript1) == 0 && nrow(transcript2) == 0) {
-    comment_sim <- 1.0  # Both empty = identical
-  }
-  
-  # Check if we have any meaningful similarity metrics
-  has_meaningful_data <- (speaker_sim > 0 || duration_sim > 0 || word_sim > 0)
-  
-  # Combine similarities (weighted average)
-  if (has_meaningful_data) {
-    overall_sim <- (speaker_sim * 0.3 + duration_sim * 0.3 + word_sim * 0.2 + comment_sim * 0.2)
-  } else {
-    # If no meaningful data, return 0.0 (as expected by tests)
-    overall_sim <- 0.0
-  }
-  
-  return(overall_sim)
-} 
+ 

@@ -64,6 +64,7 @@ You can install the development version of zoomstudentengagement like so:
 
 ``` r
 devtools::install_github("revgizmo/zoomstudentengagement")
+
 ```
 
 ## Example
@@ -82,7 +83,104 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 library(dplyr)
 devtools::load_all()
 
+
 ```
+
+# Atomic functions in this package
+
+## load_zoom_transcript()
+
+Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
+
+```{r}
+
+transcript_file <- 
+  system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+              package = "zoomstudentengagement")
+
+
+load_zoom_transcript(transcript_file_path = transcript_file)
+
+
+
+```
+
+
+
+## process_zoom_transcript()
+
+Process a Zoom recording transcript with given parameters and return tibble containing the consolidated and annotated comments.
+
+```{r}
+transcript_file <- 
+  system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+              package = "zoomstudentengagement"
+  )
+
+process_zoom_transcript(transcript_file_path = transcript_file,
+                        consolidate_comments = TRUE,
+                        max_pause_sec = 1,
+                        add_dead_air = TRUE,
+                        dead_air_name = "dead_air",
+                        na_name = "unknown",
+                        transcript_df = NULL)
+
+```
+
+
+
+## summarize_transcript_metrics()
+
+Process a Zoom recording transcript and return summary metrics by speaker 
+```{r}
+
+transcript_file <- 
+  system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+              package = "zoomstudentengagement"
+  )
+
+summarize_transcript_metrics(transcript_file_path = transcript_file,
+                             names_exclude = c("dead_air"),
+                             consolidate_comments = TRUE,
+                             max_pause_sec = 1,
+                             add_dead_air = TRUE,
+                             dead_air_name = "dead_air",
+                             na_name = "unknown",
+                             transcript_df = NULL
+) 
+```
+
+
+
+## summarize_transcript_files()
+
+session details and summary metrics by speaker for all class sessions in the tibble provided.
+
+```{r}
+
+
+transcript_data_folder <- 
+  system.file("extdata/",
+              package = "zoomstudentengagement"
+  )
+
+
+
+summarize_transcript_files(
+  # df_transcript_list = NULL,
+  transcript_file_names = 'GMT20240124-202901_Recording.transcript.vtt',
+  data_folder = transcript_data_folder,
+  transcripts_folder = "transcripts",
+  names_to_exclude = NULL,
+  deduplicate_content = TRUE,
+  similarity_threshold = 0.95,
+  duplicate_method = c("hybrid", "content", "metadata")
+)
+
+```
+
+
+
 
 # Steps to use zoomstudentengagement
 

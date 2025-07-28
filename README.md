@@ -3,6 +3,17 @@
   id="toc-zoomstudentengagement">zoomstudentengagement</a>
   - <a href="#installation" id="toc-installation">Installation</a>
   - <a href="#example" id="toc-example">Example</a>
+- <a href="#atomic-functions-in-this-package"
+  id="toc-atomic-functions-in-this-package">Atomic functions in this
+  package</a>
+  - <a href="#load_zoom_transcript"
+    id="toc-load_zoom_transcript">load_zoom_transcript()</a>
+  - <a href="#process_zoom_transcript"
+    id="toc-process_zoom_transcript">process_zoom_transcript()</a>
+  - <a href="#summarize_transcript_metrics"
+    id="toc-summarize_transcript_metrics">summarize_transcript_metrics()</a>
+  - <a href="#summarize_transcript_files"
+    id="toc-summarize_transcript_files">summarize_transcript_files()</a>
 - <a href="#steps-to-use-zoomstudentengagement"
   id="toc-steps-to-use-zoomstudentengagement">Steps to use
   zoomstudentengagement</a>
@@ -259,6 +270,93 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 # library(zoomstudentengagement)
+```
+
+# Atomic functions in this package
+
+## load_zoom_transcript()
+
+Load a Zoom recording transcript and return tibble containing the
+comments from a Zoom recording transcript
+
+``` r
+
+transcript_file <- 
+  system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+              package = "zoomstudentengagement")
+
+
+load_zoom_transcript(transcript_file_path = transcript_file)
+```
+
+## process_zoom_transcript()
+
+Process a Zoom recording transcript with given parameters and return
+tibble containing the consolidated and annotated comments.
+
+``` r
+transcript_file <- 
+  system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+              package = "zoomstudentengagement"
+  )
+
+process_zoom_transcript(transcript_file_path = transcript_file,
+                        consolidate_comments = TRUE,
+                        max_pause_sec = 1,
+                        add_dead_air = TRUE,
+                        dead_air_name = "dead_air",
+                        na_name = "unknown",
+                        transcript_df = NULL)
+```
+
+## summarize_transcript_metrics()
+
+Process a Zoom recording transcript and return summary metrics by
+speaker
+
+``` r
+
+transcript_file <- 
+  system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+              package = "zoomstudentengagement"
+  )
+
+summarize_transcript_metrics(transcript_file_path = transcript_file,
+                             names_exclude = c("dead_air"),
+                             consolidate_comments = TRUE,
+                             max_pause_sec = 1,
+                             add_dead_air = TRUE,
+                             dead_air_name = "dead_air",
+                             na_name = "unknown",
+                             transcript_df = NULL
+) 
+```
+
+## summarize_transcript_files()
+
+session details and summary metrics by speaker for all class sessions in
+the tibble provided.
+
+``` r
+
+
+transcript_data_folder <- 
+  system.file("extdata/",
+              package = "zoomstudentengagement"
+  )
+
+
+
+summarize_transcript_files(
+  # df_transcript_list = NULL,
+  transcript_file_names = 'GMT20240124-202901_Recording.transcript.vtt',
+  data_folder = transcript_data_folder,
+  transcripts_folder = "transcripts",
+  names_to_exclude = NULL,
+  deduplicate_content = TRUE,
+  similarity_threshold = 0.95,
+  duplicate_method = c("hybrid", "content", "metadata")
+)
 ```
 
 # Steps to use zoomstudentengagement

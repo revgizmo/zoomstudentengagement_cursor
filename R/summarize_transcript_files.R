@@ -1,27 +1,16 @@
 #' Summarize Transcript Files
 #'
-#' @param transcript_file_names A data.frame or character vector listing the transcript files from the
-#'   zoom recordings loaded from the cloud recording csvs and transcripts.
-#' @param data_folder Overall data folder for your recordings and data. Defaults
-#'   to 'data'
-#' @param transcripts_folder specific subfolder of the data folder where you
-#'   will store the cloud recording csvs and transcripts
-#' @param names_to_exclude Character vector of names to exclude from the results.
-#'   Defaults to NULL
-#' @param deduplicate_content Logical. If TRUE, detect and handle duplicate transcripts.
-#'   Defaults to FALSE
-#' @param similarity_threshold Threshold for considering transcripts as duplicates (0-1).
-#'   Defaults to 0.95 (95% similarity).
-#' @param duplicate_method Method for detecting duplicates. Options:
-#'   - "content": Compare actual transcript content
-#'   - "metadata": Compare file metadata (size, timestamp, etc.)
-#'   - "hybrid": Use both content and metadata
-#'   Defaults to "hybrid"
-#'
+#' @param transcript_file_names A data.frame or character vector listing the transcript files
+#' @param data_folder Overall data folder for your recordings and data
+#' @param transcripts_folder specific subfolder of the data folder where you store transcripts
+#' @param names_to_exclude Character vector of names to exclude from the results
+#' @param deduplicate_content Logical. If TRUE, detect and handle duplicate transcripts
+#' @param similarity_threshold Threshold for considering transcripts as duplicates (0-1)
+#' @param duplicate_method Method for detecting duplicates
 #' @return A tibble containing session details and summary metrics by speaker
-#'   for all class sessions in the tibble provided.
 #' @export
 #'
+#' @importFrom tidyselect all_of
 #' @examples
 #' summarize_transcript_files(df_transcript_list = NULL)
 summarize_transcript_files <-
@@ -39,7 +28,7 @@ summarize_transcript_files <-
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
     if ('character' %in% class(transcript_file_names) )      {
-      transcript_file_names = tibble(transcript_file = transcript_file_names)
+      transcript_file_names = tibble::tibble(transcript_file = transcript_file_names)
     }
 
     if (tibble::is_tibble(transcript_file_names) &&
