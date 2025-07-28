@@ -292,7 +292,7 @@ cat("  - Timezone:", config$patterns$start_time_local_tzone, "\n")
 # Create course information for all your courses
 course_info <- create_course_info(
   dept = c("CS", "CS", "MATH", "LTF"),
-  course_num = c(101, 101, 250, 201),
+  course = c("101", "101", "250", "201"),
   section = c(1, 2, 1, 1),
   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Johnson", "Dr. Smith"),
   session_length_hours = c(1.5, 1.5, 2.0, 1.5),
@@ -1033,7 +1033,7 @@ load_zoom_recorded_sessions_list(data_folder = system.file("extdata", package = 
 # Create course information for all your courses
 course_info <- create_course_info(
   dept = c("CS", "CS", "MATH", "LTF"),
-  course_num = c(101, 101, 250, 201),
+  course = c("101", "101", "250", "201"),
   section = c(1, 2, 1, 1),
   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Johnson", "Dr. Smith"),
   session_length_hours = c(1.5, 1.5, 2.0, 1.5),

@@ -224,7 +224,7 @@ sample_transcripts <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
   preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
+  course = c("101", "101"),
   section = c("A", "B"),
   student_id = c("12345", "67890"),
   dept = c("CS", "CS"),
@@ -265,7 +265,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
   preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
+  course = c("101", "101"),
   section = c("A", "A"),
   student_id = c("12345", "67890"),
   dept = c("CS", "CS"),
@@ -308,7 +308,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
   preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
+  course = c("101", "101"),
   section = c("A", "A"),
   student_id = c("12345", "67890"),
   dept = c("CS", "CS"),
@@ -353,7 +353,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
   preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
+  course = c("101", "101"),
   section = c("A", "A"),
   student_id = c("12345", "67890"),
   dept = c("CS", "CS"),
@@ -398,7 +398,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
   preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
+  course = c("101", "101"),
   section = c("A", "A"),
   student_id = c("12345", "67890"),
   dept = c("CS", "CS"),
@@ -445,7 +445,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
   preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
+  course = c("101", "101"),
   section = c("A", "A"),
   student_id = c("12345", "67890"),
   dept = c("CS", "CS"),
@@ -492,7 +492,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("Student A", "Student B", "Student C"),
   preferred_name = c("Student A", "Student B", "Student C"),
-  course_num = c(101, 101, 101),
+  course = c("101", "101", "101"),
   section = c("A", "A", "B"),
   student_id = c("A123", "B456", "C789"),
   dept = c("CS", "CS", "CS"),
@@ -540,7 +540,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("Student A", "Student B", "Student C"),
   preferred_name = c("Student A", "Student B", "Student C"),
-  course_num = c(101, 101, 101),
+  course = c("101", "101", "101"),
   section = c("A", "A", "B"),
   student_id = c("A123", "B456", "C789"),
   dept = c("CS", "CS", "CS"),
@@ -590,7 +590,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("Student A", "Student B", "Student C"),
   preferred_name = c("Student A", "Student B", "Student C"),
-  course_num = c(101, 101, 101),
+  course = c("101", "101", "101"),
   section = c("A", "A", "B"),
   student_id = c("A123", "B456", "C789"),
   dept = c("CS", "CS", "CS"),

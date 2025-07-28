@@ -53,7 +53,7 @@ sample_transcript_list <- tibble::tibble(
 sample_roster <- tibble::tibble(
   first_last = c("John Smith", "Jane Doe"),
   preferred_name = c("John Smith", "Jane Doe"),
-  course_num = c(101, 101),
+  course = c("101", "101"),
   section = c("A", "A"),
   student_id = c("12345", "67890"),
   dept = c("CS", "CS"),

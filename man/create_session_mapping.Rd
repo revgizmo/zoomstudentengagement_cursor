@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_session_mapping.R
 \name{create_session_mapping}
 \alias{create_session_mapping}
-\title{Create Session Mapping for Zoom Recordings}
+\title{Create Session Mapping from Zoom Recordings and Course Information}
 \usage{
 create_session_mapping(
   zoom_recordings_df,
@@ -15,57 +15,42 @@ create_session_mapping(
 )
 }
 \arguments{
-\item{zoom_recordings_df}{A tibble of Zoom recordings (from `load_zoom_recorded_sessions_list()`)}
+\item{zoom_recordings_df}{A tibble containing Zoom recording information with
+columns: ID, Topic, Start Time}
 
-\item{course_info_df}{A tibble containing course information with columns:
-- dept: Department code (e.g., "CS", "MATH")
-- course_num: Course number (e.g., 101, 250)
-- section: Section number (e.g., 1, 2, 3)
-- instructor: Instructor name
-- session_length_hours: Length of each session}
+\item{course_info_df}{A tibble containing course information created by
+`create_course_info()` with columns: dept, course, section, instructor,
+session_length_hours}
 
-\item{output_file}{Path to save the session mapping CSV file}
+\item{output_file}{Optional file path to save the mapping CSV file}
 
 \item{semester_start_mdy}{Semester start date in "MMM DD, YYYY" format}
 
-\item{auto_assign_patterns}{List of regex patterns to attempt automatic assignment}
+\item{auto_assign_patterns}{List of patterns for automatic assignment}
 
-\item{interactive}{If TRUE, prompts user to assign unmatched recordings}
+\item{interactive}{Whether to enable interactive assignment for unmatched recordings}
 }
 \value{
-A tibble with the session mapping containing:
-  - zoom_recording_id: Zoom recording ID
-  - dept: Department code
-  - course_num: Course number
-  - section: Section number
-  - session_date: Session date
-  - session_time: Session time
-  - instructor: Instructor name
-  - notes: Optional notes about the session
+A tibble with session mapping information
 }
 \description{
-This function helps instructors map Zoom recordings to their course information
-when the automatic parsing from Zoom recording topics is unreliable or insufficient.
-It creates a mapping file that can be used to properly associate recordings with
-specific courses, sections, and sessions.
+This function creates a mapping between Zoom recordings and course information
+by matching recording topics with course patterns.
 }
 \examples{
-# Load Zoom recordings
-zoom_recordings_df <- load_zoom_recorded_sessions_list()
-
-# Define course information
-course_info_df <- tibble::tibble(
-  dept = c("CS", "CS", "MATH"),
-  course_num = c(101, 101, 250),
-  section = c(1, 2, 1),
-  instructor = c("Dr. Smith", "Dr. Smith", "Dr. Smith"),
-  session_length_hours = c(1.5, 1.5, 2.0)
+# Create course information
+course_info <- create_course_info(
+  dept = c("CS", "MATH"),
+  course = c("101", "250"),
+  section = c("1", "1"),
+  instructor = c("Dr. Smith", "Dr. Johnson"),
+  session_length_hours = c(1.5, 2.0)
 )
 
 # Create session mapping
 session_mapping <- create_session_mapping(
-  zoom_recordings_df = zoom_recordings_df,
-  course_info_df = course_info_df,
+  zoom_recordings_df = zoom_recordings,
+  course_info_df = course_info,
   output_file = "session_mapping.csv",
   semester_start_mdy = "Jan 15, 2024"
 )
