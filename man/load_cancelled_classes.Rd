@@ -7,7 +7,8 @@
 load_cancelled_classes(
   data_folder = "data",
   cancelled_classes_file = "cancelled_classes.csv",
-  cancelled_classes_col_types = "ccccccccnnnncTTcTTccci"
+  cancelled_classes_col_types = "ccccccccnnnncTTcTTccci",
+  write_blank_cancelled_classes = FALSE
 )
 }
 \arguments{

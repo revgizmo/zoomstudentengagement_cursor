@@ -10,14 +10,14 @@ make_sections_df(roster_df)
 \item{roster_df}{A tibble listing the students enrolled in the class or classes.
 Must contain the following columns:
 - dept: character
-- course_num: integer
-- section: integer}
+- course: character
+- section: character}
 }
 \value{
 A tibble with the following columns:
   - dept: character
-  - course_num: integer
-  - section: integer
+  - course: character
+  - section: character
   - n: integer (count of students in each section)
 }
 \description{

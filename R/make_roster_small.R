@@ -6,12 +6,12 @@
 #'
 #' @param roster_df A tibble listing the students enrolled in the class or
 #'   classes with a small subset of the roster columns. Must contain the following columns:
-#'   - student_id: integer
+#'   - student_id: character
 #'   - first_last: character
 #'   - preferred_name: character
 #'   - dept: character
-#'   - course_num: integer
-#'   - section: integer
+#'   - course: character
+#'   - section: character
 #'
 #' @return A tibble listing the students enrolled in the class or classes with a
 #'   small subset of the roster columns.
@@ -29,7 +29,7 @@ make_roster_small <- function(roster_df) {
   }
 
   # Defensive: check for required columns
-  required_cols <- c("student_id", "first_last", "preferred_name", "dept", "course_num", "section")
+  required_cols <- c("student_id", "first_last", "preferred_name", "dept", "course", "section")
   missing_cols <- setdiff(required_cols, names(roster_df))
   if (length(missing_cols) > 0) {
     stop("roster_df must contain columns: ", paste(missing_cols, collapse = ", "))
@@ -38,16 +38,21 @@ make_roster_small <- function(roster_df) {
   # Handle empty input
   if (nrow(roster_df) == 0) {
     return(tibble::tibble(
-      student_id = integer(),
+      student_id = character(),
       first_last = character(),
       preferred_name = character(),
       dept = character(),
-      course_num = integer(),
-      section = integer()
+      course = character(),
+      section = character()
     ))
   }
 
-  # Select and return required columns
+  # Select and return required columns, ensuring character types
   roster_df %>%
-    dplyr::select("student_id", "first_last", "preferred_name", "dept", "course_num", "section")
+    dplyr::select("student_id", "first_last", "preferred_name", "dept", "course", "section") %>%
+    dplyr::mutate(
+      student_id = as.character(student_id),
+      course = as.character(course),
+      section = as.character(section)
+    )
 }

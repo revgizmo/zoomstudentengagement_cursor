@@ -4,8 +4,8 @@
 #' with `create_session_mapping()` to map Zoom recordings to specific courses.
 #'
 #' @param dept Department codes (e.g., "CS", "MATH", "LFT")
-#' @param course_num Course numbers (e.g., 101, 250, 201)
-#' @param section Section numbers (e.g., 1, 2, 3)
+#' @param course Course numbers (e.g., "101", "250", "201")
+#' @param section Section numbers (e.g., "1", "2", "3")
 #' @param instructor Instructor names
 #' @param session_length_hours Length of each session in hours
 #' @param semester_start_mdy Semester start date in "MMM DD, YYYY" format
@@ -15,7 +15,7 @@
 #'
 #' @return A tibble with course information containing:
 #'   - dept: Department code
-#'   - course_num: Course number
+#'   - course: Course number
 #'   - section: Section number
 #'   - instructor: Instructor name
 #'   - session_length_hours: Length of each session
@@ -30,8 +30,8 @@
 #' # Single course with multiple sections
 #' course_info <- create_course_info(
 #'   dept = c("CS", "CS", "CS"),
-#'   course_num = c(101, 101, 101),
-#'   section = c(1, 2, 3),
+#'   course = c("101", "101", "101"),
+#'   section = c("1", "2", "3"),
 #'   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Johnson"),
 #'   session_length_hours = c(1.5, 1.5, 1.5),
 #'   session_days = c("Mon", "Mon", "Tue"),
@@ -41,8 +41,8 @@
 #' # Multiple courses
 #' course_info <- create_course_info(
 #'   dept = c("CS", "MATH", "LFT"),
-#'   course_num = c(101, 250, 201),
-#'   section = c(1, 1, 1),
+#'   course = c("101", "250", "201"),
+#'   section = c("1", "1", "1"),
 #'   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Smith"),
 #'   session_length_hours = c(1.5, 2.0, 1.5),
 #'   session_days = c("Mon", "Tue", "Wed"),
@@ -50,7 +50,7 @@
 #' )
 create_course_info <- function(
   dept,
-  course_num,
+  course,
   section,
   instructor,
   session_length_hours,
@@ -61,7 +61,7 @@ create_course_info <- function(
 ) {
   
   # Input validation
-  if (length(unique(c(length(dept), length(course_num), length(section), 
+  if (length(unique(c(length(dept), length(course), length(section), 
                      length(instructor), length(session_length_hours)))) != 1) {
     stop("All input vectors must have the same length")
   }
@@ -77,8 +77,8 @@ create_course_info <- function(
   # Create the tibble
   result <- tibble::tibble(
     dept = as.character(dept),
-    course_num = as.integer(course_num),
-    section = as.integer(section),
+    course = as.character(course),
+    section = as.character(section),
     instructor = as.character(instructor),
     session_length_hours = as.numeric(session_length_hours),
     semester_start = lubridate::mdy(semester_start_mdy),
@@ -97,11 +97,11 @@ create_course_info <- function(
   # Add course identifier
   result <- result %>%
     dplyr::mutate(
-      course_id = paste(dept, course_num, section, sep = "_"),
-      course_name = paste(dept, course_num, "Section", section)
+      course_id = paste(dept, course, section, sep = "_"),
+      course_name = paste(dept, course, "Section", section)
     )
   
   # Sort by department, course number, and section
   result %>%
-    dplyr::arrange(dept, course_num, section)
+    dplyr::arrange(dept, course, section)
 } 

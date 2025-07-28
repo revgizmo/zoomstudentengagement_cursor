@@ -118,7 +118,7 @@ make_clean_names_df <- function(data_folder = "data",
     dplyr::mutate(
       # Ensure transcript_section column is character
       transcript_section = as.character(transcript_section),
-      course_num = as.character(course_num),
+      course = as.character(course),
       section = as.character(section),
       student_id = as.character(student_id)
     )
@@ -165,7 +165,7 @@ make_clean_names_df <- function(data_folder = "data",
         formal_name == first_last,
         dept,
         transcript_section,
-        course == course_num,
+        course,
         section,
         session_num,
         start_time_local,
