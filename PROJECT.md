@@ -22,7 +22,6 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **Master Audit**: Comprehensive codebase audit completed ([Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) - CLOSED)
 
 ### What Needs Work ❌
-- **Column Naming Consistency**: Inconsistent use of `course_num` vs `course` across functions ([Issue #48](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/48) - Priority: CRITICAL)
 - **Documentation Completeness**: Many functions have incomplete roxygen2 documentation ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH)
 - **Test Quality**: Some test warnings in `make_clean_names_df.R` need resolution ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
 - **Code Quality**: Need style consistency and error handling improvements ([Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15))
@@ -30,16 +29,14 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 ## CRAN Readiness Audit Results (July 2025)
 
 ### Critical Issues (Block CRAN submission)
-1. **Column Naming Inconsistency**: Inconsistent use of `course_num` vs `course` across functions creates confusion and potential bugs ([Issue #48](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/48) - Priority: CRITICAL)
-2. **Incomplete Documentation**: Many functions have `@examples` tags but no actual examples ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH)
-3. **Test Warnings**: `make_clean_names_df.R` has test warnings that need resolution ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
+1. **Incomplete Documentation**: Many functions have `@examples` tags but no actual examples ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH)
+2. **Test Warnings**: `make_clean_names_df.R` has test warnings that need resolution ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
 
 ### Resolved Issues ✅
 3. **License Specification**: "TBD Open Source" is not acceptable for CRAN ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 4. **R CMD Check**: Need to verify no errors/warnings/notes ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 
 ### Active Issues for CRAN Submission
-- **[Issue #48](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/48)**: Column naming consistency (Priority: CRITICAL)
 - **[Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)**: Documentation updates (Priority: HIGH)
 - **[Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)**: Test suite cleanup (Priority: HIGH)
 - **[Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Code quality and refactoring tasks
@@ -47,24 +44,19 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 ### Completed Issues ✅
 - **[Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Master audit tracking issue (CLOSED)
 - **[Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21)**: CRAN compliance and R-CMD-check (CLOSED)
+- **[Issue #48](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/48)**: Column naming consistency (CLOSED)
 
 ### Immediate Action Items
-1. **Column Naming Consolidation** (Priority: CRITICAL) - [Issue #48](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/48)
-   - Consolidate `course_num` to `course` across all functions
-   - Change column types from integer to character for consistency
-   - Update all related functions, tests, and documentation
-   - Ensure backward compatibility is not needed (unreleased package)
-
-2. **Documentation Fixes** (Priority: HIGH) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
+1. **Documentation Fixes** (Priority: HIGH) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
    - Audit all 34 exported functions for complete roxygen2 documentation
    - Fix functions with incomplete `@examples` sections
    - Ensure all examples are runnable
 
-3. **Test Resolution** (Priority: HIGH) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)
+2. **Test Resolution** (Priority: HIGH) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)
    - Investigate and fix `make_clean_names_df.R` test warnings
    - Verify all tests pass without warnings
 
-4. **CRAN Compliance** (Priority: HIGH) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - ✅ COMPLETED
+3. **CRAN Compliance** (Priority: HIGH) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - ✅ COMPLETED
    - Replace "TBD Open Source" with proper MIT license
    - Run full `devtools::check()` to verify compliance
 
@@ -343,13 +335,13 @@ gh pr merge --auto --delete-branch --admin
 
 ## Milestones & Timeline
 - [x] Codebase audit (July 2025) - [Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) - ✅ COMPLETED
-- [ ] Column naming consolidation (Target: July 2025) - [Issue #48](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/48) - Priority: CRITICAL
+- [x] Column naming consolidation (Target: July 2025) - [Issue #48](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/48) - ✅ COMPLETED
 - [ ] Documentation overhaul (Target: July 2025) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH
 - [ ] Test suite cleanup (Target: July 2025) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH
 - [x] CRAN compliance check (Target: July 2025) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - ✅ COMPLETED
 - [ ] Vignette creation (Target: July 2025) - [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45) - Priority: MEDIUM
 - [ ] Development efficiency tools (Target: August 2025) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47) - Priority: LOW
-- [ ] Submit to CRAN (Target: August 2025) - Blocked by #48, #19 and #24
+- [ ] Submit to CRAN (Target: August 2025) - Blocked by #19 and #24
 
 ## Task Breakdown
 
