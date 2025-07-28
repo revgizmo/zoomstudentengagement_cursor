@@ -59,7 +59,7 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
     duration <-
     end <-
     n <-
-    name <- prior_dead_air <- start <- timestamp <- wordcount <- NULL
+    name <- prior_dead_air <- start <- timestamp <- wordcount <- transcript_file <- NULL
 
   consolidate_comments_ <- consolidate_comments
   max_pause_sec_ <- max_pause_sec
@@ -81,9 +81,15 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
 
 
   if (tibble::is_tibble(transcript_df)) {
+    # Check if transcript_file column exists and prepare grouping
+    group_vars <- c("name")
+    if ("transcript_file" %in% names(transcript_df)) {
+      group_vars <- c("transcript_file", "name")
+    }
+
     return_df <- transcript_df %>%
       dplyr::filter(!name %in% unlist(names_exclude)) %>%
-      dplyr::group_by(name) %>%
+      dplyr::group_by(!!!rlang::syms(group_vars)) %>%
       dplyr::summarise(
         n = dplyr::n(),
         duration = sum(as.numeric(duration, units = "mins"), na.rm = TRUE),

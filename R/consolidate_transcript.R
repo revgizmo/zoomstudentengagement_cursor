@@ -34,7 +34,7 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
     prev_end <-
     prior_dead_air <-
     start <-
-    time_flag <- timestamp <- wordcount <- prior_speaker <- NULL
+    time_flag <- timestamp <- wordcount <- prior_speaker <- transcript_file <- NULL
 
   if (tibble::is_tibble(df)) {
     # Ensure time columns are of type Period
@@ -43,6 +43,12 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
         start = lubridate::as.period(start),
         end = lubridate::as.period(end)
       )
+
+    # Check if transcript_file column exists and prepare grouping
+    group_vars <- c("comment_num")
+    if ("transcript_file" %in% names(df)) {
+      group_vars <- c("transcript_file", "comment_num")
+    }
 
     df %>%
       dplyr::mutate(
@@ -55,7 +61,7 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
         time_flag = prior_dead_air > max_pause_sec,
         comment_num = cumsum(name_flag | time_flag)
       ) %>%
-      dplyr::group_by(comment_num) %>%
+      dplyr::group_by(!!!rlang::syms(group_vars)) %>%
       dplyr::summarize(
         name = dplyr::first(name),
         comment = paste(comment, collapse = " "),

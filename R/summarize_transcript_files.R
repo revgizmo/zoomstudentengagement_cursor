@@ -8,6 +8,15 @@
 #'   will store the cloud recording csvs and transcripts
 #' @param names_to_exclude Character vector of names to exclude from the results.
 #'   Defaults to NULL
+#' @param deduplicate_content Logical. If TRUE, detect and handle duplicate transcripts.
+#'   Defaults to FALSE
+#' @param similarity_threshold Threshold for considering transcripts as duplicates (0-1).
+#'   Defaults to 0.95 (95% similarity).
+#' @param duplicate_method Method for detecting duplicates. Options:
+#'   - "content": Compare actual transcript content
+#'   - "metadata": Compare file metadata (size, timestamp, etc.)
+#'   - "hybrid": Use both content and metadata
+#'   Defaults to "hybrid"
 #'
 #' @return A tibble containing session details and summary metrics by speaker
 #'   for all class sessions in the tibble provided.
@@ -19,8 +28,13 @@ summarize_transcript_files <-
   function(transcript_file_names,
            data_folder = "data",
            transcripts_folder = "transcripts",
-           names_to_exclude = NULL) {
+           names_to_exclude = NULL,
+           deduplicate_content = FALSE,
+           similarity_threshold = 0.95,
+           duplicate_method = c("hybrid", "content", "metadata")) {
     transcript_file <- transcript_path <- name <- NULL
+
+    duplicate_method <- match.arg(duplicate_method)
 
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
@@ -28,10 +42,39 @@ summarize_transcript_files <-
       transcript_file_names = tibble(transcript_file = transcript_file_names)
     }
 
-
     if (tibble::is_tibble(transcript_file_names) &&
       file.exists(transcripts_folder_path)
     ) {
+      
+      # Handle duplicate detection if requested
+      if (deduplicate_content) {
+        # Detect duplicates
+        duplicates <- detect_duplicate_transcripts(
+          transcript_file_names,
+          data_folder = data_folder,
+          transcripts_folder = transcripts_folder,
+          similarity_threshold = similarity_threshold,
+          method = duplicate_method,
+          names_to_exclude = names_to_exclude
+        )
+        
+        # If duplicates found, warn user
+        if (length(duplicates$duplicate_groups) > 0) {
+          warning(paste(
+            "Found", length(duplicates$duplicate_groups), "duplicate groups.",
+            "Consider reviewing and removing duplicates before processing."
+          ))
+          
+          # Print recommendations
+          cat("\nDuplicate detection results:\n")
+          cat("============================\n")
+          for (i in seq_along(duplicates$recommendations)) {
+            cat(paste("Group", i, ":", duplicates$recommendations[i], "\n"))
+          }
+          cat("\n")
+        }
+      }
+
       transcript_file_names %>%
         dplyr::mutate(
           transcript_path = dplyr::if_else(

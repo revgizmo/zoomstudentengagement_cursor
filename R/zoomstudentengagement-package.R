@@ -47,7 +47,7 @@ if (getRversion() >= "2.15.1") {
     "preferred_name", "section", "student_id",
 
     # Variables from consolidate_transcript.R
-    "comment", "duration", "name", "raw_end", "raw_start", "wordcount",
+    "comment", "duration", "name", "raw_end", "raw_start", "wordcount", "transcript_file",
 
     # Variables from make_transcripts_summary_df.R
     "avg_duration", "avg_wordcount", "max_duration", "max_wordcount",
@@ -57,7 +57,7 @@ if (getRversion() >= "2.15.1") {
     # Variables from summarize_transcript_metrics.R
     "avg_duration", "avg_wordcount", "max_duration", "max_wordcount",
     "min_duration", "min_wordcount", "total_comments", "total_duration",
-    "total_wordcount",
+    "total_wordcount", "transcript_file",
 
     # Variables from make_names_to_clean_df.R
     "course", "course_section",
