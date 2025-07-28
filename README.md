@@ -161,6 +161,17 @@
       id="toc-3-make-the-roster_small_df-data-frame-of-the-student-roster-1">3.
       Make the <code>roster_small_df</code> data frame of the Student
       Roster</a>
+    - <a
+      href="#4-make-the-roster_sessions-data-frame-of-the-student-roster-with-rows-for-each-recorded-class-section-1"
+      id="toc-4-make-the-roster_sessions-data-frame-of-the-student-roster-with-rows-for-each-recorded-class-section-1">4.
+      Make the <code>roster_sessions</code> data frame of the Student Roster
+      With Rows for Each Recorded Class Section</a>
+    - <a href="#clean-names-1" id="toc-clean-names-1">Clean Names</a>
+    - <a
+      href="#5-make-clean-names-df-of-joined-student-names-from-the-roster-and-transcripts"
+      id="toc-5-make-clean-names-df-of-joined-student-names-from-the-roster-and-transcripts">5.
+      Make Clean Names DF of joined student names from the roster and
+      transcripts</a>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -1180,6 +1191,9 @@ transcripts_metrics_df <- summarize_transcript_files(
   names_to_exclude = config$analysis$names_to_exclude
 )
 
+transcript_file_path = paste0(config$paths$data_folder, '/', config$paths$transcripts_folder, '/',  transcripts_list_df$transcript_file)
+
+summarize_transcript_metrics
 
 transcripts_metrics_df
 
@@ -1226,4 +1240,55 @@ sections_df
 roster_small_df <- make_roster_small(roster_df)
 
 roster_small_df
+```
+
+### 4. Make the `roster_sessions` data frame of the Student Roster With Rows for Each Recorded Class Section
+
+1.  Run `make_student_roster_sessions()` to get a tibble from a provided
+    tibble students enrolled in the class or classes (‘roster_small_df’)
+    and a tibble of class sessions with corresponding transcript files
+    or placeholders for cancelled classes (‘transcripts_list_df’).
+
+``` r
+roster_sessions <- make_student_roster_sessions(
+  transcripts_list_df,
+  roster_small_df
+)
+
+
+roster_sessions
+```
+
+### Clean Names
+
+- Run the `clean_names` code block
+- If any names except “dead_air”, “unknown”, or the instructor’s name
+  are listed, resolve them.
+  - Update students with their formal name from the roster
+  - If appropriate, update `Students.Rmd` with a corresponding
+    `preferred_name`
+  - Any guest students, label them as “Guests”
+
+### 5. Make Clean Names DF of joined student names from the roster and transcripts
+
+1.  Run `make_clean_names_df()` to get a tibble containing session
+    details and summary metrics by speaker for all class sessions (and
+    placeholders for missing sections) from the joining of::
+    - a tibble of customized student names by section
+      (`section_names_lookup_file` in the `data_folder` folder),
+    - a tibble containing session details and summary metrics by speaker
+      for all class sessions (`transcripts_metrics_df`), and
+    - a tibble listing the students enrolled in the class or classes,
+      with rows for each recorded class section for each student
+      (`roster_sessions`) into a single tibble.
+
+``` r
+clean_names_df <- make_clean_names_df(
+  data_folder = config$paths$data_folder,
+  section_names_lookup_file = config$paths$names_lookup_file,
+  transcripts_metrics_df,
+  roster_sessions
+)
+
+clean_names_df
 ```

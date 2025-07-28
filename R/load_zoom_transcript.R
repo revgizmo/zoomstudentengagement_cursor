@@ -37,7 +37,10 @@ load_zoom_transcript <- function(transcript_file_path) {
     stop("file.exists(transcript_file_path) is not TRUE")
   }
 
+  transcript_file <- basename(transcript_file_path)
+
   transcript_vtt <- readr::read_tsv(transcript_file_path)
+
 
   # Return NULL for empty files
   if (nrow(transcript_vtt) == 0) {
@@ -55,6 +58,7 @@ load_zoom_transcript <- function(transcript_file_path) {
 
   # Create a data frame with the correct number of rows
   transcript_df <- tibble::tibble(
+    transcript_file = transcript_file,
     comment_num = character(n_entries),
     timestamp = character(n_entries),
     comment = character(n_entries)
@@ -84,6 +88,7 @@ load_zoom_transcript <- function(transcript_file_path) {
       })
     ) %>%
     dplyr::select(
+      transcript_file,
       comment_num,
       name,
       comment,

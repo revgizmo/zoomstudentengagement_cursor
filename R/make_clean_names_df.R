@@ -127,8 +127,9 @@ make_clean_names_df <- function(data_folder = "data",
   result <-
     transcripts_metrics_df %>%
     dplyr::rename(
-      transcript_name = name,
-      transcript_section = course_section
+      transcript_name = name
+      # ,
+      # transcript_section = course_section
     ) %>%
     dplyr::mutate(
       # Ensure time column is character

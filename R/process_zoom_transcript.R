@@ -80,6 +80,7 @@ process_zoom_transcript <- function(transcript_file_path = "",
         prior_speaker = dplyr::lag(name, order_by = start, default = NA)
       ) %>%
       dplyr::select(
+        transcript_file,
         comment_num,
         name,
         comment,
