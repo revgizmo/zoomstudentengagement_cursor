@@ -37,7 +37,7 @@ load_session_mapping <- function(
   mapping_df <- readr::read_csv(mapping_file, show_col_types = FALSE)
   
   # Validate required columns
-  required_cols <- c("zoom_recording_id", "dept", "course_num", "section", 
+  required_cols <- c("zoom_recording_id", "dept", "course", "section", 
                     "session_date", "session_time", "instructor")
   missing_cols <- setdiff(required_cols, names(mapping_df))
   if (length(missing_cols) > 0) {
@@ -48,7 +48,7 @@ load_session_mapping <- function(
   # Validate mapping if requested
   if (validate_mapping) {
     unmapped <- mapping_df %>%
-      dplyr::filter(is.na(dept) | is.na(course_num) | is.na(section))
+      dplyr::filter(is.na(dept) | is.na(course) | is.na(section))
     
     if (nrow(unmapped) > 0) {
       warning("Found ", nrow(unmapped), " unmapped recordings in session mapping file")
@@ -77,8 +77,8 @@ load_session_mapping <- function(
       dplyr::mutate(
         # Use mapped values if available, otherwise use parsed values
         dept = ifelse(!is.na(dept), dept, dept.x),
-        course_section = paste(course_num, section, sep = "."),
-        course = course_num,
+        course_section = paste(course, section, sep = "."),
+        course = course,
         section = section,
         instructor = ifelse(!is.na(instructor), instructor, instructor.x),
         match_start_time = session_date,
@@ -86,7 +86,7 @@ load_session_mapping <- function(
       ) %>%
       dplyr::select(
         -dplyr::any_of(c("dept.x", "instructor.x")),
-        -dplyr::any_of(c("course_num", "session_date", "session_time"))
+        -dplyr::any_of(c("session_date", "session_time"))
       )
     
     return(result)

@@ -9,12 +9,12 @@ make_roster_small(roster_df)
 \arguments{
 \item{roster_df}{A tibble listing the students enrolled in the class or
 classes with a small subset of the roster columns. Must contain the following columns:
-- student_id: integer
+- student_id: character
 - first_last: character
 - preferred_name: character
 - dept: character
-- course_num: integer
-- section: integer}
+- course: character
+- section: character}
 }
 \value{
 A tibble listing the students enrolled in the class or classes with a

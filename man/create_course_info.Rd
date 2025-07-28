@@ -6,7 +6,7 @@
 \usage{
 create_course_info(
   dept,
-  course_num,
+  course,
   section,
   instructor,
   session_length_hours,
@@ -19,9 +19,9 @@ create_course_info(
 \arguments{
 \item{dept}{Department codes (e.g., "CS", "MATH", "LFT")}
 
-\item{course_num}{Course numbers (e.g., 101, 250, 201)}
+\item{course}{Course numbers (e.g., "101", "250", "201")}
 
-\item{section}{Section numbers (e.g., 1, 2, 3)}
+\item{section}{Section numbers (e.g., "1", "2", "3")}
 
 \item{instructor}{Instructor names}
 
@@ -38,7 +38,7 @@ create_course_info(
 \value{
 A tibble with course information containing:
   - dept: Department code
-  - course_num: Course number
+  - course: Course number
   - section: Section number
   - instructor: Instructor name
   - session_length_hours: Length of each session
@@ -55,8 +55,8 @@ with `create_session_mapping()` to map Zoom recordings to specific courses.
 # Single course with multiple sections
 course_info <- create_course_info(
   dept = c("CS", "CS", "CS"),
-  course_num = c(101, 101, 101),
-  section = c(1, 2, 3),
+  course = c("101", "101", "101"),
+  section = c("1", "2", "3"),
   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Johnson"),
   session_length_hours = c(1.5, 1.5, 1.5),
   session_days = c("Mon", "Mon", "Tue"),
@@ -66,8 +66,8 @@ course_info <- create_course_info(
 # Multiple courses
 course_info <- create_course_info(
   dept = c("CS", "MATH", "LFT"),
-  course_num = c(101, 250, 201),
-  section = c(1, 1, 1),
+  course = c("101", "250", "201"),
+  section = c("1", "1", "1"),
   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Smith"),
   session_length_hours = c(1.5, 2.0, 1.5),
   session_days = c("Mon", "Tue", "Wed"),

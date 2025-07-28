@@ -1,4 +1,4 @@
-student_id,first_last,last_first,last_name,first_name,user_id,role,email_address,lec,majors,terms_in_attendance,units,grading_basis,waitlist_position,dept,course_num,section,roster_dt_min,roster_dt_max,enrolled,roster_dt,preferred_name
+student_id,first_last,last_first,last_name,first_name,user_id,role,email_address,lec,majors,terms_in_attendance,units,grading_basis,waitlist_position,dept,course,section,roster_dt_min,roster_dt_max,enrolled,roster_dt,preferred_name
 9990000019,Melissa Ko,"Ko, Melissa",Ko,Melissa,9990019,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Melissa Ko
 9990000020,Ryan Sloan,"Sloan, Ryan",Sloan,Ryan,9990020,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Ryan Sloan
 9990000021,Shreeharsh Kelkar,"Kelkar, Shreeharsh",Kelkar,Shreeharsh,9990021,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Shreeharsh Kelkar
