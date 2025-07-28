@@ -60,10 +60,10 @@ if (getRversion() >= "2.15.1") {
     "total_wordcount",
 
     # Variables from make_names_to_clean_df.R
-    "course_num", "course_section",
+    "course", "course_section",
 
     # Variables from make_sections_df.R
-    "dept", "course_num", "section", "n",
+    "dept", "course", "section", "n",
 
     # Variables from make_students_only_transcripts_summary_df.R
     "section",

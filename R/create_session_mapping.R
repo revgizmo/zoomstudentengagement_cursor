@@ -1,51 +1,35 @@
-#' Create Session Mapping for Zoom Recordings
+#' Create Session Mapping from Zoom Recordings and Course Information
 #'
-#' This function helps instructors map Zoom recordings to their course information
-#' when the automatic parsing from Zoom recording topics is unreliable or insufficient.
-#' It creates a mapping file that can be used to properly associate recordings with
-#' specific courses, sections, and sessions.
+#' This function creates a mapping between Zoom recordings and course information
+#' by matching recording topics with course patterns.
 #'
-#' @param zoom_recordings_df A tibble of Zoom recordings (from `load_zoom_recorded_sessions_list()`)
-#' @param course_info_df A tibble containing course information with columns:
-#'   - dept: Department code (e.g., "CS", "MATH")
-#'   - course_num: Course number (e.g., 101, 250)
-#'   - section: Section number (e.g., 1, 2, 3)
-#'   - instructor: Instructor name
-#'   - session_length_hours: Length of each session
-#' @param output_file Path to save the session mapping CSV file
+#' @param zoom_recordings_df A tibble containing Zoom recording information with
+#'   columns: ID, Topic, Start Time
+#' @param course_info_df A tibble containing course information created by
+#'   `create_course_info()` with columns: dept, course, section, instructor,
+#'   session_length_hours
+#' @param output_file Optional file path to save the mapping CSV file
 #' @param semester_start_mdy Semester start date in "MMM DD, YYYY" format
-#' @param auto_assign_patterns List of regex patterns to attempt automatic assignment
-#' @param interactive If TRUE, prompts user to assign unmatched recordings
+#' @param auto_assign_patterns List of patterns for automatic assignment
+#' @param interactive Whether to enable interactive assignment for unmatched recordings
 #'
-#' @return A tibble with the session mapping containing:
-#'   - zoom_recording_id: Zoom recording ID
-#'   - dept: Department code
-#'   - course_num: Course number
-#'   - section: Section number
-#'   - session_date: Session date
-#'   - session_time: Session time
-#'   - instructor: Instructor name
-#'   - notes: Optional notes about the session
-#'
+#' @return A tibble with session mapping information
 #' @export
 #'
 #' @examples
-#' # Load Zoom recordings
-#' zoom_recordings_df <- load_zoom_recorded_sessions_list()
-#'
-#' # Define course information
-#' course_info_df <- tibble::tibble(
-#'   dept = c("CS", "CS", "MATH"),
-#'   course_num = c(101, 101, 250),
-#'   section = c(1, 2, 1),
-#'   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Smith"),
-#'   session_length_hours = c(1.5, 1.5, 2.0)
+#' # Create course information
+#' course_info <- create_course_info(
+#'   dept = c("CS", "MATH"),
+#'   course = c("101", "250"),
+#'   section = c("1", "1"),
+#'   instructor = c("Dr. Smith", "Dr. Johnson"),
+#'   session_length_hours = c(1.5, 2.0)
 #' )
 #'
 #' # Create session mapping
 #' session_mapping <- create_session_mapping(
-#'   zoom_recordings_df = zoom_recordings_df,
-#'   course_info_df = course_info_df,
+#'   zoom_recordings_df = zoom_recordings,
+#'   course_info_df = course_info,
 #'   output_file = "session_mapping.csv",
 #'   semester_start_mdy = "Jan 15, 2024"
 #' )
@@ -71,7 +55,7 @@ create_session_mapping <- function(
   }
   
   # Required columns for course_info_df
-  required_cols <- c("dept", "course_num", "section", "instructor", "session_length_hours")
+  required_cols <- c("dept", "course", "section", "instructor", "session_length_hours")
   missing_cols <- setdiff(required_cols, names(course_info_df))
   if (length(missing_cols) > 0) {
     stop("course_info_df must contain columns: ", paste(missing_cols, collapse = ", "))
@@ -86,8 +70,8 @@ create_session_mapping <- function(
     ) %>%
     dplyr::mutate(
       dept = NA_character_,
-      course_num = NA_integer_,
-      section = NA_integer_,
+      course = NA_character_,
+      section = NA_character_,
       session_date = lubridate::parse_date_time(
         start_time,
         orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
@@ -107,7 +91,7 @@ create_session_mapping <- function(
       # Find matching course info
       course_match <- course_info_df %>%
         dplyr::filter(stringr::str_detect(
-          paste(dept, course_num, sep = " "),
+          paste(dept, course, sep = " "),
           pattern_name
         ))
       
@@ -115,7 +99,7 @@ create_session_mapping <- function(
         # Apply pattern to topic matching
         matching_rows <- stringr::str_detect(mapping_df$topic, pattern)
         mapping_df$dept[matching_rows] <- course_match$dept[1]
-        mapping_df$course_num[matching_rows] <- course_match$course_num[1]
+        mapping_df$course[matching_rows] <- course_match$course[1]
         mapping_df$section[matching_rows] <- course_match$section[1]
         mapping_df$instructor[matching_rows] <- course_match$instructor[1]
       }
@@ -125,7 +109,7 @@ create_session_mapping <- function(
   # Interactive assignment for unmatched recordings
   if (interactive) {
     unmatched <- mapping_df %>%
-      dplyr::filter(is.na(dept) | is.na(course_num) | is.na(section))
+      dplyr::filter(is.na(dept) | is.na(course) | is.na(section))
     
     if (nrow(unmatched) > 0) {
       cat("Found", nrow(unmatched), "unmatched recordings:\n")
@@ -141,7 +125,7 @@ create_session_mapping <- function(
         cat("\nAvailable courses:\n")
         for (j in 1:nrow(course_info_df)) {
           course <- course_info_df[j, ]
-          cat(j, ":", course$dept, course$course_num, "Section", course$section, "\n")
+          cat(j, ":", course$dept, course$course, "Section", course$section, "\n")
         }
         
         # Get user input
@@ -151,7 +135,7 @@ create_session_mapping <- function(
         if (course_choice > 0 && course_choice <= nrow(course_info_df)) {
           selected_course <- course_info_df[course_choice, ]
           mapping_df$dept[mapping_df$zoom_recording_id == recording$zoom_recording_id] <- selected_course$dept
-          mapping_df$course_num[mapping_df$zoom_recording_id == recording$zoom_recording_id] <- selected_course$course_num
+          mapping_df$course[mapping_df$zoom_recording_id == recording$zoom_recording_id] <- selected_course$course
           mapping_df$section[mapping_df$zoom_recording_id == recording$zoom_recording_id] <- selected_course$section
           mapping_df$instructor[mapping_df$zoom_recording_id == recording$zoom_recording_id] <- selected_course$instructor
         }
@@ -160,9 +144,9 @@ create_session_mapping <- function(
   }
   
   # Add notes for unmatched recordings
-  unmatched_count <- sum(is.na(mapping_df$dept) | is.na(mapping_df$course_num) | is.na(mapping_df$section))
+  unmatched_count <- sum(is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section))
   if (unmatched_count > 0) {
-    mapping_df$notes[is.na(mapping_df$dept) | is.na(mapping_df$course_num) | is.na(mapping_df$section)] <- 
+    mapping_df$notes[is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section)] <- 
       "NEEDS MANUAL ASSIGNMENT"
     warning(unmatched_count, " recordings need manual assignment")
   }
@@ -170,15 +154,16 @@ create_session_mapping <- function(
   # Save mapping file
   if (!is.null(output_file)) {
     readr::write_csv(mapping_df, output_file)
-    cat("Session mapping saved to:", output_file, "\n")
   }
   
   # Return mapping
   mapping_df %>%
     dplyr::select(
       zoom_recording_id,
+      topic,
+      start_time,
       dept,
-      course_num,
+      course,
       section,
       session_date,
       session_time,

@@ -5,14 +5,14 @@
 \title{Summarize Transcript Files}
 \usage{
 summarize_transcript_files(
-  df_transcript_list,
+  transcript_file_names,
   data_folder = "data",
   transcripts_folder = "transcripts",
   names_to_exclude = NULL
 )
 }
 \arguments{
-\item{df_transcript_list}{A data.frame listing the transcript files from the
+\item{transcript_file_names}{A data.frame or character vector listing the transcript files from the
 zoom recordings loaded from the cloud recording csvs and transcripts.}
 
 \item{data_folder}{Overall data folder for your recordings and data. Defaults

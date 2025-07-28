@@ -33,7 +33,9 @@ create_analysis_config(
   start_time_local_tzone = "America/Los_Angeles",
   cancelled_classes_col_types = "ciiiccccccdiiicTTcTTccci",
   section_names_lookup_col_types = "ccccccccc",
-  names_to_exclude = NULL
+  names_to_exclude = NULL,
+  use_session_mapping = FALSE,
+  session_mapping_file = "session_mapping.csv"
 )
 }
 \arguments{
@@ -88,6 +90,10 @@ create_analysis_config(
 \item{section_names_lookup_col_types}{Column types specification for section names lookup CSV.}
 
 \item{names_to_exclude}{Character vector of names to exclude from analysis (e.g., "dead_air").}
+
+\item{use_session_mapping}{If TRUE, use session mapping approach instead of regex parsing}
+
+\item{session_mapping_file}{Path to session mapping CSV file (if use_session_mapping = TRUE)}
 }
 \value{
 A list containing the configuration organized into logical groups:

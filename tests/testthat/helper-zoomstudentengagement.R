@@ -37,7 +37,7 @@ create_sample_roster <- function() {
     first_last = c("Student1", "Student2"),
     preferred_name = c("Student1", "Student2"),
     dept = c("DEPT", "DEPT"),
-    course_num = c(101, 101),
+    course = c("101", "101"),
     section = c("A", "A"),
     transcript_section = c("101.A", "101.A"),
     session_num = c(1, 1),

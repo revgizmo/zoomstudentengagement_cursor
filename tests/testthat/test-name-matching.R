@@ -87,7 +87,7 @@ test_that("make_clean_names_df handles missing values", {
   roster_sessions <- tibble::tibble(
     first_last = c("John Smith", "Jane Doe"),
     preferred_name = c("John Smith", "Jane Doe"),
-    course_num = c(101, 101),
+    course = c("101", "101"),
     section = c("A", "A"),
     student_id = c("S001", "S002"),
     dept = c("Math", "Math"),
@@ -105,7 +105,7 @@ test_that("make_clean_names_df handles missing values", {
     formal_name = c("John Smith", "Jane Doe", NA, "Unknown User"),
     preferred_name = c("John Smith", "Jane Doe", NA, NA), # Changed from c("John", "Jane", NA, NA)
     student_id = c("S001", "S002", NA, NA),
-    course = c(101, 101, 101, 101),
+    course = c("101", "101", "101", "101"),
     section = c("A", "A", "A", "A")
   )
 
@@ -145,7 +145,7 @@ test_that("make_clean_names_df ensures character type inference", {
   transcripts_metrics_df <- tibble::tibble(
     name = c("Student1", "Student2"),
     course_section = c("101.A", "101.A"), # Added missing column
-    course = c(101, 101), # Added missing column
+    course = c("101", "101"), # Added missing column
     section = c("A", "A"),
     day = c("2023-01-01", "2023-01-01"),
     time = c("09:00", "09:00"),
@@ -168,7 +168,7 @@ test_that("make_clean_names_df ensures character type inference", {
   roster_sessions <- tibble::tibble(
     first_last = c("Student1", "Student2"),
     preferred_name = c("Student1", "Student2"), # Added missing column
-    course_num = c(101, 101), # Added missing column
+    course = c("101", "101"), # Added missing column
     section = c("A", "A"),
     student_id = c("12345", "67890"),
     dept = c("Math", "Math"),
@@ -186,7 +186,7 @@ test_that("make_clean_names_df ensures character type inference", {
     formal_name = c("Student1", "Student2"),
     preferred_name = c("Student1", "Student2"),
     student_id = c("12345", "67890"),
-    course = c(101, 101), # Added missing column
+    course = c("101", "101"), # Added missing column
     section = c("A", "A") # Added missing column
   )
 
