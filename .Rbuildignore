@@ -1,11 +1,49 @@
+# RStudio project files
 ^.*\.Rproj$
 ^\.Rproj\.user$
+
+# Development and documentation files
 ^README\.Rmd$
-.cursor/
-.github/
-AUDIT_LOG.md
-CONTRIBUTING.md
-CRAN_CHECKLIST.md
-FUNCTION_INVENTORY.md
-PROJECT.md
-test_script.R
+^\.cursor/
+^\.github/
+^\.lintr$
+^\.Rprofile$
+^\.gitignore$
+^\.cursorrules$
+
+# System files
+^\.DS_Store$
+^.*/\.DS_Store$
+
+# Temporary and build files
+^\.\.Rcheck$
+^revdep/
+
+# Development documentation
+^AUDIT_LOG\.md$
+^CONTRIBUTING\.md$
+^CRAN_CHECKLIST\.md$
+^DOCUMENTATION_AUDIT_PLAN\.md$
+^DOCUMENTATION_AUDIT_RESULTS\.md$
+^DOCUMENTATION_ORGANIZATION_PLAN\.md$
+^FUNCTION_INVENTORY\.md$
+^PROJECT\.md$
+^COLUMN_NAMING_ANALYSIS\.md$
+^COLUMN_NAMING_CLEANUP_PLAN\.md$
+^COMPREHENSIVE_CHECK_RESULTS\.md$
+
+# Test and development scripts
+^test_script\.R$
+^test_all_examples\.R$
+^test_examples\.R$
+^test_rmd\.Rmd$
+^all_r_files\.txt$
+^r_files_with_examples\.txt$
+
+# Data files (not part of package)
+^session_mapping\.csv$
+^comprehensive_example_test_results\.rds$
+^my_analysis\.Rmd$
+
+# Temporary files
+^inst/\.!.*\.Rmd$
