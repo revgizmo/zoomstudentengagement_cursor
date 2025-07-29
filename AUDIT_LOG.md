@@ -404,3 +404,146 @@ The package has significant technical debt that needs addressing before CRAN sub
 ---
 
 Refer to the [Master Tracking Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) for the audit checklist and sub-issues. 
+
+### [2025-01-XX] Documentation Organization Audit
+
+**Date**: 2025-01-XX
+**Audit Type**: Documentation Structure Review
+**Scope**: README.Rmd, vignettes, and documentation organization
+
+#### Executive Summary
+Comprehensive review of documentation structure revealed significant organizational issues that need addressing for CRAN compliance and user experience.
+
+#### Current Documentation Problems
+
+##### 1. README.Rmd Issues
+- **Size**: 1,227 lines - too long for a README
+- **Content**: Complex workflows mixed with basic usage
+- **Structure**: Poor organization and readability
+- **Purpose**: Should be overview + basic examples only
+
+##### 2. Missing Vignette Infrastructure
+- **No proper vignettes/ directory**: Rmd files scattered in inst/
+- **No structured vignette system**: Missing CRAN-compliant setup
+- **Content location**: Complex workflows should be in vignettes, not README
+
+##### 3. Documentation Strategy Gaps
+- **No clear separation of concerns**: What goes where is unclear
+- **Missing standards**: No documentation organization strategy
+- **Poor user experience**: Difficult to find relevant information
+
+#### Existing Issues Coverage
+
+##### ✅ Covered by Existing Issues
+1. **Issue #2** - Documentation Overhaul (Priority: LOW)
+2. **Issue #35** - Update NEWS.md, tests, README, and vignettes (Priority: MEDIUM)
+3. **Issue #45** - Create package vignettes (Priority: MEDIUM)
+4. **Issue #58** - Fix missing example data (Priority: HIGH)
+
+##### ❌ NOT Covered by Existing Issues
+1. **Comprehensive Documentation Organization** - New issue needed
+2. **README.Rmd Restructuring Strategy** - Not addressed
+3. **Vignette Infrastructure Setup** - Partially covered by #45
+4. **Documentation Content Migration** - Not addressed
+
+#### Proposed Solution
+
+##### 1. README.Rmd Restructuring
+**Target**: ~200-300 lines maximum
+
+**Content to Keep**:
+- Package overview and purpose
+- Installation instructions
+- Basic usage examples (2-3 simple examples)
+- Quick start guide
+- Links to vignettes for detailed workflows
+
+**Content to Move**:
+- Complex workflow examples → Vignettes
+- Detailed function documentation → Function docs
+- Advanced usage patterns → Vignettes
+
+##### 2. Vignette Infrastructure Setup
+**Create proper vignette system**:
+- Set up `vignettes/` directory
+- Create CRAN-compliant vignette structure
+- Move existing Rmd files to appropriate locations
+
+**Proposed Vignettes**:
+- **Getting Started**: Basic workflow for new users
+- **Advanced Analysis**: Complex analysis workflows
+- **Troubleshooting Guide**: Common issues and solutions
+- **API Reference**: Detailed function documentation
+
+##### 3. Documentation Strategy
+**Define content organization**:
+- **README**: Overview + basic examples
+- **Vignettes**: Detailed workflows and tutorials
+- **Function docs**: API reference and examples
+- **NEWS.md**: Change log and version history
+
+#### Files to Modify
+
+##### README.Rmd
+- Reduce from 1,227 lines to ~300 lines
+- Keep only overview and basic examples
+- Add links to vignettes for detailed workflows
+
+##### New Vignettes
+- `vignettes/getting-started.Rmd`
+- `vignettes/advanced-analysis.Rmd`
+- `vignettes/troubleshooting.Rmd`
+- `vignettes/api-reference.Rmd`
+
+##### Existing Files to Move
+- `inst/new_analysis_template.Rmd` → `vignettes/advanced-analysis.Rmd`
+- `inst/Zoom_Student_Engagement_Analysis_student_summary_report.Rmd` → `vignettes/student-reports.Rmd`
+
+#### Acceptance Criteria
+
+##### README.Rmd
+- [ ] Reduced to ~300 lines maximum
+- [ ] Clear overview and purpose
+- [ ] Basic installation and usage examples
+- [ ] Links to vignettes for detailed workflows
+- [ ] No complex workflow content
+
+##### Vignette System
+- [ ] Proper `vignettes/` directory created
+- [ ] CRAN-compliant vignette structure
+- [ ] At least 3 comprehensive vignettes
+- [ ] All vignettes build successfully
+- [ ] Proper cross-referencing between docs
+
+##### Documentation Standards
+- [ ] Clear content organization strategy
+- [ ] Documentation standards documented
+- [ ] Proper separation of concerns
+- [ ] Consistent formatting and style
+
+#### Recommendations
+
+##### Immediate Actions (Priority: HIGH)
+1. **Create New Issue** - Comprehensive documentation organization and structure review
+2. **Update Issue #45** - Add specific vignette infrastructure requirements
+3. **Update Issue #2** - Increase priority and add restructuring requirements
+
+##### Medium Priority Actions
+1. **Content Migration Plan** - Detailed plan for moving content
+2. **Documentation Standards** - Create standards document
+3. **User Experience Review** - Test documentation usability
+
+#### Next Steps
+1. Create GitHub issue for comprehensive documentation organization
+2. Update existing issues with specific requirements
+3. Develop detailed migration plan
+4. Implement changes in phases
+
+#### Audit Conclusion
+The package documentation needs significant reorganization for CRAN compliance and user experience. While some issues are covered by existing issues, a comprehensive approach is needed to address the overall structure and organization.
+
+**Estimated Effort**: 1-2 weeks of focused documentation work
+**CRAN Impact**: HIGH - Documentation structure affects CRAN compliance
+**Priority**: HIGH - This affects user experience and maintainability
+
+--- 

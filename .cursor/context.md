@@ -74,6 +74,7 @@ R package for analyzing and visualizing student engagement from Zoom transcripts
    - **Global Variables**: 15 undefined global variable warnings ([Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59))
    - **Test Suite**: Comprehensive restoration needed ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24))
    - **Documentation**: Complete audit and fixes required ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19))
+   - **Documentation Organization**: README.Rmd restructuring and vignette infrastructure ([Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2), [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45))
 
 ## Development Guidelines
 1. Branch Strategy:
