@@ -20,7 +20,7 @@ test_that("make_student_roster_sessions creates correct structure", {
 
   result <- make_student_roster_sessions(transcripts_list_df, roster_small_df)
 
-  expect_true(all(c("student_id", "first_last", "preferred_name", "dept", "course", "section", "session_num", "start_time_local", "transcript_section") %in% names(result)))
+  expect_true(all(c("student_id", "first_last", "preferred_name", "dept", "course", "section", "session_num", "start_time_local", "course_section") %in% names(result)))
   expect_equal(nrow(result), 4) # 2 students * 2 sessions
   expect_equal(result$course, rep("101", 4))
 })

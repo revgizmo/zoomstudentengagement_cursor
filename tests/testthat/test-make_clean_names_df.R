@@ -63,7 +63,7 @@ test_that("make_clean_names_df preserves section information", {
 
   # Create sample lookup with modified section
   sample_lookup <- create_sample_section_names_lookup()
-  sample_lookup$transcript_section[1] <- "101.B" # Change section for one student
+  sample_lookup$course_section[1] <- "101.B" # Change section for one student
   sample_lookup$section[1] <- "B" # Change section for one student
 
   # Write the lookup to a temporary CSV file
@@ -81,9 +81,9 @@ test_that("make_clean_names_df preserves section information", {
     roster_sessions = sample_roster
   )
 
-  # Check that transcript_section information is preserved
-  expect_true("transcript_section" %in% names(result))
-  expect_true(all(result$transcript_section %in% c("101.A", "101.B")))
+  # Check that course_section information is preserved
+  expect_true("course_section" %in% names(result))
+  expect_true(all(result$course_section %in% c("101.A", "101.B")))
 
   # Clean up
   unlink(temp_dir, recursive = TRUE)
