@@ -126,6 +126,13 @@ devtools::build()                    # Create distributable package
 - Link PRs to issues using `Fixes #X` or `Closes #X`
 - Request review before merging
 
+### GitHub CLI Commands
+- **CRITICAL**: Always escape parentheses `()` in `gh pr create` commands with backslashes: `\(` and `\)`
+- Example: `gh pr create --title "fix: Address lintr warnings" --body "Use seq_len\(\) instead of 1:nrow\(\)"`
+- This prevents zsh parse errors: `zsh: parse error near '()'`
+- Alternative: Use single quotes around the entire body to avoid escaping: `--body 'Use seq_len() instead of 1:nrow()'`
+- Always test GitHub CLI commands before running them in production
+
 ### Branch Protection
 - Main branch is protected
 - All checks must pass before merge
