@@ -55,7 +55,7 @@
 #'   dept = c("CS", "CS"),
 #'   session_num = c(1, 1),
 #'   start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
-#'   transcript_section = c("101.A", "101.B")
+#'   course_section = c("101.A", "101.B")
 #' )
 #'
 #' make_clean_names_df(

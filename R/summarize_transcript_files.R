@@ -14,7 +14,12 @@
 #'
 #' @importFrom tidyselect all_of
 #' @examples
-#' summarize_transcript_files(df_transcript_list = NULL)
+#' # Create sample transcript file names
+#' transcript_files <- c("GMT20240115-100000_Recording.transcript.vtt", 
+#'                      "GMT20240116-140000_Recording.transcript.vtt")
+#'
+#' # Summarize transcript files
+#' summary <- summarize_transcript_files(transcript_file_names = transcript_files)
 summarize_transcript_files <-
   function(transcript_file_names,
            data_folder = "data",

@@ -10,8 +10,14 @@
 #' @export
 #' 
 #' @examples
+#' # Create sample transcript list
+#' transcript_list <- tibble::tibble(
+#'   transcript_file = c("GMT20240115-100000_Recording.transcript.vtt", 
+#'                      "GMT20240115-100000_Recording.cc.vtt",
+#'                      "GMT20240116-140000_Recording.transcript.vtt")
+#' )
+#'
 #' # Detect duplicates in a transcript list
-#' transcript_list <- load_transcript_files_list()
 #' duplicates <- detect_duplicate_transcripts(transcript_list)
 #'
 #' # View duplicate groups

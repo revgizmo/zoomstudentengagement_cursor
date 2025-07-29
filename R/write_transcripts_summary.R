@@ -49,7 +49,7 @@
 #'   dept = c("CS", "CS", "CS"),
 #'   session_num = c(1, 1, 2),
 #'   start_time_local = c("2024-01-01 09:00:00", "2024-01-01 09:00:00", "2024-01-02 10:00:00"),
-#'   transcript_section = c("101.A", "101.A", "101.B")
+#'   course_section = c("101.A", "101.A", "101.B")
 #' )
 #'
 #' # Create a temporary directory for the example

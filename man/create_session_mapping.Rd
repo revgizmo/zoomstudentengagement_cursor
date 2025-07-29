@@ -38,6 +38,13 @@ This function creates a mapping between Zoom recordings and course information
 by matching recording topics with course patterns.
 }
 \examples{
+# Create sample Zoom recordings data
+zoom_recordings <- tibble::tibble(
+  ID = c("123456789", "987654321"),
+  Topic = c("CS 101 - Monday 10:00 AM (Dr. Smith)", "MATH 250 - Tuesday 2:00 PM (Dr. Johnson)"),
+  `Start Time` = c("Jan 15, 2024 10:00 AM", "Jan 16, 2024 2:00 PM")
+)
+
 # Create course information
 course_info <- create_course_info(
   dept = c("CS", "MATH"),

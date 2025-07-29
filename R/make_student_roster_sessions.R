@@ -37,7 +37,7 @@ make_student_roster_sessions <-
       section <-
       section_transcript <-
       session_num <-
-      start_time_local <- student_id <- transcript_section <- NULL
+      start_time_local <- student_id <- course_section <- NULL
 
     # Defensive: check for valid tibbles
     if (!tibble::is_tibble(transcripts_list_df) || !tibble::is_tibble(roster_small_df)) {
