@@ -17,6 +17,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Create sample Zoom recordings data
 #' zoom_recordings <- tibble::tibble(
 #'   ID = c("123456789", "987654321"),
@@ -40,6 +41,7 @@
 #'   output_file = "session_mapping.csv",
 #'   semester_start_mdy = "Jan 15, 2024"
 #' )
+#' }
 create_session_mapping <- function(
     zoom_recordings_df,
     course_info_df,
