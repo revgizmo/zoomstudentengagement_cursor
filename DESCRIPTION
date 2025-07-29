@@ -27,6 +27,7 @@ Imports:
     tidyselect
 Suggests:
     testthat (>= 3.0.0),
+    withr,
     covr,
     knitr,
     rmarkdown

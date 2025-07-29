@@ -1,6 +1,7 @@
 
 - <a href="#zoomstudentengagement"
   id="toc-zoomstudentengagement">zoomstudentengagement</a>
+  - <a href="#-documentation" id="toc--documentation">📚 Documentation</a>
   - <a href="#installation" id="toc-installation">Installation</a>
   - <a href="#example" id="toc-example">Example</a>
 - <a href="#atomic-functions-in-this-package"
@@ -199,6 +200,16 @@
 The goal of `zoomstudentengagement` is to allow instructors to gain
 insights into student engagement, with a particular focus on
 participation equity, from Zoom transcripts of recorded course sessions.
+
+## 📚 Documentation
+
+- **[PROJECT.md](PROJECT.md)** - Current project status and CRAN
+  readiness
+- **[DOCUMENTATION.md](DOCUMENTATION.md)** - Complete documentation
+  index
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
+- **[ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** -
+  Quick guide for issue management
 
 In it’s current form, the `zoomstudentengagement` library is useful for
 4 related things:

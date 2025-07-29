@@ -78,7 +78,7 @@ README.html
 .Renviron
 
 # pkgdown site
-docs/
+# docs/ - Removed to allow tracking of project documentation
 
 # translation temp files
 po/*~
