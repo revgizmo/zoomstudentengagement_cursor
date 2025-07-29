@@ -27,6 +27,9 @@ add_dead_air_rows <- function(df, dead_air_name = "dead_air") {
         end = lubridate::as.period(end)
       )
 
+    # Check if transcript_file column exists
+    has_transcript_file <- "transcript_file" %in% names(df)
+
     # Create dead air rows
     dead_air_rows <- df %>%
       dplyr::mutate(

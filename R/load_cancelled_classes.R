@@ -9,6 +9,8 @@
 #'   Defaults to 'cancelled_classes.csv'
 #' @param cancelled_classes_col_types column types in the csv file of cancelled
 #'   classes. Defaults to 'ccccccccnnnncTTcTTccci'
+#' @param write_blank_cancelled_classes Logical. If TRUE and the file doesn't exist,
+#'   creates a blank cancelled classes file. Defaults to FALSE
 #'
 #' @return A tibble listing the cancelled class sessions for scheduled classes
 #'   where a zoom recording is not expected.

@@ -8,25 +8,29 @@ summarize_transcript_files(
   transcript_file_names,
   data_folder = "data",
   transcripts_folder = "transcripts",
-  names_to_exclude = NULL
+  names_to_exclude = NULL,
+  deduplicate_content = FALSE,
+  similarity_threshold = 0.95,
+  duplicate_method = c("hybrid", "content", "metadata")
 )
 }
 \arguments{
-\item{transcript_file_names}{A data.frame or character vector listing the transcript files from the
-zoom recordings loaded from the cloud recording csvs and transcripts.}
+\item{transcript_file_names}{A data.frame or character vector listing the transcript files}
 
-\item{data_folder}{Overall data folder for your recordings and data. Defaults
-to 'data'}
+\item{data_folder}{Overall data folder for your recordings and data}
 
-\item{transcripts_folder}{specific subfolder of the data folder where you
-will store the cloud recording csvs and transcripts}
+\item{transcripts_folder}{specific subfolder of the data folder where you store transcripts}
 
-\item{names_to_exclude}{Character vector of names to exclude from the results.
-Defaults to NULL}
+\item{names_to_exclude}{Character vector of names to exclude from the results}
+
+\item{deduplicate_content}{Logical. If TRUE, detect and handle duplicate transcripts}
+
+\item{similarity_threshold}{Threshold for considering transcripts as duplicates (0-1)}
+
+\item{duplicate_method}{Method for detecting duplicates}
 }
 \value{
 A tibble containing session details and summary metrics by speaker
-  for all class sessions in the tibble provided.
 }
 \description{
 Summarize Transcript Files

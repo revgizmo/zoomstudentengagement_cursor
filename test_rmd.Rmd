@@ -1,0 +1,15 @@
+---
+title: "Test R Markdown"
+---
+
+```{r setup}
+
+print("Hello from R!")
+
+
+```
+
+```{r test-chunk}
+x <- 1 + 1
+print(paste("1 + 1 =", x))
+``` 
