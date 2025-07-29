@@ -25,7 +25,7 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **Test Coverage**: 83.40% (good progress toward 90% target)
 
 ### What Needs Work ❌ (Critical Issues for CRAN)
-- **R CMD Check Warning**: Missing `withr` dependency in tests ([Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71) - Priority: HIGH)
+- **R CMD Check Warning**: Missing `withr` dependency in tests ([Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71) - **RESOLVED** ✅)
 - **R CMD Check Notes**: 3 minor formatting and file structure notes ([Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72) - Priority: HIGH)
 - **Missing Example Data**: Function documentation needs example data fixes ([Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58) - Priority: HIGH)
 - **Test Coverage**: Need to reach 90% target (currently 83.40%) ([Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20) - Priority: MEDIUM)
@@ -40,14 +40,14 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 4. **R CMD Check Errors**: **RESOLVED** - 0 errors ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 
 ### 🔄 **Remaining Issues (Critical - CRAN Ready Soon)**
-1. **R CMD Check Warning**: Missing `withr` dependency in tests ([Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71) - Priority: HIGH)
+1. **R CMD Check Warning**: Missing `withr` dependency in tests ([Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71) - **RESOLVED** ✅)
 2. **R CMD Check Notes**: 3 minor formatting and file structure notes ([Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72) - Priority: HIGH)
 3. **Missing Example Data**: Function documentation needs example data fixes ([Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58) - Priority: HIGH)
 4. **Test Coverage**: Need to reach 90% (currently 83.40%) ([Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20) - Priority: MEDIUM)
 5. **Test Warnings**: 29 test warnings to clean up ([Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68) - Priority: MEDIUM)
 
-### Active Issues for CRAN Submission (29 Open Issues)
-- **[Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71)**: Fix missing withr dependency (Priority: HIGH - CRAN submission blocker)
+### Active Issues for CRAN Submission (28 Open Issues)
+- **[Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71)**: Fix missing withr dependency (**RESOLVED** ✅)
 - **[Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72)**: Create .Rbuildignore to fix R CMD check notes (Priority: HIGH - CRAN submission blocker)
 - **[Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)**: Fix missing example data (Priority: HIGH - CRAN submission blocker)
 - **[Issue #56](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/56)**: Add transcript_file column (Priority: HIGH - core functionality)
@@ -75,9 +75,9 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **[Issue #74](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/74)**: Review and standardize issue labels (CLOSED)
 
 ### Immediate Action Items (CRAN Preparation)
-1. **Missing Dependency** (Priority: HIGH) - [Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71)
-   - Add `withr` to DESCRIPTION dependencies
-   - Required for clean CRAN submission
+1. **Missing Dependency** (Priority: HIGH) - [Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71) - **RESOLVED** ✅
+   - ✅ Added `withr` to DESCRIPTION dependencies
+   - ✅ Required for clean CRAN submission
 
 2. **R CMD Check Notes** (Priority: HIGH) - [Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72)
    - Create `.Rbuildignore` to exclude non-standard files
