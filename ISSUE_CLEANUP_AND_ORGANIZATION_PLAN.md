@@ -212,21 +212,51 @@ Based on current package status, these are the actual blockers:
 - [x] Update PROJECT.md with current status
 - [x] Fix all issue references
 - [x] Update AUDIT_LOG.md
-- [ ] Create issue management documentation
+- [x] Create issue management documentation
+
+### Day 6: Documentation Organization and Integration
+- [x] Create issue management quick reference
+- [x] Document improved hybrid approach strategy
+- [ ] **Phase 1**: Create `docs/` directory structure
+  - [ ] Create `docs/development/` for development guidelines
+  - [ ] Create `docs/planning/` for completed planning docs
+  - [ ] Create `docs/README.md` for docs index
+- [ ] **Phase 2**: Move detailed/archived docs to appropriate subdirectories
+  - [ ] Move `ISSUE_MANAGEMENT_GUIDELINES.md` to `docs/development/`
+  - [ ] Move `AUDIT_LOG.md` to `docs/development/`
+  - [ ] Move planning docs to `docs/planning/`
+  - [ ] Move audit results to `docs/planning/`
+- [ ] **Phase 3**: Update all cross-references and links
+  - [ ] Update `DOCUMENTATION.md` with new file locations
+  - [ ] Update `PROJECT.md` references
+  - [ ] Update `README.Rmd` documentation section
+- [ ] **Phase 4**: Create documentation index files
+  - [ ] Update `docs/README.md` with organized structure
+  - [ ] Ensure `DOCUMENTATION.md` provides clear navigation
+- [ ] **Phase 5**: Update README.Rmd and rebuild README.md
+  - [ ] Update documentation references in README.Rmd
+  - [ ] Run `devtools::build_readme()` to regenerate README.md
+- [ ] **Phase 6**: Update PROJECT.md and other references
+  - [ ] Update PROJECT.md with new documentation structure
+  - [ ] Update Cursor rules with documentation practices
+- [ ] **Phase 7**: Create GitHub issue templates
+  - [ ] Create bug report template from guidelines
+  - [ ] Create feature request template from guidelines
+  - [ ] Create documentation update template from guidelines
 
 ## Success Metrics
 
 ### Issue Cleanup Success
-- [ ] All stale issues closed
-- [ ] All duplicate issues consolidated  
-- [ ] All issue descriptions accurate
-- [ ] Proper labels and priorities assigned
+- [x] All stale issues closed
+- [x] All duplicate issues consolidated  
+- [x] All issue descriptions accurate
+- [x] Proper labels and priorities assigned
 
 ### Organization Success
-- [ ] Issues organized into milestones
-- [ ] Clear development roadmap
-- [ ] Consistent labeling system
-- [ ] Proper issue workflows
+- [x] Issues organized into milestones
+- [x] Clear development roadmap
+- [x] Consistent labeling system
+- [x] Proper issue workflows
 
 ### Documentation Success
 - [x] PROJECT.md reflects current reality
@@ -251,17 +281,17 @@ Based on current package status, these are the actual blockers:
 
 ## Next Steps
 
-### Immediate Actions (This Week)
-1. **Start Issue Validation:** Review all 27 open issues
-2. **Close Stale Issues:** #24, #7, and any others identified
-3. **Update PROJECT.md:** Fix all inconsistencies
-4. **Create Missing Issues:** Add issues for actual problems
+### Immediate Actions (This Week) - ✅ COMPLETED
+1. **Start Issue Validation:** ✅ Reviewed all 29 open issues
+2. **Close Stale Issues:** ✅ Closed #24, #7, and other stale issues
+3. **Update PROJECT.md:** ✅ Fixed all inconsistencies
+4. **Create Missing Issues:** ✅ Added issues #71, #72, #73, #74 for actual problems
 
 ### Week 1 Deliverables
-- [ ] Clean, accurate issue list
-- [ ] Updated PROJECT.md
-- [ ] Clear development roadmap
-- [ ] Proper issue organization
+- [x] Clean, accurate issue list
+- [x] Updated PROJECT.md
+- [x] Clear development roadmap
+- [x] Proper issue organization
 
 ### Success Indicators
 - **Short-term:** Accurate issue tracking
@@ -271,6 +301,81 @@ Based on current package status, these are the actual blockers:
 ---
 
 **Note:** This plan focuses on getting the issue management system accurate and organized before proceeding with development work. The goal is to have a solid foundation for continued development.
+
+## 📋 **Day 6: Documentation Organization Strategy**
+
+### **Improved Hybrid Approach - Documented**
+
+After analyzing the current documentation structure and R package conventions, we've developed an improved hybrid approach that balances discoverability with organization.
+
+#### **Key Insights from Analysis:**
+
+1. **R Package Conventions**: Most successful R packages keep key docs in root
+2. **GitHub Integration**: GitHub expects certain files in root (CONTRIBUTING.md, etc.)
+3. **Cursor Integration**: Important docs should be easily accessible
+4. **Maintenance Burden**: Complex organization can lead to stale documentation
+5. **Scalability**: Structure should work for both small and large projects
+
+#### **Recommended Structure:**
+
+```
+Root (Essential - High Visibility):
+├── README.Rmd                    # Source for main documentation
+├── README.md                     # Generated (git-tracked for GitHub)
+├── CONTRIBUTING.md               # GitHub expects this
+├── LICENSE                       # Legal requirement
+├── PROJECT.md                    # Project status (high visibility)
+├── CRAN_CHECKLIST.md             # CRAN submission guide
+├── ISSUE_MANAGEMENT_QUICK_REFERENCE.md  # For immediate use
+└── DOCUMENTATION.md              # Documentation index
+
+docs/ (Reference - Detailed):
+├── development/
+│   ├── ISSUE_MANAGEMENT_GUIDELINES.md
+│   └── AUDIT_LOG.md
+├── planning/
+│   ├── ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md
+│   ├── DOCUMENTATION_AUDIT_RESULTS.md
+│   ├── COLUMN_NAMING_ANALYSIS.md
+│   └── [other completed planning docs]
+└── README.md                     # Documentation index for docs/
+```
+
+#### **Rationale for This Structure:**
+
+1. **Discoverability**: Key docs remain in root where they're easily found
+2. **GitHub Compliance**: Maintains expected file locations for GitHub features
+3. **Cursor Friendly**: Important docs easily accessible during development
+4. **R Package Conventions**: Follows established patterns in R ecosystem
+5. **Scalable**: Can add detailed docs without cluttering root
+6. **Maintainable**: Clear separation between essential and reference docs
+
+#### **Implementation Strategy:**
+
+1. **Phase 1**: Create `docs/` directory structure
+2. **Phase 2**: Move detailed/archived docs to appropriate subdirectories
+3. **Phase 3**: Update all cross-references and links
+4. **Phase 4**: Create documentation index files
+5. **Phase 5**: Update README.Rmd and rebuild README.md
+6. **Phase 6**: Update PROJECT.md and other references
+
+#### **Maintenance Plan:**
+
+- **Monthly**: Review documentation for accuracy and completeness
+- **Quarterly**: Archive completed planning docs to `docs/planning/`
+- **As Needed**: Update `DOCUMENTATION.md` index when adding new docs
+- **Regular**: Run `devtools::build_readme()` after README.Rmd changes
+
+#### **Success Criteria:**
+
+- [ ] All essential docs remain in root for discoverability
+- [ ] Detailed docs organized in logical subdirectories
+- [ ] All cross-references updated and working
+- [ ] Documentation index provides clear navigation
+- [ ] README.Rmd updated with documentation references
+- [ ] README.md rebuilt and current
+
+---
 
 ## 🎉 **ISSUE CLEANUP COMPLETION SUMMARY**
 
