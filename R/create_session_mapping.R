@@ -52,9 +52,9 @@ create_session_mapping <- function(
     ),
     interactive = FALSE) {
   # Declare global variables to avoid R CMD check warnings
-  ID <- Topic <- `Start Time` <- start_time <- session_date <- zoom_recording_id <- 
+  ID <- Topic <- `Start Time` <- start_time <- session_date <- zoom_recording_id <-
     topic <- session_time <- notes <- NULL
-  
+
   # Input validation
   if (!tibble::is_tibble(zoom_recordings_df)) {
     stop("zoom_recordings_df must be a tibble")
