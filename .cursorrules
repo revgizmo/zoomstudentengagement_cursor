@@ -73,6 +73,13 @@ This is an R package for analyzing student engagement from Zoom transcripts, wit
 - Use `devtools::build_readme()` to rebuild README from README.Rmd
 - Include installation instructions and basic usage examples
 
+### Project Documentation
+- Essential docs in root: README.Rmd, PROJECT.md, CONTRIBUTING.md, CRAN_CHECKLIST.md
+- Quick reference: ISSUE_MANAGEMENT_QUICK_REFERENCE.md for immediate use
+- Detailed docs in `docs/`: development guidelines and planning documents
+- Use DOCUMENTATION.md as central navigation hub
+- Follow R package conventions for documentation organization
+
 ## Testing Requirements
 
 ### Test Coverage

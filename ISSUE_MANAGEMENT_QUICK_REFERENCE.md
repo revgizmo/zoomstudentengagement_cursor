@@ -96,6 +96,6 @@ Before closing any `CRAN:submission` issue:
 
 ## 📞 **Need Help?**
 
-- Check `ISSUE_MANAGEMENT_GUIDELINES.md` for detailed information
+- Check [docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/ISSUE_MANAGEMENT_GUIDELINES.md) for detailed information
 - Review similar issues for examples
 - Ask in issue comments for clarification 
