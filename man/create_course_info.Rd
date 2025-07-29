@@ -17,7 +17,7 @@ create_course_info(
 )
 }
 \arguments{
-\item{dept}{Department codes (e.g., "CS", "MATH", "LFT")}
+\item{dept}{Department codes (e.g., "CS", "MATH", "LTF")}
 
 \item{course}{Course numbers (e.g., "101", "250", "201")}
 
@@ -65,7 +65,7 @@ course_info <- create_course_info(
 
 # Multiple courses
 course_info <- create_course_info(
-  dept = c("CS", "MATH", "LFT"),
+  dept = c("CS", "MATH", "LTF"),
   course = c("101", "250", "201"),
   section = c("1", "1", "1"),
   instructor = c("Dr. Smith", "Dr. Smith", "Dr. Smith"),

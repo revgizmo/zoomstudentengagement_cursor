@@ -219,7 +219,7 @@ load_zoom_recorded_sessions_list <-
           `Start Time`,
           orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y H:M:S", "b d, Y H:M"),
           tz = "America/Los_Angeles",
-          quiet = TRUE  # Suppress warnings for failed parses
+          quiet = TRUE # Suppress warnings for failed parses
         ),
         match_end_time = match_start_time + lubridate::hours(scheduled_session_length_hours + 0.5)
       )

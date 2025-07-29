@@ -9,8 +9,8 @@ create_session_mapping(
   course_info_df,
   output_file = "session_mapping.csv",
   semester_start_mdy = "Jan 01, 2024",
-  auto_assign_patterns = list(`CS 101` = "CS.*101", `MATH 250` = "MATH.*250", `LFT 201` =
-    "LFT.*201"),
+  auto_assign_patterns = list(`CS 101` = "CS.*101", `MATH 250` = "MATH.*250", `LTF 201` =
+    "LTF.*201"),
   interactive = FALSE
 )
 }

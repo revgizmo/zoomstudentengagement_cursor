@@ -26,7 +26,7 @@ if (getRversion() >= "2.15.1") {
     "comments", "dept", "duration", "duration_perc", "first_last", "formal_name",
     "n", "n_perc", "name", "name_raw", "preferred_name", "session_num",
     "start_time_local", "student_id", "transcript_name", "course_section",
-                    "wordcount", "wordcount_perc", "wpm",
+    "wordcount", "wordcount_perc", "wpm",
 
     # Variables from load_transcript_files_list.R
     "file_name", "recording_start", "file_type",

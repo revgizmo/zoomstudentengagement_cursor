@@ -7,9 +7,11 @@ test_that("create_course_info creates correct structure", {
     session_length_hours = c(1.5, 2.0)
   )
 
-  expect_named(course_info, c("dept", "course", "section", "instructor",
-                              "session_length_hours", "semester_start", "semester_end",
-                              "course_id", "course_name"))
+  expect_named(course_info, c(
+    "dept", "course", "section", "instructor",
+    "session_length_hours", "semester_start", "semester_end",
+    "course_id", "course_name"
+  ))
   expect_equal(nrow(course_info), 2)
   expect_equal(course_info$course, c("101", "250"))
 })
@@ -82,9 +84,11 @@ test_that("create_session_mapping creates correct structure", {
     )
   )
 
-  expect_named(session_mapping, c("zoom_recording_id", "topic", "start_time",
-                                 "dept", "course", "section", "session_date",
-                                 "session_time", "instructor", "notes"))
+  expect_named(session_mapping, c(
+    "zoom_recording_id", "topic", "start_time",
+    "dept", "course", "section", "session_date",
+    "session_time", "instructor", "notes"
+  ))
   expect_equal(session_mapping$course, c("101", "250"))
 })
 
@@ -135,4 +139,4 @@ test_that("create_session_mapping handles empty course_info", {
 
   expect_equal(nrow(session_mapping), 1)
   expect_true(is.na(session_mapping$course[1]))
-}) 
+})
