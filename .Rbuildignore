@@ -43,6 +43,7 @@
 # Data files (not part of package)
 ^session_mapping\.csv$
 ^comprehensive_example_test_results\.rds$
+^my_analysis\.Rmd$
 
 # Temporary files
 ^inst/\.!.*\.Rmd$

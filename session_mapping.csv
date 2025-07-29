@@ -1,3 +1,0 @@
-zoom_recording_id,topic,start_time,dept,course,section,session_date,session_time,instructor,notes
-123456789,CS 101 - Monday 10:00 AM (Dr. Smith),"Jan 15, 2024 10:00 AM",CS,101,1,2024-01-15T18:00:00Z,10:00,Dr. Smith,NA
-987654321,MATH 250 - Tuesday 2:00 PM (Dr. Johnson),"Jan 16, 2024 2:00 PM",MATH,250,1,2024-01-16T22:00:00Z,14:00,Dr. Johnson,NA

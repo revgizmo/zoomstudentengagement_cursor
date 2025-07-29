@@ -94,7 +94,10 @@ create_analysis_config <- function(
       "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
     ),
     zoom_recorded_sessions_csv_names_pattern = "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
-    zoom_recorded_sessions_csv_col_names = "Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed",
+    zoom_recorded_sessions_csv_col_names = paste0(
+      "Topic,ID,Start Time,File Size (MB),File Count,",
+      "Total Views,Total Downloads,Last Accessed"
+    ),
     # Transcript File Patterns
     transcript_files_names_pattern = "GMT\\d{8}-\\d{6}_Recording",
     dt_extract_pattern = "(?<=GMT)\\d{8}",
