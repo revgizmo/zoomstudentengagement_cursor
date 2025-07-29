@@ -199,7 +199,7 @@ Based on current package status, these are the actual blockers:
 - [x] Categorize issues by type and area
 
 ### Day 3: Create Missing Issues
-- [ ] Create "Update PROJECT.md" issue
+- [x] Create "Update PROJECT.md" issue
 - [ ] Create "Fix R CMD check notes" issue
 - [ ] Create "Standardize issue labels" issue
 - [ ] Create ".Rbuildignore" issue
