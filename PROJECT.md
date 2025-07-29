@@ -43,6 +43,7 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **[Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)**: Documentation updates (Priority: HIGH)
 - **[Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)**: Missing example data fixes (Priority: HIGH)
 - **[Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59)**: Global variable binding cleanup (Priority: HIGH)
+- **[Issue #60](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/60)**: Documentation organization and structure review (Priority: HIGH)
 - **[Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2)**: Documentation overhaul (Priority: HIGH - needs restructuring)
 - **[Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)**: Create package vignettes (Priority: HIGH - infrastructure needed)
 - **[Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Code quality and refactoring tasks
@@ -79,7 +80,7 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
    - Ensure all examples are runnable
    - Fix documentation format issues
 
-6. **Documentation Organization** (Priority: HIGH) - [Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2), [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)
+6. **Documentation Organization** (Priority: HIGH) - [Issue #60](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/60), [Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2), [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)
    - Restructure README.Rmd (reduce from 1,227 to ~300 lines)
    - Create proper vignette infrastructure
    - Move complex workflows to vignettes
