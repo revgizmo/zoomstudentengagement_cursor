@@ -49,7 +49,7 @@ create_sample_roster <- function() {
 create_sample_section_names_lookup <- function() {
   tibble::tibble(
     transcript_name = c("Student1", "Student2", "Professor"),
-    transcript_section = c("101.A", "101.A", "101.A"),
+    course_section = c("101.A", "101.A", "101.A"),
     day = c("2023-01-01", "2023-01-01", "2023-01-01"),
     time = c("09:00", "09:00", "09:00"),
     formal_name = c("Student1", "Student2", "Professor"),

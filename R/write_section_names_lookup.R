@@ -83,14 +83,14 @@ write_section_names_lookup <-
       n <-
       preferred_name <-
       section <-
-      student_id <- time <- transcript_name <- transcript_section <- NULL
+      student_id <- time <- transcript_name <- course_section <- NULL
 
     if (tibble::is_tibble(clean_names_df) &&
       file.exists(data_folder)
     ) {
       clean_names_df %>%
         dplyr::group_by(
-          transcript_section,
+          course_section,
           day,
           time,
           course,

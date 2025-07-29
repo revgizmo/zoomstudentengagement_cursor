@@ -68,9 +68,15 @@ make_student_roster_sessions <-
     # Process transcripts list
     transcripts_processed <-
       transcripts_list_df %>%
-      dplyr::rename(transcript_section = course_section) %>%
+      dplyr::mutate(
+        course_section = if ("course_section" %in% names(.)) {
+          course_section
+        } else {
+          paste(course, section, sep = ".")
+        }
+      ) %>%
       tidyr::separate(
-        col = transcript_section,
+        col = course_section,
         into = c("course_transcript", "section_transcript"),
         sep = "\\.",
         remove = FALSE,
@@ -121,7 +127,7 @@ make_student_roster_sessions <-
         section,
         session_num,
         start_time_local,
-        transcript_section
+        course_section
       ) %>%
       # Ensure tibble class
       tibble::as_tibble()

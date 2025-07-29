@@ -87,7 +87,7 @@ make_clean_names_df <- function(data_folder = "data",
     student_id <-
     time <-
     transcript_name <-
-    transcript_section <- wordcount <- wordcount_perc <- wpm <- NULL
+    course_section <- wordcount <- wordcount_perc <- wpm <- NULL
 
   # Input validation
   if (!tibble::is_tibble(transcripts_metrics_df)) {
@@ -116,8 +116,14 @@ make_clean_names_df <- function(data_folder = "data",
   # Clean the roster_sessions df
   roster_sessions_clean <- roster_sessions %>%
     dplyr::mutate(
-      # Ensure transcript_section column is character
-      transcript_section = as.character(transcript_section),
+      # Ensure course_section column is character (create if needed)
+      course_section = if ("course_section" %in% names(.)) {
+        as.character(course_section)
+      } else if ("transcript_section" %in% names(.)) {
+        as.character(transcript_section)
+      } else {
+        paste(course, section, sep = ".")
+      },
       course = as.character(course),
       section = as.character(section),
       student_id = as.character(student_id)
@@ -128,14 +134,18 @@ make_clean_names_df <- function(data_folder = "data",
     transcripts_metrics_df %>%
     dplyr::rename(
       transcript_name = name
-      # ,
-      # transcript_section = course_section
     ) %>%
     dplyr::mutate(
       # Ensure time column is character
       time = as.character(time),
-      # Ensure transcript_section column is character
-      transcript_section = as.character(transcript_section),
+      # Ensure course_section column is character (create if needed)
+      course_section = if ("course_section" %in% names(.)) {
+        as.character(course_section)
+      } else if ("transcript_section" %in% names(.)) {
+        as.character(transcript_section)
+      } else {
+        paste(course, section, sep = ".")
+      },
       course = as.character(course),
       section = as.character(section)
     ) %>%
@@ -144,7 +154,7 @@ make_clean_names_df <- function(data_folder = "data",
       section_names_lookup,
       by = dplyr::join_by(
         transcript_name,
-        transcript_section,
+        course_section,
         course,
         section,
         day,
@@ -165,7 +175,7 @@ make_clean_names_df <- function(data_folder = "data",
         preferred_name,
         formal_name == first_last,
         dept,
-        transcript_section,
+        course_section,
         course,
         section,
         session_num,
@@ -186,8 +196,7 @@ make_clean_names_df <- function(data_folder = "data",
         is.na(preferred_name) & !is.na(formal_name) ~ as.character(formal_name),
         TRUE ~ as.character(preferred_name)
       ),
-      student_id = dplyr::coalesce(student_id, NA_character_),
-      section = dplyr::coalesce(transcript_section, NA_character_)
+      student_id = dplyr::coalesce(student_id, NA_character_)
     ) %>%
     dplyr::select(
       preferred_name,
@@ -195,7 +204,7 @@ make_clean_names_df <- function(data_folder = "data",
       transcript_name,
       student_id,
       section,
-      transcript_section,
+      course_section,
       session_num,
       n,
       duration,

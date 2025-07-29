@@ -93,13 +93,13 @@ test_that("make_clean_names_df handles missing values", {
     dept = c("Math", "Math"),
     session_num = c(1, 1),
     start_time_local = c("2023-01-01 10:00", "2023-01-01 10:00"),
-    transcript_section = c("101.A", "101.A")
+    course_section = c("101.A", "101.A")
   )
 
   # Create a section names lookup with missing values
   section_names_lookup <- tibble::tibble(
     transcript_name = c("John Smith", "Jane Doe", NA, "Unknown User"),
-    transcript_section = c("101.A", "101.A", "101.A", "101.A"),
+    course_section = c("101.A", "101.A", "101.A", "101.A"),
     day = c("Mon", "Mon", "Mon", "Mon"),
     time = c("10:00", "10:00", "10:00", "10:00"),
     formal_name = c("John Smith", "Jane Doe", NA, "Unknown User"),
@@ -133,7 +133,7 @@ test_that("make_clean_names_df handles missing values", {
   expect_type(result$student_id, "character")
   expect_type(result$time, "character")
   expect_type(result$section, "character")
-  expect_type(result$transcript_section, "character")
+  expect_type(result$course_section, "character")
   expect_type(result$day, "character")
 
   # Clean up
@@ -174,13 +174,13 @@ test_that("make_clean_names_df ensures character type inference", {
     dept = c("Math", "Math"),
     session_num = c(1, 1),
     start_time_local = c("2023-01-01 09:00", "2023-01-01 09:00"),
-    transcript_section = c("101.A", "101.A") # Fixed format
+    course_section = c("101.A", "101.A") # Fixed format
   )
 
   # Create a section names lookup with numeric-looking strings
   section_names_lookup <- tibble::tibble(
     transcript_name = c("Student1", "Student2"),
-    transcript_section = c("101.A", "101.A"), # Fixed format
+    course_section = c("101.A", "101.A"), # Fixed format
     day = c("2023-01-01", "2023-01-01"),
     time = c("09:00", "09:00"),
     formal_name = c("Student1", "Student2"),
@@ -206,7 +206,7 @@ test_that("make_clean_names_df ensures character type inference", {
   expect_type(result$student_id, "character")
   expect_type(result$time, "character")
   expect_type(result$section, "character")
-  expect_type(result$transcript_section, "character")
+  expect_type(result$course_section, "character")
   expect_type(result$day, "character")
 
   # Check that numeric-looking strings are not converted to numeric
