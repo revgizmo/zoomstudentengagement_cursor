@@ -26,6 +26,9 @@ load_session_mapping <- function(
     mapping_file,
     zoom_recordings_df = NULL,
     validate_mapping = TRUE) {
+  # Declare global variables to avoid R CMD check warnings
+  zoom_recording_id <- topic <- notes <- dept.x <- instructor.x <- session_date <- NULL
+
   # Check if mapping file exists
   if (!file.exists(mapping_file)) {
     stop("Session mapping file not found: ", mapping_file)

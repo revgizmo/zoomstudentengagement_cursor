@@ -87,6 +87,7 @@ make_clean_names_df <- function(data_folder = "data",
     student_id <-
     time <-
     transcript_name <-
+    transcript_section <-
     course_section <- wordcount <- wordcount_perc <- wpm <- NULL
 
   # Input validation

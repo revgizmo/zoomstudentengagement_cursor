@@ -131,6 +131,8 @@ devtools::build()                    # Create distributable package
 - Example: `gh pr create --title "fix: Address lintr warnings" --body "Use seq_len\(\) instead of 1:nrow\(\)"`
 - This prevents zsh parse errors: `zsh: parse error near '()'`
 - Alternative: Use single quotes around the entire body to avoid escaping: `--body 'Use seq_len() instead of 1:nrow()'`
+- **CRITICAL**: When merging PRs with branch protection, use `--admin` flag: `gh pr merge <PR_NUMBER> --merge --admin`
+- This bypasses branch protection rules when admin privileges are available
 - Always test GitHub CLI commands before running them in production
 
 ### Branch Protection

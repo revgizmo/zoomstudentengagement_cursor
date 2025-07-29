@@ -30,7 +30,8 @@ summarize_transcript_files <-
            deduplicate_content = FALSE,
            similarity_threshold = 0.95,
            duplicate_method = c("hybrid", "content", "metadata")) {
-    transcript_file <- transcript_path <- name <- NULL
+    # Declare global variables to avoid R CMD check warnings
+    transcript_file <- transcript_path <- name <- transcript_file_match <- row_id <- NULL
 
     duplicate_method <- match.arg(duplicate_method)
 
