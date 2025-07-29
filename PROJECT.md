@@ -21,36 +21,41 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **CRAN Compliance**: License and R-CMD-check issues resolved ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 - **Master Audit**: Comprehensive codebase audit completed ([Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) - CLOSED)
 - **Test Suite**: **0 FAILURES** (down from 18!), 453 tests passing
-- **R CMD Check**: **0 ERRORS, 15 WARNINGS** (global variable warnings still present)
+- **R CMD Check**: **0 ERRORS, 0 WARNINGS** (all issues resolved!)
 - **Test Coverage**: 83.43% (good progress toward 90% target)
 
 ### What Needs Work ❌ (Some Issues)
-- **Test Coverage**: Need to reach 90% target (currently 83.43%) ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
-- **Documentation**: README.Rmd restructuring needed (1,219 lines → ~300 lines) ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH)
-- **R CMD Check Notes**: 5 minor formatting and file structure notes ([Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59) - Priority: HIGH)
+- **Test Coverage**: Need to reach 90% target (currently 83.43%) ([Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20) - Priority: MEDIUM)
+- **Documentation**: README.Rmd restructuring needed (1,219 lines → ~300 lines) ([Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2) - Priority: LOW)
+- **R CMD Check Notes**: 5 minor formatting and file structure notes ([Issue #67](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/67) - Priority: HIGH)
+- **Test Warnings**: 30 test warnings to clean up ([Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68) - Priority: MEDIUM)
 - **Code Quality**: Need style consistency and error handling improvements ([Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15))
 
 ## CRAN Readiness Audit Results (July 2025)
 
 ### ✅ **RESOLVED Issues (Major Success!)**
-1. **Test Failures**: **RESOLVED** - 0 failures (down from 18!) ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
+1. **Test Failures**: **RESOLVED** - 0 failures (down from 18!) ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: MEDIUM)
 2. **Column Naming Regression**: **RESOLVED** ([Issue #57](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/57) - CLOSED)
 3. **License Specification**: **RESOLVED** - MIT license properly configured ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 4. **R CMD Check Errors**: **RESOLVED** - 0 errors ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
-5. **R CMD Check Warnings**: **RESOLVED** - 0 warnings ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
+5. **R CMD Check Warnings**: **RESOLVED** - 0 warnings ([Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59) - CLOSED)
 
 ### 🔄 **Remaining Issues (Some - CRAN Ready Soon)**
-1. **Test Coverage**: Need to reach 90% (currently 83.43%) ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
-2. **Documentation Restructuring**: README.Rmd too long (1,219 lines → ~300 lines) ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH)
-3. **R CMD Check Notes**: 5 minor formatting and file structure notes ([Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59) - Priority: HIGH)
+1. **R CMD Check Notes**: 5 minor formatting and file structure notes ([Issue #67](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/67) - Priority: HIGH)
+2. **Test Warnings**: 30 test warnings to clean up ([Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68) - Priority: MEDIUM)
+3. **Test Coverage**: Need to reach 90% (currently 83.43%) ([Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20) - Priority: MEDIUM)
+4. **Documentation Restructuring**: README.Rmd too long (1,219 lines → ~300 lines) ([Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2) - Priority: LOW)
 
 ### Active Issues for CRAN Submission
-- **[Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)**: Test suite cleanup (Priority: HIGH - mostly resolved)
-- **[Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)**: Documentation updates (Priority: HIGH - restructuring needed)
-- **[Issue #60](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/60)**: Documentation organization and structure review (Priority: HIGH - CLOSED)
-- **[Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2)**: Documentation overhaul (Priority: HIGH - needs restructuring)
-- **[Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)**: Create package vignettes (Priority: HIGH - infrastructure needed)
-- **[Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Code quality and refactoring tasks
+- **[Issue #67](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/67)**: Fix R CMD check notes (Priority: HIGH - CRAN submission blocker)
+- **[Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)**: Fix missing example data (Priority: HIGH - CRAN submission blocker)
+- **[Issue #56](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/56)**: Add transcript_file column (Priority: HIGH - core functionality)
+- **[Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68)**: Clean up test warnings (Priority: MEDIUM - test suite cleanup)
+- **[Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20)**: Increase test coverage (Priority: MEDIUM - target 90%)
+- **[Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)**: Test suite cleanup (Priority: MEDIUM - mostly resolved)
+- **[Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)**: Create package vignettes (Priority: MEDIUM - infrastructure needed)
+- **[Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2)**: Documentation overhaul (Priority: LOW - restructuring needed)
+- **[Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Code quality and refactoring tasks (Priority: LOW - future improvements)
 
 ### Completed Issues ✅
 - **[Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Master audit tracking issue (CLOSED)
@@ -61,27 +66,42 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **[Issue #60](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/60)**: Documentation organization (CLOSED)
 
 ### Immediate Action Items (CRAN Preparation)
-1. **Test Coverage Improvement** (Priority: HIGH) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)
+1. **R CMD Check Notes** (Priority: HIGH) - [Issue #67](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/67)
+   - Fix 5 minor formatting and file structure notes
+   - Update `.Rbuildignore` to exclude non-standard files
+   - Clean up hidden files
+   - Required for clean CRAN submission
+
+2. **Missing Example Data** (Priority: HIGH) - [Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)
+   - Fix missing example data in function documentation
+   - Ensure all examples are runnable
+   - Required for CRAN submission
+
+3. **Core Functionality Enhancement** (Priority: HIGH) - [Issue #56](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/56)
+   - Add transcript_file column with intelligent duplicate handling
+   - Improve core package functionality
+
+4. **Test Warnings Cleanup** (Priority: MEDIUM) - [Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68)
+   - Address 30 test warnings
+   - Update test fixtures to modern testthat syntax
+   - Replace deprecated `teardown()` usage
+
+5. **Test Coverage Improvement** (Priority: MEDIUM) - [Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20)
    - Current: 83.43%
    - Target: 90%
    - Focus on: `load_and_process_zoom_transcript.R` (0%), `load_session_mapping.R` (0%), `detect_duplicate_transcripts.R` (29.75%)
 
-2. **Documentation Restructuring** (Priority: HIGH) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
-   - Reduce README.Rmd from 1,219 lines to ~300 lines
-   - Move complex workflows to vignettes
-   - Create proper vignette infrastructure
-
-3. **R CMD Check Notes** (Priority: HIGH) - [Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59)
-   - Fix 5 minor formatting and file structure notes
-   - Update `.Rbuildignore` to exclude non-standard files
-   - Clean up hidden files
-
-4. **Vignette Creation** (Priority: MEDIUM) - [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)
+6. **Vignette Creation** (Priority: MEDIUM) - [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)
    - Create Getting Started vignette
    - Create Advanced Analysis vignette
    - Create Troubleshooting Guide vignette
 
-5. **Development Efficiency** (Priority: LOW) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47)
+7. **Documentation Restructuring** (Priority: LOW) - [Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2)
+   - Reduce README.Rmd from 1,219 lines to ~300 lines
+   - Move complex workflows to vignettes
+   - Create proper vignette infrastructure
+
+8. **Development Efficiency** (Priority: LOW) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47)
    - Create verification helper script
    - Automate pre-CRAN validation process
 
@@ -800,13 +820,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-## Codebase Audit (2024-06)
-- [ ] [Master Tracking Issue: #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)
-- [ ] Review function naming and API consistency
-- [ ] Refactor duplicated code
-- [ ] Improve error messages
-- [ ] Update documentation
-- [ ] Increase test coverage
-- [ ] Review dependencies and CRAN readiness
-- [ ] Address technical debt and future improvements 
