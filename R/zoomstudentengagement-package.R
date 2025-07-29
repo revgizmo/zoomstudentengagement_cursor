@@ -25,7 +25,7 @@ if (getRversion() >= "2.15.1") {
     # Variables from make_clean_names_df.R
     "comments", "dept", "duration", "duration_perc", "first_last", "formal_name",
     "n", "n_perc", "name", "name_raw", "preferred_name", "session_num",
-    "start_time_local", "student_id", "transcript_name", "transcript_section",
+    "start_time_local", "student_id", "transcript_name", "course_section",
                     "wordcount", "wordcount_perc", "wpm",
 
     # Variables from load_transcript_files_list.R
@@ -72,7 +72,7 @@ if (getRversion() >= "2.15.1") {
     "row_num", "preferred_name", "section",
 
     # Variables from make_student_roster_sessions.R
-    "start_time_local", "student_id", "transcript_section",
+    "start_time_local", "student_id", "course_section",
 
     # Variables from join_transcripts_list.R
     "filepath", "transcript_file", "transcript_path",

@@ -38,11 +38,11 @@ make_transcripts_session_summary_df <- function(clean_names_df) {
     stop("clean_names_df must be a tibble or NULL.")
   }
   # Define expected columns
-  expected_cols <- c("section", "day", "time", "session_num", "preferred_name", "transcript_section", "wordcount", "duration")
+  expected_cols <- c("section", "day", "time", "session_num", "preferred_name", "course_section", "wordcount", "duration")
   # Filter to only use columns that are present
   available_cols <- intersect(expected_cols, names(clean_names_df))
   if (length(available_cols) == 0) {
-    stop("clean_names_df must contain at least one of the expected columns: section, day, time, session_num, preferred_name, transcript_section, wordcount, duration.")
+    stop("clean_names_df must contain at least one of the expected columns: section, day, time, session_num, preferred_name, course_section, wordcount, duration.")
   }
   # Group by available columns and compute summary metrics
   result <- clean_names_df %>%

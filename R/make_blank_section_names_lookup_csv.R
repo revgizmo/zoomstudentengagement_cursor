@@ -9,16 +9,17 @@
 #' make_blank_section_names_lookup_csv()
 make_blank_section_names_lookup_csv <- function() {
   readr::read_csv(
-    I("course,section,day,time,student_id,formal_name,preferred_name,transcript_name"),
+    I("course_section,day,time,course,section,preferred_name,formal_name,transcript_name,student_id"),
     col_types = readr::cols(
-      course = readr::col_character(),
-      section = readr::col_character(),
+      course_section = readr::col_character(),
       day = readr::col_character(),
       time = readr::col_character(),
-      student_id = readr::col_character(),
-      formal_name = readr::col_character(),
+      course = readr::col_character(),
+      section = readr::col_character(),
       preferred_name = readr::col_character(),
-      transcript_name = readr::col_character()
+      formal_name = readr::col_character(),
+      transcript_name = readr::col_character(),
+      student_id = readr::col_character()
     )
   )
 }

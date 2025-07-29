@@ -42,7 +42,7 @@
 #'   dept = c("CS", "CS"),
 #'   session_num = c(1, 1),
 #'   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
-#'   transcript_section = c("101.A", "101.A")
+#'   course_section = c("101.A", "101.A")
 #' )
 #'
 #' make_students_only_transcripts_summary_df(
@@ -89,7 +89,7 @@ make_students_only_transcripts_summary_df <-
 #              !is.na(preferred_name),
 #              !is.na(student_id)
 #       )  %>%
-#       group_by(section, day, time, session_num, preferred_name, transcript_section) %>%
+#       group_by(section, day, time, session_num, preferred_name, course_section) %>%
 #       summarise(
 #         n = sum(n),
 #         duration = sum(duration),

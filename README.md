@@ -353,7 +353,7 @@ summarize_transcript_files(
   data_folder = transcript_data_folder,
   transcripts_folder = "transcripts",
   names_to_exclude = NULL,
-  deduplicate_content = TRUE,
+  deduplicate_content = FALSE,
   similarity_threshold = 0.95,
   duplicate_method = c("hybrid", "content", "metadata")
 )
@@ -1283,7 +1283,7 @@ transcripts_list_df
 
 ``` r
 transcripts_metrics_df <- summarize_transcript_files(
-  transcript_file_names = transcripts_list_df$transcript_file,
+  transcript_file_names = transcripts_list_df,
   data_folder = config$paths$data_folder,
   transcripts_folder = config$paths$transcripts_folder,
   names_to_exclude = config$analysis$names_to_exclude

@@ -52,7 +52,7 @@
 #'   dept = c("CS", "CS", "CS"),
 #'   session_num = c(1, 1, 2),
 #'   start_time_local = c("2024-01-01 09:00:00", "2024-01-01 09:00:00", "2024-01-02 10:00:00"),
-#'   transcript_section = c("101.A", "101.A", "101.B")
+#'   course_section = c("101.A", "101.A", "101.B")
 #' )
 #'
 #' # Create a temporary directory for the example
@@ -83,14 +83,14 @@ write_section_names_lookup <-
       n <-
       preferred_name <-
       section <-
-      student_id <- time <- transcript_name <- transcript_section <- NULL
+      student_id <- time <- transcript_name <- course_section <- NULL
 
     if (tibble::is_tibble(clean_names_df) &&
       file.exists(data_folder)
     ) {
       clean_names_df %>%
         dplyr::group_by(
-          transcript_section,
+          course_section,
           day,
           time,
           course,

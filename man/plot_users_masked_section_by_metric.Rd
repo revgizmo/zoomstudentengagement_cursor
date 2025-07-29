@@ -50,7 +50,7 @@ sample_roster <- tibble::tibble(
   dept = c("CS", "CS"),
   session_num = c(1, 1),
   start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00"),
-  transcript_section = c("101.A", "101.A")
+  course_section = c("101.A", "101.A")
 )
 
 plot_users_masked_section_by_metric(

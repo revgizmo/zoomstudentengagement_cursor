@@ -2,7 +2,7 @@ test_that("write_section_names_lookup writes a CSV and returns a tibble", {
   temp_dir <- tempdir()
   temp_file <- "test_section_names_lookup.csv"
   df <- tibble::tibble(
-    transcript_section = c("A", "B"),
+    course_section = c("101.A", "201.B"),
     day = c("Mon", "Tue"),
     time = c("09:00", "10:00"),
     course = c(101L, 201L),
@@ -24,7 +24,7 @@ test_that("write_section_names_lookup handles empty input", {
   temp_dir <- tempdir()
   temp_file <- "test_section_names_lookup_empty.csv"
   df <- tibble::tibble(
-    transcript_section = character(),
+    course_section = character(),
     day = character(),
     time = character(),
     course = integer(),

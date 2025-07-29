@@ -2,7 +2,7 @@ test_that("create_analysis_config creates valid configuration with defaults", {
   config <- create_analysis_config()
   
   expect_type(config, "list")
-  expect_named(config, c("course", "paths", "patterns", "reports", "analysis"))
+  expect_named(config, c("course", "paths", "patterns", "reports", "analysis", "session_mapping"))
   
   # Check course section
   expect_named(config$course, c("dept", "semester_start", "session_length_hours", "instructor_name"))
