@@ -46,9 +46,10 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 3. **Test Coverage**: Need to reach 90% (currently 83.40%) ([Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20) - Priority: MEDIUM)
 4. **Test Warnings**: 29 test warnings to clean up ([Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68) - Priority: MEDIUM)
 
-### Active Issues for CRAN Submission (25 Open Issues)
+### Active Issues for CRAN Submission (26 Open Issues)
 - **[Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)**: Fix missing example data (Priority: HIGH - CRAN submission blocker)
 - **[Issue #77](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/77)**: Address remaining R CMD check notes (Priority: MEDIUM - CRAN submission)
+- **[Issue #4](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/4)**: CRAN Preparation (Priority: LOW - CRAN submission)
 - **[Issue #56](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/56)**: Add transcript_file column (Priority: HIGH - core functionality)
 - **[Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68)**: Clean up test warnings (Priority: HIGH - test suite cleanup)
 - **[Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20)**: Increase test coverage (Priority: HIGH - target 90%)

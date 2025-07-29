@@ -24,13 +24,13 @@ You identified critical issues with our GitHub issue management:
 |-------------------|---------|--------|
 | Issue #67 is "Priority: HIGH" | Issue #67 is CLOSED | Misleading priorities |
 | 5 R CMD check notes | Only 2 notes remain | Outdated status |
-| 5-7 active issues | 25 open issues | Updated scope |
+| 5-7 active issues | 26 open issues | Updated scope |
 | Test suite has failures | 0 failures, 453 tests passing | ✅ Current metrics |
 
-### 📊 **Issue Inventory (25 Open Issues)**
+### 📊 **Issue Inventory (26 Open Issues)**
 
 **By Priority:**
-- **HIGH:** 7 issues (including some that may be stale)
+- **HIGH:** 8 issues (including some that may be stale)
 - **MEDIUM:** 12 issues  
 - **LOW:** 6 issues
 
