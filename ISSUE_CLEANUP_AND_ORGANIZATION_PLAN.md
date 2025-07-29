@@ -200,9 +200,9 @@ Based on current package status, these are the actual blockers:
 
 ### Day 3: Create Missing Issues
 - [x] Create "Update PROJECT.md" issue
-- [ ] Create "Fix R CMD check notes" issue
+- [x] Create "Fix R CMD check notes" issue
 - [ ] Create "Standardize issue labels" issue
-- [ ] Create ".Rbuildignore" issue
+- [x] Create ".Rbuildignore" issue
 
 ### Day 4: Organization
 - [ ] Create GitHub milestones
