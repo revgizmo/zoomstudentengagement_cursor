@@ -22,23 +22,27 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **Master Audit**: Comprehensive codebase audit completed ([Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) - CLOSED)
 
 ### What Needs Work ❌
-- **Documentation Completeness**: Many functions have incomplete roxygen2 documentation ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH)
-- **Test Quality**: Some test warnings in `make_clean_names_df.R` need resolution ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
+- **Test Failures**: 18 test failures due to column naming regression and configuration issues ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24), [Issue #57](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/57) - Priority: HIGH)
+- **Documentation Issues**: Example failures and global variable binding warnings ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19), [Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58), [Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59) - Priority: HIGH)
 - **Code Quality**: Need style consistency and error handling improvements ([Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15))
 
 ## CRAN Readiness Audit Results (July 2025)
 
 ### Critical Issues (Block CRAN submission)
-1. **Incomplete Documentation**: Many functions have `@examples` tags but no actual examples ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19) - Priority: HIGH)
-2. **Test Warnings**: `make_clean_names_df.R` has test warnings that need resolution ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24) - Priority: HIGH)
+1. **Test Failures**: 18 test failures due to column naming regression and configuration issues ([Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24), [Issue #57](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/57) - Priority: HIGH)
+2. **Example Failures**: Function examples fail due to missing data objects ([Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19), [Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58) - Priority: HIGH)
+3. **Global Variable Warnings**: 15 undefined global variable warnings in R CMD check ([Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59) - Priority: HIGH)
 
 ### Resolved Issues ✅
 3. **License Specification**: "TBD Open Source" is not acceptable for CRAN ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 4. **R CMD Check**: Need to verify no errors/warnings/notes ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 
 ### Active Issues for CRAN Submission
-- **[Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)**: Documentation updates (Priority: HIGH)
 - **[Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)**: Test suite cleanup (Priority: HIGH)
+- **[Issue #57](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/57)**: Column naming regression fixes (Priority: HIGH)
+- **[Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)**: Documentation updates (Priority: HIGH)
+- **[Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)**: Missing example data fixes (Priority: HIGH)
+- **[Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59)**: Global variable binding cleanup (Priority: HIGH)
 - **[Issues #16-34](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Code quality and refactoring tasks
 
 ### Completed Issues ✅
@@ -48,18 +52,30 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **[Issue #54](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/54)**: Complete column naming cleanup (CLOSED)
 
 ### Immediate Action Items
-1. **Documentation Fixes** (Priority: HIGH) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
-   - Audit all 34 exported functions for complete roxygen2 documentation
-   - Fix functions with incomplete `@examples` sections
+1. **Column Naming Regression** (Priority: HIGH) - [Issue #57](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/57)
+   - Fix `transcript_section` vs `section` column naming conflicts
+   - Resolve missing `course_section` column issues
+   - Update all affected functions and tests
+
+2. **Test Suite Restoration** (Priority: HIGH) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)
+   - Fix 18 test failures across multiple functions
+   - Resolve configuration structure issues
+   - Clean up all test warnings
+
+3. **Example Data Fixes** (Priority: HIGH) - [Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)
+   - Fix missing `zoom_recordings` object in examples
+   - Audit all function examples for missing data
+   - Create proper example datasets
+
+4. **Global Variable Cleanup** (Priority: HIGH) - [Issue #59](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/59)
+   - Fix 15 undefined global variable warnings
+   - Properly scope variables in functions
+   - Update function signatures as needed
+
+5. **Documentation Updates** (Priority: HIGH) - [Issue #19](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/19)
+   - Complete roxygen2 documentation audit
    - Ensure all examples are runnable
-
-2. **Test Resolution** (Priority: HIGH) - [Issue #24](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/24)
-   - Investigate and fix `make_clean_names_df.R` test warnings
-   - Verify all tests pass without warnings
-
-3. **CRAN Compliance** (Priority: HIGH) - [Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - ✅ COMPLETED
-   - Replace "TBD Open Source" with proper MIT license
-   - Run full `devtools::check()` to verify compliance
+   - Fix documentation format issues
 
 4. **Vignette Creation** (Priority: MEDIUM) - [Issue #45](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/45)
    - Create Getting Started vignette
