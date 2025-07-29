@@ -35,9 +35,11 @@ Detect Duplicate Transcripts
 \examples{
 # Create sample transcript list
 transcript_list <- tibble::tibble(
-  transcript_file = c("GMT20240115-100000_Recording.transcript.vtt", 
-                     "GMT20240115-100000_Recording.cc.vtt",
-                     "GMT20240116-140000_Recording.transcript.vtt")
+  transcript_file = c(
+    "GMT20240115-100000_Recording.transcript.vtt",
+    "GMT20240115-100000_Recording.cc.vtt",
+    "GMT20240116-140000_Recording.transcript.vtt"
+  )
 )
 
 # Detect duplicates in a transcript list

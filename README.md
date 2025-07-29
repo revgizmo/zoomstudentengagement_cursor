@@ -280,10 +280,10 @@ Load a Zoom recording transcript and return tibble containing the
 comments from a Zoom recording transcript
 
 ``` r
-
-transcript_file <- 
+transcript_file <-
   system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-              package = "zoomstudentengagement")
+    package = "zoomstudentengagement"
+  )
 
 
 load_zoom_transcript(transcript_file_path = transcript_file)
@@ -295,18 +295,20 @@ Process a Zoom recording transcript with given parameters and return
 tibble containing the consolidated and annotated comments.
 
 ``` r
-transcript_file <- 
+transcript_file <-
   system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-              package = "zoomstudentengagement"
+    package = "zoomstudentengagement"
   )
 
-process_zoom_transcript(transcript_file_path = transcript_file,
-                        consolidate_comments = TRUE,
-                        max_pause_sec = 1,
-                        add_dead_air = TRUE,
-                        dead_air_name = "dead_air",
-                        na_name = "unknown",
-                        transcript_df = NULL)
+process_zoom_transcript(
+  transcript_file_path = transcript_file,
+  consolidate_comments = TRUE,
+  max_pause_sec = 1,
+  add_dead_air = TRUE,
+  dead_air_name = "dead_air",
+  na_name = "unknown",
+  transcript_df = NULL
+)
 ```
 
 ## summarize_transcript_metrics()
@@ -315,21 +317,21 @@ Process a Zoom recording transcript and return summary metrics by
 speaker
 
 ``` r
-
-transcript_file <- 
+transcript_file <-
   system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-              package = "zoomstudentengagement"
+    package = "zoomstudentengagement"
   )
 
-summarize_transcript_metrics(transcript_file_path = transcript_file,
-                             names_exclude = c("dead_air"),
-                             consolidate_comments = TRUE,
-                             max_pause_sec = 1,
-                             add_dead_air = TRUE,
-                             dead_air_name = "dead_air",
-                             na_name = "unknown",
-                             transcript_df = NULL
-) 
+summarize_transcript_metrics(
+  transcript_file_path = transcript_file,
+  names_exclude = c("dead_air"),
+  consolidate_comments = TRUE,
+  max_pause_sec = 1,
+  add_dead_air = TRUE,
+  dead_air_name = "dead_air",
+  na_name = "unknown",
+  transcript_df = NULL
+)
 ```
 
 ## summarize_transcript_files()
@@ -338,18 +340,16 @@ session details and summary metrics by speaker for all class sessions in
 the tibble provided.
 
 ``` r
-
-
-transcript_data_folder <- 
+transcript_data_folder <-
   system.file("extdata/",
-              package = "zoomstudentengagement"
+    package = "zoomstudentengagement"
   )
 
 
 
 summarize_transcript_files(
   # df_transcript_list = NULL,
-  transcript_file_names = 'GMT20240124-202901_Recording.transcript.vtt',
+  transcript_file_names = "GMT20240124-202901_Recording.transcript.vtt",
   data_folder = transcript_data_folder,
   transcripts_folder = "transcripts",
   names_to_exclude = NULL,
@@ -415,7 +415,7 @@ print(course_info)
 
 # Create configuration with session mapping enabled
 config <- create_analysis_config(
-  dept = "CS",  # Primary department (can be overridden by mapping)
+  dept = "CS", # Primary department (can be overridden by mapping)
   semester_start_mdy = "Jan 15, 2024",
   scheduled_session_length_hours = 1.5,
   instructor_name = "Dr. Smith",
@@ -520,7 +520,7 @@ zoom_recordings_raw <- load_zoom_recorded_sessions_list(
   transcripts_folder = config$paths$transcripts_folder,
   zoom_recorded_sessions_csv_names_pattern = config$patterns$zoom_recordings_csv,
   zoom_recorded_sessions_csv_col_names = config$patterns$zoom_recordings_csv_col_names,
-  dept = NULL,  # Don't filter by department initially
+  dept = NULL, # Don't filter by department initially
   semester_start_mdy = config$course$semester_start,
   scheduled_session_length_hours = config$course$session_length_hours
 )
@@ -532,10 +532,10 @@ session_mapping <- create_session_mapping(
   output_file = config$session_mapping$session_mapping_file,
   auto_assign_patterns = list(
     "CS 101" = "CS.*101",
-    "MATH 250" = "MATH.*250", 
+    "MATH 250" = "MATH.*250",
     "LTF 201" = "LTF.*201"
   ),
-  interactive = TRUE  # Set to FALSE for batch processing
+  interactive = TRUE # Set to FALSE for batch processing
 )
 
 # Load the mapped recordings
@@ -1153,16 +1153,16 @@ course_info <- create_course_info(
 # Display course information
 cat("Course Information:\n")
 print(course_info)
-  
+
 
 
 
 # Create configuration with session mapping enabled
 config <- create_analysis_config(
-  dept = course_info[3,]$dept,  # Primary department (can be overridden by mapping)
+  dept = course_info[3, ]$dept, # Primary department (can be overridden by mapping)
   semester_start_mdy = "Jan 01, 2024",
-  scheduled_session_length_hours = course_info[3,]$session_length_hours,
-  instructor_name = course_info[3,]$instructor,
+  scheduled_session_length_hours = course_info[3, ]$session_length_hours,
+  instructor_name = course_info[3, ]$instructor,
   data_folder = system.file("extdata", package = "zoomstudentengagement"),
   transcripts_folder = "transcripts",
   names_to_exclude = c("dead_air"),
@@ -1289,7 +1289,7 @@ transcripts_metrics_df <- summarize_transcript_files(
   names_to_exclude = config$analysis$names_to_exclude
 )
 
-transcript_file_path = paste0(config$paths$data_folder, '/', config$paths$transcripts_folder, '/',  transcripts_list_df$transcript_file)
+transcript_file_path <- paste0(config$paths$data_folder, "/", config$paths$transcripts_folder, "/", transcripts_list_df$transcript_file)
 
 summarize_transcript_metrics
 

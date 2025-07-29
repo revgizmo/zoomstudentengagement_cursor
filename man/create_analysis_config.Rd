@@ -5,7 +5,7 @@
 \title{Create Analysis Configuration}
 \usage{
 create_analysis_config(
-  dept = "LFT",
+  dept = "LTF",
   semester_start_mdy = "Jan 01, 2024",
   scheduled_session_length_hours = 1.5,
   instructor_name = "Conor Healy",
@@ -39,7 +39,7 @@ create_analysis_config(
 )
 }
 \arguments{
-\item{dept}{Department code (e.g., "LFT", "MATH", "CS"). Used to filter Zoom recordings.}
+\item{dept}{Department code (e.g., "LTF", "MATH", "CS"). Used to filter Zoom recordings.}
 
 \item{semester_start_mdy}{Semester start date in "MMM DD, YYYY" format (e.g., "Jan 01, 2024").}
 
@@ -111,7 +111,7 @@ sensible defaults while allowing customization for different course setups.
 \examples{
 # Basic configuration with defaults
 config <- create_analysis_config(
-  dept = "LFT",
+  dept = "LTF",
   instructor_name = "Dr. Smith",
   data_folder = "data"
 )

@@ -1,7 +1,7 @@
 #' Summarize Transcript Files
 #'
-#' @param transcript_file_names A data.frame or character vector listing the transcript files. 
-#'   If a tibble with additional columns beyond 'transcript_file' is provided, all metadata 
+#' @param transcript_file_names A data.frame or character vector listing the transcript files.
+#'   If a tibble with additional columns beyond 'transcript_file' is provided, all metadata
 #'   columns will be preserved in the output.
 #' @param data_folder Overall data folder for your recordings and data
 #' @param transcripts_folder specific subfolder of the data folder where you store transcripts
@@ -15,8 +15,10 @@
 #' @importFrom tidyselect all_of
 #' @examples
 #' # Create sample transcript file names
-#' transcript_files <- c("GMT20240115-100000_Recording.transcript.vtt", 
-#'                      "GMT20240116-140000_Recording.transcript.vtt")
+#' transcript_files <- c(
+#'   "GMT20240115-100000_Recording.transcript.vtt",
+#'   "GMT20240116-140000_Recording.transcript.vtt"
+#' )
 #'
 #' # Summarize transcript files
 #' summary <- summarize_transcript_files(transcript_file_names = transcript_files)
@@ -35,19 +37,18 @@ summarize_transcript_files <-
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
     # Handle different input types
-    if ('character' %in% class(transcript_file_names)) {
-      transcript_file_names = tibble::tibble(transcript_file = transcript_file_names)
+    if ("character" %in% class(transcript_file_names)) {
+      transcript_file_names <- tibble::tibble(transcript_file = transcript_file_names)
     }
-    
+
     # If input is a tibble with transcript_file column, preserve all other columns
-    preserve_metadata <- tibble::is_tibble(transcript_file_names) && 
-                        "transcript_file" %in% names(transcript_file_names) &&
-                        ncol(transcript_file_names) > 1
+    preserve_metadata <- tibble::is_tibble(transcript_file_names) &&
+      "transcript_file" %in% names(transcript_file_names) &&
+      ncol(transcript_file_names) > 1
 
     if (tibble::is_tibble(transcript_file_names) &&
       file.exists(transcripts_folder_path)
     ) {
-      
       # Handle duplicate detection if requested
       if (deduplicate_content) {
         # Detect duplicates
@@ -59,14 +60,14 @@ summarize_transcript_files <-
           method = duplicate_method,
           names_to_exclude = names_to_exclude
         )
-        
+
         # If duplicates found, warn user
         if (length(duplicates$duplicate_groups) > 0) {
           warning(paste(
             "Found", length(duplicates$duplicate_groups), "duplicate groups.",
             "Consider reviewing and removing duplicates before processing."
           ))
-          
+
           # Print recommendations
           cat("\nDuplicate detection results:\n")
           cat("============================\n")
@@ -84,7 +85,7 @@ summarize_transcript_files <-
           dplyr::select(-transcript_file) %>%
           dplyr::mutate(row_id = dplyr::row_number())
       }
-      
+
       result <- transcript_file_names %>%
         dplyr::rename(file_name = transcript_file) %>%
         dplyr::mutate(
@@ -129,7 +130,7 @@ summarize_transcript_files <-
           dplyr::select(., -all_of(cols_to_remove))
         } %>%
         dplyr::rename(transcript_file = file_name)
-      
+
       # Restore original metadata if preserving
       if (preserve_metadata && !is.null(original_metadata)) {
         result <- result %>%
@@ -137,7 +138,7 @@ summarize_transcript_files <-
           dplyr::left_join(original_metadata, by = "row_id") %>%
           dplyr::select(-row_id)
       }
-      
+
       result
     }
   }

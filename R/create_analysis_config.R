@@ -4,7 +4,7 @@
 #' package analysis workflow. It groups related parameters logically and provides
 #' sensible defaults while allowing customization for different course setups.
 #'
-#' @param dept Department code (e.g., "LFT", "MATH", "CS"). Used to filter Zoom recordings.
+#' @param dept Department code (e.g., "LTF", "MATH", "CS"). Used to filter Zoom recordings.
 #' @param semester_start_mdy Semester start date in "MMM DD, YYYY" format (e.g., "Jan 01, 2024").
 #' @param scheduled_session_length_hours Scheduled length of each class session in hours.
 #' @param instructor_name Name of the instructor for filtering and reporting.
@@ -45,7 +45,7 @@
 #' @examples
 #' # Basic configuration with defaults
 #' config <- create_analysis_config(
-#'   dept = "LFT",
+#'   dept = "LTF",
 #'   instructor_name = "Dr. Smith",
 #'   data_folder = "data"
 #' )
@@ -72,54 +72,45 @@
 #'   scheduled_session_length_hours = config$course$session_length_hours
 #' )
 create_analysis_config <- function(
-  # Course Information
-  dept = "LFT",
-  semester_start_mdy = "Jan 01, 2024",
-  scheduled_session_length_hours = 1.5,
-  instructor_name = "Conor Healy",
-  
-  # File Paths
-  data_folder = system.file("extdata", package = "zoomstudentengagement"),
-  transcripts_folder = "transcripts",
-  roster_file = "roster.csv",
-  cancelled_classes_file = "cancelled_classes.csv",
-  names_lookup_file = "section_names_lookup.csv",
-  transcripts_session_summary_file = "transcripts_session_summary.csv",
-  transcripts_summary_file = "transcripts_summary.csv",
-  
-  # Report Settings
-  student_summary_report = "Zoom_Student_Engagement_Analysis_student_summary_report",
-  student_summary_report_folder = system.file("", package = "zoomstudentengagement"),
-  
-  # File Patterns
-  topic_split_pattern = paste0(
-    "^(?<dept>\\S+) (?<section>\\S+) - ",
-    "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
-  ),
-  zoom_recorded_sessions_csv_names_pattern = "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
-  zoom_recorded_sessions_csv_col_names = "Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed",
-  
-  # Transcript File Patterns
-  transcript_files_names_pattern = "GMT\\d{8}-\\d{6}_Recording",
-  dt_extract_pattern = "(?<=GMT)\\d{8}",
-  transcript_file_extension_pattern = ".transcript",
-  closed_caption_file_extension_pattern = ".cc",
-  recording_start_pattern = "(?<=GMT)\\d{8}-\\d{6}",
-  recording_start_format = "%Y%m%d-%H%M%S",
-  start_time_local_tzone = "America/Los_Angeles",
-  
-  # Column Types
-  cancelled_classes_col_types = "ciiiccccccdiiicTTcTTccci",
-  section_names_lookup_col_types = "ccccccccc",
-  
-  # Analysis Parameters
-  names_to_exclude = NULL,
-  
-  # Session Mapping
-  use_session_mapping = FALSE,
-  session_mapping_file = "session_mapping.csv"
-) {
-  
+    # Course Information
+    dept = "LTF",
+    semester_start_mdy = "Jan 01, 2024",
+    scheduled_session_length_hours = 1.5,
+    instructor_name = "Conor Healy",
+    # File Paths
+    data_folder = system.file("extdata", package = "zoomstudentengagement"),
+    transcripts_folder = "transcripts",
+    roster_file = "roster.csv",
+    cancelled_classes_file = "cancelled_classes.csv",
+    names_lookup_file = "section_names_lookup.csv",
+    transcripts_session_summary_file = "transcripts_session_summary.csv",
+    transcripts_summary_file = "transcripts_summary.csv",
+    # Report Settings
+    student_summary_report = "Zoom_Student_Engagement_Analysis_student_summary_report",
+    student_summary_report_folder = system.file("", package = "zoomstudentengagement"),
+    # File Patterns
+    topic_split_pattern = paste0(
+      "^(?<dept>\\S+) (?<section>\\S+) - ",
+      "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+    ),
+    zoom_recorded_sessions_csv_names_pattern = "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
+    zoom_recorded_sessions_csv_col_names = "Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed",
+    # Transcript File Patterns
+    transcript_files_names_pattern = "GMT\\d{8}-\\d{6}_Recording",
+    dt_extract_pattern = "(?<=GMT)\\d{8}",
+    transcript_file_extension_pattern = ".transcript",
+    closed_caption_file_extension_pattern = ".cc",
+    recording_start_pattern = "(?<=GMT)\\d{8}-\\d{6}",
+    recording_start_format = "%Y%m%d-%H%M%S",
+    start_time_local_tzone = "America/Los_Angeles",
+    # Column Types
+    cancelled_classes_col_types = "ciiiccccccdiiicTTcTTccci",
+    section_names_lookup_col_types = "ccccccccc",
+    # Analysis Parameters
+    names_to_exclude = NULL,
+    # Session Mapping
+    use_session_mapping = FALSE,
+    session_mapping_file = "session_mapping.csv") {
   # Input validation
   if (!is.character(dept) || length(dept) != 1) {
     stop("dept must be a single character string")
@@ -142,7 +133,7 @@ create_analysis_config <- function(
   if (!is.character(start_time_local_tzone) || length(start_time_local_tzone) != 1) {
     stop("start_time_local_tzone must be a single character string")
   }
-  
+
   # Return validated configuration
   list(
     course = list(
@@ -151,7 +142,6 @@ create_analysis_config <- function(
       session_length_hours = scheduled_session_length_hours,
       instructor_name = instructor_name
     ),
-    
     paths = list(
       data_folder = data_folder,
       transcripts_folder = transcripts_folder,
@@ -161,7 +151,6 @@ create_analysis_config <- function(
       transcripts_session_summary_file = transcripts_session_summary_file,
       transcripts_summary_file = transcripts_summary_file
     ),
-    
     patterns = list(
       topic_split = topic_split_pattern,
       zoom_recordings_csv = zoom_recorded_sessions_csv_names_pattern,
@@ -174,21 +163,18 @@ create_analysis_config <- function(
       recording_start_format = recording_start_format,
       start_time_local_tzone = start_time_local_tzone
     ),
-    
     reports = list(
       student_summary_report = student_summary_report,
       student_summary_report_folder = student_summary_report_folder
     ),
-    
     analysis = list(
       cancelled_classes_col_types = cancelled_classes_col_types,
       section_names_lookup_col_types = section_names_lookup_col_types,
       names_to_exclude = names_to_exclude
     ),
-    
     session_mapping = list(
       use_session_mapping = use_session_mapping,
       session_mapping_file = session_mapping_file
     )
   )
-} 
+}

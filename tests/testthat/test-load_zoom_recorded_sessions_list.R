@@ -137,15 +137,15 @@ test_that("load_zoom_recorded_sessions_list handles generalized course formats",
   result <- load_zoom_recorded_sessions_list(
     data_folder = temp_dir,
     transcripts_folder = "transcripts",
-    dept = NULL  # Don't filter by dept to test all formats
+    dept = NULL # Don't filter by dept to test all formats
   )
 
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 3)
-  
+
   # Test that course_section is character type
   expect_type(result$course_section, "character")
-  
+
   # Test that different course formats are parsed correctly
   expect_equal(result$course_section, c("201.006", "101", "250.001"))
   expect_equal(result$dept, c("DATASCI", "LTF", "MATH"))

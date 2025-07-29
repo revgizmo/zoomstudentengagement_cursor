@@ -41,18 +41,16 @@
 #'   semester_start_mdy = "Jan 15, 2024"
 #' )
 create_session_mapping <- function(
-  zoom_recordings_df,
-  course_info_df,
-  output_file = "session_mapping.csv",
-  semester_start_mdy = "Jan 01, 2024",
-  auto_assign_patterns = list(
-    "CS 101" = "CS.*101",
-    "MATH 250" = "MATH.*250",
-    "LFT 201" = "LFT.*201"
-  ),
-  interactive = FALSE
-) {
-  
+    zoom_recordings_df,
+    course_info_df,
+    output_file = "session_mapping.csv",
+    semester_start_mdy = "Jan 01, 2024",
+    auto_assign_patterns = list(
+      "CS 101" = "CS.*101",
+      "MATH 250" = "MATH.*250",
+      "LTF 201" = "LTF.*201"
+    ),
+    interactive = FALSE) {
   # Input validation
   if (!tibble::is_tibble(zoom_recordings_df)) {
     stop("zoom_recordings_df must be a tibble")
@@ -60,14 +58,14 @@ create_session_mapping <- function(
   if (!tibble::is_tibble(course_info_df)) {
     stop("course_info_df must be a tibble")
   }
-  
+
   # Required columns for course_info_df
   required_cols <- c("dept", "course", "section", "instructor", "session_length_hours")
   missing_cols <- setdiff(required_cols, names(course_info_df))
   if (length(missing_cols) > 0) {
     stop("course_info_df must contain columns: ", paste(missing_cols, collapse = ", "))
   }
-  
+
   # Create base mapping structure
   mapping_df <- zoom_recordings_df %>%
     dplyr::select(
@@ -89,19 +87,19 @@ create_session_mapping <- function(
       instructor = NA_character_,
       notes = NA_character_
     )
-  
+
   # Attempt automatic assignment based on patterns
   if (length(auto_assign_patterns) > 0) {
     for (pattern_name in names(auto_assign_patterns)) {
       pattern <- auto_assign_patterns[[pattern_name]]
-      
+
       # Find matching course info
       course_match <- course_info_df %>%
         dplyr::filter(stringr::str_detect(
           paste(dept, course, sep = " "),
           pattern_name
         ))
-      
+
       if (nrow(course_match) > 0) {
         # Apply pattern to topic matching
         matching_rows <- stringr::str_detect(mapping_df$topic, pattern)
@@ -112,33 +110,33 @@ create_session_mapping <- function(
       }
     }
   }
-  
+
   # Interactive assignment for unmatched recordings
   if (interactive) {
     unmatched <- mapping_df %>%
       dplyr::filter(is.na(dept) | is.na(course) | is.na(section))
-    
+
     if (nrow(unmatched) > 0) {
       cat("Found", nrow(unmatched), "unmatched recordings:\n")
-      
-      for (i in 1:nrow(unmatched)) {
+
+      for (i in seq_len(nrow(unmatched))) {
         recording <- unmatched[i, ]
         cat("\nRecording", i, "of", nrow(unmatched), ":\n")
         cat("ID:", recording$zoom_recording_id, "\n")
         cat("Topic:", recording$topic, "\n")
         cat("Date:", as.character(recording$session_date), "\n")
-        
+
         # Show available courses
         cat("\nAvailable courses:\n")
-        for (j in 1:nrow(course_info_df)) {
+        for (j in seq_len(nrow(course_info_df))) {
           course <- course_info_df[j, ]
           cat(j, ":", course$dept, course$course, "Section", course$section, "\n")
         }
-        
+
         # Get user input
         cat("\nEnter course number (or 0 to skip): ")
         course_choice <- as.integer(readline())
-        
+
         if (course_choice > 0 && course_choice <= nrow(course_info_df)) {
           selected_course <- course_info_df[course_choice, ]
           mapping_df$dept[mapping_df$zoom_recording_id == recording$zoom_recording_id] <- selected_course$dept
@@ -149,20 +147,20 @@ create_session_mapping <- function(
       }
     }
   }
-  
+
   # Add notes for unmatched recordings
   unmatched_count <- sum(is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section))
   if (unmatched_count > 0) {
-    mapping_df$notes[is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section)] <- 
+    mapping_df$notes[is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section)] <-
       "NEEDS MANUAL ASSIGNMENT"
     warning(unmatched_count, " recordings need manual assignment")
   }
-  
+
   # Save mapping file
   if (!is.null(output_file)) {
     readr::write_csv(mapping_df, output_file)
   }
-  
+
   # Return mapping
   mapping_df %>%
     dplyr::select(
@@ -177,4 +175,4 @@ create_session_mapping <- function(
       instructor,
       notes
     )
-} 
+}

@@ -46,6 +46,7 @@ transcript2 <- data.frame(
 similarity <- calculate_content_similarity(transcript1, transcript2)
 
 # Calculate similarity excluding dead air entries
-similarity <- calculate_content_similarity(transcript1, transcript2, 
-                                         names_to_exclude = c("dead_air", "silence"))
+similarity <- calculate_content_similarity(transcript1, transcript2,
+  names_to_exclude = c("dead_air", "silence")
+)
 }

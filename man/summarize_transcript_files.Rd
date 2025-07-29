@@ -15,8 +15,8 @@ summarize_transcript_files(
 )
 }
 \arguments{
-\item{transcript_file_names}{A data.frame or character vector listing the transcript files. 
-If a tibble with additional columns beyond 'transcript_file' is provided, all metadata 
+\item{transcript_file_names}{A data.frame or character vector listing the transcript files.
+If a tibble with additional columns beyond 'transcript_file' is provided, all metadata
 columns will be preserved in the output.}
 
 \item{data_folder}{Overall data folder for your recordings and data}
@@ -39,8 +39,10 @@ Summarize Transcript Files
 }
 \examples{
 # Create sample transcript file names
-transcript_files <- c("GMT20240115-100000_Recording.transcript.vtt", 
-                     "GMT20240116-140000_Recording.transcript.vtt")
+transcript_files <- c(
+  "GMT20240115-100000_Recording.transcript.vtt",
+  "GMT20240116-140000_Recording.transcript.vtt"
+)
 
 # Summarize transcript files
 summary <- summarize_transcript_files(transcript_file_names = transcript_files)
