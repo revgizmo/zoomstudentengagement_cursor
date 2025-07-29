@@ -39,13 +39,12 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 4. **R CMD Check Errors**: **RESOLVED** - 0 errors ([Issue #21](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/21) - CLOSED)
 
 ### 🔄 **Remaining Issues (Critical - CRAN Ready Soon)**
-1. **R CMD Check Notes**: 3 minor formatting and file structure notes ([Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72) - Priority: HIGH)
+1. **R CMD Check Notes**: 2 minor formatting and file structure notes (Priority: HIGH)
 2. **Missing Example Data**: Function documentation needs example data fixes ([Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58) - Priority: HIGH)
 3. **Test Coverage**: Need to reach 90% (currently 83.40%) ([Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20) - Priority: MEDIUM)
 4. **Test Warnings**: 29 test warnings to clean up ([Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68) - Priority: MEDIUM)
 
 ### Active Issues for CRAN Submission (25 Open Issues)
-- **[Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72)**: Create .Rbuildignore to fix R CMD check notes (Priority: HIGH - CRAN submission blocker)
 - **[Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)**: Fix missing example data (Priority: HIGH - CRAN submission blocker)
 - **[Issue #56](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/56)**: Add transcript_file column (Priority: HIGH - core functionality)
 - **[Issue #68](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/68)**: Clean up test warnings (Priority: HIGH - test suite cleanup)
@@ -69,14 +68,15 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - **[Issue #57](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/57)**: Column naming regression fixes (CLOSED)
 - **[Issue #60](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/60)**: Documentation organization (CLOSED)
 - **[Issue #71](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/71)**: Fix missing withr dependency (CLOSED)
+- **[Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72)**: Create .Rbuildignore to fix R CMD check notes (CLOSED)
 - **[Issue #73](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/73)**: Update PROJECT.md to reflect current status (CLOSED)
 - **[Issue #74](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/74)**: Review and standardize issue labels (CLOSED)
 
 ### Immediate Action Items (CRAN Preparation)
-1. **R CMD Check Notes** (Priority: HIGH) - [Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72)
-   - Create `.Rbuildignore` to exclude non-standard files
-   - Fix 3 minor formatting and file structure notes
-   - Required for clean CRAN submission
+1. **R CMD Check Notes** (Priority: HIGH) - RESOLVED ✅
+   - ✅ Added `docs/` to `.Rbuildignore` to exclude non-standard files
+   - ✅ Reduced from 3 to 2 minor formatting and file structure notes
+   - ✅ Remaining notes are system-related and acceptable for CRAN
 
 3. **Missing Example Data** (Priority: HIGH) - [Issue #58](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/58)
    - Fix missing example data in function documentation
