@@ -1,5 +1,3 @@
-context("Name Matching")
-
 test_that("make_clean_names_df handles basic cases", {
   # Create test data
   transcripts_metrics_df <- create_sample_transcript_metrics()

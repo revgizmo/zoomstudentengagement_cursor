@@ -12,7 +12,5 @@ set.seed(42)
 test_dir <- tempfile("zoomstudentengagement_test_")
 dir.create(test_dir)
 
-# Clean up after tests
-teardown({
-  unlink(test_dir, recursive = TRUE)
-})
+# Clean up after tests using modern testthat fixtures
+withr::defer(unlink(test_dir, recursive = TRUE), teardown_env())
