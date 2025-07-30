@@ -124,15 +124,76 @@ join_transcripts_list <- function(
     df_cancelled_classes$ID <- as.character(df_cancelled_classes$ID)
   }
 
-  # Coerce file columns to character if present and not already
-  file_cols <- c("closed_caption_file", "transcript_file", "chat_file")
+  # Coerce file columns to character in both data frames to avoid type mismatch
+  file_cols <- c("chat_file", "transcript_file", "closed_caption_file")
   for (col in file_cols) {
     if (col %in% names(joined_sessions)) {
-      if (is.list(joined_sessions[[col]])) joined_sessions[[col]] <- as.character(joined_sessions[[col]])
+      joined_sessions[[col]] <- as.character(joined_sessions[[col]])
     }
     if (col %in% names(df_cancelled_classes)) {
-      if (is.list(df_cancelled_classes[[col]])) df_cancelled_classes[[col]] <- as.character(df_cancelled_classes[[col]])
+      df_cancelled_classes[[col]] <- as.character(df_cancelled_classes[[col]])
     }
+  }
+
+  # Coerce 'Start Time' to character in both data frames to avoid type mismatch
+  if ("Start Time" %in% names(joined_sessions)) {
+    joined_sessions$`Start Time` <- as.character(joined_sessions$`Start Time`)
+  }
+  if ("Start Time" %in% names(df_cancelled_classes)) {
+    df_cancelled_classes$`Start Time` <- as.character(df_cancelled_classes$`Start Time`)
+  }
+
+  # Coerce numeric columns to numeric in both data frames to avoid type mismatch
+  numeric_cols <- c("Total Views", "Total Downloads", "File Count", "File Size (MB)")
+  for (col in numeric_cols) {
+    if (col %in% names(joined_sessions)) {
+      joined_sessions[[col]] <- suppressWarnings(as.numeric(joined_sessions[[col]]))
+    }
+    if (col %in% names(df_cancelled_classes)) {
+      df_cancelled_classes[[col]] <- suppressWarnings(as.numeric(df_cancelled_classes[[col]]))
+    }
+  }
+
+  # Coerce 'Last Accessed' to character in both data frames to avoid type mismatch
+  if ("Last Accessed" %in% names(joined_sessions)) {
+    joined_sessions$`Last Accessed` <- as.character(joined_sessions$`Last Accessed`)
+  }
+  if ("Last Accessed" %in% names(df_cancelled_classes)) {
+    df_cancelled_classes$`Last Accessed` <- as.character(df_cancelled_classes$`Last Accessed`)
+  }
+
+  # Coerce 'match_start_time' and 'match_end_time' to character in both data frames to avoid type mismatch
+  for (col in c("match_start_time", "match_end_time")) {
+    if (col %in% names(joined_sessions)) {
+      joined_sessions[[col]] <- as.character(joined_sessions[[col]])
+    }
+    if (col %in% names(df_cancelled_classes)) {
+      df_cancelled_classes[[col]] <- as.character(df_cancelled_classes[[col]])
+    }
+  }
+
+  # Coerce 'date_extract' to character in both data frames to avoid type mismatch
+  if ("date_extract" %in% names(joined_sessions)) {
+    joined_sessions$date_extract <- as.character(joined_sessions$date_extract)
+  }
+  if ("date_extract" %in% names(df_cancelled_classes)) {
+    df_cancelled_classes$date_extract <- as.character(df_cancelled_classes$date_extract)
+  }
+
+  # Coerce 'recording_start' to character in both data frames to avoid type mismatch
+  if ("recording_start" %in% names(joined_sessions)) {
+    joined_sessions$recording_start <- as.character(joined_sessions$recording_start)
+  }
+  if ("recording_start" %in% names(df_cancelled_classes)) {
+    df_cancelled_classes$recording_start <- as.character(df_cancelled_classes$recording_start)
+  }
+
+  # Coerce 'start_time_local' to character in both data frames to avoid type mismatch
+  if ("start_time_local" %in% names(joined_sessions)) {
+    joined_sessions$start_time_local <- as.character(joined_sessions$start_time_local)
+  }
+  if ("start_time_local" %in% names(df_cancelled_classes)) {
+    df_cancelled_classes$start_time_local <- as.character(df_cancelled_classes$start_time_local)
   }
 
   result <- dplyr::bind_rows(joined_sessions, df_cancelled_classes) %>%

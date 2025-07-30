@@ -296,11 +296,11 @@ mapping_summary
 
 # Check for unmapped recordings
 unmapped <- zoom_recordings_raw %>%
-  anti_join(session_mapping, by = "recording_id")
+  anti_join(session_mapping, by = c("ID" = "recording_id"))
 
 if (nrow(unmapped) > 0) {
   cat("Unmapped recordings found:\n")
-  print(unmapped$recording_name)
+  print(unmapped$Topic)
 } else {
   cat("All recordings mapped successfully!\n")
 }

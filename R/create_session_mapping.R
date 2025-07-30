@@ -169,13 +169,21 @@ create_session_mapping <- function(
 
   # Return mapping
   mapping_df %>%
+    dplyr::mutate(
+      course_section = if (all(c("dept", "course", "section") %in% names(.))) {
+        paste(dept, course, section, sep = ".")
+      } else {
+        NA_character_
+      }
+    ) %>%
     dplyr::select(
-      zoom_recording_id,
+      recording_id = zoom_recording_id,
       topic,
       start_time,
       dept,
       course,
       section,
+      course_section,
       session_date,
       session_time,
       instructor,
