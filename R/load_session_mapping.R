@@ -82,17 +82,16 @@ load_session_mapping <- function(
         by = c("ID" = "zoom_recording_id")
       ) %>%
       dplyr::mutate(
-        # Use mapped values if available, otherwise use parsed values
-        dept = ifelse(!is.na(dept), dept, dept.x),
-        course_section = paste(course, section, sep = "."),
-        course = course,
-        section = section,
-        instructor = ifelse(!is.na(instructor), instructor, instructor.x),
-        match_start_time = session_date,
-        match_end_time = session_date + lubridate::duration(1.5, "hours")
+        dept = if ("dept" %in% names(.)) dept else NA_character_,
+        course = if ("course" %in% names(.)) course else NA_character_,
+        section = if ("section" %in% names(.)) section else NA_character_,
+        instructor = if ("instructor" %in% names(.)) instructor else NA_character_,
+        course_section = if (all(c("course", "section") %in% names(.))) paste(course, section, sep = ".") else NA_character_,
+        match_start_time = if ("session_date" %in% names(.)) session_date else NA,
+        match_end_time = if ("session_date" %in% names(.)) session_date + lubridate::duration(1.5, "hours") else NA
       ) %>%
       dplyr::select(
-        -dplyr::any_of(c("dept.x", "instructor.x")),
+        -dplyr::any_of(c("dept_zoom")),
         -dplyr::any_of(c("session_date", "session_time"))
       )
 

@@ -1,4 +1,4 @@
-transcript_section,day,time,course,section,preferred_name,formal_name,transcript_name,student_id
+course_section,day,time,course,section,preferred_name,formal_name,transcript_name,student_id
 23.24,Thurs,6:30PM,23,23.24,Conor Healy,Conor Healy,Conor Healy,9990000025
 23.24,Thurs,6:30PM,23,23.24,Dr. Melissa Ko,Dr. Melissa Ko,Dr. Melissa Ko,NA
 23.24,NA,NA,23,23.24,John Fielding,John Fielding,NA,9990000024

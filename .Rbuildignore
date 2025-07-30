@@ -60,3 +60,6 @@
 ^\.Rhistory$
 ^\.RData$
 ^\.Ruserdata/
+^\.Rproj\.user$
+^doc$
+^Meta$

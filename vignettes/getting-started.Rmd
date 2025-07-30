@@ -1,0 +1,99 @@
+---
+title: "Getting Started with zoomstudentengagement"
+author: "zoomstudentengagement package"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with zoomstudentengagement}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+```{r setup}
+library(zoomstudentengagement)
+library(dplyr)
+library(ggplot2)
+```
+
+# Getting Started with zoomstudentengagement
+
+The `zoomstudentengagement` package helps instructors analyze student engagement from Zoom transcripts, with a particular focus on participation equity. This vignette will get you started with the basic workflow.
+
+## Installation
+
+Install the package from GitHub:
+
+```{r eval = FALSE}
+devtools::install_github("revgizmo/zoomstudentengagement")
+```
+
+## Quick Start
+
+Here's a minimal example to get you started:
+
+```{r quick-start}
+# Load a sample transcript
+transcript_file <- system.file(
+  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+  package = "zoomstudentengagement"
+)
+
+# Process the transcript
+processed_transcript <- process_zoom_transcript(
+  transcript_file_path = transcript_file,
+  consolidate_comments = TRUE,
+  add_dead_air = TRUE
+)
+
+# Calculate summary metrics
+summary_metrics <- summarize_transcript_metrics(
+  transcript_file_path = transcript_file,
+  names_exclude = c("dead_air")
+)
+
+# View the results
+head(summary_metrics)
+```
+
+## What the Package Does
+
+The `zoomstudentengagement` package provides tools for:
+
+1. **Loading and Processing Zoom Transcripts**: Convert Zoom VTT files into analyzable data
+2. **Calculating Engagement Metrics**: Measure participation by speaker/student
+3. **Name Matching and Cleaning**: Match transcript names to student rosters
+4. **Visualization**: Create plots to analyze participation patterns
+5. **Reporting**: Generate individual student reports
+
+## Basic Workflow
+
+The typical workflow involves:
+
+1. **Setup**: Configure your analysis parameters
+2. **Load Transcripts**: Import and process Zoom transcript files
+3. **Load Roster**: Import student enrollment data
+4. **Clean Names**: Match transcript names to student records
+5. **Analyze**: Calculate metrics and create visualizations
+6. **Report**: Generate insights and reports
+
+## Next Steps
+
+- **For transcript processing**: See the [Transcript Processing](transcript-processing.html) vignette
+- **For roster management**: See the [Roster Cleaning](roster-cleaning.html) vignette  
+- **For visualization**: See the [Plotting and Analysis](plotting.html) vignette
+- **For advanced workflows**: See the [Session Mapping](session-mapping.html) vignette
+
+## Getting Help
+
+- Check the [package documentation](https://revgizmo.github.io/zoomstudentengagement/)
+- Review the [PROJECT.md](https://github.com/revgizmo/zoomstudentengagement_cursor/blob/main/PROJECT.md) for current development status
+- Report issues on [GitHub](https://github.com/revgizmo/zoomstudentengagement_cursor/issues)
