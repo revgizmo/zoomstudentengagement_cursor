@@ -13,6 +13,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Load session mapping
 #' session_mapping <- load_session_mapping("session_mapping.csv")
 #'
@@ -22,6 +23,7 @@
 #'   "session_mapping.csv",
 #'   zoom_recordings_df = zoom_recordings_df
 #' )
+#' }
 load_session_mapping <- function(
     mapping_file,
     zoom_recordings_df = NULL,

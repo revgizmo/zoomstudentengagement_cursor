@@ -56,7 +56,14 @@
 #' @export
 #'
 #' @examples
+#' # Show what happens when no data files exist (returns empty tibble)
+#' load_zoom_recorded_sessions_list(
+#'   data_folder = "nonexistent_folder",
+#'   transcripts_folder = "transcripts"
+#' )
+#'
 #' \dontrun{
+#' # Load actual Zoom recordings data (requires data files)
 #' # Requires a Zoom cloud recordings CSV in the appropriate folder, e.g.:
 #' # inst/extdata/transcripts/zoomus_recordings__20240124.csv
 #' load_zoom_recorded_sessions_list(

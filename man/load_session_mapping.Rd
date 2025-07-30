@@ -26,6 +26,7 @@ and integrates it with the Zoom recordings data to provide reliable course
 information for analysis.
 }
 \examples{
+\dontrun{
 # Load session mapping
 session_mapping <- load_session_mapping("session_mapping.csv")
 
@@ -35,4 +36,5 @@ mapped_recordings <- load_session_mapping(
   "session_mapping.csv",
   zoom_recordings_df = zoom_recordings_df
 )
+}
 }

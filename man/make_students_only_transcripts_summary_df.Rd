@@ -22,6 +22,7 @@ This function creates a tibble from summary results at the
 level of the class section and preferred student name after filtering for only the students enrolled in the class.
 }
 \examples{
+\dontrun{
 # Create sample transcript list
 sample_transcript_list <- tibble::tibble(
   name = c("John Smith", "Jane Doe", "Unknown"),
@@ -68,4 +69,5 @@ make_students_only_transcripts_summary_df(
   ),
   preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")
 )
+}
 }
