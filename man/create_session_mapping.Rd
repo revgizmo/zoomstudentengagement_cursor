@@ -38,6 +38,7 @@ This function creates a mapping between Zoom recordings and course information
 by matching recording topics with course patterns.
 }
 \examples{
+\dontrun{
 # Create sample Zoom recordings data
 zoom_recordings <- tibble::tibble(
   ID = c("123456789", "987654321"),
@@ -61,4 +62,5 @@ session_mapping <- create_session_mapping(
   output_file = "session_mapping.csv",
   semester_start_mdy = "Jan 15, 2024"
 )
+}
 }

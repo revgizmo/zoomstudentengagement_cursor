@@ -26,7 +26,26 @@ a tibble that summarizes results at the level of the class section
 Mask User Names by Metric
 }
 \examples{
+# Create sample transcripts summary data
+sample_summary <- tibble::tibble(
+  section = c("101.A", "101.A", "101.A"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson"),
+  session_ct = c(5, 3, 8),
+  duration = c(300, 180, 480),
+  wordcount = c(500, 300, 800)
+)
+
+# Mask student names by session count (default metric)
+mask_user_names_by_metric(sample_summary)
+
+# Mask student names by duration metric
+mask_user_names_by_metric(sample_summary, metric = "duration")
+
+# Highlight a specific student while masking others
+mask_user_names_by_metric(sample_summary, target_student = "Jane Doe")
+
 \dontrun{
+# More complex example with larger dataset
 # Create sample transcripts summary data
 sample_summary <- tibble::tibble(
   section = c("101.A", "101.A", "101.A"),

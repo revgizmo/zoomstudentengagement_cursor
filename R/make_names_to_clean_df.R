@@ -24,7 +24,19 @@
 #' @export
 #'
 #' @examples
+#' # Create sample clean_names_df with unmatched students
+#' sample_clean_names_df <- tibble::tibble(
+#'   student_id = c("12345", NA, "67890"),
+#'   preferred_name = c("John Smith", "Unknown Student", "Jane Doe"),
+#'   transcript_name = c("John Smith", "Unknown Student", "Jane Doe"),
+#'   n = c(5, 3, 8)
+#' )
+#'
+#' # Find students with transcript recordings but no matching student ID
+#' make_names_to_clean_df(sample_clean_names_df)
+#'
 #' \dontrun{
+#' # More complex example with larger dataset
 #' # Create sample clean_names_df with unmatched students
 #' sample_clean_names_df <- tibble::tibble(
 #'   student_id = c("12345", NA, "67890"),

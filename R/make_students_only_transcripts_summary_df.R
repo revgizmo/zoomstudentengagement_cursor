@@ -10,6 +10,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Create sample transcript list
 #' sample_transcript_list <- tibble::tibble(
 #'   name = c("John Smith", "Jane Doe", "Unknown"),
@@ -56,6 +57,7 @@
 #'   ),
 #'   preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")
 #' )
+#' }
 make_students_only_transcripts_summary_df <-
   function(transcripts_session_summary_df,
            preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")) {
