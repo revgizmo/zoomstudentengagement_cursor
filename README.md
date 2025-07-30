@@ -77,16 +77,21 @@ head(metrics)
 
 For detailed workflows and examples, see the package vignettes:
 
-- **[Getting Started](doc/getting-started.html)** - Basic setup and
-  workflow overview
-- **[Transcript Processing](doc/transcript-processing.html)** - Load,
-  process, and analyze transcripts
-- **[Roster Management](doc/roster-cleaning.html)** - Manage student
-  rosters and clean name mismatches
-- **[Plotting and Analysis](doc/plotting.html)** - Create visualizations
-  and analyze engagement patterns
-- **[Session Mapping](doc/session-mapping.html)** - Handle complex
-  scenarios with multiple courses/sections
+- **[Getting
+  Started](https://revgizmo.github.io/zoomstudentengagement/getting-started.html)** -
+  Basic setup and workflow overview
+- **[Transcript
+  Processing](https://revgizmo.github.io/zoomstudentengagement/transcript-processing.html)** -
+  Load, process, and analyze transcripts
+- **[Roster
+  Management](https://revgizmo.github.io/zoomstudentengagement/roster-cleaning.html)** -
+  Manage student rosters and clean name mismatches
+- **[Plotting and
+  Analysis](https://revgizmo.github.io/zoomstudentengagement/plotting.html)** -
+  Create visualizations and analyze engagement patterns
+- **[Session
+  Mapping](https://revgizmo.github.io/zoomstudentengagement/session-mapping.html)** -
+  Handle complex scenarios with multiple courses/sections
 
 ## 🎯 What the Package Does
 
