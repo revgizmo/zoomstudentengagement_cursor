@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(zoomstudentengagement)
-load_all()
 library(dplyr)
 library(ggplot2)
 ```
@@ -35,43 +34,48 @@ This vignette shows how to create visualizations and analyze student engagement 
 
 First, let's prepare some sample data for analysis:
 
-```{r prepare-data, eval = FALSE}
-# Load sample data
-data_folder <- system.file("extdata", package = "zoomstudentengagement")
+```{r prepare-data}
+# Create sample data for demonstration
+# In practice, you would load actual transcript and roster data
 
-# Load roster
-roster_df <- load_roster(
-  data_folder = data_folder,
-  roster_file = "roster.csv"
+# Sample transcript metrics
+transcripts_metrics_df <- tibble::tibble(
+  name = c("Alice Johnson", "Bob Smith", "Carol Davis", "David Wilson", "Eva Brown"),
+  n = c(8, 12, 5, 15, 3),
+  duration = c(45.2, 67.8, 23.1, 89.4, 12.5),
+  wordcount = c(1200, 1800, 650, 2200, 400),
+  comments = list("Good point", "Interesting question", "I agree", "Follow-up question", "Brief comment"),
+  n_perc = c(18.6, 27.9, 11.6, 34.9, 7.0),
+  duration_perc = c(19.2, 28.8, 9.8, 38.0, 5.3),
+  wordcount_perc = c(19.2, 28.8, 10.4, 35.2, 6.4),
+  wpm = c(26.5, 26.6, 28.1, 24.6, 32.0),
+  course_section = "LTF.201.1",
+  course = 201,
+  section = 1,
+  day = "Thursday",
+  time = "18:30",
+  name_raw = name,
+  start_time_local = as.POSIXct("2024-01-24 18:30:00", tz = "America/Los_Angeles"),
+  dept = "LTF",
+  session_num = 1
 )
 
-# Load transcript metrics
-transcript_file <- system.file(
-  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-  package = "zoomstudentengagement"
+# Sample roster sessions
+roster_sessions <- tibble::tibble(
+  student_id = c("12345", "12346", "12347", "12348", "12349"),
+  first_last = c("Alice Johnson", "Bob Smith", "Carol Davis", "David Wilson", "Eva Brown"),
+  preferred_name = c("Alice", "Bob", "Carol", "David", "Eva"),
+  dept = "LTF",
+  course = 201,
+  section = 1,
+  session_num = 1,
+  start_time_local = as.POSIXct("2024-01-24 18:30:00", tz = "America/Los_Angeles"),
+  course_section = "LTF.201.1"
 )
 
-transcripts_metrics_df <- summarize_transcript_metrics(
-  transcript_file_path = transcript_file,
-  names_exclude = c("dead_air")
-)
-
-# Create session data (simplified for example)
-transcripts_list_df <- data.frame(
-  transcript_file = "GMT20240124-202901_Recording.transcript.vtt",
-  session_date = as.Date("2024-01-24"),
-  section = "LTF.201.1"
-)
-
-roster_small_df <- make_roster_small(roster_df)
-roster_sessions <- make_student_roster_sessions(
-  transcripts_list_df,
-  roster_small_df
-)
-
-# Create clean names
+# Create clean names dataframe
 clean_names_df <- make_clean_names_df(
-  data_folder = data_folder,
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
   section_names_lookup_file = "section_names_lookup.csv",
   transcripts_metrics_df,
   roster_sessions
@@ -80,6 +84,9 @@ clean_names_df <- make_clean_names_df(
 # Create summary dataframes
 transcripts_session_summary_df <- make_transcripts_session_summary_df(clean_names_df)
 transcripts_summary_df <- make_transcripts_summary_df(transcripts_session_summary_df)
+
+# View the summary data
+head(transcripts_summary_df)
 ```
 
 ## Basic Visualization
@@ -180,7 +187,7 @@ Filter data for specific analysis:
 ```{r custom-filtering}
 # Filter for specific sections
 section_data <- transcripts_summary_df %>%
-  filter(section == "LTF.201.1")
+  filter(section == 1)  # Use the actual section number from our sample data
 
 # Plot filtered data
 plot_users_by_metric(section_data, metric = "wpm")
