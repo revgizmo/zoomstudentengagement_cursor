@@ -1,0 +1,216 @@
+---
+title: "Transcript Processing with zoomstudentengagement"
+author: "zoomstudentengagement package"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Transcript Processing with zoomstudentengagement}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+```{r setup}
+library(zoomstudentengagement)
+library(dplyr)
+library(ggplot2)
+```
+
+# Transcript Processing
+
+This vignette shows how to load, process, and analyze Zoom transcripts using the `zoomstudentengagement` package.
+
+## Loading Individual Transcripts
+
+### Basic Transcript Loading
+
+Start by loading a raw Zoom transcript:
+
+```{r load-basic}
+# Load a sample transcript
+transcript_file <- system.file(
+  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+  package = "zoomstudentengagement"
+)
+
+# Load the raw transcript
+raw_transcript <- load_zoom_transcript(transcript_file_path = transcript_file)
+
+# View the structure
+head(raw_transcript)
+```
+
+### Processing Transcripts
+
+Process the transcript to consolidate comments and add dead air:
+
+```{r process-transcript}
+# Process the transcript with options
+processed_transcript <- process_zoom_transcript(
+  transcript_file_path = transcript_file,
+  consolidate_comments = TRUE,
+  max_pause_sec = 1,
+  add_dead_air = TRUE,
+  dead_air_name = "dead_air",
+  na_name = "unknown"
+)
+
+# View the processed transcript
+head(processed_transcript)
+```
+
+## Calculating Summary Metrics
+
+### Single Transcript Analysis
+
+Calculate engagement metrics for a single transcript:
+
+```{r single-metrics}
+# Calculate summary metrics
+summary_metrics <- summarize_transcript_metrics(
+  transcript_file_path = transcript_file,
+  names_exclude = c("dead_air"),
+  consolidate_comments = TRUE,
+  max_pause_sec = 1,
+  add_dead_air = TRUE
+)
+
+# View the metrics
+summary_metrics
+```
+
+### Multiple Transcript Analysis
+
+For multiple transcripts, use the batch processing function:
+
+```{r batch-processing}
+# Set up data folder path
+data_folder <- system.file("extdata", package = "zoomstudentengagement")
+
+# Process multiple transcripts
+batch_metrics <- summarize_transcript_files(
+  transcript_file_names = "GMT20240124-202901_Recording.transcript.vtt",
+  data_folder = data_folder,
+  transcripts_folder = "transcripts",
+  names_to_exclude = c("dead_air"),
+  deduplicate_content = FALSE
+)
+
+# View batch results
+head(batch_metrics)
+```
+
+## Working with Transcript Files
+
+### Loading Transcript File Lists
+
+Load and organize multiple transcript files:
+
+```{r file-list}
+# Load transcript files list
+transcript_files <- load_transcript_files_list(
+  data_folder = data_folder,
+  transcripts_folder = "transcripts"
+)
+
+# View the file list
+transcript_files
+```
+
+### Loading Zoom Recordings List
+
+Load the list of Zoom recordings from CSV:
+
+```{r recordings-list}
+# Load Zoom recordings list
+recordings_list <- load_zoom_recorded_sessions_list(
+  data_folder = data_folder,
+  transcripts_folder = "transcripts",
+  dept = "LTF",
+  semester_start_mdy = "Jan 01, 2024",
+  scheduled_session_length_hours = 1.5
+)
+
+# View the recordings list
+recordings_list
+```
+
+## Advanced Processing Options
+
+### Content Deduplication
+
+Handle duplicate transcripts intelligently:
+
+```{r deduplication}
+# Process with content deduplication
+deduplicated_metrics <- summarize_transcript_files(
+  transcript_file_names = "GMT20240124-202901_Recording.transcript.vtt",
+  data_folder = data_folder,
+  transcripts_folder = "transcripts",
+  deduplicate_content = TRUE,
+  similarity_threshold = 0.95,
+  duplicate_method = "hybrid"
+)
+
+# View deduplicated results
+head(deduplicated_metrics)
+```
+
+### Custom Processing Parameters
+
+Fine-tune the processing parameters:
+
+```{r custom-params}
+# Custom processing with specific parameters
+custom_processed <- process_zoom_transcript(
+  transcript_file_path = transcript_file,
+  consolidate_comments = TRUE,
+  max_pause_sec = 2,  # Longer pause threshold
+  add_dead_air = TRUE,
+  dead_air_name = "silence",
+  na_name = "unidentified"
+)
+
+# View custom processed transcript
+head(custom_processed)
+```
+
+## Understanding the Output
+
+### Transcript Structure
+
+The processed transcript contains:
+
+- **start_time**: When the comment started
+- **end_time**: When the comment ended  
+- **duration**: Length of the comment
+- **name**: Speaker name
+- **comment**: The actual text
+- **wordcount**: Number of words
+
+### Metrics Structure
+
+The summary metrics include:
+
+- **name**: Speaker name
+- **n**: Number of comments
+- **perc_n**: Percentage of total comments
+- **duration**: Total speaking time
+- **perc_duration**: Percentage of total time
+- **wordcount**: Total words spoken
+- **perc_wordcount**: Percentage of total words
+- **wpm**: Words per minute
+
+## Next Steps
+
+- **For roster management**: See the [Roster Cleaning](roster-cleaning.html) vignette
+- **For visualization**: See the [Plotting and Analysis](plotting.html) vignette
+- **For session mapping**: See the [Session Mapping](session-mapping.html) vignette 

@@ -1,0 +1,268 @@
+---
+title: "Roster Management and Name Cleaning"
+author: "zoomstudentengagement package"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Roster Management and Name Cleaning}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+```{r setup}
+library(zoomstudentengagement)
+library(dplyr)
+library(ggplot2)
+```
+
+# Roster Management and Name Cleaning
+
+This vignette shows how to manage student rosters and clean name mismatches between Zoom transcripts and official enrollment data.
+
+## Loading Student Rosters
+
+### Basic Roster Loading
+
+Load a student roster from a CSV file:
+
+```{r load-roster}
+# Load the sample roster
+data_folder <- system.file("extdata", package = "zoomstudentengagement")
+
+roster_df <- load_roster(
+  data_folder = data_folder,
+  roster_file = "roster.csv"
+)
+
+# View the roster structure
+head(roster_df)
+```
+
+### Creating Section Summaries
+
+Generate summaries by course section:
+
+```{r sections}
+# Create sections summary
+sections_df <- make_sections_df(roster_df)
+
+# View sections
+sections_df
+```
+
+### Creating Student Lists
+
+Create a simplified student list for analysis:
+
+```{r roster-small}
+# Create simplified roster
+roster_small_df <- make_roster_small(roster_df)
+
+# View simplified roster
+head(roster_small_df)
+```
+
+## Working with Transcript Data
+
+### Loading Transcript Metrics
+
+First, let's load some transcript data to work with:
+
+```{r load-transcripts}
+# Load transcript metrics
+transcript_file <- system.file(
+  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+  package = "zoomstudentengagement"
+)
+
+transcripts_metrics_df <- summarize_transcript_metrics(
+  transcript_file_path = transcript_file,
+  names_exclude = c("dead_air")
+)
+
+# View transcript metrics
+head(transcripts_metrics_df)
+```
+
+### Creating Session Rosters
+
+Create a roster with entries for each recorded session:
+
+```{r session-roster}
+# Create session mapping (simplified for this example)
+transcripts_list_df <- data.frame(
+  transcript_file = "GMT20240124-202901_Recording.transcript.vtt",
+  session_date = as.Date("2024-01-24"),
+  section = "LTF.201.1"
+)
+
+# Create roster sessions
+roster_sessions <- make_student_roster_sessions(
+  transcripts_list_df,
+  roster_small_df
+)
+
+# View roster sessions
+head(roster_sessions)
+```
+
+## Name Cleaning Process
+
+### Initial Name Matching
+
+Join transcript names with roster data:
+
+```{r initial-matching}
+# Create clean names dataframe
+clean_names_df <- make_clean_names_df(
+  data_folder = data_folder,
+  section_names_lookup_file = "section_names_lookup.csv",
+  transcripts_metrics_df,
+  roster_sessions
+)
+
+# View initial matching results
+head(clean_names_df)
+```
+
+### Identifying Names to Clean
+
+Find names that need manual cleaning:
+
+```{r names-to-clean}
+# Find names that need cleaning
+names_to_clean <- make_names_to_clean_df(clean_names_df)
+
+# View names needing attention
+names_to_clean
+```
+
+### Writing Names Lookup
+
+Create a lookup file for manual editing:
+
+```{r write-lookup}
+# Write section names lookup
+write_section_names_lookup(
+  clean_names_df,
+  data_folder = data_folder,
+  section_names_lookup_file = "section_names_lookup.csv"
+)
+```
+
+## Manual Name Cleaning
+
+### Understanding the Process
+
+The name cleaning process involves:
+
+1. **Automatic Matching**: The package attempts to match transcript names to roster names
+2. **Manual Review**: Names that don't match automatically are flagged for review
+3. **Lookup File**: A CSV file is created for manual editing
+4. **Iterative Process**: Repeat until all names are properly matched
+
+### Common Name Issues
+
+Typical issues you might encounter:
+
+- **Nicknames**: "Mike" vs "Michael"
+- **Display Names**: "Prof. Smith" vs "Dr. Smith"  
+- **Guest Speakers**: Names not in the roster
+- **Technical Issues**: "Unknown" or "User123"
+
+### Editing the Lookup File
+
+The lookup file contains:
+
+- **transcript_name**: Name as it appears in the transcript
+- **preferred_name**: How you want it to appear in analysis
+- **formal_name**: Official name from roster
+- **student_id**: Student identifier
+- **section**: Course section
+
+## Advanced Name Cleaning
+
+### Using Preferred Names
+
+The package supports preferred names from the roster:
+
+```{r preferred-names}
+# Check if roster has preferred names
+if ("preferred_name" %in% colnames(roster_df)) {
+  cat("Roster includes preferred names\n")
+  head(roster_df[, c("formal_name", "preferred_name")])
+} else {
+  cat("Roster uses formal names only\n")
+}
+```
+
+### Handling Special Cases
+
+For special cases like guest speakers:
+
+```{r special-cases}
+# Example: Mark guest speakers
+# In the lookup file, set:
+# transcript_name: "Guest Speaker"
+# preferred_name: "Guest"
+# formal_name: "Guest Speaker" 
+# student_id: "GUEST001"
+# section: "LTF.201.1"
+```
+
+## Iterative Cleaning Process
+
+### Step-by-Step Workflow
+
+1. **Run initial matching**:
+   ```r
+   clean_names_df <- make_clean_names_df(...)
+   ```
+
+2. **Check for unmatched names**:
+   ```r
+   names_to_clean <- make_names_to_clean_df(clean_names_df)
+   ```
+
+3. **Edit the lookup file** manually
+
+4. **Re-run matching** with updated lookup
+
+5. **Repeat** until all names are matched
+
+### Validation
+
+Check your cleaning results:
+
+```{r validation}
+# After cleaning, check results
+final_clean_names <- make_clean_names_df(
+  data_folder = data_folder,
+  section_names_lookup_file = "section_names_lookup.csv",
+  transcripts_metrics_df,
+  roster_sessions
+)
+
+# Check for any remaining unmatched names
+remaining_unmatched <- make_names_to_clean_df(final_clean_names)
+if (nrow(remaining_unmatched) == 0) {
+  cat("All names successfully matched!\n")
+} else {
+  cat("Still have", nrow(remaining_unmatched), "names to clean\n")
+}
+```
+
+## Next Steps
+
+- **For analysis**: See the [Plotting and Analysis](plotting.html) vignette
+- **For session mapping**: See the [Session Mapping](session-mapping.html) vignette
+- **For student reports**: See the [Student Reports](student-reports.html) vignette 
