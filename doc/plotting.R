@@ -115,7 +115,7 @@ plot_users_masked_section_by_metric(
 ## ----custom-filtering---------------------------------------------------------
 # Filter for specific sections
 section_data <- transcripts_summary_df %>%
-  filter(section == 1)  # Use the actual section number from our sample data
+  filter(section == 1) # Use the actual section number from our sample data
 
 # Plot filtered data
 plot_users_by_metric(section_data, metric = "wpm")
@@ -148,7 +148,7 @@ engagement_categories <- transcripts_summary_df %>%
   mutate(
     engagement_type = case_when(
       n == 0 ~ "No participation",
-      n <= 2 ~ "Low participation", 
+      n <= 2 ~ "Low participation",
       n <= 5 ~ "Moderate participation",
       TRUE ~ "High participation"
     )

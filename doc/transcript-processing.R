@@ -109,7 +109,7 @@ head(deduplicated_metrics)
 custom_processed <- process_zoom_transcript(
   transcript_file_path = transcript_file,
   consolidate_comments = TRUE,
-  max_pause_sec = 2,  # Longer pause threshold
+  max_pause_sec = 2, # Longer pause threshold
   add_dead_air = TRUE,
   dead_air_name = "silence",
   na_name = "unidentified"

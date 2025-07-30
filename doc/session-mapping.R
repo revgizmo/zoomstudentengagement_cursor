@@ -67,7 +67,7 @@ session_mapping <- create_session_mapping(
   output_file = config$session_mapping$session_mapping_file,
   auto_assign_patterns = list(
     "CS 101" = "CS.*101",
-    "MATH 250" = "MATH.*250", 
+    "MATH 250" = "MATH.*250",
     "LTF 201" = "LTF.*201"
   ),
   interactive = FALSE # Set to TRUE for interactive mode
@@ -139,7 +139,7 @@ head(transcripts_metrics_df)
 # Example of custom patterns
 custom_patterns <- list(
   "CS 101 Section 1" = "CS.*101.*Section.*1|CS.*101.*Monday",
-  "CS 101 Section 2" = "CS.*101.*Section.*2|CS.*101.*Wednesday", 
+  "CS 101 Section 2" = "CS.*101.*Section.*2|CS.*101.*Wednesday",
   "MATH 250" = "MATH.*250|Mathematics.*250",
   "LTF 201" = "LTF.*201|Language.*201"
 )
