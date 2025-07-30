@@ -78,15 +78,27 @@ head(roster_small_df)
 First, let's load some transcript data to work with:
 
 ```{r load-transcripts}
-# Load transcript metrics
-transcript_file <- system.file(
-  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-  package = "zoomstudentengagement"
-)
-
-transcripts_metrics_df <- summarize_transcript_metrics(
-  transcript_file_path = transcript_file,
-  names_exclude = c("dead_air")
+# Create sample transcript metrics for demonstration
+# In practice, you would use summarize_transcript_metrics() on actual transcript files
+transcripts_metrics_df <- tibble::tibble(
+  name = c("Conor Healy", "Dr. Melissa Ko", "Ryan Sloan"),
+  n = c(15, 8, 12),
+  duration = c(45.2, 23.1, 38.7),
+  wordcount = c(1200, 650, 950),
+  comments = list("Good discussion", "Excellent points", "Interesting question"),
+  n_perc = c(25.0, 13.3, 20.0),
+  duration_perc = c(25.0, 13.3, 20.0),
+  wordcount_perc = c(25.0, 13.3, 20.0),
+  wpm = c(26.5, 28.1, 24.6),
+  course_section = "23.24",
+  course = 23,
+  section = 24,
+  day = "Thursday",
+  time = "18:30",
+  name_raw = name,
+  start_time_local = as.POSIXct("2024-01-24 18:30:00", tz = "America/Los_Angeles"),
+  dept = "LTF",
+  session_num = 1
 )
 
 # View transcript metrics
@@ -98,11 +110,15 @@ head(transcripts_metrics_df)
 Create a roster with entries for each recorded session:
 
 ```{r session-roster}
-# Create session mapping (simplified for this example)
-transcripts_list_df <- data.frame(
-  transcript_file = "GMT20240124-202901_Recording.transcript.vtt",
-  session_date = as.Date("2024-01-24"),
-  section = "LTF.201.1"
+# Create a simplified session mapping for demonstration
+# In practice, you would use the full data loading functions
+transcripts_list_df <- tibble::tibble(
+  dept = "LTF",
+  course = 23,
+  section = 24,
+  session_num = 1,
+  start_time_local = as.POSIXct("2024-01-24 18:30:00", tz = "America/Los_Angeles"),
+  course_section = "23.24"
 )
 
 # Create roster sessions
@@ -199,7 +215,7 @@ The package supports preferred names from the roster:
 # Check if roster has preferred names
 if ("preferred_name" %in% colnames(roster_df)) {
   cat("Roster includes preferred names\n")
-  head(roster_df[, c("formal_name", "preferred_name")])
+  head(roster_df[, c("first_last", "preferred_name")])
 } else {
   cat("Roster uses formal names only\n")
 }

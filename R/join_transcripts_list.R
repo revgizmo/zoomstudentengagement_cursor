@@ -116,6 +116,14 @@ join_transcripts_list <- function(
     df_cancelled_classes$course_section <- as.character(df_cancelled_classes$course_section)
   }
 
+  # Coerce 'ID' to character in both data frames to avoid type mismatch
+  if ("ID" %in% names(joined_sessions)) {
+    joined_sessions$ID <- as.character(joined_sessions$ID)
+  }
+  if ("ID" %in% names(df_cancelled_classes)) {
+    df_cancelled_classes$ID <- as.character(df_cancelled_classes$ID)
+  }
+
   # Coerce file columns to character if present and not already
   file_cols <- c("closed_caption_file", "transcript_file", "chat_file")
   for (col in file_cols) {
