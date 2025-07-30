@@ -34,7 +34,7 @@ This vignette shows how to create visualizations and analyze student engagement 
 
 First, let's prepare some sample data for analysis:
 
-```{r prepare-data}
+```{r prepare-data, eval = FALSE}
 # Load sample data
 data_folder <- system.file("extdata", package = "zoomstudentengagement")
 

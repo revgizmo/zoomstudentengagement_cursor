@@ -24,7 +24,7 @@ test_that("load_zoom_transcript loads valid VTT file correctly", {
 
   # Check basic structure
   expect_s3_class(result, "tbl_df")
-  expect_true(all(c("comment_num", "name", "comment", "start", "end", "duration", "wordcount") %in% names(result)))
+  expect_true(all(c("transcript_file", "comment_num", "name", "comment", "start", "end", "duration", "wordcount") %in% names(result)))
 
   # Check content
   expect_equal(nrow(result), 3)
