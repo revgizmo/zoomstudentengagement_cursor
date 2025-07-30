@@ -123,18 +123,25 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
    - Ensure package works as expected in production scenarios
 
 10. **FERPA/Security Compliance** (Priority: HIGH) - [Issue #84](https://github.com/revgizmo/zoomstudentengagement/issues/84)
-    - Review and document FERPA compliance considerations
-    - Implement data privacy and security best practices
-    - Add data anonymization features
-    - Document secure data handling procedures
-    - Review for potential security vulnerabilities
+   - Review and document FERPA compliance considerations
+   - Implement data privacy and security best practices
+   - Add data anonymization features
+   - Document secure data handling procedures
+   - Review for potential security vulnerabilities
 
-11. **Documentation Restructuring** (Priority: LOW) - [Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2)
+11. **Ethical Use and Equitable Participation Review** (Priority: HIGH) - [Issue #85](https://github.com/revgizmo/zoomstudentengagement/issues/85)
+   - Review all functions for potential 'creepiness factor'
+   - Ensure package promotes equitable participation, not surveillance
+   - Assess functions for potential bias or negative psychological impact
+   - Add ethical use guidelines and best practices
+   - Verify functions support positive educational outcomes
+
+12. **Documentation Restructuring** (Priority: LOW) - [Issue #2](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/2)
    - Reduce README.Rmd from 1,219 lines to ~300 lines
    - Move complex workflows to vignettes
    - Create proper vignette infrastructure
 
-12. **Development Efficiency** (Priority: MEDIUM) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47)
+13. **Development Efficiency** (Priority: MEDIUM) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47)
    - Create verification helper script
    - Automate pre-CRAN validation process
 
