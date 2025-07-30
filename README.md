@@ -77,15 +77,15 @@ head(metrics)
 
 For detailed workflows and examples, see the package vignettes:
 
-- **[Getting Started](vignettes/getting-started.html)** - Basic setup
-  and workflow overview
-- **[Transcript Processing](vignettes/transcript-processing.html)** -
-  Load, process, and analyze transcripts
-- **[Roster Management](vignettes/roster-cleaning.html)** - Manage
-  student rosters and clean name mismatches
-- **[Plotting and Analysis](vignettes/plotting.html)** - Create
-  visualizations and analyze engagement patterns
-- **[Session Mapping](vignettes/session-mapping.html)** - Handle complex
+- **[Getting Started](doc/getting-started.html)** - Basic setup and
+  workflow overview
+- **[Transcript Processing](doc/transcript-processing.html)** - Load,
+  process, and analyze transcripts
+- **[Roster Management](doc/roster-cleaning.html)** - Manage student
+  rosters and clean name mismatches
+- **[Plotting and Analysis](doc/plotting.html)** - Create visualizations
+  and analyze engagement patterns
+- **[Session Mapping](doc/session-mapping.html)** - Handle complex
   scenarios with multiple courses/sections
 
 ## 🎯 What the Package Does

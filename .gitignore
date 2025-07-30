@@ -91,5 +91,5 @@ rsconnect/
 !.cursor/context.md
 .cursor.json
 example_test_results.rds
-/doc/
+# /doc/ - Removed to allow tracking of built vignettes
 /Meta/
