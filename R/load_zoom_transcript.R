@@ -49,7 +49,7 @@ load_zoom_transcript <- function(transcript_file_path) {
   transcript_vtt <- readr::read_tsv(
     transcript_file_path,
     col_names = "WEBVTT",
-    skip = 1,  # Skip the "WEBVTT" header row
+    skip = 1, # Skip the "WEBVTT" header row
     show_col_types = FALSE
   )
 
@@ -89,12 +89,12 @@ load_zoom_transcript <- function(transcript_file_path) {
     dplyr::mutate(
       # Split comment into name and text more efficiently
       name_comment_split = strsplit(comment, ": ", fixed = TRUE),
-      name = sapply(name_comment_split, function(x) if(length(x) > 1) x[1] else NA_character_),
-      comment = sapply(name_comment_split, function(x) if(length(x) > 1) paste(x[-1], collapse = ": ") else x[1]),
+      name = sapply(name_comment_split, function(x) if (length(x) > 1) x[1] else NA_character_),
+      comment = sapply(name_comment_split, function(x) if (length(x) > 1) paste(x[-1], collapse = ": ") else x[1]),
       # Split timestamp more efficiently
       time_split = strsplit(timestamp, " --> ", fixed = TRUE),
-      start = sapply(time_split, function(x) if(length(x) == 2) x[1] else NA_character_),
-      end = sapply(time_split, function(x) if(length(x) == 2) x[2] else NA_character_)
+      start = sapply(time_split, function(x) if (length(x) == 2) x[1] else NA_character_),
+      end = sapply(time_split, function(x) if (length(x) == 2) x[2] else NA_character_)
     ) %>%
     dplyr::mutate(
       start = hms::as_hms(start),

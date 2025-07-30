@@ -37,7 +37,7 @@ load_section_names_lookup <- function(data_folder = "data",
   if (file.exists(file_path)) {
     # File exists, proceed with importing it
     data <- readr::read_csv(
-      file_path, 
+      file_path,
       col_names = c("course_section", "day", "time", "course", "section", "preferred_name", "formal_name", "transcript_name", "student_id"),
       col_types = section_names_lookup_col_types,
       skip = 1,

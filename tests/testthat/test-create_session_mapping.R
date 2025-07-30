@@ -85,8 +85,8 @@ test_that("create_session_mapping creates correct structure", {
   )
 
   expect_named(session_mapping, c(
-    "zoom_recording_id", "topic", "start_time",
-    "dept", "course", "section", "session_date",
+    "recording_id", "topic", "start_time",
+    "dept", "course", "section", "course_section", "session_date",
     "session_time", "instructor", "notes"
   ))
   expect_equal(session_mapping$course, c("101", "250"))
