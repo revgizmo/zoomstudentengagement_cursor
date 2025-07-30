@@ -27,6 +27,23 @@ A ggplot of the provided metrics by students from the provided tibble
 Plot Users by Metric
 }
 \examples{
+# Simple example with sample data
+sample_summary <- tibble::tibble(
+  section = c("A", "A", "B"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson"),
+  session_ct = c(5, 3, 8),
+  duration = c(300, 180, 480),
+  wordcount = c(500, 300, 800)
+)
+
+# Plot session count by student
+plot_users_by_metric(sample_summary, metric = "session_ct")
+
+# Plot duration by student
+plot_users_by_metric(sample_summary, metric = "duration")
+
+\dontrun{
+# Complex example with full workflow
 # Create sample transcript list
 sample_transcript_list <- tibble::tibble(
   name = c("John Smith", "Jane Doe", "Unknown"),
@@ -74,4 +91,5 @@ plot_users_by_metric(
     )
   )
 )
+}
 }
