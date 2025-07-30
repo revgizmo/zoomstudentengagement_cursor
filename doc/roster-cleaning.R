@@ -126,7 +126,7 @@ if ("preferred_name" %in% colnames(roster_df)) {
 # In the lookup file, set:
 # transcript_name: "Guest Speaker"
 # preferred_name: "Guest"
-# formal_name: "Guest Speaker" 
+# formal_name: "Guest Speaker"
 # student_id: "GUEST001"
 # section: "LTF.201.1"
 
