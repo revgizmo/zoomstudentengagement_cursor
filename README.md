@@ -80,6 +80,9 @@ For detailed workflows and examples, see the package vignettes:
 - **[Getting
   Started](https://revgizmo.github.io/zoomstudentengagement/getting-started.html)** -
   Basic setup and workflow overview
+- **[Whole
+  Game](https://revgizmo.github.io/zoomstudentengagement/whole-game.html)** -
+  Complete workflow for new instructors
 - **[Transcript
   Processing](https://revgizmo.github.io/zoomstudentengagement/transcript-processing.html)** -
   Load, process, and analyze transcripts
