@@ -94,3 +94,4 @@ rsconnect/
 example_test_results.rds
 # /doc/ - Removed to allow tracking of built vignettes
 /Meta/
+/doc/
