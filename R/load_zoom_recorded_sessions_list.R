@@ -169,14 +169,27 @@ load_zoom_recorded_sessions_list <-
     print("After reading CSV:")
     print(result)
 
-    result <- result %>%
-      dplyr::group_by(`Topic`, `ID`, `Start Time`, `File Size (MB)`, `File Count`) %>%
-      dplyr::summarise(
-        `Total Views` = max(`Total Views`),
-        `Total Downloads` = max(`Total Downloads`),
-        `Last Accessed` = max(`Last Accessed`),
-        .groups = "drop"
-      )
+    # Use base R operations instead of dplyr to avoid segmentation fault
+    # Group by the specified columns and take max values
+    group_cols <- c("Topic", "ID", "Start Time", "File Size (MB)", "File Count")
+    
+    # Create a unique identifier for each group
+    result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
+    
+    # Aggregate using base R
+    aggregated_data <- aggregate(
+      result[, c("Total Views", "Total Downloads", "Last Accessed")],
+      by = list(group_id = result$group_id),
+      FUN = function(x) if (is.character(x)) x[which.max(nchar(x))] else max(x, na.rm = TRUE)
+    )
+    
+    # Get the first row from each group for the grouping columns
+    group_data <- result[!duplicated(result$group_id), group_cols, drop = FALSE]
+    group_data$group_id <- result$group_id[!duplicated(result$group_id)]
+    
+    # Merge the aggregated data with the group data
+    result <- merge(group_data, aggregated_data, by = "group_id", all.x = TRUE)
+    result$group_id <- NULL  # Remove the temporary group_id column
 
     # Debug print statements
     print("After summarise:")

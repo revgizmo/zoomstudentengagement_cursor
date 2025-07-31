@@ -583,11 +583,14 @@ overlapping Zoom recordings.</p>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>transcript_files_df</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 6</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   date_extract recording_start     start_time_local    closed_caption_file      </span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;        &lt;dttm&gt;              &lt;dttm&gt;              &lt;chr&gt;                    </span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 20240124     2024-01-24 20:29:01 2024-01-24 12:29:01 GMT20240124-202901_Recor…</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: transcript_file &lt;chr&gt;, chat_file &lt;chr&gt;</span></span></code></pre></div>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   date_extract     recording_start    start_time_local</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     20240124 2024-01-24 20:29:01 2024-01-24 12:29:01</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   closed_caption_file</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-202901_Recording.cc.vtt</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                               transcript_file</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-202901_Recording.transcript.vtt</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 chat_file</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-202901_RecordingnewChat.txt</span></span></code></pre></div>
 </div>
 <div id="step-2-load-cancelled-classes" class="section level3">
 <h3>Step 2: Load Cancelled Classes</h3>
@@ -618,45 +621,27 @@ overlapping Zoom recordings.</p>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>transcripts_list_df</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 33</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Th… 996 … Jan 24, 202…             147.           11             0</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 27 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;,</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   dept.x &lt;chr&gt;, course_section &lt;chr&gt;, course.x &lt;dbl&gt;, section.x &lt;dbl&gt;,</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   match_start_time &lt;chr&gt;, match_end_time &lt;chr&gt;, topic &lt;chr&gt;,</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   start_time &lt;chr&gt;, dept.y &lt;lgl&gt;, course.y &lt;lgl&gt;, section.y &lt;lgl&gt;,</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   instructor &lt;chr&gt;, notes &lt;chr&gt;, dept &lt;chr&gt;, course &lt;chr&gt;, section &lt;chr&gt;,</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   date_extract &lt;chr&gt;, recording_start &lt;chr&gt;, start_time_local &lt;chr&gt;,</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   closed_caption_file &lt;chr&gt;, transcript_file &lt;chr&gt;, chat_file &lt;chr&gt;, …</span></span></code></pre></div>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 0 × 5</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 5 variables: section &lt;chr&gt;, match_start_time &lt;dttm&gt;, match_end_time &lt;dttm&gt;,</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   start_time_local &lt;dttm&gt;, session_num &lt;int&gt;</span></span></code></pre></div>
 </div>
 <div id="step-4-process-transcripts" class="section level3">
 <h3>Step 4: Process Transcripts</h3>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Process transcripts</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>transcripts_metrics_df <span class="ot">&lt;-</span> <span class="fu">summarize_transcript_files</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">transcript_file_names =</span> transcripts_list_df,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_folder =</span> config<span class="sc">$</span>paths<span class="sc">$</span>data_folder,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">transcripts_folder =</span> config<span class="sc">$</span>paths<span class="sc">$</span>transcripts_folder,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to_exclude =</span> config<span class="sc">$</span>analysis<span class="sc">$</span>names_to_exclude</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(transcripts_metrics_df)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 76</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic.x ID.x  `Start Time.x` `File Size (MB).x` `File Count.x` `Total Views.x`</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;                       &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23… 996 … Jan 24, 2024 …               147.             11               0</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23… 996 … Jan 24, 2024 …               147.             11               0</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23… 996 … Jan 24, 2024 …               147.             11               0</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 LTF 23… 996 … Jan 24, 2024 …               147.             11               0</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 LTF 23… 996 … Jan 24, 2024 …               147.             11               0</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 LTF 23… 996 … Jan 24, 2024 …               147.             11               0</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 70 more variables: `Total Downloads.x` &lt;dbl&gt;, `Last Accessed.x` &lt;chr&gt;,</span></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   dept.x.x &lt;chr&gt;, course_section.x &lt;chr&gt;, course.x.x &lt;dbl&gt;,</span></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   section.x.x &lt;dbl&gt;, match_start_time.x &lt;chr&gt;, match_end_time.x &lt;chr&gt;,</span></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   topic.x &lt;chr&gt;, start_time.x &lt;chr&gt;, dept.y.x &lt;lgl&gt;, course.y.x &lt;lgl&gt;,</span></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   section.y.x &lt;lgl&gt;, instructor.x &lt;chr&gt;, notes.x &lt;chr&gt;, dept.x.x.x &lt;chr&gt;,</span></span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   course.x.x.x &lt;chr&gt;, section.x.x.x &lt;chr&gt;, date_extract.x &lt;chr&gt;,</span></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   recording_start.x &lt;chr&gt;, start_time_local.x &lt;chr&gt;, …</span></span></code></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract transcript file names from the joined data</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>transcript_file_names <span class="ot">&lt;-</span> transcripts_list_df<span class="sc">$</span>transcript_file[<span class="sc">!</span><span class="fu">is.na</span>(transcripts_list_df<span class="sc">$</span>transcript_file)]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `transcript_file`.</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Unknown or uninitialised column: `transcript_file`.</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>transcripts_metrics_df <span class="ot">&lt;-</span> <span class="fu">summarize_transcript_files</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">transcript_file_names =</span> transcript_file_names,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_folder =</span> config<span class="sc">$</span>paths<span class="sc">$</span>data_folder,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">transcripts_folder =</span> config<span class="sc">$</span>paths<span class="sc">$</span>transcripts_folder,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to_exclude =</span> config<span class="sc">$</span>analysis<span class="sc">$</span>names_to_exclude</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(transcripts_metrics_df)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 </div>
 </div>
 <div id="advanced-session-mapping-features" class="section level2">

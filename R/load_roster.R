@@ -16,16 +16,16 @@
 load_roster <- function(
     data_folder = "data",
     roster_file = "roster.csv") {
-  enrolled <- NULL
-
   roster_file_path <- file.path(data_folder, roster_file)
 
   if (file.exists(roster_file_path)) {
     roster_data <- readr::read_csv(roster_file_path)
-    
+
     # Check if enrolled column exists and filter if it does
     if ("enrolled" %in% names(roster_data)) {
-      return(roster_data %>% dplyr::filter(enrolled == TRUE))
+      # Use base R filtering instead of dplyr to avoid segmentation fault
+      enrolled_rows <- roster_data$enrolled == TRUE
+      return(roster_data[enrolled_rows, , drop = FALSE])
     } else {
       return(roster_data)
     }
@@ -34,5 +34,3 @@ load_roster <- function(
     tibble::tibble()
   }
 }
-
-

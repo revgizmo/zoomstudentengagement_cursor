@@ -63,34 +63,52 @@ load_transcript_files_list <-
         transcript_files_names_pattern
       )
 
-      transcript_files %>%
-        data.table::data.table("file_name" = .) %>%
-        # filter(!grepl(zoom_recorded_sessions_csv_names_pattern, file_name)) %>%
-        dplyr::mutate(
-          date_extract = stringr::str_extract(file_name, dt_extract_pattern),
-          # session_num = dense_rank(date_extract),
-          file_type = dplyr::case_when(
-            grepl(transcript_file_extension_pattern,
-              file_name,
-              fixed = FALSE
-            ) ~
-              "transcript_file",
-            grepl(closed_caption_file_extension_pattern,
-              file_name,
-              fixed = FALSE
-            ) ~
-              "closed_caption_file",
-            .default = "chat_file"
-          ),
-          recording_start = lubridate::parse_date_time(stringr::str_extract(file_name, recording_start_pattern),
-            orders = recording_start_format
-          ),
-          recording_start = as.POSIXct(recording_start, tz = "UTC"),
-          start_time_local = lubridate::with_tz(recording_start, tzone = start_time_local_tzone)
-        ) %>%
-        tidyr::pivot_wider(
-          names_from = file_type,
-          values_from = file_name
+      # Use base R operations instead of dplyr to avoid segmentation fault
+      if (length(transcript_files) > 0) {
+        # Create data frame with file names
+        df <- data.frame(file_name = transcript_files, stringsAsFactors = FALSE)
+
+        # Extract date
+        df$date_extract <- stringr::str_extract(df$file_name, dt_extract_pattern)
+
+        # Determine file type
+        df$file_type <- ifelse(
+          grepl(transcript_file_extension_pattern, df$file_name, fixed = FALSE),
+          "transcript_file",
+          ifelse(
+            grepl(closed_caption_file_extension_pattern, df$file_name, fixed = FALSE),
+            "closed_caption_file",
+            "chat_file"
+          )
         )
+
+        # Extract and parse recording start time
+        recording_start_str <- stringr::str_extract(df$file_name, recording_start_pattern)
+        df$recording_start <- lubridate::parse_date_time(recording_start_str, orders = recording_start_format)
+        df$recording_start <- as.POSIXct(df$recording_start, tz = "UTC")
+        df$start_time_local <- lubridate::with_tz(df$recording_start, tzone = start_time_local_tzone)
+
+        # Pivot to wide format using base R
+        result <- data.frame(
+          date_extract = unique(df$date_extract),
+          recording_start = unique(df$recording_start),
+          start_time_local = unique(df$start_time_local),
+          stringsAsFactors = FALSE
+        )
+
+        # Add file type columns
+        for (file_type in unique(df$file_type)) {
+          type_files <- df[df$file_type == file_type, "file_name"]
+          if (length(type_files) > 0) {
+            result[[file_type]] <- type_files[1] # Take first file of each type
+          } else {
+            result[[file_type]] <- NA_character_
+          }
+        }
+
+        return(result)
+      } else {
+        return(data.frame())
+      }
     }
   }

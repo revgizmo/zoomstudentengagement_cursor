@@ -43,8 +43,9 @@ calculate_content_similarity <- function(transcript1, transcript2, names_to_excl
 
   # Filter out excluded names (only if name column exists)
   if (!is.null(names_to_exclude) && "name" %in% names(transcript1) && "name" %in% names(transcript2)) {
-    transcript1 <- transcript1 %>% dplyr::filter(!name %in% names_to_exclude)
-    transcript2 <- transcript2 %>% dplyr::filter(!name %in% names_to_exclude)
+    # Use base R filtering instead of dplyr to avoid segmentation fault
+    transcript1 <- transcript1[!transcript1$name %in% names_to_exclude, , drop = FALSE]
+    transcript2 <- transcript2[!transcript2$name %in% names_to_exclude, , drop = FALSE]
   }
 
   # If either transcript is empty after filtering, return 0

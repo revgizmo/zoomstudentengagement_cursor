@@ -61,12 +61,24 @@ join_transcripts_list <- function(
     ))
   }
 
-  joined_sessions <- df_zoom_recorded_sessions %>%
-    dplyr::cross_join(df_transcript_files) %>%
-    dplyr::filter(
-      match_start_time <= start_time_local,
-      match_end_time >= start_time_local
-    )
+  # Use base R operations instead of dplyr to avoid segmentation fault
+  # Create cross join manually
+  joined_sessions <- expand.grid(
+    i = seq_len(nrow(df_zoom_recorded_sessions)),
+    j = seq_len(nrow(df_transcript_files))
+  )
+
+  # Extract rows from both data frames
+  zoom_rows <- df_zoom_recorded_sessions[joined_sessions$i, , drop = FALSE]
+  transcript_rows <- df_transcript_files[joined_sessions$j, , drop = FALSE]
+
+  # Combine columns
+  joined_sessions <- cbind(zoom_rows, transcript_rows)
+
+  # Filter using base R instead of dplyr
+  filter_condition <- joined_sessions$match_start_time <= joined_sessions$start_time_local &
+    joined_sessions$match_end_time >= joined_sessions$start_time_local
+  joined_sessions <- joined_sessions[filter_condition, , drop = FALSE]
 
   # Get all columns needed in the final output
   all_cols <- union(names(joined_sessions), names(df_cancelled_classes))
@@ -196,13 +208,44 @@ join_transcripts_list <- function(
     df_cancelled_classes$start_time_local <- as.character(df_cancelled_classes$start_time_local)
   }
 
-  result <- dplyr::bind_rows(joined_sessions, df_cancelled_classes) %>%
-    dplyr::arrange(start_time_local) %>%
-    dplyr::group_by(section) %>%
-    dplyr::mutate(session_num = dplyr::dense_rank(start_time_local)) %>%
-    dplyr::ungroup()
+  # Use base R operations instead of dplyr to avoid segmentation fault
+  # Combine the data frames
+  result <- rbind(joined_sessions, df_cancelled_classes)
 
-  result
+  # Sort by start_time_local
+  if ("start_time_local" %in% names(result)) {
+    result <- result[order(result$start_time_local), , drop = FALSE]
+  }
+
+  # Add session_num by section using base R
+  if ("section" %in% names(result) && "start_time_local" %in% names(result)) {
+    # Convert start_time_local back to POSIXct for proper ordering
+    result$start_time_local <- as.POSIXct(result$start_time_local)
+
+    # Calculate session_num by section
+    result$session_num <- NA_integer_
+    sections <- unique(result$section)
+
+    for (sect in sections) {
+      if (!is.na(sect)) { # Handle NA sections
+        section_rows <- result$section == sect
+        if (sum(section_rows, na.rm = TRUE) > 0) {
+          # Get the order within this section
+          section_data <- result[section_rows, , drop = FALSE]
+          section_order <- order(section_data$start_time_local)
+
+          # Assign dense rank (1, 2, 3, etc.) - handle NA rows carefully
+          valid_rows <- which(section_rows)
+          if (length(valid_rows) > 0) {
+            result$session_num[valid_rows[section_order]] <- seq_len(length(valid_rows))
+          }
+        }
+      }
+    }
+  }
+
+  # Convert to tibble to maintain expected return type
+  tibble::as_tibble(result)
 }
 # join_transcripts_list(df_zoom_recorded_sessions = zoom_recorded_sessions_df,
 #                       df_transcript_files = transcript_files_df,
