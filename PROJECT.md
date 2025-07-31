@@ -246,6 +246,20 @@ devtools::check()
 devtools::build()
 ```
 
+#### Phase 5: Bugbot-Style Validation (2-3 minutes)
+```r
+# Run comprehensive validation similar to Cursor Bugbot
+source("scripts/pre-pr-validation.R")
+```
+
+**What this catches:**
+- Data structure validation (column names, types)
+- Function signature verification  
+- Vignette build testing
+- Documentation completeness
+- Code style and quality issues
+- Common R package pitfalls
+
 ### PR and Merge Workflow
 
 #### Before Creating PR
