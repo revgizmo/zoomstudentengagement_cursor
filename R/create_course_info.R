@@ -94,14 +94,10 @@ create_course_info <- function(
     result$session_times <- as.character(session_times)
   }
 
-  # Add course identifier
-  result <- result %>%
-    dplyr::mutate(
-      course_id = paste(dept, course, section, sep = "_"),
-      course_name = paste(dept, course, "Section", section)
-    )
+  # Add course identifier - using base R to avoid potential dplyr issues
+  result$course_id <- paste(result$dept, result$course, result$section, sep = "_")
+  result$course_name <- paste(result$dept, result$course, "Section", result$section)
 
-  # Sort by department, course number, and section
-  result %>%
-    dplyr::arrange(dept, course, section)
+  # Sort by department, course number, and section - using base R
+  result[order(result$dept, result$course, result$section), ]
 }
