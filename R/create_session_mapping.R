@@ -78,33 +78,31 @@ create_session_mapping <- function(
       zoom_recording_id = ID,
       topic = Topic,
       start_time = `Start Time`
-    ) %>%
-    dplyr::mutate(
-      dept = NA_character_,
-      course = NA_character_,
-      section = NA_character_,
-      session_date = lubridate::parse_date_time(
-        start_time,
-        orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
-        tz = "America/Los_Angeles",
-        quiet = TRUE
-      ),
-      session_time = format(session_date, "%H:%M"),
-      instructor = NA_character_,
-      notes = NA_character_
     )
+
+  # Use base R operations instead of dplyr to avoid segmentation fault
+  mapping_df$dept <- NA_character_
+  mapping_df$course <- NA_character_
+  mapping_df$section <- NA_character_
+  mapping_df$session_date <- lubridate::parse_date_time(
+    mapping_df$start_time,
+    orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
+    tz = "America/Los_Angeles",
+    quiet = TRUE
+  )
+  mapping_df$session_time <- format(mapping_df$session_date, "%H:%M")
+  mapping_df$instructor <- NA_character_
+  mapping_df$notes <- NA_character_
 
   # Attempt automatic assignment based on patterns
   if (length(auto_assign_patterns) > 0) {
     for (pattern_name in names(auto_assign_patterns)) {
       pattern <- auto_assign_patterns[[pattern_name]]
 
-      # Find matching course info
-      course_match <- course_info_df %>%
-        dplyr::filter(stringr::str_detect(
-          paste(dept, course, sep = " "),
-          pattern_name
-        ))
+      # Find matching course info using base R instead of dplyr to avoid segmentation fault
+      course_dept_course <- paste(course_info_df$dept, course_info_df$course, sep = " ")
+      matching_rows <- stringr::str_detect(course_dept_course, pattern_name)
+      course_match <- course_info_df[matching_rows, , drop = FALSE]
 
       if (nrow(course_match) > 0) {
         # Apply pattern to topic matching
@@ -167,26 +165,20 @@ create_session_mapping <- function(
     readr::write_csv(mapping_df, output_file)
   }
 
-  # Return mapping
-  mapping_df %>%
-    dplyr::mutate(
-      course_section = if (all(c("dept", "course", "section") %in% names(.))) {
-        paste(dept, course, section, sep = ".")
-      } else {
-        NA_character_
-      }
-    ) %>%
-    dplyr::select(
-      recording_id = zoom_recording_id,
-      topic,
-      start_time,
-      dept,
-      course,
-      section,
-      course_section,
-      session_date,
-      session_time,
-      instructor,
-      notes
-    )
+  # Return mapping with base R operations instead of dplyr to avoid segmentation fault
+  # Add course_section column
+  if (all(c("dept", "course", "section") %in% names(mapping_df))) {
+    mapping_df$course_section <- paste(mapping_df$dept, mapping_df$course, mapping_df$section, sep = ".")
+  } else {
+    mapping_df$course_section <- NA_character_
+  }
+
+  # Select and rename columns using base R
+  result <- mapping_df[, c(
+    "zoom_recording_id", "topic", "start_time", "dept", "course", "section",
+    "course_section", "session_date", "session_time", "instructor", "notes"
+  )]
+  names(result)[names(result) == "zoom_recording_id"] <- "recording_id"
+
+  return(result)
 }

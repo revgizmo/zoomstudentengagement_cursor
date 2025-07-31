@@ -203,8 +203,11 @@ transcripts_list_df
 
 ```{r step4}
 # Process transcripts
+# Extract transcript file names from the joined data
+transcript_file_names <- transcripts_list_df$transcript_file[!is.na(transcripts_list_df$transcript_file)]
+
 transcripts_metrics_df <- summarize_transcript_files(
-  transcript_file_names = transcripts_list_df,
+  transcript_file_names = transcript_file_names,
   data_folder = config$paths$data_folder,
   transcripts_folder = config$paths$transcripts_folder,
   names_to_exclude = config$analysis$names_to_exclude
