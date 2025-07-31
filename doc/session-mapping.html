@@ -440,61 +440,75 @@ overlapping Zoom recordings.</p>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 /private… Cono… 901 … Jan 03, 202… 2819.0706                   9             1</span></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;</span></span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;After summarise:&quot;</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 8</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;                   &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Conor Healy&#39;s … 901 … Jan 03, 202… 2819.0706                   9             1</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Th… 960 … Jan 11, 202… 2317.0028                  36             0</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Th… 960 … Jan 18, 202… 1200.6551                  24             0</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 LTF 23.24 - Th… 996 … Jan 24, 202… 147.0676                   11             0</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in load_zoom_recorded_sessions_list(data_folder =</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; config$paths$data_folder, : Some Topic entries did not match the expected</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pattern and section could not be extracted.</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;After topic parsing:&quot;</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 12</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Conor Healy&#39;s … 901 … Jan 03, 202…            2819.            9             1</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Th… 960 … Jan 11, 202…            2317.           36             0</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Th… 960 … Jan 18, 202…            1201.           24             0</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 LTF 23.24 - Th… 996 … Jan 24, 202…             147.           11             0</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 6 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;,</span></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   dept &lt;chr&gt;, course_section &lt;chr&gt;, course &lt;int&gt;, section &lt;int&gt;</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Start Time values:&quot;</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Jan 03, 2024 19:16:16&quot; &quot;Jan 11, 2024 18:22:24&quot; &quot;Jan 18, 2024 18:26:14&quot;</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;Jan 24, 2024 12:25:59&quot;</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;After date parsing:&quot;</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 14</span></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`</span></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Conor Healy&#39;s … 901 … Jan 03, 202…            2819.            9             1</span></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Th… 960 … Jan 11, 202…            2317.           36             0</span></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Th… 960 … Jan 18, 202…            1201.           24             0</span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 LTF 23.24 - Th… 996 … Jan 24, 202…             147.           11             0</span></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 8 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;,</span></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   dept &lt;chr&gt;, course_section &lt;chr&gt;, course &lt;int&gt;, section &lt;int&gt;,</span></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   match_start_time &lt;dttm&gt;, match_end_time &lt;dttm&gt;</span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Final result after filtering:&quot;</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 14</span></span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`</span></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Th… 960 … Jan 18, 202…            1201.           24             0</span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Th… 996 … Jan 24, 202…             147.           11             0</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 8 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;,</span></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   dept &lt;chr&gt;, course_section &lt;chr&gt;, course &lt;int&gt;, section &lt;int&gt;,</span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   match_start_time &lt;dttm&gt;, match_end_time &lt;dttm&gt;</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="co"># View raw recordings</span></span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>zoom_recordings_raw</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 14</span></span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`</span></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Th… 960 … Jan 18, 202…            1201.           24             0</span></span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Th… 996 … Jan 24, 202…             147.           11             0</span></span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 8 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;,</span></span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   dept &lt;chr&gt;, course_section &lt;chr&gt;, course &lt;int&gt;, section &lt;int&gt;,</span></span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   match_start_time &lt;dttm&gt;, match_end_time &lt;dttm&gt;</span></span></code></pre></div>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 Topic            ID            Start Time</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Conor Healy&#39;s Personal Meeting Room  901 075 7783 Jan 03, 2024 19:16:16</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   File Size (MB) File Count Total Views Total Downloads         Last Accessed</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      2819.0706          9           1               4 Jan 10, 2024 20:52:26</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in load_zoom_recorded_sessions_list(data_folder =</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; config$paths$data_folder, : Some Topic entries did not match the expected</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pattern and section could not be extracted.</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;After topic parsing:&quot;</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 Topic            ID            Start Time</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Conor Healy&#39;s Personal Meeting Room  901 075 7783 Jan 03, 2024 19:16:16</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   File Size (MB) File Count Total Views Total Downloads         Last Accessed</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      2819.0706          9           1               4 Jan 10, 2024 20:52:26</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept course_section course section</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 &lt;NA&gt;           &lt;NA&gt;     NA      NA</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  LTF          23.24     23      24</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Start Time values:&quot;</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Jan 03, 2024 19:16:16&quot; &quot;Jan 11, 2024 18:22:24&quot; &quot;Jan 18, 2024 18:26:14&quot;</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] &quot;Jan 24, 2024 12:25:59&quot;</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;After date parsing:&quot;</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 Topic            ID            Start Time</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Conor Healy&#39;s Personal Meeting Room  901 075 7783 Jan 03, 2024 19:16:16</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   File Size (MB) File Count Total Views Total Downloads         Last Accessed</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      2819.0706          9           1               4 Jan 10, 2024 20:52:26</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept course_section course section    match_start_time      match_end_time</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 &lt;NA&gt;           &lt;NA&gt;     NA      NA 2024-01-03 19:16:16 2024-01-03 21:16:16</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24 2024-01-11 18:22:24 2024-01-11 20:22:24</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24 2024-01-18 18:26:14 2024-01-18 20:26:14</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  LTF          23.24     23      24 2024-01-24 12:25:59 2024-01-24 14:25:59</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Final result after filtering:&quot;</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                              Topic            ID            Start Time</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   File Size (MB) File Count Total Views Total Downloads         Last Accessed</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept course_section course section    match_start_time      match_end_time</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  LTF          23.24     23      24 2024-01-18 18:26:14 2024-01-18 20:26:14</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24 2024-01-24 12:25:59 2024-01-24 14:25:59</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="co"># View raw recordings</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>zoom_recordings_raw</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 14</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Topic           ID    `Start Time` `File Size (MB)` `File Count` `Total Views`</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Th… 960 … Jan 18, 202…            1201.           24             0</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Th… 996 … Jan 24, 202…             147.           11             0</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 8 more variables: `Total Downloads` &lt;dbl&gt;, `Last Accessed` &lt;chr&gt;,</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   dept &lt;chr&gt;, course_section &lt;chr&gt;, course &lt;int&gt;, section &lt;int&gt;,</span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   match_start_time &lt;dttm&gt;, match_end_time &lt;dttm&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="creating-session-mapping" class="section level2">
