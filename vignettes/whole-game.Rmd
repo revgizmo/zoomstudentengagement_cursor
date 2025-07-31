@@ -65,7 +65,8 @@ Start by loading your student roster:
 ```{r load-roster}
 # Load the student roster
 roster <- load_roster(
-  system.file("extdata/roster.csv", package = "zoomstudentengagement")
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  roster_file = "roster.csv"
 )
 
 # View the roster structure
@@ -144,7 +145,7 @@ cat("Names in transcripts:\n")
 print(transcript_names)
 
 # Compare with roster names
-roster_names <- unique(roster$name)
+roster_names <- unique(roster$preferred_name)
 cat("\nNames in roster:\n")
 print(roster_names)
 
@@ -253,12 +254,12 @@ ggplot(student_summary, aes(x = reorder(student_name, total_utterances), y = tot
   theme_minimal()
 
 # Plot participation by duration
-ggplot(student_summary, aes(x = reorder(student_name, total_duration), y = total_duration/60)) +
+ggplot(student_summary, aes(x = reorder(student_name, total_duration), y = total_duration / 60)) +
   geom_bar(stat = "identity", fill = "darkgreen") +
   coord_flip() +
   labs(
     title = "Student Participation by Speaking Time",
-    x = "Student Name", 
+    x = "Student Name",
     y = "Speaking Time (minutes)"
   ) +
   theme_minimal()
@@ -283,8 +284,8 @@ participation_stats <- student_summary %>%
     mean_utterances = mean(total_utterances, na.rm = TRUE),
     median_utterances = median(total_utterances, na.rm = TRUE),
     sd_utterances = sd(total_utterances, na.rm = TRUE),
-    gini_coefficient = 1 - (2 * sum(rank(total_utterances) * total_utterances) / 
-                           (n() * sum(total_utterances))) - 1/n()
+    gini_coefficient = (2 * sum(rank(total_utterances) * total_utterances) /
+      (n() * sum(total_utterances))) - (n() + 1) / n()
   )
 
 cat("\nParticipation Statistics:\n")
@@ -301,7 +302,7 @@ participation_categories <- student_summary %>%
   mutate(
     participation_level = case_when(
       total_utterances >= quantile(total_utterances, 0.75, na.rm = TRUE) ~ "High",
-      total_utterances >= quantile(total_utterances, 0.25, na.rm = TRUE) ~ "Medium", 
+      total_utterances >= quantile(total_utterances, 0.25, na.rm = TRUE) ~ "Medium",
       TRUE ~ "Low"
     )
   )
@@ -321,7 +322,7 @@ print(level_summary)
 cat("\n=== RECOMMENDATIONS FOR EQUITABLE PARTICIPATION ===\n")
 cat("1. Students with low participation may benefit from:\n")
 cat("   - Direct invitations to contribute\n")
-cat("   - Smaller group discussions\n") 
+cat("   - Smaller group discussions\n")
 cat("   - Alternative participation methods (chat, polls)\n\n")
 
 cat("2. Consider implementing:\n")
@@ -351,7 +352,7 @@ write_csv(name_mapping, "name_mappings.csv")
 
 cat("Analysis files saved:\n")
 cat("- clean_engagement_metrics.csv\n")
-cat("- student_participation_summary.csv\n") 
+cat("- student_participation_summary.csv\n")
 cat("- name_mappings.csv\n")
 ```
 
