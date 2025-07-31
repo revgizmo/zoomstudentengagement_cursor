@@ -23,14 +23,12 @@ load_roster <- function(
 
     # Check if enrolled column exists and filter if it does
     if ("enrolled" %in% names(roster_data)) {
-      # Use base R filtering instead of dplyr to avoid segmentation fault
-      enrolled_rows <- roster_data$enrolled == TRUE
-      return(roster_data[enrolled_rows, , drop = FALSE])
+      # REVERTED: Using dplyr to reproduce segmentation fault for investigation
+      return(roster_data %>% dplyr::filter(enrolled == TRUE))
     } else {
       return(roster_data)
     }
   } else {
-    # Return empty tibble with same structure if file doesn't exist
-    tibble::tibble()
+    return(tibble::tibble())
   }
 }
