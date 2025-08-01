@@ -14,7 +14,7 @@ load_and_process_zoom_transcript(
 )
 }
 \arguments{
-\item{transcript_file_path}{File path of a .vtt file of a Zoom recording
+\item{transcript_file_path}{File path of a .transcript.vtt file of a Zoom recording
 transcript.}
 
 \item{consolidate_comments}{Set to `TRUE` to consolidate consecutive comments

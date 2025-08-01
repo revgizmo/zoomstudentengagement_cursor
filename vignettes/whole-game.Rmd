@@ -43,10 +43,10 @@ You're a new instructor who has:
 First, let's explore what data you have available:
 
 ```{r explore-data}
-# Check what transcript files are available
+# Check what transcript files are available (specifically .transcript.vtt files)
 transcript_files <- list.files(
   system.file("extdata/transcripts", package = "zoomstudentengagement"),
-  pattern = "\\.vtt$",
+  pattern = "\\.transcript\\.vtt$",
   full.names = TRUE
 )
 
@@ -98,10 +98,10 @@ cat("\nTranscript dimensions:", nrow(transcript_data), "utterances\n")
 If you have multiple sessions, you can process them all at once:
 
 ```{r process-multiple}
-# Get all transcript files
+# Get all transcript files (specifically .transcript.vtt files)
 transcript_files <- list.files(
   system.file("extdata/transcripts", package = "zoomstudentengagement"),
-  pattern = "\\.vtt$",
+  pattern = "\\.transcript\\.vtt$",
   full.names = TRUE
 )
 

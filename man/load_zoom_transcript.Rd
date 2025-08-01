@@ -7,7 +7,7 @@
 load_zoom_transcript(transcript_file_path)
 }
 \arguments{
-\item{transcript_file_path}{File path of a .vtt file of a Zoom recording
+\item{transcript_file_path}{File path of a .transcript.vtt file of a Zoom recording
 transcript.}
 }
 \value{
