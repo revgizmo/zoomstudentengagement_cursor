@@ -16,7 +16,7 @@
 
 
 
-#' @param transcript_file_path File path of a .vtt file of a Zoom recording
+#' @param transcript_file_path File path of a .transcript.vtt file of a Zoom recording
 #'   transcript.
 #' @param consolidate_comments Set to `TRUE` to consolidate consecutive comments
 #'   from the same speaker with gaps of less than `max_pause_sec`. `FALSE`

@@ -10,7 +10,7 @@
 
 
 
-#' @param transcript_file_path File path of a .vtt file of a Zoom recording
+#' @param transcript_file_path File path of a .transcript.vtt file of a Zoom recording
 #'   transcript.
 #' @param names_exclude Character vector of names to exclude from the results.
 #'   Defaults to 'c("dead_air")'

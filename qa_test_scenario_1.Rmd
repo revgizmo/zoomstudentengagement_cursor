@@ -1,0 +1,858 @@
+---
+title: "QA Test Scenario 1: New Instructor Workflow"
+author: "QA Tester"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 10,
+  fig.height = 6,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+```{r load-packages}
+# Load required packages
+library(zoomstudentengagement)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tibble)
+library(lubridate)
+
+# Set up testing environment
+cat("=== QA Test Scenario 1: New Instructor Workflow ===\n")
+cat("Package version:", as.character(packageVersion("zoomstudentengagement")), "\n")
+cat("Test date:", as.character(Sys.Date()), "\n\n")
+```
+
+# QA Test Scenario 1: New Instructor Workflow
+
+This document provides a complete testing workflow for the `zoomstudentengagement` package using real data. This scenario simulates a new instructor who has Zoom transcripts and wants to analyze student engagement.
+
+## Prerequisites
+
+Before starting this test, ensure you have:
+- R and RStudio installed
+- The `zoomstudentengagement` package installed
+- Real Zoom transcript files (.vtt format)
+- A student roster file (.csv format)
+- Zoom recordings list file (.csv format, optional)
+
+## Step 0: Setup Testing Environment
+
+**IMPORTANT**: Run this chunk first to create the necessary directory structure.
+
+```{r setup-environment}
+# Create testing directory structure relative to current working directory
+test_base_dir <- file.path(getwd(), "zoom_real_world_testing")
+cat("Creating testing environment in:", test_base_dir, "\n")
+
+# Create directory structure
+dirs_to_create <- c(
+  file.path(test_base_dir, "data"),
+  file.path(test_base_dir, "data/transcripts"),
+  file.path(test_base_dir, "data/metadata"),
+  file.path(test_base_dir, "outputs"),
+  file.path(test_base_dir, "reports")
+)
+
+for (dir in dirs_to_create) {
+  if (!dir.exists(dir)) {
+    dir.create(dir, recursive = TRUE)
+    cat("Created directory:", dir, "\n")
+  } else {
+    cat("Directory already exists:", dir, "\n")
+  }
+}
+
+# Set working directory to testing folder
+setwd(test_base_dir)
+cat("\nWorking directory set to:", getwd(), "\n")
+
+# Create a simple test configuration
+test_config <- list(
+  base_dir = test_base_dir,
+  data_dir = file.path(test_base_dir, "data"),
+  transcripts_dir = file.path(test_base_dir, "data/transcripts"),
+  outputs_dir = file.path(test_base_dir, "outputs"),
+  reports_dir = file.path(test_base_dir, "reports")
+)
+
+# Save configuration
+saveRDS(test_config, file.path(test_base_dir, "test_config.rds"))
+cat("\nTest configuration saved.\n")
+
+# Display directory structure
+cat("\n=== Directory Structure Created ===\n")
+cat("📁", test_base_dir, "\n")
+cat("  📁 data/\n")
+cat("    📁 transcripts/     <- Place your .vtt files here\n")
+cat("    📁 metadata/        <- Place roster and other CSV files here\n")
+cat("  📁 outputs/           <- Analysis results will be saved here\n")
+cat("  📁 reports/           <- Generated reports will be saved here\n")
+```
+
+## Step 1: Data Preparation
+
+**INSTRUCTIONS FOR TESTER:**
+
+1. **Copy your Zoom transcript files** (.transcript.vtt format) into the `zoom_real_world_testing/data/transcripts/` folder
+2. **Copy your student roster file** (.csv format) into the `zoom_real_world_testing/data/metadata/` folder
+3. **Copy your Zoom recordings list** (.csv format, if available) into the `zoom_real_world_testing/data/metadata/` folder
+
+**IMPORTANT**: 
+- Make sure your files are in the correct subdirectories as shown above. The roster and Zoom files must be in the `metadata/` subfolder, not directly in the `data/` folder.
+- **Note**: The package specifically looks for `.transcript.vtt` files (not `.cc.vtt` or other .vtt files). These are the canonical Zoom transcript files.
+
+After copying your files, run the following chunk to verify your data:
+
+```{r verify-data}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+# Verify we're in the right directory
+cat("Current working directory:", getwd(), "\n")
+cat("Test base directory:", test_config$base_dir, "\n\n")
+
+# Check for transcript files (specifically .transcript.vtt files)
+transcript_files <- list.files(
+  test_config$transcripts_dir,
+  pattern = "\\.transcript\\.vtt$",
+  full.names = TRUE
+)
+
+cat("=== Data Verification ===\n")
+cat("📄 Transcript files found:", length(transcript_files), "\n")
+if (length(transcript_files) > 0) {
+  cat("Files:\n")
+  for (file in transcript_files) {
+    file_size <- file.size(file) / 1024  # Size in KB
+    cat("  -", basename(file), sprintf("(%.1f KB)\n", file_size))
+  }
+} else {
+  cat("❌ No transcript files found. Please copy .vtt files to:", test_config$transcripts_dir, "\n")
+}
+
+# Check for roster file
+roster_files <- list.files(
+  file.path(test_config$data_dir, "metadata"),
+  pattern = "roster.*csv$",
+  full.names = TRUE
+)
+
+cat("\n📋 Roster files found:", length(roster_files), "\n")
+if (length(roster_files) > 0) {
+  cat("Files:\n")
+  for (file in roster_files) {
+    file_size <- file.size(file) / 1024  # Size in KB
+    cat("  -", basename(file), sprintf("(%.1f KB)\n", file_size))
+  }
+} else {
+  cat("❌ No roster files found. Please copy roster CSV to:", file.path(test_config$data_dir, "metadata"), "\n")
+}
+
+# Check for Zoom recordings list
+zoom_files <- list.files(
+  file.path(test_config$data_dir, "metadata"),
+  pattern = "zoom.*csv$",
+  full.names = TRUE
+)
+
+cat("\n📊 Zoom recordings list found:", length(zoom_files), "\n")
+if (length(zoom_files) > 0) {
+  cat("Files:\n")
+  for (file in zoom_files) {
+    file_size <- file.size(file) / 1024  # Size in KB
+    cat("  -", basename(file), sprintf("(%.1f KB)\n", file_size))
+  }
+} else {
+  cat("ℹ️  No Zoom recordings list found. This is optional.\n")
+}
+
+# Data validation
+if (length(transcript_files) == 0 || length(roster_files) == 0) {
+  stop("❌ Required data files are missing. Please copy your files and run this chunk again.")
+} else {
+  cat("\n✅ Data verification complete. Ready to proceed with analysis.\n")
+}
+```
+
+## Step 2: Load and Explore Data
+
+Now let's load your data and understand its structure:
+
+```{r load-data}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+# Load student roster
+roster_file <- list.files(
+  file.path(test_config$data_dir, "metadata"),
+  pattern = "roster.*csv$",
+  full.names = TRUE
+)[1]
+
+cat("=== Loading Student Roster ===\n")
+cat("File:", basename(roster_file), "\n")
+
+roster <- load_roster(
+  data_folder = dirname(roster_file),
+  roster_file = basename(roster_file)
+)
+
+cat("✅ Roster loaded successfully\n")
+cat("📊 Roster dimensions:", nrow(roster), "students ×", ncol(roster), "columns\n")
+cat("📋 Column names:", paste(names(roster), collapse = ", "), "\n\n")
+
+# Display roster structure
+cat("=== Roster Preview ===\n")
+print(head(roster, 5))
+
+# Load transcript files (specifically .transcript.vtt files)
+transcript_files <- list.files(
+  test_config$transcripts_dir,
+  pattern = "\\.transcript\\.vtt$",
+  full.names = TRUE
+)
+
+cat("\n=== Loading Transcript Files ===\n")
+cat("📄 Found", length(transcript_files), "transcript files\n")
+
+# Load first transcript to examine structure
+first_transcript <- load_zoom_transcript(transcript_files[1])
+cat("✅ First transcript loaded successfully\n")
+cat("📊 Transcript dimensions:", nrow(first_transcript), "utterances ×", ncol(first_transcript), "columns\n")
+cat("📋 Column names:", paste(names(first_transcript), collapse = ", "), "\n\n")
+
+# Display transcript structure
+cat("=== Transcript Preview ===\n")
+print(head(first_transcript, 5))
+
+# Check for unique speakers
+speakers <- unique(first_transcript$name)
+cat("\n=== Speakers in Transcript ===\n")
+cat("👥 Found", length(speakers), "unique speakers:\n")
+for (speaker in head(speakers, 10)) {
+  cat("  -", speaker, "\n")
+}
+if (length(speakers) > 10) {
+  cat("  ... and", length(speakers) - 10, "more\n")
+}
+```
+
+## Step 3: Process All Transcripts
+
+Now let's process all your transcript files to calculate engagement metrics:
+
+```{r process-transcripts}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+# Start performance monitoring
+start_time <- Sys.time()
+start_memory <- gc(verbose = FALSE)[, "used"]
+
+cat("=== Processing All Transcripts ===\n")
+cat("⏱️  Starting at:", format(start_time), "\n")
+
+# Get transcript file names (without full path)
+transcript_file_names <- basename(transcript_files)
+
+# Process all transcripts
+cat("🔄 Processing", length(transcript_file_names), "transcript files...\n")
+
+all_metrics <- summarize_transcript_files(
+  transcript_file_names = transcript_file_names,
+  data_folder = test_config$data_dir,
+  transcripts_folder = "transcripts",
+  names_to_exclude = c("dead_air", "Unknown", "Instructor")
+)
+
+# Performance summary
+end_time <- Sys.time()
+end_memory <- gc(verbose = FALSE)[, "used"]
+processing_time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+memory_used <- (end_memory - start_memory) / 1024^2  # MB
+
+cat("\n✅ Processing completed successfully!\n")
+cat("⏱️  Processing time:", round(processing_time, 2), "seconds\n")
+cat("💾 Memory used:", round(memory_used, 2), "MB\n")
+cat("📊 Total metrics calculated:", nrow(all_metrics), "records\n")
+cat("👥 Unique speakers:", length(unique(all_metrics$name)), "\n")
+cat("📄 Sessions processed:", length(unique(all_metrics$transcript_file)), "\n\n")
+
+# Display results
+cat("=== Metrics Preview ===\n")
+print(head(all_metrics, 10))
+
+# Summary statistics
+cat("\n=== Summary Statistics ===\n")
+summary_stats <- all_metrics %>%
+  summarise(
+    total_utterances = sum(n, na.rm = TRUE),
+    total_duration = sum(duration, na.rm = TRUE),
+    total_words = sum(wordcount, na.rm = TRUE),
+    avg_utterance_length = mean(duration, na.rm = TRUE),
+    avg_words_per_utterance = mean(wordcount, na.rm = TRUE)
+  )
+
+print(summary_stats)
+```
+
+## Step 4: Name Matching and Cleaning
+
+This is often the most challenging part - matching Zoom names to your roster:
+
+```{r name-matching}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+cat("=== Name Matching Analysis ===\n")
+
+# Get names from transcripts
+transcript_names <- unique(all_metrics$name)
+roster_names <- unique(roster$preferred_name)
+
+cat("📄 Names in transcripts:", length(transcript_names), "\n")
+cat("📋 Names in roster:", length(roster_names), "\n")
+
+# Find exact matches
+exact_matches <- intersect(transcript_names, roster_names)
+cat("✅ Exact matches found:", length(exact_matches), "\n")
+
+# Find unmatched names
+unmatched_transcript <- setdiff(transcript_names, roster_names)
+unmatched_roster <- setdiff(roster_names, transcript_names)
+
+cat("❓ Unmatched transcript names:", length(unmatched_transcript), "\n")
+cat("❓ Unmatched roster names:", length(unmatched_roster), "\n")
+
+# Display unmatched names for manual review
+if (length(unmatched_transcript) > 0) {
+  cat("\n=== Unmatched Transcript Names ===\n")
+  cat("These names appear in transcripts but not in your roster:\n")
+  for (name in head(unmatched_transcript, 15)) {
+    cat("  -", name, "\n")
+  }
+  if (length(unmatched_transcript) > 15) {
+    cat("  ... and", length(unmatched_transcript) - 15, "more\n")
+  }
+}
+
+if (length(unmatched_roster) > 0) {
+  cat("\n=== Unmatched Roster Names ===\n")
+  cat("These names are in your roster but didn't appear in transcripts:\n")
+  for (name in head(unmatched_roster, 15)) {
+    cat("  -", name, "\n")
+  }
+  if (length(unmatched_roster) > 15) {
+    cat("  ... and", length(unmatched_roster) - 15, "more\n")
+  }
+}
+
+# Create initial name mapping
+cat("\n=== Creating Name Mapping ===\n")
+name_mapping <- data.frame(
+  name_to_clean = transcript_names,
+  clean_name = ifelse(transcript_names %in% roster_names, transcript_names, NA_character_),
+  stringsAsFactors = FALSE
+)
+
+# Calculate matching success
+matching_success <- sum(!is.na(name_mapping$clean_name)) / nrow(name_mapping) * 100
+cat("📊 Initial matching success:", round(matching_success, 1), "%\n")
+
+# Display mapping
+cat("\n=== Name Mapping Preview ===\n")
+print(head(name_mapping, 10))
+```
+
+## Step 5: Manual Name Mapping (if needed)
+
+If you have unmatched names, you can create manual mappings here:
+
+```{r manual-mapping}
+# This chunk is for manual name mapping if needed
+# Uncomment and modify the code below to add manual mappings
+
+cat("=== Manual Name Mapping ===\n")
+
+# Example manual mappings (modify these for your data)
+# manual_mappings <- data.frame(
+#   name_to_clean = c("Bob", "Sally", "Mike"),
+#   clean_name = c("Robert Smith", "Sarah Johnson", "Michael Brown"),
+#   notes = c("Uses nickname", "Preferred name", "Uses nickname"),
+#   stringsAsFactors = FALSE
+# )
+
+# If you have manual mappings, uncomment these lines:
+# name_mapping <- bind_rows(
+#   name_mapping %>% filter(!is.na(clean_name)),
+#   manual_mappings
+# )
+
+cat("ℹ️  If you need to add manual name mappings, edit this chunk and uncomment the code above.\n")
+cat("ℹ️  Otherwise, proceed to the next step.\n")
+```
+
+## Step 6: Apply Name Mappings and Create Clean Data
+
+Now let's apply the name mappings to create clean engagement data:
+
+```{r clean-data}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+cat("=== Creating Clean Engagement Data ===\n")
+
+# Apply name mappings to metrics
+clean_metrics <- all_metrics %>%
+  left_join(name_mapping, by = c("name" = "name_to_clean")) %>%
+  mutate(
+    student_name = coalesce(clean_name, name),
+    is_matched = !is.na(clean_name),
+    is_student = !is.na(clean_name)  # Assume matched names are students
+  )
+
+# Summary of matching success
+matching_summary <- clean_metrics %>%
+  group_by(is_matched) %>%
+  summarise(
+    count = n(),
+    percentage = n() / nrow(clean_metrics) * 100
+  )
+
+cat("📊 Name Matching Results:\n")
+print(matching_summary)
+
+# Student vs non-student participation
+participation_summary <- clean_metrics %>%
+  group_by(is_student) %>%
+  summarise(
+    total_utterances = sum(n, na.rm = TRUE),
+    total_duration = sum(duration, na.rm = TRUE),
+    total_words = sum(wordcount, na.rm = TRUE),
+    avg_utterance_length = mean(duration, na.rm = TRUE)
+  )
+
+cat("\n📊 Participation Summary (Students vs Others):\n")
+print(participation_summary)
+
+# Display clean data
+cat("\n=== Clean Data Preview ===\n")
+print(head(clean_metrics, 10))
+```
+
+## Step 7: Analyze Student Participation Patterns
+
+Now let's analyze participation patterns to understand engagement:
+
+```{r analyze-patterns}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+cat("=== Analyzing Student Participation Patterns ===\n")
+
+# Create student summary (only matched students)
+student_summary <- clean_metrics %>%
+  filter(is_student) %>%
+  group_by(student_name) %>%
+  summarise(
+    total_utterances = sum(n, na.rm = TRUE),
+    total_duration = sum(duration, na.rm = TRUE),
+    total_words = sum(wordcount, na.rm = TRUE),
+    avg_words_per_minute = mean(wpm, na.rm = TRUE),
+    sessions_participated = n_distinct(transcript_file),
+    participation_rate = total_utterances / sum(clean_metrics$n, na.rm = TRUE) * 100
+  ) %>%
+  arrange(desc(total_utterances))
+
+cat("📊 Student Participation Summary:\n")
+cat("👥 Students analyzed:", nrow(student_summary), "\n")
+cat("📄 Total utterances across all students:", sum(student_summary$total_utterances), "\n")
+cat("⏱️  Total speaking time across all students:", round(sum(student_summary$total_duration) / 60, 1), "minutes\n\n")
+
+# Display top participants
+cat("=== Top 10 Most Active Students ===\n")
+print(head(student_summary, 10))
+
+# Display low participants
+cat("\n=== Students with Low Participation ===\n")
+low_participation <- student_summary %>%
+  filter(total_utterances < median(total_utterances, na.rm = TRUE)) %>%
+  arrange(total_utterances)
+
+print(head(low_participation, 10))
+
+# Participation statistics
+participation_stats <- student_summary %>%
+  summarise(
+    mean_utterances = mean(total_utterances, na.rm = TRUE),
+    median_utterances = median(total_utterances, na.rm = TRUE),
+    sd_utterances = sd(total_utterances, na.rm = TRUE),
+    min_utterances = min(total_utterances, na.rm = TRUE),
+    max_utterances = max(total_utterances, na.rm = TRUE)
+  )
+
+cat("\n=== Participation Statistics ===\n")
+print(participation_stats)
+```
+
+## Step 8: Create Visualizations
+
+Let's create visualizations to understand participation patterns:
+
+```{r create-visualizations}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+cat("=== Creating Participation Visualizations ===\n")
+
+# Plot 1: Participation by utterance count
+p1 <- ggplot(student_summary, aes(x = reorder(student_name, total_utterances), y = total_utterances)) +
+  geom_bar(stat = "identity", fill = "steelblue", alpha = 0.8) +
+  coord_flip() +
+  labs(
+    title = "Student Participation by Utterance Count",
+    subtitle = paste("Based on", length(unique(clean_metrics$transcript_file)), "sessions"),
+    x = "Student Name",
+    y = "Number of Utterances"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 8),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+
+print(p1)
+
+# Plot 2: Participation by speaking time
+p2 <- ggplot(student_summary, aes(x = reorder(student_name, total_duration), y = total_duration / 60)) +
+  geom_bar(stat = "identity", fill = "darkgreen", alpha = 0.8) +
+  coord_flip() +
+  labs(
+    title = "Student Participation by Speaking Time",
+    subtitle = paste("Based on", length(unique(clean_metrics$transcript_file)), "sessions"),
+    x = "Student Name",
+    y = "Speaking Time (minutes)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 8),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+
+print(p2)
+
+# Plot 3: Participation distribution
+p3 <- ggplot(student_summary, aes(x = total_utterances)) +
+  geom_histogram(bins = 15, fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_vline(xintercept = median(student_summary$total_utterances, na.rm = TRUE), 
+             color = "red", linetype = "dashed", size = 1) +
+  labs(
+    title = "Distribution of Student Participation",
+    subtitle = "Red line = median participation",
+    x = "Number of Utterances",
+    y = "Number of Students"
+  ) +
+  theme_minimal()
+
+print(p3)
+
+cat("✅ Visualizations created successfully!\n")
+```
+
+## Step 9: Identify Participation Gaps and Insights
+
+Let's identify students who might need encouragement and generate insights:
+
+```{r identify-gaps}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+cat("=== Identifying Participation Gaps ===\n")
+
+# Create participation categories
+participation_categories <- student_summary %>%
+  mutate(
+    participation_level = case_when(
+      total_utterances >= quantile(total_utterances, 0.75, na.rm = TRUE) ~ "High",
+      total_utterances >= quantile(total_utterances, 0.25, na.rm = TRUE) ~ "Medium",
+      TRUE ~ "Low"
+    )
+  )
+
+# Summary by participation level
+level_summary <- participation_categories %>%
+  group_by(participation_level) %>%
+  summarise(
+    count = n(),
+    percentage = n() / nrow(participation_categories) * 100
+  )
+
+cat("📊 Participation Level Distribution:\n")
+print(level_summary)
+
+# Students needing encouragement
+low_participation_students <- participation_categories %>%
+  filter(participation_level == "Low") %>%
+  arrange(total_utterances)
+
+cat("\n=== Students Who May Need Encouragement ===\n")
+if (nrow(low_participation_students) > 0) {
+  print(low_participation_students[, c("student_name", "total_utterances", "total_duration", "sessions_participated")])
+} else {
+  cat("✅ No students identified as needing encouragement.\n")
+}
+
+# Equity analysis
+equity_metrics <- student_summary %>%
+  summarise(
+    gini_coefficient = (2 * sum(rank(total_utterances) * total_utterances) /
+      (n() * sum(total_utterances))) - (n() + 1) / n(),
+    participation_ratio = max(total_utterances) / min(total_utterances),
+    std_dev_ratio = sd(total_utterances) / mean(total_utterances)
+  )
+
+cat("\n=== Participation Equity Metrics ===\n")
+cat("📊 Gini Coefficient (0 = perfect equality, 1 = perfect inequality):", round(equity_metrics$gini_coefficient, 3), "\n")
+cat("📊 Participation Ratio (highest/lowest):", round(equity_metrics$participation_ratio, 1), "\n")
+cat("📊 Coefficient of Variation:", round(equity_metrics$std_dev_ratio, 3), "\n")
+```
+
+## Step 10: Generate Recommendations
+
+Based on the analysis, let's generate actionable recommendations:
+
+```{r generate-recommendations}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+cat("=== Generating Actionable Recommendations ===\n")
+
+# Calculate recommendations based on data
+total_students <- nrow(student_summary)
+low_participation_count <- nrow(low_participation_students)
+participation_equity <- equity_metrics$gini_coefficient
+
+cat("📋 ANALYSIS SUMMARY:\n")
+cat("   • Total students analyzed:", total_students, "\n")
+cat("   • Students with low participation:", low_participation_count, "\n")
+cat("   • Participation equity score:", round(participation_equity, 3), "\n")
+cat("   • Sessions analyzed:", length(unique(clean_metrics$transcript_file)), "\n\n")
+
+cat("🎯 RECOMMENDATIONS FOR EQUITABLE PARTICIPATION:\n\n")
+
+if (low_participation_count > 0) {
+  cat("1. DIRECT SUPPORT FOR LOW-PARTICIPATION STUDENTS:\n")
+  cat("   • Reach out individually to", low_participation_count, "students with low participation\n")
+  cat("   • Offer alternative participation methods (chat, polls, breakout rooms)\n")
+  cat("   • Consider cultural and personal communication preferences\n")
+  cat("   • Provide advance notice of discussion topics\n\n")
+}
+
+if (participation_equity > 0.3) {
+  cat("2. STRUCTURAL CHANGES TO PROMOTE EQUITY:\n")
+  cat("   • Implement structured discussion protocols\n")
+  cat("   • Use think-pair-share activities\n")
+  cat("   • Set participation time limits per student\n")
+  cat("   • Create smaller discussion groups\n\n")
+}
+
+cat("3. MONITORING AND TRACKING:\n")
+cat("   • Continue monitoring participation patterns over time\n")
+cat("   • Track improvement in engagement after interventions\n")
+cat("   • Collect student feedback on participation preferences\n")
+cat("   • Adjust teaching strategies based on insights\n\n")
+
+cat("4. BEST PRACTICES:\n")
+cat("   • Focus on quality over quantity of participation\n")
+cat("   • Create inclusive learning environments\n")
+cat("   • Respect diverse communication styles\n")
+cat("   • Use data to inform teaching, not student evaluation\n\n")
+
+cat("⚠️  ETHICAL CONSIDERATIONS:\n")
+cat("   • Use this data to promote equitable participation, not surveillance\n")
+cat("   • Focus on group patterns rather than individual performance\n")
+cat("   • Respect student privacy and preferences\n")
+cat("   • Share insights constructively with students when appropriate\n")
+```
+
+## Step 11: Save Analysis Results
+
+Let's save all the analysis results for future reference:
+
+```{r save-results}
+# Load test configuration
+test_config <- readRDS(file.path(test_base_dir, "test_config.rds"))
+
+cat("=== Saving Analysis Results ===\n")
+
+# Create timestamp for file naming
+timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
+
+# Save clean metrics
+clean_metrics_file <- file.path(test_config$outputs_dir, paste0("clean_engagement_metrics_", timestamp, ".csv"))
+write_csv(clean_metrics, clean_metrics_file)
+cat("✅ Clean metrics saved:", basename(clean_metrics_file), "\n")
+
+# Save student summary
+student_summary_file <- file.path(test_config$outputs_dir, paste0("student_participation_summary_", timestamp, ".csv"))
+write_csv(student_summary, student_summary_file)
+cat("✅ Student summary saved:", basename(student_summary_file), "\n")
+
+# Save name mappings
+name_mapping_file <- file.path(test_config$outputs_dir, paste0("name_mappings_", timestamp, ".csv"))
+write_csv(name_mapping, name_mapping_file)
+cat("✅ Name mappings saved:", basename(name_mapping_file), "\n")
+
+# Save participation categories
+categories_file <- file.path(test_config$outputs_dir, paste0("participation_categories_", timestamp, ".csv"))
+write_csv(participation_categories, categories_file)
+cat("✅ Participation categories saved:", basename(categories_file), "\n")
+
+# Create analysis report
+analysis_report <- list(
+  test_date = Sys.Date(),
+  package_version = as.character(packageVersion("zoomstudentengagement")),
+  data_summary = list(
+    transcript_files = length(transcript_files),
+    total_size_mb = sum(file.size(transcript_files)) / 1024^2,
+    students_analyzed = nrow(student_summary),
+    sessions_analyzed = length(unique(clean_metrics$transcript_file))
+  ),
+  performance_metrics = list(
+    processing_time_seconds = processing_time,
+    memory_used_mb = memory_used
+  ),
+  participation_summary = list(
+    total_utterances = sum(student_summary$total_utterances),
+    total_speaking_time_minutes = sum(student_summary$total_duration) / 60,
+    average_utterances_per_student = mean(student_summary$total_utterances),
+    participation_equity_score = equity_metrics$gini_coefficient
+  ),
+  recommendations = list(
+    low_participation_students = low_participation_count,
+    needs_structural_changes = participation_equity > 0.3
+  )
+)
+
+# Save analysis report
+report_file <- file.path(test_config$reports_dir, paste0("analysis_report_", timestamp, ".rds"))
+saveRDS(analysis_report, report_file)
+cat("✅ Analysis report saved:", basename(report_file), "\n")
+
+# Create summary text file
+summary_file <- file.path(test_config$reports_dir, paste0("analysis_summary_", timestamp, ".txt"))
+sink(summary_file)
+cat("=== Student Engagement Analysis Summary ===\n")
+cat("Date:", as.character(Sys.Date()), "\n")
+cat("Package Version:", as.character(packageVersion("zoomstudentengagement")), "\n\n")
+cat("DATA SUMMARY:\n")
+cat("- Transcript files analyzed:", length(transcript_files), "\n")
+cat("- Students analyzed:", nrow(student_summary), "\n")
+cat("- Sessions analyzed:", length(unique(clean_metrics$transcript_file)), "\n")
+cat("- Total utterances:", sum(student_summary$total_utterances), "\n")
+cat("- Total speaking time:", round(sum(student_summary$total_duration) / 60, 1), "minutes\n\n")
+cat("PARTICIPATION EQUITY:\n")
+cat("- Gini coefficient:", round(equity_metrics$gini_coefficient, 3), "\n")
+cat("- Students with low participation:", low_participation_count, "\n")
+cat("- Participation ratio (highest/lowest):", round(equity_metrics$participation_ratio, 1), "\n\n")
+cat("RECOMMENDATIONS:\n")
+if (low_participation_count > 0) {
+  cat("- Reach out to", low_participation_count, "students with low participation\n")
+}
+if (participation_equity > 0.3) {
+  cat("- Implement structural changes to promote equity\n")
+}
+cat("- Continue monitoring participation patterns\n")
+cat("- Collect student feedback on participation preferences\n")
+sink()
+
+cat("✅ Analysis summary saved:", basename(summary_file), "\n")
+
+cat("\n=== All Files Saved Successfully ===\n")
+cat("📁 Outputs directory:", test_config$outputs_dir, "\n")
+cat("📁 Reports directory:", test_config$reports_dir, "\n")
+```
+
+## Step 12: Test Completion Summary
+
+```{r test-summary}
+cat("=== QA Test Scenario 1: COMPLETED SUCCESSFULLY ===\n\n")
+
+cat("🎉 CONGRATULATIONS! You have successfully completed the QA test.\n\n")
+
+cat("📊 TEST RESULTS SUMMARY:\n")
+cat("✅ Package installation and loading: SUCCESS\n")
+cat("✅ Directory structure creation: SUCCESS\n")
+cat("✅ Data loading and validation: SUCCESS\n")
+cat("✅ Transcript processing: SUCCESS\n")
+cat("✅ Name matching and cleaning: SUCCESS\n")
+cat("✅ Participation analysis: SUCCESS\n")
+cat("✅ Visualization creation: SUCCESS\n")
+cat("✅ Results saving: SUCCESS\n\n")
+
+cat("📈 PERFORMANCE METRICS:\n")
+cat("⏱️  Total processing time:", round(processing_time, 2), "seconds\n")
+cat("💾 Memory usage:", round(memory_used, 2), "MB\n")
+cat("📄 Files processed:", length(transcript_files), "\n")
+cat("👥 Students analyzed:", nrow(student_summary), "\n\n")
+
+cat("📋 NEXT STEPS:\n")
+cat("1. Review the generated visualizations and insights\n")
+cat("2. Check the saved output files in the outputs/ directory\n")
+cat("3. Read the analysis summary in the reports/ directory\n")
+cat("4. Consider implementing the recommendations for your class\n")
+cat("5. Provide feedback on the testing experience\n\n")
+
+cat("🔍 FILES TO REVIEW:\n")
+cat("• Clean engagement metrics CSV\n")
+cat("• Student participation summary CSV\n")
+cat("• Name mappings CSV\n")
+cat("• Analysis report RDS\n")
+cat("• Analysis summary text file\n\n")
+
+cat("💡 TIPS FOR FUTURE USE:\n")
+cat("• Run this analysis regularly to track participation trends\n")
+cat("• Adjust name mappings as needed for new students\n")
+cat("• Use insights to inform teaching strategies\n")
+cat("• Respect student privacy and preferences\n\n")
+
+cat("Thank you for completing the QA test!\n")
+```
+
+## Troubleshooting
+
+If you encounter any issues during testing:
+
+### Common Issues and Solutions
+
+1. **Package not found**: Run `install.packages("devtools")` then `devtools::install_github("revgizmo/zoomstudentengagement")`
+
+2. **File not found errors**: Ensure you've copied your files to the correct directories as specified in Step 1
+
+3. **Memory issues**: Close other R sessions and restart R if you encounter memory problems
+
+4. **Permission errors**: Ensure you have write permissions in the testing directory
+
+### Getting Help
+
+If you encounter issues not covered here:
+- Check the package documentation: `?zoomstudentengagement`
+- Review the vignettes: `browseVignettes("zoomstudentengagement")`
+- Report issues on GitHub: https://github.com/revgizmo/zoomstudentengagement/issues
+
+---
+
+**Note**: This test uses real data and generates actual analysis results. All outputs are saved to your local testing directory and are not shared unless you choose to do so. 

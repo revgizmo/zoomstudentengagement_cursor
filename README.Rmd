@@ -76,16 +76,18 @@ For detailed workflows and examples, see the package vignettes:
 
 The `zoomstudentengagement` package provides tools for:
 
-1. **Loading and Processing Zoom Transcripts**: Convert Zoom VTT files into analyzable data
+1. **Loading and Processing Zoom Transcripts**: Convert Zoom .transcript.vtt files into analyzable data
 2. **Calculating Engagement Metrics**: Measure participation by speaker/student
 3. **Name Matching and Cleaning**: Match transcript names to student rosters
 4. **Visualization**: Create plots to analyze participation patterns
 5. **Reporting**: Generate individual student reports
 
+**Note**: The package specifically processes `.transcript.vtt` files (the canonical Zoom transcript files). Other Zoom file types like `.cc.vtt` (closed captions) and `.newChat.txt` (chat logs) are not currently supported but may be added in future versions.
+
 ## 🔧 Key Functions
 
 ### Core Processing
-- `load_zoom_transcript()` - Load raw Zoom transcript files
+- `load_zoom_transcript()` - Load raw Zoom transcript files (.transcript.vtt)
 - `process_zoom_transcript()` - Process and consolidate transcript data
 - `summarize_transcript_metrics()` - Calculate engagement metrics
 - `summarize_transcript_files()` - Batch process multiple transcripts
