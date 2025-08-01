@@ -16,7 +16,7 @@ summarize_transcript_metrics(
 )
 }
 \arguments{
-\item{transcript_file_path}{File path of a .vtt file of a Zoom recording
+\item{transcript_file_path}{File path of a .transcript.vtt file of a Zoom recording
 transcript.}
 
 \item{names_exclude}{Character vector of names to exclude from the results.
