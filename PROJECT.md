@@ -260,6 +260,36 @@ source("scripts/pre-pr-validation.R")
 - Code style and quality issues
 - Common R package pitfalls
 
+### Real-World Testing (Production Validation)
+
+#### When to Run Real-World Testing
+- Before CRAN submission
+- When testing with real confidential data
+- For performance validation with large datasets
+- For privacy and security feature validation
+
+#### Real-World Testing Process
+```r
+# Set up secure testing environment (outside of LLM environments)
+# Copy testing infrastructure to secure location
+# Add real confidential data
+# Run comprehensive real-world tests
+source("scripts/real_world_testing/run_real_world_tests.R")
+```
+
+**What this validates:**
+- Performance with real Zoom transcripts
+- Name matching with actual student rosters
+- Privacy features and data anonymization
+- Memory usage with large files
+- Error handling with real-world edge cases
+- Integration testing with confidential data
+
+#### Testing Process Relationship
+- **QA Process**: Development-time validation (safe for all environments)
+- **Real-World Testing**: Production validation (requires secure environment)
+- **Workflow**: QA → Real-World Testing → CRAN Submission
+
 ### PR and Merge Workflow
 
 #### Before Creating PR
