@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 # Real-World Testing Runner for zoomstudentengagement
 #
 # This script sets up the environment and runs real-world tests

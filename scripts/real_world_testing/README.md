@@ -35,7 +35,7 @@ zoom_real_world_testing/              # Actual test data (gitignored)
 
 Create the actual testing directory (this is gitignored for security):
 
-```bash
+```zsh
 # From the project root
 mkdir -p zoom_real_world_testing/data/transcripts
 mkdir -p zoom_real_world_testing/data/metadata
@@ -47,7 +47,7 @@ mkdir -p zoom_real_world_testing/outputs
 
 Copy the testing infrastructure to the actual test directory:
 
-```bash
+```zsh
 # From the project root
 cp scripts/real_world_testing/run_real_world_tests.R zoom_real_world_testing/
 cp scripts/real_world_testing/run_tests.sh zoom_real_world_testing/
@@ -76,14 +76,14 @@ Place your real test data in the appropriate directories:
 
 #### Option 1: Using the Shell Script (Recommended)
 
-```bash
+```zsh
 cd zoom_real_world_testing
 ./run_tests.sh
 ```
 
 #### Option 2: Direct R Script Execution
 
-```bash
+```zsh
 cd zoom_real_world_testing
 Rscript run_real_world_tests.R --output-dir=reports --data-dir=data
 ```
@@ -208,20 +208,20 @@ After running tests, the following files will be generated:
    ```
 
 2. **Missing Test Data**
-   ```bash
+   ```zsh
    # Ensure test data is available
    ls -la zoom_real_world_testing/data/transcripts/
    ls -la zoom_real_world_testing/data/metadata/
    ```
 
 3. **Permission Issues**
-   ```bash
+   ```zsh
    # Make script executable
    chmod +x zoom_real_world_testing/run_tests.sh
    ```
 
 4. **Environment Issues**
-   ```bash
+   ```zsh
    # Check R installation
    Rscript --version
    

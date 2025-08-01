@@ -125,7 +125,7 @@ This document outlines the comprehensive testing plan for validating the zoomstu
 ## Testing Timeline
 
 ### Phase 1: Setup and Initial Testing (1-2 days)
-- Set up secure testing environment
+- Set up secure testing environment (using zsh)
 - Prepare test data and scenarios
 - Run basic functionality tests
 
