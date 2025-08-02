@@ -66,13 +66,41 @@ log_test_result <- function(test_name, status, details = NULL, error = NULL) {
   test_results[[length(test_results) + 1]] <<- result
 }
 
+# Helper function to find a suitable transcript file
+find_transcript_file <- function() {
+  transcript_dir <- file.path(data_dir, "transcripts")
+  transcript_files <- list.files(
+    transcript_dir, 
+    pattern = "\\.(vtt|txt|csv)$", 
+    full.names = TRUE,
+    recursive = TRUE
+  )
+  
+  if (length(transcript_files) == 0) {
+    stop("No transcript files found in ", transcript_dir)
+  }
+  
+  # Prefer .transcript.vtt files, then .vtt, then others
+  preferred_files <- transcript_files[grepl("\\.transcript\\.vtt$", transcript_files)]
+  if (length(preferred_files) > 0) {
+    return(preferred_files[1])
+  }
+  
+  vtt_files <- transcript_files[grepl("\\.vtt$", transcript_files)]
+  if (length(vtt_files) > 0) {
+    return(vtt_files[1])
+  }
+  
+  return(transcript_files[1])
+}
+
 # Function to safely test transcript processing
 test_transcript_processing <- function() {
   log_test_result("transcript_processing", "STARTED")
   
   tryCatch({
     # Test with real transcript file
-    transcript_file <- file.path(data_dir, "transcripts", "GMT20240124-202901_Recording.transcript.vtt")
+    transcript_file <- find_transcript_file()
     
     if (!file.exists(transcript_file)) {
       stop("Transcript file not found")
@@ -125,7 +153,7 @@ test_name_matching <- function() {
     roster <- load_roster(roster_file)
     
     # Load transcript for name matching
-    transcript_file <- file.path(data_dir, "transcripts", "GMT20240124-202901_Recording.transcript.vtt")
+    transcript_file <- find_transcript_file()
     transcript_data <- load_zoom_transcript(transcript_file)
     
     # Test name matching
@@ -156,7 +184,7 @@ test_visualization <- function() {
   
   tryCatch({
     # Load test data
-    transcript_file <- file.path(data_dir, "transcripts", "GMT20240124-202901_Recording.transcript.vtt")
+    transcript_file <- find_transcript_file()
     roster_file <- file.path(data_dir, "metadata", "roster.csv")
     
     transcript_data <- load_zoom_transcript(transcript_file)
@@ -275,7 +303,7 @@ test_privacy_features <- function() {
   
   tryCatch({
     # Load test data
-    transcript_file <- file.path(data_dir, "transcripts", "GMT20240124-202901_Recording.transcript.vtt")
+    transcript_file <- find_transcript_file()
     roster_file <- file.path(data_dir, "metadata", "roster.csv")
     
     transcript_data <- load_zoom_transcript(transcript_file)
