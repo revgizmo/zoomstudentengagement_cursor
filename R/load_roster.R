@@ -30,6 +30,6 @@ load_roster <- function(
       return(tibble::as_tibble(roster_data))
     }
   } else {
-    return(tibble::tibble())
+    stop("Roster file not found: ", roster_file_path)
   }
 }

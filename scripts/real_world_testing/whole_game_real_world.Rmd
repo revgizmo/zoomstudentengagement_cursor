@@ -101,17 +101,23 @@ Start by loading your student roster:
 
 ```{r load-roster}
 # Load the student roster
-roster_file <- file.path("data/metadata", "roster.csv")
+roster_file <- "roster.csv"
+roster_path <- file.path("data/metadata", roster_file)
 
-if (file.exists(roster_file)) {
-  roster <- load_roster(roster_file)
-  
-  # View the roster structure
-  head(roster)
-  cat("\nRoster dimensions:", nrow(roster), "students\n")
-  cat("Roster columns:", paste(names(roster), collapse = ", "), "\n")
+if (file.exists(roster_path)) {
+  tryCatch({
+    roster <- load_roster(data_folder = "data/metadata", roster_file = roster_file)
+    
+    # View the roster structure
+    head(roster)
+    cat("\nRoster dimensions:", nrow(roster), "students\n")
+    cat("Roster columns:", paste(names(roster), collapse = ", "), "\n")
+  }, error = function(e) {
+    cat("⚠️  Error loading roster:", e$message, "\n")
+    cat("Please check that your roster.csv file is properly formatted\n")
+  })
 } else {
-  cat("⚠️  Roster file not found at:", roster_file, "\n")
+  cat("⚠️  Roster file not found at:", roster_path, "\n")
   cat("Please add your roster.csv file to data/metadata/\n")
 }
 ```
