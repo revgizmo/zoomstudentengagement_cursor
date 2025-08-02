@@ -295,6 +295,31 @@ Rscript scripts/context-for-new-chat.R
 ./scripts/context-for-new-chat.sh && Rscript scripts/context-for-new-chat.R
 ```
 
+### Option 2: Reference Key Documentation Files
+
+For comprehensive project information, reference these key files:
+
+#### **Essential Project Documentation**
+- **`README.md`** - Package overview, installation, and quick start
+- **`PROJECT.md`** - Current project status and CRAN readiness
+- **`CONTRIBUTING.md`** - Development workflow and contribution guidelines
+- **`CRAN_CHECKLIST.md`** - Detailed CRAN submission tracking and requirements
+
+#### **Development Guidelines**
+- **`docs/development/CURSOR_CONTEXT_GUIDE.md`** - This file: AI-assisted development guidelines
+- **`docs/development/AUDIT_LOG.md`** - Recent audit results and findings
+- **`ISSUE_MANAGEMENT_QUICK_REFERENCE.md`** - Issue workflow and management
+
+#### **Package Documentation**
+- **`R/`** - Core functions (33 exported functions)
+- **`tests/`** - Test suite (30+ test files)
+- **`vignettes/`** - Usage examples and tutorials
+- **`man/`** - Function documentation (auto-generated)
+
+#### **Sample Data and Examples**
+- **`inst/extdata/`** - Sample data files for testing and examples
+- **`vignettes/`** - Comprehensive usage examples and tutorials
+
 ### Option 2: Manual Context Provision
 
 Copy and paste the following into your new Cursor chat:
@@ -389,6 +414,28 @@ Rscript scripts/context-for-new-chat.R
 - Quick health check commands
 - Common issues and solutions
 - Development tips
+
+## When to Use Context Scripts vs. Documentation References
+
+### **Use Context Scripts When:**
+- Starting a new development session
+- Need current project status and metrics
+- Want recent activity and issue updates
+- Need quick overview of current state
+- Working on time-sensitive tasks
+
+### **Use Documentation References When:**
+- Need detailed development guidelines
+- Looking for comprehensive CRAN requirements
+- Want to understand project structure and conventions
+- Need to reference specific workflows or processes
+- Working on complex features requiring deep understanding
+
+### **Best Practice: Combine Both**
+1. **Start with context scripts** for current status
+2. **Reference specific documentation** for detailed guidance
+3. **Use context scripts for updates** during development
+4. **Reference documentation for** final validation and submission
 
 ## Best Practices for Context Provision
 
