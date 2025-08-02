@@ -203,6 +203,31 @@ Rscript -e "devtools::load_all(); devtools::test(); devtools::check_man(); devto
 - [ ] Documentation is complete and up-to-date
 - [ ] README.md is current (`devtools::build_readme()`)
 
+## Context Scripts for Cursor
+
+### Overview
+We've created comprehensive context scripts to provide current project status to new Cursor chats:
+
+- **`scripts/context-for-new-chat.sh`** - Shell script for project context
+- **`scripts/context-for-new-chat.R`** - R script for R-specific context
+- **`scripts/get-context.sh`** - Combined context script
+- **`scripts/save-context.sh`** - Save context to files for linking
+
+### Quick Usage
+```bash
+# Get complete context
+./scripts/get-context.sh
+
+# Save context to files for linking
+./scripts/save-context.sh
+
+# Then link in Cursor: @context.md, @r-context.md, or @full-context.md
+```
+
+### Documentation
+- **Complete Guide**: `docs/development/CURSOR_CONTEXT_GUIDE.md`
+- **Quick Reference**: `scripts/README.md`
+
 ## Pre-CRAN Development Workflow
 
 ### Pre-PR Validation (Development Phase)
