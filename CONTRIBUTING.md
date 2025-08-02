@@ -6,14 +6,14 @@ Thank you for your interest in contributing to the zoomstudentengagement package
 
 ### For New Contributors
 1. **Read this guide** - Understand the development workflow
-2. **Check the AI guidelines** - [AI-Assisted Development Guide](docs/development/CURSOR_CONTEXT_GUIDE.md)
+2. **Check the AI guidelines** - [AI-Assisted Development Guide](docs/development/AI_ASSISTED_DEVELOPMENT.md)
 3. **Review current issues** - `gh issue list --limit 10`
 4. **Pick an issue** - Start with "good first issue" or "priority:medium"
 5. **Follow the workflow** - Create branch, make changes, test, submit PR
 
 ### For AI-Assisted Development
 - **Use the context scripts** - `./scripts/context-for-new-chat.sh`
-- **Follow AI guidelines** - [AI-Assisted Development Guide](docs/development/CURSOR_CONTEXT_GUIDE.md)
+- **Follow AI guidelines** - [AI-Assisted Development Guide](docs/development/AI_ASSISTED_DEVELOPMENT.md)
 - **Maintain ethical standards** - Privacy first, FERPA compliance
 - **Validate all changes** - Run pre-PR validation checklist
 
@@ -441,7 +441,7 @@ For CRAN submission workflow when the package is ready for CRAN, see the [CRAN S
 
 #### **When Stuck**
 1. Check existing issues for similar problems
-2. Review the [AI-Assisted Development Guide](docs/development/CURSOR_CONTEXT_GUIDE.md)
+2. Review the [AI-Assisted Development Guide](docs/development/AI_ASSISTED_DEVELOPMENT.md)
 3. Run context scripts to get current status
 4. Check PROJECT.md for current priorities
 5. Create an issue with detailed information
@@ -500,7 +500,7 @@ For feature requests, include:
 - `covr` for test coverage
 
 ### Project-Specific Guides
-- [AI-Assisted Development Guide](docs/development/CURSOR_CONTEXT_GUIDE.md) - Comprehensive AI guidelines
+- [AI-Assisted Development Guide](docs/development/AI_ASSISTED_DEVELOPMENT.md) - Comprehensive AI guidelines
 - [PROJECT.md](PROJECT.md) - Current project status and priorities
 - [CRAN_CHECKLIST.md](CRAN_CHECKLIST.md) - CRAN submission checklist
 - [ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md) - Issue workflow

@@ -49,6 +49,10 @@
 2. Use [CONTEXT_PROVISION.md](CONTEXT_PROVISION.md) for context templates
 3. Follow [AI_ASSISTED_DEVELOPMENT.md](AI_ASSISTED_DEVELOPMENT.md) for AI collaboration
 
+### **Documentation Maintenance**
+1. Check [AUDIT_LOG.md](AUDIT_LOG.md) for recent decisions
+2. Review [DOCUMENTATION_ORGANIZATION_SUMMARY.md](DOCUMENTATION_ORGANIZATION_SUMMARY.md) for context
+
 ---
 
 ## 🔄 Development Workflow
@@ -120,11 +124,11 @@ covr::package_coverage()
 ```
 
 ### Key Guidelines
-- **AI Development**: [AI_ASSISTED_DEVELOPMENT.md](AI_ASSISTED_DEVELOPMENT.md)
-- **Context Provision**: [CONTEXT_PROVISION.md](CONTEXT_PROVISION.md)
-- **Cursor Integration**: [CURSOR_INTEGRATION.md](CURSOR_INTEGRATION.md)
-- **Pre-PR Validation**: [PRE_PR_VALIDATION.md](PRE_PR_VALIDATION.md)
-- **CRAN Submission**: [CRAN_SUBMISSION.md](CRAN_SUBMISSION.md)
+- **AI Development**: [AI_ASSISTED_DEVELOPMENT.md](AI_ASSISTED_DEVELOPMENT.md) - Core AI collaboration principles
+- **Context Provision**: [CONTEXT_PROVISION.md](CONTEXT_PROVISION.md) - Context scripts and templates
+- **Cursor Integration**: [CURSOR_INTEGRATION.md](CURSOR_INTEGRATION.md) - Cursor-specific features
+- **Pre-PR Validation**: [PRE_PR_VALIDATION.md](PRE_PR_VALIDATION.md) - Quality assurance checklist
+- **CRAN Submission**: [CRAN_SUBMISSION.md](CRAN_SUBMISSION.md) - CRAN requirements and process
 
 ---
 

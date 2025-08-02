@@ -229,7 +229,7 @@ This checklist tracks progress toward CRAN submission for the zoomstudentengagem
 
 ### Project Documentation
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Development workflow and guidelines
-- [AI-Assisted Development Guide](docs/development/CURSOR_CONTEXT_GUIDE.md) - AI guidelines
+- [AI-Assisted Development Guide](docs/development/AI_ASSISTED_DEVELOPMENT.md) - AI guidelines
 - [PROJECT.md](PROJECT.md) - Current project status
 
 ### Validation Commands

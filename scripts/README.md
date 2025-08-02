@@ -164,6 +164,6 @@ For quick context, copy and paste:
 ## Documentation
 
 For detailed information about using context scripts with Cursor, see:
-- [Cursor Context Guide](../docs/development/CURSOR_CONTEXT_GUIDE.md)
+- [Cursor Integration Guide](../docs/development/CURSOR_INTEGRATION.md)
 - [Issue Management Quick Reference](../ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
 - [Real-World Testing Guide](../zoom_real_world_testing/README.md) 
