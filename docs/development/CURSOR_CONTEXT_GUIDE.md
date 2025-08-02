@@ -1,8 +1,268 @@
-# Cursor Context Guide for zoomstudentengagement
+# AI-Assisted Development Guide for zoomstudentengagement
 
 ## Overview
 
-This guide provides best practices and tools for providing current project context to new Cursor chats. This ensures that AI assistants have the necessary information to help effectively with development tasks.
+This guide provides comprehensive best practices and tools for AI-assisted development in the zoomstudentengagement R package. It covers context provision, AI agent guidelines, development workflows, and integration strategies for effective AI collaboration.
+
+## Why AI-Assisted Development Matters
+
+AI assistants can significantly accelerate development when properly guided with:
+- Current project context and status
+- Clear development priorities and constraints
+- Project-specific conventions and standards
+- Ethical considerations and compliance requirements
+- Proper workflow integration
+
+Effective AI collaboration helps:
+- Reduce development time and errors
+- Maintain code quality and consistency
+- Ensure compliance with project standards
+- Scale development capacity
+- Improve documentation and testing
+
+---
+
+## 🤖 AI Agent Guidelines
+
+### Core Principles for AI Collaboration
+
+#### 1. **Context-First Approach**
+- Always provide comprehensive project context before asking questions
+- Include current status, priorities, and constraints
+- Reference relevant issues, documentation, and recent changes
+- Use the provided context scripts for consistent information
+
+#### 2. **Ethical Development Practices**
+- **Privacy First**: Never expose sensitive student data or personal information
+- **FERPA Compliance**: Ensure all suggestions comply with educational privacy laws
+- **Equitable Participation**: Focus on participation equity and inclusive design
+- **Transparency**: Document AI-assisted changes and their rationale
+- **Human Oversight**: Always review and validate AI-generated code
+
+#### 3. **Code Quality Standards**
+- Follow [tidyverse style guide](https://style.tidyverse.org/)
+- Maintain >90% test coverage for all new code
+- Include comprehensive roxygen2 documentation
+- Ensure CRAN compliance for all changes
+- Use consistent naming conventions and patterns
+
+#### 4. **Development Workflow Integration**
+- Create feature branches for all changes
+- Link changes to relevant GitHub issues
+- Follow the established PR workflow
+- Run pre-PR validation checks
+- Update documentation with changes
+
+### AI Agent Responsibilities
+
+#### **Context Management**
+- Keep context file up to date with latest changes
+- Document all significant decisions and their rationale
+- Track ongoing work and blockers
+- Maintain clear status of all components
+- Update PROJECT.md with current information
+
+#### **Code Generation**
+- Follow R package best practices
+- Include comprehensive documentation
+- Add appropriate tests for new code
+- Ensure CRAN compliance
+- Use consistent naming conventions
+- Validate input parameters and error handling
+
+#### **Issue Resolution**
+- Document problem and solution approach
+- Link related issues and PRs
+- Track resolution progress
+- Update context with outcomes
+- Provide clear acceptance criteria
+
+#### **Documentation**
+- Keep README current and comprehensive
+- Maintain up-to-date function documentation
+- Document all exported functions
+- Include usage examples
+- Keep vignettes current and relevant
+
+### AI Agent Best Practices
+
+#### **Before Starting Work**
+1. **Gather Context**: Run context scripts and review current status
+2. **Understand Requirements**: Read issue descriptions and acceptance criteria
+3. **Check Dependencies**: Review related issues and existing code
+4. **Plan Approach**: Outline solution strategy and implementation steps
+5. **Validate Assumptions**: Confirm understanding with human developer
+
+#### **During Development**
+1. **Follow Conventions**: Use established patterns and naming conventions
+2. **Write Tests First**: Create tests before implementing features
+3. **Document as You Go**: Add roxygen2 documentation immediately
+4. **Validate Incrementally**: Test changes frequently and thoroughly
+5. **Communicate Progress**: Update context and issue status regularly
+
+#### **Before Submitting Work**
+1. **Run Validation**: Execute pre-PR validation checklist
+2. **Review Code**: Self-review for quality and compliance
+3. **Update Documentation**: Ensure all changes are documented
+4. **Test Thoroughly**: Verify all functionality works as expected
+5. **Prepare Context**: Update context for next development session
+
+### AI Agent Constraints and Limitations
+
+#### **Data Privacy and Security**
+- **Never log or expose** sensitive student data
+- **Always anonymize** data in examples and tests
+- **Validate input** to prevent injection attacks
+- **Follow FERPA guidelines** for all data handling
+- **Use secure practices** for file operations
+
+#### **Code Quality Requirements**
+- **No hardcoded secrets** or sensitive information
+- **Proper error handling** for all functions
+- **Input validation** for all parameters
+- **Memory efficiency** for large data operations
+- **Performance considerations** for scalability
+
+#### **CRAN Compliance**
+- **All examples must run** without errors
+- **No global variable warnings** in R CMD check
+- **Proper package structure** and metadata
+- **Complete documentation** for all exports
+- **License compliance** and attribution
+
+---
+
+## 🎯 Cursor-Specific Guidelines
+
+### File Organization and Navigation
+
+#### **Project Structure Understanding**
+- **R/**: Core functions (33 exported)
+- **tests/**: Test suite (30+ test files)
+- **man/**: Documentation (auto-generated)
+- **vignettes/**: Usage examples
+- **inst/extdata/**: Sample data
+- **docs/**: Development documentation
+- **scripts/**: Development utilities
+
+#### **Code Navigation Strategies**
+- Use semantic search for finding relevant code
+- Leverage file search for quick access
+- Maintain clear function relationships
+- Document complex code paths
+- Use consistent file naming conventions
+
+#### **Development Workflow Integration**
+- Use Cursor's AI features for code generation
+- Leverage built-in testing tools
+- Utilize documentation helpers
+- Follow Cursor's best practices for R development
+- Integrate with version control workflows
+
+### Cursor AI Features Best Practices
+
+#### **Code Generation**
+- Provide clear, specific prompts
+- Include context about existing code patterns
+- Specify desired output format and style
+- Review and validate generated code
+- Iterate on suggestions as needed
+
+#### **Code Review and Refactoring**
+- Use AI to identify potential improvements
+- Request explanations for suggested changes
+- Validate refactoring suggestions
+- Maintain code consistency
+- Preserve existing functionality
+
+#### **Documentation Assistance**
+- Generate roxygen2 documentation
+- Create usage examples
+- Update README and vignettes
+- Maintain documentation consistency
+- Ensure all examples are runnable
+
+---
+
+## 📋 Pre-PR Validation Checklist
+
+Before creating a pull request, run these checks:
+
+```r
+# Phase 1: Code Quality (5-10 minutes)
+styler::style_pkg()                  # Ensure consistent formatting
+lintr::lint_package()               # Check code quality
+
+# Phase 2: Documentation (2-5 minutes)
+devtools::document()                 # Update roxygen2 documentation
+devtools::build_readme()             # Rebuild README.md
+devtools::spell_check()              # Check for typos
+
+# Phase 3: Testing (3-5 minutes)
+devtools::test()                     # Run all tests
+covr::package_coverage()             # Check test coverage
+
+# Phase 4: Final Validation (5-10 minutes)
+devtools::check()                    # Full package check
+devtools::build()                    # Create distributable package
+```
+
+### Validation Requirements
+
+#### **Code Quality**
+- [ ] Code follows tidyverse style guide
+- [ ] No lintr warnings or errors
+- [ ] Consistent naming conventions
+- [ ] Proper error handling
+- [ ] Input validation implemented
+
+#### **Documentation**
+- [ ] All exported functions documented
+- [ ] Examples are runnable and tested
+- [ ] README.md is current
+- [ ] No spelling errors
+- [ ] Vignettes are up to date
+
+#### **Testing**
+- [ ] All tests pass
+- [ ] Coverage >90% for new code
+- [ ] Edge cases covered
+- [ ] Error conditions tested
+- [ ] Performance considerations addressed
+
+#### **CRAN Compliance**
+- [ ] R CMD check passes (0 errors, 0 warnings)
+- [ ] Package builds successfully
+- [ ] All examples run without errors
+- [ ] No global variable warnings
+- [ ] License and metadata correct
+
+---
+
+## 🚀 CRAN Submission Requirements
+
+### Critical Requirements
+- All tests must pass (`devtools::test()`)
+- Code coverage >90% (`covr::package_coverage()`)
+- No spelling errors (`devtools::spell_check()`)
+- All examples run (`devtools::check_examples()`)
+- R CMD check passes with 0 errors, 0 warnings (`devtools::check()`)
+- Package builds successfully (`devtools::build()`)
+
+### Documentation Completeness
+- All exported functions have complete roxygen2 documentation
+- All examples are runnable and tested
+- README.md is current and comprehensive
+- Vignettes are created for complex workflows
+- No missing documentation warnings
+
+### Package Metadata
+- `DESCRIPTION` has correct version, license (MIT), and dependencies
+- `NAMESPACE` is properly generated
+- All dependencies are specified with version constraints
+- License file is present and correct
+
+---
 
 ## Why Context Matters
 
@@ -370,7 +630,7 @@ alias fullcontext='./scripts/context-for-new-chat.sh && Rscript scripts/context-
 
 ## Conclusion
 
-Providing good context to Cursor chats is essential for effective AI-assisted development. Use the provided scripts and templates to ensure consistent, comprehensive context provision. Remember to keep context current and relevant to your specific needs.
+Providing good context to AI-assisted development sessions is essential for effective collaboration. Use the provided scripts, templates, and guidelines to ensure consistent, comprehensive context provision while maintaining high code quality and ethical standards.
 
 **Key Takeaways**:
 - Always provide essential project status
@@ -379,9 +639,12 @@ Providing good context to Cursor chats is essential for effective AI-assisted de
 - Include relevant issue information
 - Integrate context into your development workflow
 - Update context when project status changes
+- Follow ethical development practices
+- Maintain CRAN compliance standards
 
 **Next Steps**:
-1. Try the context scripts with your next Cursor chat
+1. Try the context scripts with your next AI-assisted development session
 2. Customize templates for your specific needs
 3. Integrate context provision into your workflow
-4. Share feedback and improvements with the team 
+4. Share feedback and improvements with the team
+5. Review and update AI guidelines regularly 
