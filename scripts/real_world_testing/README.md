@@ -35,6 +35,9 @@ cp /path/to/your/zoomus_recordings__*.csv data/metadata/
 
 # Run all tests
 ./run_tests.sh
+
+# Or work through the manual workflow
+./run_manual_workflow.sh
 ```
 
 ## ⚠️ **SECURITY WARNING**
@@ -56,6 +59,8 @@ scripts/real_world_testing/           # Infrastructure files (this directory)
 ├── validate_data.R                   # R data validation functions
 ├── run_tests.sh                      # Test runner script
 ├── run_real_world_tests.R            # Main testing script
+├── whole_game_real_world.Rmd         # Manual workflow document
+├── run_manual_workflow.sh            # Manual workflow runner
 ├── real_world_test_plan.md           # Comprehensive testing plan
 └── config_example.R                  # Example configuration file
 
@@ -71,6 +76,24 @@ my_testing_project/                   # Standalone project root
 ```
 
 ## 🔧 Setup Process
+
+### Manual Workflow vs Automated Testing
+
+This infrastructure provides two approaches:
+
+1. **Automated Testing** (`run_tests.sh`): Runs comprehensive tests automatically
+2. **Manual Workflow** (`whole_game_real_world.Rmd`): Step-by-step analysis with your data
+
+**Choose the manual workflow if you want to:**
+- Understand each step of the analysis process
+- Customize the analysis for your specific needs
+- Learn how to use the package functions
+- Generate custom visualizations and insights
+
+**Choose automated testing if you want to:**
+- Quickly validate that everything works with your data
+- Run comprehensive tests for quality assurance
+- Generate standardized reports
 
 ### Automatic Setup
 The `setup.sh` script automatically:
