@@ -28,6 +28,12 @@
 - **[ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Essential issue management practices
 
 ### Detailed Guidelines
+- **[docs/development/README.md](docs/development/README.md)** - Development guidelines index and quick start
+- **[docs/development/AI_ASSISTED_DEVELOPMENT.md](docs/development/AI_ASSISTED_DEVELOPMENT.md)** - Core AI-assisted development guidelines
+- **[docs/development/CONTEXT_PROVISION.md](docs/development/CONTEXT_PROVISION.md)** - How to provide effective context
+- **[docs/development/CURSOR_INTEGRATION.md](docs/development/CURSOR_INTEGRATION.md)** - Cursor-specific guidelines
+- **[docs/development/PRE_PR_VALIDATION.md](docs/development/PRE_PR_VALIDATION.md)** - Pre-PR validation checklist
+- **[docs/development/CRAN_SUBMISSION.md](docs/development/CRAN_SUBMISSION.md)** - CRAN submission requirements
 - **[docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/ISSUE_MANAGEMENT_GUIDELINES.md)** - Comprehensive issue management
 - **[docs/development/AUDIT_LOG.md](docs/development/AUDIT_LOG.md)** - Codebase audit tracking and decisions
 
@@ -72,7 +78,8 @@
 ### **Developer**
 1. Review [PROJECT.md](PROJECT.md) for current status
 2. Check [ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
-3. Reference [docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/ISSUE_MANAGEMENT_GUIDELINES.md) for detailed practices
+3. Start with [docs/development/README.md](docs/development/README.md) for development guidelines
+4. Reference [docs/development/AI_ASSISTED_DEVELOPMENT.md](docs/development/AI_ASSISTED_DEVELOPMENT.md) for AI collaboration
 
 ### **Maintainer**
 1. Monitor [PROJECT.md](PROJECT.md) for status updates
