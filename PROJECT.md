@@ -225,7 +225,7 @@ We've created comprehensive context scripts to provide current project status to
 ```
 
 ### Documentation
-- **Complete Guide**: `docs/development/CURSOR_CONTEXT_GUIDE.md`
+- **Complete Guide**: `docs/development/README.md`
 - **Quick Reference**: `scripts/README.md`
 
 ## Pre-CRAN Development Workflow

@@ -1,10 +1,15 @@
-# Cursor Context Guide for zoomstudentengagement
+# Context Provision Guidelines
+## zoomstudentengagement R Package
 
-## Overview
+**Purpose**: Guidelines for providing effective context to AI assistants during development.
 
-This guide provides best practices and tools for providing current project context to new Cursor chats. This ensures that AI assistants have the necessary information to help effectively with development tasks.
+**Audience**: Developers using AI assistants who need to provide comprehensive project context.
 
-## Why Context Matters
+**Last Updated**: August 2025
+
+---
+
+## 🎯 Why Context Matters
 
 When starting a new chat in Cursor, the AI assistant doesn't have access to:
 - Current project status and progress
@@ -20,7 +25,9 @@ Providing this context helps the AI:
 - Focus on the most relevant and urgent tasks
 - Follow project conventions and standards
 
-## Quick Start
+---
+
+## 🚀 Quick Start Options
 
 ### Option 1: Use the Context Scripts (Recommended)
 
@@ -35,7 +42,22 @@ Rscript scripts/context-for-new-chat.R
 ./scripts/context-for-new-chat.sh && Rscript scripts/context-for-new-chat.R
 ```
 
-### Option 2: Manual Context Provision
+### Option 2: Reference Key Documentation Files
+
+For comprehensive project information, reference these key files:
+
+#### **Essential Project Documentation**
+- **`README.md`** - Package overview, installation, and quick start
+- **`PROJECT.md`** - Current project status and CRAN readiness
+- **`CONTRIBUTING.md`** - Development workflow and contribution guidelines
+- **`CRAN_CHECKLIST.md`** - Detailed CRAN submission tracking and requirements
+
+#### **Development Guidelines**
+- **`docs/development/AI_ASSISTED_DEVELOPMENT.md`** - AI-assisted development guidelines
+- **`docs/development/AUDIT_LOG.md`** - Recent audit results and findings
+- **`ISSUE_MANAGEMENT_QUICK_REFERENCE.md`** - Issue workflow and management
+
+### Option 3: Manual Context Provision
 
 Copy and paste the following into your new Cursor chat:
 
@@ -64,7 +86,9 @@ Copy and paste the following into your new Cursor chat:
 **Recent Issues**: [Use `gh issue list --limit 5` to get current issues]
 ```
 
-## Context Scripts
+---
+
+## 📋 Context Scripts
 
 ### Shell Script: `scripts/context-for-new-chat.sh`
 
@@ -130,74 +154,33 @@ Rscript scripts/context-for-new-chat.R
 - Common issues and solutions
 - Development tips
 
-## Best Practices for Context Provision
+---
 
-### 1. Always Include Essential Information
+## 🎯 When to Use Context Scripts vs. Documentation References
 
-**Must-Have Context**:
-- Current project status and goals
-- Test status (pass/fail, coverage)
-- R CMD check status
-- Current priorities and blockers
-- Recent activity or changes
+### **Use Context Scripts When:**
+- Starting a new development session
+- Need current project status and metrics
+- Want recent activity and issue updates
+- Need quick overview of current state
+- Working on time-sensitive tasks
 
-**Nice-to-Have Context**:
-- Project structure overview
-- Development workflow
-- Common issues and solutions
-- Quick commands for validation
+### **Use Documentation References When:**
+- Need detailed development guidelines
+- Looking for comprehensive CRAN requirements
+- Want to understand project structure and conventions
+- Need to reference specific workflows or processes
+- Working on complex features requiring deep understanding
 
-### 2. Keep Context Current
+### **Best Practice: Combine Both**
+1. **Start with context scripts** for current status
+2. **Reference specific documentation** for detailed guidance
+3. **Use context scripts for updates** during development
+4. **Reference documentation for** final validation and submission
 
-**Update Context When**:
-- Tests fail or pass
-- New issues are created
-- Priorities change
-- Major milestones are reached
-- CRAN readiness status changes
+---
 
-**How to Update**:
-- Run context scripts to get current status
-- Update PROJECT.md with new information
-- Check GitHub issues for recent activity
-- Verify test and coverage status
-
-### 3. Use Appropriate Detail Level
-
-**For Quick Questions**:
-- Project status and current focus
-- Test status (pass/fail)
-- Immediate priorities
-
-**For Complex Tasks**:
-- Full context from scripts
-- Detailed issue information
-- Development workflow
-- Common solutions
-
-**For CRAN Preparation**:
-- Complete context from both scripts
-- All CRAN-related issues
-- Test coverage and R CMD check status
-- Compliance requirements
-
-### 4. Include Relevant Issue Information
-
-**For Issue-Specific Work**:
-```markdown
-**Working on Issue #XX**: [Issue Title]
-**Priority**: [High/Medium/Low]
-**Status**: [Open/In Progress/Closed]
-**Description**: [Brief description]
-**Acceptance Criteria**: [What needs to be done]
-```
-
-**For General Development**:
-- List of high-priority issues
-- CRAN submission blockers
-- Recent activity
-
-## Context Templates
+## 📝 Context Templates
 
 ### Template 1: Quick Status Check
 
@@ -241,7 +224,9 @@ Rscript scripts/context-for-new-chat.R
 **Next Steps**: [Immediate actions needed]
 ```
 
-## Integration with Development Workflow
+---
+
+## 🔄 Integration with Development Workflow
 
 ### Pre-Chat Context Gathering
 
@@ -291,44 +276,9 @@ Rscript scripts/context-for-new-chat.R
 3. **Update context scripts** if needed
 4. **Document lessons learned** for future reference
 
-## Troubleshooting Context Issues
+---
 
-### Common Problems
-
-**Scripts Don't Work**:
-- Check file permissions: `chmod +x scripts/context-for-new-chat.sh`
-- Verify dependencies: `gh --version`, `Rscript --version`
-- Check working directory: Must be in project root
-
-**Outdated Information**:
-- Run scripts to get current status
-- Check GitHub issues for recent activity
-- Verify test status manually
-- Update PROJECT.md with current information
-
-**Missing Context**:
-- Use both shell and R scripts
-- Include issue-specific information
-- Add relevant file contents
-- Provide development workflow context
-
-### Getting Help
-
-**When Context is Insufficient**:
-1. Run both context scripts
-2. Check PROJECT.md for current status
-3. Review recent GitHub issues
-4. Check test and coverage status manually
-5. Provide specific error messages or problems
-
-**For Complex Issues**:
-1. Include full error messages
-2. Provide relevant file contents
-3. Include test results
-4. Describe expected vs actual behavior
-5. Include environment information
-
-## Advanced Context Techniques
+## 🛠️ Advanced Context Techniques
 
 ### Custom Context Scripts
 
@@ -368,20 +318,54 @@ alias rcontext='Rscript scripts/context-for-new-chat.R'
 alias fullcontext='./scripts/context-for-new-chat.sh && Rscript scripts/context-for-new-chat.R'
 ```
 
-## Conclusion
+---
 
-Providing good context to Cursor chats is essential for effective AI-assisted development. Use the provided scripts and templates to ensure consistent, comprehensive context provision. Remember to keep context current and relevant to your specific needs.
+## 🔧 Troubleshooting Context Issues
 
-**Key Takeaways**:
-- Always provide essential project status
-- Keep context current and accurate
-- Use appropriate detail level for the task
-- Include relevant issue information
-- Integrate context into your development workflow
-- Update context when project status changes
+### Common Problems
 
-**Next Steps**:
-1. Try the context scripts with your next Cursor chat
-2. Customize templates for your specific needs
-3. Integrate context provision into your workflow
-4. Share feedback and improvements with the team 
+**Scripts Don't Work**:
+- Check file permissions: `chmod +x scripts/context-for-new-chat.sh`
+- Verify dependencies: `gh --version`, `Rscript --version`
+- Check working directory: Must be in project root
+
+**Outdated Information**:
+- Run scripts to get current status
+- Check GitHub issues for recent activity
+- Verify test status manually
+- Update PROJECT.md with current information
+
+**Missing Context**:
+- Use both shell and R scripts
+- Include issue-specific information
+- Add relevant file contents
+- Provide development workflow context
+
+### Getting Help
+
+**When Context is Insufficient**:
+1. Run both context scripts
+2. Check PROJECT.md for current status
+3. Review recent GitHub issues
+4. Check test and coverage status manually
+5. Provide specific error messages or problems
+
+**For Complex Issues**:
+1. Include full error messages
+2. Provide relevant file contents
+3. Include test results
+4. Describe expected vs actual behavior
+5. Include environment information
+
+---
+
+## 🔗 Related Documentation
+
+- **[AI_ASSISTED_DEVELOPMENT.md](AI_ASSISTED_DEVELOPMENT.md)** - Core AI development guidelines
+- **[CURSOR_INTEGRATION.md](CURSOR_INTEGRATION.md)** - Cursor-specific guidelines
+- **[PRE_PR_VALIDATION.md](PRE_PR_VALIDATION.md)** - Pre-PR validation checklist
+- **[CRAN_SUBMISSION.md](CRAN_SUBMISSION.md)** - CRAN submission requirements
+
+---
+
+**See Also**: [ISSUE_MANAGEMENT_QUICK_REFERENCE.md](../../ISSUE_MANAGEMENT_QUICK_REFERENCE.md) for issue workflow 

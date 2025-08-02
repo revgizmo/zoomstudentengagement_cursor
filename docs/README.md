@@ -6,6 +6,12 @@ This directory contains detailed documentation organized by purpose and audience
 ## 📁 Directory Structure
 
 ### `development/` - Development Guidelines
+- **[README.md](development/README.md)** - Development guidelines index and quick start
+- **[AI_ASSISTED_DEVELOPMENT.md](development/AI_ASSISTED_DEVELOPMENT.md)** - Core AI-assisted development guidelines
+- **[CONTEXT_PROVISION.md](development/CONTEXT_PROVISION.md)** - How to provide effective context to AI assistants
+- **[CURSOR_INTEGRATION.md](development/CURSOR_INTEGRATION.md)** - Cursor-specific guidelines and features
+- **[PRE_PR_VALIDATION.md](development/PRE_PR_VALIDATION.md)** - Pre-PR validation checklist and requirements
+- **[CRAN_SUBMISSION.md](development/CRAN_SUBMISSION.md)** - CRAN submission requirements and process
 - **[ISSUE_MANAGEMENT_GUIDELINES.md](development/ISSUE_MANAGEMENT_GUIDELINES.md)** - Comprehensive issue management practices
 - **[AUDIT_LOG.md](development/AUDIT_LOG.md)** - Codebase audit tracking and decisions
 
@@ -22,7 +28,8 @@ This directory contains detailed documentation organized by purpose and audience
 ## 🎯 Quick Navigation
 
 ### For Developers
-- Start with [development/ISSUE_MANAGEMENT_GUIDELINES.md](development/ISSUE_MANAGEMENT_GUIDELINES.md)
+- Start with [development/README.md](development/README.md) for development guidelines index
+- Use [development/AI_ASSISTED_DEVELOPMENT.md](development/AI_ASSISTED_DEVELOPMENT.md) for AI collaboration
 - Check [development/AUDIT_LOG.md](development/AUDIT_LOG.md) for recent decisions
 
 ### For Project Planning
