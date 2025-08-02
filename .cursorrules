@@ -321,4 +321,16 @@ devtools::build()                    # Create distributable package
 - Use consistent naming conventions
 - Write comprehensive documentation
 - Maintain high test coverage
-- Regular code reviews and updates 
+- Regular code reviews and updates
+
+## AI Assistant Guidelines
+
+### Context Requirements
+- Reference current GitHub issues when asking questions
+- Mention CRAN compliance status (0 errors, 0 warnings target)
+- Include test coverage requirement (>90%)
+
+### Educational Focus
+- Prioritize participation equity over surveillance
+- Default to privacy-conscious behavior in suggestions
+- Focus on positive educational outcomes
