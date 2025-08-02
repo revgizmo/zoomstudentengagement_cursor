@@ -29,6 +29,6 @@ load_roster <- function(
       return(roster_data)
     }
   } else {
-    return(tibble::tibble())
+    stop("Roster file not found: ", roster_file_path)
   }
 }
