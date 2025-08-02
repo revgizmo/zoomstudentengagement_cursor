@@ -203,6 +203,31 @@ Rscript -e "devtools::load_all(); devtools::test(); devtools::check_man(); devto
 - [ ] Documentation is complete and up-to-date
 - [ ] README.md is current (`devtools::build_readme()`)
 
+## Context Scripts for Cursor
+
+### Overview
+We've created comprehensive context scripts to provide current project status to new Cursor chats:
+
+- **`scripts/context-for-new-chat.sh`** - Shell script for project context
+- **`scripts/context-for-new-chat.R`** - R script for R-specific context
+- **`scripts/get-context.sh`** - Combined context script
+- **`scripts/save-context.sh`** - Save context to files for linking
+
+### Quick Usage
+```bash
+# Get complete context
+./scripts/get-context.sh
+
+# Save context to files for linking
+./scripts/save-context.sh
+
+# Then link in Cursor: @context.md, @r-context.md, or @full-context.md
+```
+
+### Documentation
+- **Complete Guide**: `docs/development/CURSOR_CONTEXT_GUIDE.md`
+- **Quick Reference**: `scripts/README.md`
+
 ## Pre-CRAN Development Workflow
 
 ### Pre-PR Validation (Development Phase)
@@ -259,6 +284,36 @@ source("scripts/pre-pr-validation.R")
 - Documentation completeness
 - Code style and quality issues
 - Common R package pitfalls
+
+### Real-World Testing (Production Validation)
+
+#### When to Run Real-World Testing
+- Before CRAN submission
+- When testing with real confidential data
+- For performance validation with large datasets
+- For privacy and security feature validation
+
+#### Real-World Testing Process
+```r
+# Set up secure testing environment (outside of LLM environments)
+# Copy testing infrastructure to secure location
+# Add real confidential data
+# Run comprehensive real-world tests
+source("scripts/real_world_testing/run_real_world_tests.R")
+```
+
+**What this validates:**
+- Performance with real Zoom transcripts
+- Name matching with actual student rosters
+- Privacy features and data anonymization
+- Memory usage with large files
+- Error handling with real-world edge cases
+- Integration testing with confidential data
+
+#### Testing Process Relationship
+- **QA Process**: Development-time validation (safe for all environments)
+- **Real-World Testing**: Production validation (requires secure environment)
+- **Workflow**: QA → Real-World Testing → CRAN Submission
 
 ### PR and Merge Workflow
 
