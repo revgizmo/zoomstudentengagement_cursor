@@ -31,6 +31,8 @@ library(testthat)
 # }
 
 # Create sample roster data for testing
+#' Create sample roster data for testing
+#' @return A tibble with sample roster data
 #' @keywords internal
 create_sample_roster <- function() {
   tibble::tibble(
@@ -47,6 +49,8 @@ create_sample_roster <- function() {
 }
 
 # Create sample section names lookup for testing
+#' Create sample section names lookup for testing
+#' @return A tibble with sample section names lookup data
 #' @keywords internal
 create_sample_section_names_lookup <- function() {
   tibble::tibble(
@@ -63,6 +67,8 @@ create_sample_section_names_lookup <- function() {
 }
 
 # Create sample metrics lookup for testing
+#' Create sample metrics lookup for testing
+#' @return A tibble with sample metrics lookup data
 #' @keywords internal
 create_sample_metrics_lookup <- function() {
   tibble::tibble(
@@ -76,6 +82,8 @@ create_sample_metrics_lookup <- function() {
 }
 
 # Create sample transcript metrics data for testing
+#' Create sample transcript metrics data for testing
+#' @return A tibble with sample transcript metrics data
 #' @keywords internal
 create_sample_transcript_metrics <- function() {
   tibble::tibble(

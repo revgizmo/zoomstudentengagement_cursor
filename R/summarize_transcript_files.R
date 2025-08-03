@@ -12,7 +12,7 @@
 #' @return A tibble containing session details and summary metrics by speaker
 #' @export
 #'
-#' @importFrom tidyselect all_of
+
 #' @examples
 #' # Create sample transcript file names
 #' transcript_files <- c(

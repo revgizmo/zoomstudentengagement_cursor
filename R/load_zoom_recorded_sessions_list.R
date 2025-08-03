@@ -53,7 +53,7 @@
 #'   recording csvs. Returns NULL if the transcripts folder doesn't exist,
 #'   or an empty tibble with the correct column structure if no matching
 #'   files are found.
-#' @importFrom stats aggregate
+
 #' @export
 #'
 #' @examples
@@ -178,7 +178,7 @@ load_zoom_recorded_sessions_list <-
     result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
 
     # Aggregate using base R
-    aggregated_data <- aggregate(
+    aggregated_data <- stats::aggregate(
       result[, c("Total Views", "Total Downloads", "Last Accessed")],
       by = list(group_id = result$group_id),
       FUN = function(x) if (is.character(x)) x[which.max(nchar(x))] else max(x, na.rm = TRUE)
