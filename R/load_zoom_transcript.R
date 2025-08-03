@@ -117,5 +117,6 @@ load_zoom_transcript <- function(transcript_file_path) {
     return(NULL)
   }
 
-  result
+  # Convert to tibble to maintain expected return type
+  return(tibble::as_tibble(result))
 }

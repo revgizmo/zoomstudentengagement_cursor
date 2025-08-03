@@ -95,14 +95,17 @@ process_zoom_transcript <- function(transcript_file_path = "",
         zoomstudentengagement::add_dead_air_rows(dead_air_name = dead_air_name_)
     }
 
-    return_df <- transcript_df %>%
-      dplyr::arrange(start) %>%
-      dplyr::mutate(
-        comment_num = dplyr::row_number(),
-        name =
-          dplyr::case_when(is.na(name) ~ na_name_, TRUE ~ name)
-      )
+    # Use base R operations instead of dplyr to avoid segmentation fault
+    # Sort by start time
+    return_df <- transcript_df[order(transcript_df$start), ]
 
-    return(return_df)
+    # Add comment numbers using base R
+    return_df$comment_num <- seq_len(nrow(return_df))
+
+    # Handle NA names using base R
+    return_df$name <- ifelse(is.na(return_df$name), na_name_, return_df$name)
+
+    # Convert to tibble to maintain expected return type
+    return(tibble::as_tibble(return_df))
   }
 }

@@ -53,6 +53,7 @@
 #'   recording csvs. Returns NULL if the transcripts folder doesn't exist,
 #'   or an empty tibble with the correct column structure if no matching
 #'   files are found.
+#' @importFrom stats aggregate
 #' @export
 #'
 #' @examples

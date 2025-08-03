@@ -12,7 +12,7 @@
 
 <meta name="author" content="zoomstudentengagement package" />
 
-<meta name="date" content="2025-08-02" />
+<meta name="date" content="2025-08-03" />
 
 <title>Transcript Processing with zoomstudentengagement</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Transcript Processing with
 zoomstudentengagement</h1>
 <h4 class="author">zoomstudentengagement package</h4>
-<h4 class="date">2025-08-02</h4>
+<h4 class="date">2025-08-03</h4>
 
 
 
@@ -394,16 +394,15 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># View the processed transcript</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(processed_transcript)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 8</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name          comment   start     end       transcript_file duration wordcount</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 dead_air      &lt;NA&gt;      00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srijani Ghosh Hi!       00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 dead_air      &lt;NA&gt;      00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Conor Healy   Get this… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 dead_air      &lt;NA&gt;      00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srijani Ghosh Hello! H… 00&#39;05.14&quot; 00&#39;08.31&quot; GMT20240124-20…   3.17           8</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: comment_num &lt;int&gt;</span></span></code></pre></div>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 6</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name          comment          start     end       transcript_file comment_num</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;            &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;                 &lt;int&gt;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 dead_air      &lt;NA&gt;             00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…           1</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srijani Ghosh Hi!              00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…           2</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 dead_air      &lt;NA&gt;             00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…           3</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Conor Healy   Get this party … 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…           4</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 dead_air      &lt;NA&gt;             00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…           5</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srijani Ghosh Hello! Hello! H… 00&#39;05.14&quot; 00&#39;08.31&quot; GMT20240124-20…           6</span></span></code></pre></div>
 </div>
 </div>
 <div id="calculating-summary-metrics" class="section level2">
@@ -419,19 +418,31 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_pause_sec =</span> <span class="dv">1</span>,</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_dead_air =</span> <span class="cn">TRUE</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># View the metrics</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>summary_metrics</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 10</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   transcript_file   name      n duration wordcount comments n_perc duration_perc</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;    &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-2029… Cono…    30  485.         1418 &lt;chr&gt;     66.7         72.2  </span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 GMT20240124-2029… Srij…     8   69.1         213 &lt;chr&gt;     17.8         10.3  </span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 GMT20240124-2029… Shre…     3   43.3          86 &lt;chr&gt;      6.67         6.45 </span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 GMT20240124-2029… Dr. …     2   42.7          98 &lt;chr&gt;      4.44         6.36 </span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 GMT20240124-2029… Ryan…     1   31.3          95 &lt;chr&gt;      2.22         4.65 </span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 GMT20240124-2029… unkn…     1    0.680         1 &lt;chr&gt;      2.22         0.101</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: wordcount_perc &lt;dbl&gt;, wpm &lt;dbl&gt;</span></span></code></pre></div>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># View the metrics</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>summary_metrics</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 10</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   transcript_file   name      n duration wordcount comments n_perc duration_perc</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;I&lt;list&gt;  &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-2029… Srij…     8        0         0 &lt;chr&gt;     17.8            NaN</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 GMT20240124-2029… Cono…    30        0         0 &lt;chr&gt;     66.7            NaN</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 GMT20240124-2029… Dr. …     2        0         0 &lt;chr&gt;      4.44           NaN</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 GMT20240124-2029… Shre…     3        0         0 &lt;chr&gt;      6.67           NaN</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 GMT20240124-2029… unkn…     1        0         0 &lt;chr&gt;      2.22           NaN</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 GMT20240124-2029… Ryan…     1        0         0 &lt;chr&gt;      2.22           NaN</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: wordcount_perc &lt;dbl&gt;, wpm &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div id="multiple-transcript-analysis" class="section level3">
 <h3>Multiple Transcript Analysis</h3>
@@ -447,20 +458,32 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to_exclude =</span> <span class="fu">c</span>(<span class="st">&quot;dead_air&quot;</span>),</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">deduplicate_content =</span> <span class="cn">FALSE</span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># View batch results</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(batch_metrics)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   transcript_file transcript_path name      n duration wordcount comments n_perc</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;    &lt;dbl&gt;</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-20… /private/var/f… Cono…    30  485.         1418 &lt;chr&gt;     66.7 </span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 GMT20240124-20… /private/var/f… Srij…     8   69.1         213 &lt;chr&gt;     17.8 </span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 GMT20240124-20… /private/var/f… Shre…     3   43.3          86 &lt;chr&gt;      6.67</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 GMT20240124-20… /private/var/f… Dr. …     2   42.7          98 &lt;chr&gt;      4.44</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 GMT20240124-20… /private/var/f… Ryan…     1   31.3          95 &lt;chr&gt;      2.22</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 GMT20240124-20… /private/var/f… unkn…     1    0.680         1 &lt;chr&gt;      2.22</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: duration_perc &lt;dbl&gt;, wordcount_perc &lt;dbl&gt;, wpm &lt;dbl&gt;,</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   name_raw &lt;chr&gt;</span></span></code></pre></div>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># View batch results</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(batch_metrics)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name         n duration wordcount comments n_perc duration_perc wordcount_perc</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;I&lt;list&gt;  &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Srijani…     8        0         0 &lt;chr&gt;     17.8            NaN            NaN</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Conor H…    30        0         0 &lt;chr&gt;     66.7            NaN            NaN</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Dr. Mel…     2        0         0 &lt;chr&gt;      4.44           NaN            NaN</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Shreeha…     3        0         0 &lt;chr&gt;      6.67           NaN            NaN</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 unknown      1        0         0 &lt;chr&gt;      2.22           NaN            NaN</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Ryan Sl…     1        0         0 &lt;chr&gt;      2.22           NaN            NaN</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: wpm &lt;dbl&gt;, transcript_file &lt;chr&gt;, transcript_path &lt;chr&gt;,</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   name_raw &lt;chr&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="working-with-transcript-files" class="section level2">
@@ -587,20 +610,34 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">similarity_threshold =</span> <span class="fl">0.95</span>,</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">duplicate_method =</span> <span class="st">&quot;hybrid&quot;</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># View deduplicated results</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(deduplicated_metrics)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   transcript_file transcript_path name      n duration wordcount comments n_perc</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;    &lt;dbl&gt;</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-20… /private/var/f… Cono…    30    485.       1418 &lt;chr&gt;     33.3 </span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 GMT20240124-20… /private/var/f… Srij…     8     69.1       213 &lt;chr&gt;      8.89</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 GMT20240124-20… /private/var/f… dead…    45     63.6         0 &lt;chr&gt;     50   </span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 GMT20240124-20… /private/var/f… Shre…     3     43.3        86 &lt;chr&gt;      3.33</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 GMT20240124-20… /private/var/f… Dr. …     2     42.7        98 &lt;chr&gt;      2.22</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 GMT20240124-20… /private/var/f… Ryan…     1     31.3        95 &lt;chr&gt;      1.11</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: duration_perc &lt;dbl&gt;, wordcount_perc &lt;dbl&gt;, wpm &lt;dbl&gt;,</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   name_raw &lt;chr&gt;</span></span></code></pre></div>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `duration`.</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `wordcount`.</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co"># View deduplicated results</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(deduplicated_metrics)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name         n duration wordcount comments n_perc duration_perc wordcount_perc</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;I&lt;list&gt;  &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 dead_air    45        0         0 &lt;chr&gt;     50              NaN            NaN</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srijani…     8        0         0 &lt;chr&gt;      8.89           NaN            NaN</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Conor H…    30        0         0 &lt;chr&gt;     33.3            NaN            NaN</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Dr. Mel…     2        0         0 &lt;chr&gt;      2.22           NaN            NaN</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Shreeha…     3        0         0 &lt;chr&gt;      3.33           NaN            NaN</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 unknown      1        0         0 &lt;chr&gt;      1.11           NaN            NaN</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: wpm &lt;dbl&gt;, transcript_file &lt;chr&gt;, transcript_path &lt;chr&gt;,</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   name_raw &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div id="custom-processing-parameters" class="section level3">
 <h3>Custom Processing Parameters</h3>
@@ -617,16 +654,15 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># View custom processed transcript</span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(custom_processed)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 8</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name          comment   start     end       transcript_file duration wordcount</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt;</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 silence       &lt;NA&gt;      00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srijani Ghosh Hi!       00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 silence       &lt;NA&gt;      00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Conor Healy   Get this… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 silence       &lt;NA&gt;      00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srijani Ghosh Hello! H… 00&#39;05.14&quot; 00&#39;11.67&quot; GMT20240124-20…   6.53           9</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: comment_num &lt;int&gt;</span></span></code></pre></div>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 6</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name          comment          start     end       transcript_file comment_num</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;            &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;                 &lt;int&gt;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 silence       &lt;NA&gt;             00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…           1</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srijani Ghosh Hi!              00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…           2</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 silence       &lt;NA&gt;             00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…           3</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Conor Healy   Get this party … 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…           4</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 silence       &lt;NA&gt;             00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…           5</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srijani Ghosh Hello! Hello! H… 00&#39;05.14&quot; 00&#39;11.67&quot; GMT20240124-20…           6</span></span></code></pre></div>
 </div>
 </div>
 <div id="understanding-the-output" class="section level2">

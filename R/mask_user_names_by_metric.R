@@ -59,25 +59,31 @@ mask_user_names_by_metric <-
     row_num <- preferred_name <- section <- NULL
 
     if (tibble::is_tibble(df)) {
-      metric_col <- df[metric]
-      df$metric_col <- metric_col[[1]]
-      metric_col_name <- names(metric_col)
+      # Use base R operations instead of dplyr to avoid segmentation fault
+      metric_col <- df[[metric]]
 
-      df %>%
-        dplyr::mutate(
-          student = preferred_name,
-          row_num = dplyr::row_number(dplyr::desc(dplyr::coalesce(
-            metric_col, -Inf
-          ))),
-          student = dplyr::if_else(
-            preferred_name == target_student,
-            paste0("**", target_student, "**"),
-            paste(
-              "Student",
-              stringr::str_pad(row_num, width = 2, pad = "0"),
-              sep = " "
-            )
-          )
-        )
+      # Handle NA values by replacing with -Inf for sorting
+      metric_col_clean <- ifelse(is.na(metric_col), -Inf, metric_col)
+
+      # Sort by metric (descending) and get row numbers
+      sorted_indices <- order(-metric_col_clean)
+      row_numbers <- match(seq_along(metric_col_clean), sorted_indices)
+
+      # Create student names using base R
+      student_names <- character(length(row_numbers))
+      for (i in seq_along(row_numbers)) {
+        if (df$preferred_name[i] == target_student && target_student != "") {
+          student_names[i] <- paste0("**", target_student, "**")
+        } else {
+          student_names[i] <- paste("Student", stringr::str_pad(row_numbers[i], width = 2, pad = "0"), sep = " ")
+        }
+      }
+
+      # Create result dataframe
+      result <- df
+      result$student <- student_names
+
+      # Convert to tibble to maintain expected return type
+      return(tibble::as_tibble(result))
     }
   }

@@ -12,7 +12,7 @@
 
 <meta name="author" content="zoomstudentengagement package" />
 
-<meta name="date" content="2025-08-02" />
+<meta name="date" content="2025-08-03" />
 
 <title>Roster Management and Name Cleaning</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Roster Management and Name Cleaning</h1>
 <h4 class="author">zoomstudentengagement package</h4>
-<h4 class="date">2025-08-02</h4>
+<h4 class="date">2025-08-03</h4>
 
 
 
@@ -514,16 +514,16 @@ mismatches between Zoom transcripts and official enrollment data.</p>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 21</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   preferred_name   formal_name transcript_name student_id section course_section</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;         </span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Melissa Ko       Melissa Ko  &lt;NA&gt;            9990000019 24      23.24         </span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Ryan Sloan       Ryan Sloan  &lt;NA&gt;            9990000020 24      23.24         </span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Shreeharsh Kelk… Shreeharsh… &lt;NA&gt;            9990000021 24      23.24         </span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Srijani Ghosh    Srijani Gh… &lt;NA&gt;            9990000022 24      23.24         </span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Khalilah Beal-U… Khalilah B… &lt;NA&gt;            9990000023 24      23.24         </span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 John Fielding    John Field… &lt;NA&gt;            9990000024 24      23.24         </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Conor Healy      &lt;NA&gt;        &lt;NA&gt;            9990000025 24      23.24         </span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 John Fielding    &lt;NA&gt;        &lt;NA&gt;            9990000024 24      23.24         </span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Khalilah Beal-U… &lt;NA&gt;        &lt;NA&gt;            9990000023 24      23.24         </span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Melissa Ko       &lt;NA&gt;        &lt;NA&gt;            9990000019 24      23.24         </span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Ryan Sloan       &lt;NA&gt;        &lt;NA&gt;            9990000020 24      23.24         </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Shreeharsh Kelk… &lt;NA&gt;        &lt;NA&gt;            9990000021 24      23.24         </span></span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 15 more variables: session_num &lt;dbl&gt;, n &lt;dbl&gt;, duration &lt;dbl&gt;,</span></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   wordcount &lt;dbl&gt;, comments &lt;list&gt;, n_perc &lt;dbl&gt;, duration_perc &lt;dbl&gt;,</span></span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   wordcount_perc &lt;dbl&gt;, wpm &lt;dbl&gt;, name_raw &lt;chr&gt;, start_time_local &lt;dttm&gt;,</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   course &lt;chr&gt;, day &lt;chr&gt;, time &lt;chr&gt;, dept &lt;chr&gt;</span></span></code></pre></div>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   time &lt;chr&gt;, day &lt;chr&gt;, course &lt;chr&gt;, dept &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div id="identifying-names-to-clean" class="section level3">
 <h3>Identifying Names to Clean</h3>
@@ -534,12 +534,11 @@ mismatches between Zoom transcripts and official enrollment data.</p>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View names needing attention</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>names_to_clean</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 4</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   student_id, preferred_name [3]</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   student_id preferred_name transcript_name     n</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;           &lt;int&gt;</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 &lt;NA&gt;       Conor Healy    Conor Healy         1</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 &lt;NA&gt;       Dr. Melissa Ko Dr. Melissa Ko      1</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 &lt;NA&gt;       Ryan Sloan     Ryan Sloan          1</span></span></code></pre></div>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   student_id preferred_name transcript_name     n</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;           &lt;dbl&gt;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 &lt;NA&gt;       Conor Healy    Conor Healy         1</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 &lt;NA&gt;       Dr. Melissa Ko Dr. Melissa Ko      1</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 &lt;NA&gt;       Ryan Sloan     Ryan Sloan          1</span></span></code></pre></div>
 </div>
 <div id="writing-names-lookup" class="section level3">
 <h3>Writing Names Lookup</h3>

@@ -26,10 +26,7 @@ test_that("consolidate_transcript minimal test with logging", {
     {
       message("Step 1: About to call consolidate_transcript...")
 
-      # Load the function
-      devtools::load_all()
-
-      message("Step 2: Function loaded, calling consolidate_transcript...")
+      message("Step 2: Calling consolidate_transcript...")
 
       # Call the function with correct parameters
       result <- consolidate_transcript(

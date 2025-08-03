@@ -87,24 +87,86 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
       group_vars <- c("transcript_file", "name")
     }
 
-    return_df <- transcript_df %>%
-      dplyr::filter(!name %in% unlist(names_exclude)) %>%
-      dplyr::group_by(!!!rlang::syms(group_vars)) %>%
-      dplyr::summarise(
-        n = dplyr::n(),
-        duration = sum(as.numeric(duration, units = "mins"), na.rm = TRUE),
-        wordcount = sum(as.numeric(wordcount, units = "mins"), na.rm = TRUE),
-        comments = list(comment)
-      ) %>%
-      dplyr::ungroup() %>%
-      dplyr::mutate(
-        n_perc = n / sum(n) * 100,
-        duration_perc = duration / sum(duration, na.rm = TRUE) * 100,
-        wordcount_perc = wordcount / sum(wordcount, na.rm = TRUE) * 100,
-        wpm = wordcount / duration
-      ) %>%
-      dplyr::arrange(-duration)
+    # Use base R operations instead of dplyr to avoid segmentation fault
+    # Filter out excluded names
+    filtered_df <- transcript_df[!transcript_df$name %in% unlist(names_exclude), , drop = FALSE]
 
-    return_df
+    if (nrow(filtered_df) == 0) {
+      return(tibble::tibble(
+        name = character(),
+        n = numeric(),
+        duration = numeric(),
+        wordcount = numeric(),
+        comments = list(),
+        n_perc = numeric(),
+        duration_perc = numeric(),
+        wordcount_perc = numeric(),
+        wpm = numeric()
+      ))
+    }
+
+    # Create a unique identifier for each group
+    filtered_df$group_id <- apply(filtered_df[, group_vars], 1, paste, collapse = "|")
+
+    # Aggregate by group using base R
+    group_ids <- unique(filtered_df$group_id)
+    result_rows <- list()
+
+    for (i in seq_along(group_ids)) {
+      group_id <- group_ids[i]
+      group_data <- filtered_df[filtered_df$group_id == group_id, , drop = FALSE]
+
+      # Calculate summaries
+      n_count <- nrow(group_data)
+      duration_sum <- sum(as.numeric(group_data$duration), na.rm = TRUE)
+      wordcount_sum <- sum(as.numeric(group_data$wordcount), na.rm = TRUE)
+      comments_list <- list(group_data$comment)
+
+      # Get group identifiers
+      group_parts <- strsplit(group_id, "\\|")[[1]]
+
+      # Create result row
+      if (length(group_vars) == 1) {
+        result_row <- data.frame(
+          name = group_parts[1],
+          n = n_count,
+          duration = duration_sum,
+          wordcount = wordcount_sum,
+          comments = I(comments_list),
+          stringsAsFactors = FALSE
+        )
+      } else {
+        result_row <- data.frame(
+          transcript_file = group_parts[1],
+          name = group_parts[2],
+          n = n_count,
+          duration = duration_sum,
+          wordcount = wordcount_sum,
+          comments = I(comments_list),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      result_rows[[i]] <- result_row
+    }
+
+    # Combine results
+    result <- do.call(rbind, result_rows)
+
+    # Calculate percentages using base R
+    total_n <- sum(result$n, na.rm = TRUE)
+    total_duration <- sum(result$duration, na.rm = TRUE)
+    total_wordcount <- sum(result$wordcount, na.rm = TRUE)
+
+    result$n_perc <- result$n / total_n * 100
+    result$duration_perc <- result$duration / total_duration * 100
+    result$wordcount_perc <- result$wordcount / total_wordcount * 100
+    result$wpm <- result$wordcount / result$duration
+
+    # Sort by duration (descending) using base R
+    result <- result[order(-result$duration), , drop = FALSE]
+
+    # Convert to tibble to maintain expected return type
+    return(tibble::as_tibble(result))
   }
 }

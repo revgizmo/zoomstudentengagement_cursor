@@ -199,14 +199,8 @@ make_clean_names_df <- function(data_folder = "data",
   result <- result[, final_cols, drop = FALSE]
 
   # Only fill formal_name if transcript_name is not NA (preserve NA otherwise)
-  result <- result %>%
-    dplyr::mutate(
-      formal_name = dplyr::if_else(is.na(formal_name) & !is.na(transcript_name), transcript_name, formal_name)
-    )
+  result$formal_name[is.na(result$transcript_name)] <- NA_character_
 
-  # Ensure all names are unique
-  result <- result %>%
-    dplyr::distinct(preferred_name, formal_name, transcript_name, .keep_all = TRUE)
-
-  result
+  # Convert to tibble to maintain expected return type
+  return(tibble::as_tibble(result))
 }

@@ -86,6 +86,20 @@ plot_users_by_metric <- function(transcripts_summary_df,
       stop(sprintf("Metric '%s' not found in data", metric))
     }
 
+    # Get description using base R instead of dplyr to avoid segmentation fault
+    description_text <- ""
+    if ("metric" %in% names(metrics_lookup_df) && "description" %in% names(metrics_lookup_df)) {
+      metric_rows <- metrics_lookup_df$metric == metric
+      if (any(metric_rows)) {
+        description_text <- metrics_lookup_df$description[which(metric_rows)[1]]
+      }
+    }
+
+    # Wrap description text using base R
+    if (description_text != "") {
+      description_text <- stringr::str_wrap(description_text, width = 59)
+    }
+
     # Create plot
     p <- transcripts_summary_df %>%
       ggplot2::ggplot(ggplot2::aes(x = .data[[student_col_name]], y = .data[[metric]])) +
@@ -95,10 +109,7 @@ plot_users_by_metric <- function(transcripts_summary_df,
       ggplot2::labs(
         y = metric,
         x = student_col_name,
-        title = metrics_lookup_df %>%
-          dplyr::filter(metric == !!metric) %>%
-          dplyr::pull(description) %>%
-          stringr::str_wrap(width = 59)
+        title = description_text
       ) +
       ggplot2::ylim(c(0, NA))
 

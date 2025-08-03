@@ -26,15 +26,12 @@ test_that("summarize_transcript_metrics minimal test with logging", {
     {
       message("Step 1: About to call summarize_transcript_metrics...")
 
-      # Load the function
-      devtools::load_all()
-
-      message("Step 2: Function loaded, calling summarize_transcript_metrics...")
+      message("Step 2: Calling summarize_transcript_metrics...")
 
       # Call the function with correct parameters
       result <- summarize_transcript_metrics(
         transcript_df = minimal_data,
-        names_exclude = list() # No exclusions
+        names_exclude = list()
       )
 
       message("Step 3: summarize_transcript_metrics completed successfully")
@@ -82,77 +79,19 @@ test_that("summarize_transcript_metrics with rlang::syms debugging", {
 
   message("=== Testing summarize_transcript_metrics with rlang::syms debugging ===")
 
-  # Test the rlang::syms part specifically
+  # Test the function directly without dplyr operations
   result <- tryCatch(
     {
-      message("Step 1: Testing rlang::syms with dplyr::group_by...")
+      message("Step 1: Testing summarize_transcript_metrics function...")
 
-      # Test rlang::syms directly
-      group_vars <- c("transcript_file", "name")
-      message("Group vars: ", paste(group_vars, collapse = ", "))
+      # Test the function directly
+      result <- summarize_transcript_metrics(transcript_df = minimal_data, names_exclude = list())
 
-      # Test rlang::syms creation
-      syms_result <- tryCatch(
-        {
-          message("Creating rlang::syms...")
-          rlang::syms(group_vars)
-        },
-        error = function(e) {
-          message("ERROR creating rlang::syms: ", e$message)
-          return(NULL)
-        }
-      )
-
-      if (!is.null(syms_result)) {
-        message("rlang::syms created successfully: ", class(syms_result))
-      }
-
-      # Test dplyr::filter first
-      filtered_result <- tryCatch(
-        {
-          message("Testing dplyr::filter...")
-          minimal_data %>% dplyr::filter(!name %in% unlist(list()))
-        },
-        error = function(e) {
-          message("ERROR in dplyr::filter: ", e$message)
-          return(NULL)
-        }
-      )
-
-      if (!is.null(filtered_result)) {
-        message("dplyr::filter completed successfully")
-      }
-
-      # Test dplyr::group_by with rlang::syms
-      grouped_result <- tryCatch(
-        {
-          message("Testing dplyr::group_by with rlang::syms...")
-          minimal_data %>%
-            dplyr::filter(!name %in% unlist(list())) %>%
-            dplyr::group_by(!!!rlang::syms(group_vars))
-        },
-        error = function(e) {
-          message("ERROR in dplyr::group_by with rlang::syms: ", e$message)
-          return(NULL)
-        }
-      )
-
-      if (!is.null(grouped_result)) {
-        message("dplyr::group_by with rlang::syms completed successfully")
-      }
-
-      # Now test the full function
-      message("Step 2: Testing full summarize_transcript_metrics function...")
-      result <- summarize_transcript_metrics(
-        transcript_df = minimal_data,
-        names_exclude = list()
-      )
-
-      message("Step 3: Full function completed successfully")
+      message("Step 2: Function completed successfully")
       return(result)
     },
     error = function(e) {
-      message("ERROR in full test: ", e$message)
+      message("ERROR in test: ", e$message)
       message("Error call: ", deparse(e$call))
       print(traceback())
       return(NULL)
@@ -161,4 +100,10 @@ test_that("summarize_transcript_metrics with rlang::syms debugging", {
 
   # Check if we got a result
   expect_false(is.null(result), "summarize_transcript_metrics should not return NULL")
+
+  if (!is.null(result)) {
+    expect_s3_class(result, "tbl_df")
+    expect_true(nrow(result) > 0, "Result should have at least one row")
+    expect_true("name" %in% names(result), "Result should have 'name' column")
+  }
 })

@@ -24,9 +24,10 @@ load_roster <- function(
     # Check if enrolled column exists and filter if it does
     if ("enrolled" %in% names(roster_data)) {
       # Use base R subsetting to avoid segmentation faults
-      return(roster_data[roster_data$enrolled == TRUE, ])
+      filtered_data <- roster_data[roster_data$enrolled == TRUE, ]
+      return(tibble::as_tibble(filtered_data))
     } else {
-      return(roster_data)
+      return(tibble::as_tibble(roster_data))
     }
   } else {
     return(tibble::tibble())

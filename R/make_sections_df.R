@@ -46,17 +46,33 @@ make_sections_df <- function(roster_df) {
     ))
   }
 
-  # Ensure correct column types
-  roster_df <- roster_df %>%
-    dplyr::mutate(
-      dept = as.character(dept),
-      course = as.character(course),
-      section = as.character(section)
-    )
+  # Ensure correct column types using base R
+  roster_df$dept <- as.character(roster_df$dept)
+  roster_df$course <- as.character(roster_df$course)
+  roster_df$section <- as.character(roster_df$section)
 
-  # Count students by section, handling NA values
-  roster_df %>%
-    dplyr::group_by(dept, course, section) %>%
-    dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
-    dplyr::arrange(dept, course, section)
+  # Count students by section using base R
+  # Create a unique identifier for each group
+  roster_df$group_id <- paste(roster_df$dept, roster_df$course, roster_df$section, sep = "|")
+
+  # Count occurrences of each group
+  group_counts <- table(roster_df$group_id)
+
+  # Create result dataframe
+  group_names <- names(group_counts)
+  group_parts <- strsplit(group_names, "\\|")
+
+  result <- data.frame(
+    dept = sapply(group_parts, function(x) x[1]),
+    course = sapply(group_parts, function(x) x[2]),
+    section = sapply(group_parts, function(x) x[3]),
+    n = as.integer(group_counts),
+    stringsAsFactors = FALSE
+  )
+
+  # Sort by dept, course, section using base R
+  result <- result[order(result$dept, result$course, result$section), , drop = FALSE]
+
+  # Convert to tibble to maintain expected return type
+  return(tibble::as_tibble(result))
 }

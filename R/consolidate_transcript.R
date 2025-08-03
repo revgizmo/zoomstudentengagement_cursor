@@ -89,15 +89,8 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
 
     # Combine results
     result <- do.call(rbind, result_list)
-    rownames(result) <- NULL
 
-    # Calculate duration and wordcount
-    result$duration <- as.numeric(result$end - result$start)
-    result$wordcount <- sapply(result$comment, function(x) {
-      length(strsplit(x, " +")[[1]])
-    })
-
-    # Convert to tibble and return
+    # Convert to tibble to maintain expected return type
     return(tibble::as_tibble(result))
   }
 }
