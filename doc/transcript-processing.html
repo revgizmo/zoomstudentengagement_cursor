@@ -394,17 +394,16 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># View the processed transcript</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(processed_transcript)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name  comment start     end       transcript_file duration wordcount prev_end </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt; &lt;time&gt;   </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 dead… &lt;NA&gt;    00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA    NA    </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srij… Hi!     00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1 00&#39;00.00&quot;</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 dead… &lt;NA&gt;    00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA    NA    </span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Cono… Get th… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4 00&#39;01.79&quot;</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 dead… &lt;NA&gt;    00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA    NA    </span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srij… Hello!… 00&#39;05.14&quot; 00&#39;08.31&quot; GMT20240124-20…   3.17           8 00&#39;04.05&quot;</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: prior_dead_air &lt;dbl&gt;, raw_end &lt;lgl&gt;, raw_start &lt;lgl&gt;,</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   comment_num &lt;int&gt;</span></span></code></pre></div>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 8</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name          comment   start     end       transcript_file duration wordcount</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 dead_air      &lt;NA&gt;      00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srijani Ghosh Hi!       00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 dead_air      &lt;NA&gt;      00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Conor Healy   Get this… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 dead_air      &lt;NA&gt;      00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srijani Ghosh Hello! H… 00&#39;05.14&quot; 00&#39;08.31&quot; GMT20240124-20…   3.17           8</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: comment_num &lt;int&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="calculating-summary-metrics" class="section level2">
@@ -521,45 +520,45 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;After topic parsing:&quot;</span></span>
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                              Topic            ID            Start Time</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
 <span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   File Size (MB) File Count Total Views Total Downloads         Last Accessed</span></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
 <span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept course_section course section</span></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  LTF          23.24     23      24</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  LTF          23.24     23      24</span></span>
 <span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Start Time values:&quot;</span></span>
 <span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Jan 11, 2024 18:22:24&quot; &quot;Jan 18, 2024 18:26:14&quot; &quot;Jan 24, 2024 12:25:59&quot;</span></span>
 <span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;After date parsing:&quot;</span></span>
 <span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                              Topic            ID            Start Time</span></span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
 <span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   File Size (MB) File Count Total Views Total Downloads         Last Accessed</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
 <span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept course_section course section    match_start_time      match_end_time</span></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  LTF          23.24     23      24 2024-01-11 18:22:24 2024-01-11 20:22:24</span></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24 2024-01-18 18:26:14 2024-01-18 20:26:14</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24 2024-01-24 12:25:59 2024-01-24 14:25:59</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24 2024-01-11 18:22:24 2024-01-11 20:22:24</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24 2024-01-18 18:26:14 2024-01-18 20:26:14</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  LTF          23.24     23      24 2024-01-24 12:25:59 2024-01-24 14:25:59</span></span>
 <span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Final result after filtering:&quot;</span></span>
 <span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                              Topic            ID            Start Time</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 11, 2024 18:22:24</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 LTF 23.24 - Thurs 6:30PM (Healy) 960 8322 8914 Jan 18, 2024 18:26:14</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 LTF 23.24 - Thurs 6:30PM (Healy) 996 6354 4011 Jan 24, 2024 12:25:59</span></span>
 <span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   File Size (MB) File Count Total Views Total Downloads         Last Accessed</span></span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      2317.0028         36           0               6 Jan 18, 2024 11:43:46</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1200.6551         24           0               6 Jan 19, 2024 04:59:50</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       147.0676         11           0               6 Jan 24, 2024 13:39:20</span></span>
 <span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   dept course_section course section    match_start_time      match_end_time</span></span>
-<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  LTF          23.24     23      24 2024-01-11 18:22:24 2024-01-11 20:22:24</span></span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24 2024-01-18 18:26:14 2024-01-18 20:26:14</span></span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24 2024-01-24 12:25:59 2024-01-24 14:25:59</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  LTF          23.24     23      24 2024-01-11 18:22:24 2024-01-11 20:22:24</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  LTF          23.24     23      24 2024-01-18 18:26:14 2024-01-18 20:26:14</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  LTF          23.24     23      24 2024-01-24 12:25:59 2024-01-24 14:25:59</span></span>
 <span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="co"># View the recordings list</span></span>
 <span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>recordings_list</span>
@@ -618,17 +617,16 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># View custom processed transcript</span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(custom_processed)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name  comment start     end       transcript_file duration wordcount prev_end </span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt; &lt;time&gt;   </span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 sile… &lt;NA&gt;    00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA    NA    </span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srij… Hi!     00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1 00&#39;00.00&quot;</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 sile… &lt;NA&gt;    00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA    NA    </span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Cono… Get th… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4 00&#39;01.79&quot;</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 sile… &lt;NA&gt;    00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA    NA    </span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srij… Hello!… 00&#39;05.14&quot; 00&#39;11.67&quot; GMT20240124-20…   6.53           9 00&#39;04.05&quot;</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: prior_dead_air &lt;dbl&gt;, raw_end &lt;lgl&gt;, raw_start &lt;lgl&gt;,</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   comment_num &lt;int&gt;</span></span></code></pre></div>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 8</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name          comment   start     end       transcript_file duration wordcount</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 silence       &lt;NA&gt;      00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srijani Ghosh Hi!       00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 silence       &lt;NA&gt;      00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Conor Healy   Get this… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 silence       &lt;NA&gt;      00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srijani Ghosh Hello! H… 00&#39;05.14&quot; 00&#39;11.67&quot; GMT20240124-20…   6.53           9</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: comment_num &lt;int&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="understanding-the-output" class="section level2">

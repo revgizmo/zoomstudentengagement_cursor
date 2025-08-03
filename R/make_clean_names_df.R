@@ -114,122 +114,89 @@ make_clean_names_df <- function(data_folder = "data",
     section_names_lookup_col_types = "ccccccccc" # Changed to all character columns
   )
 
-  # Clean the roster_sessions df
-  roster_sessions_clean <- roster_sessions %>%
-    dplyr::mutate(
-      # Ensure course_section column is character (create if needed)
-      course_section = if ("course_section" %in% names(.)) {
-        as.character(course_section)
-      } else if ("transcript_section" %in% names(.)) {
-        as.character(transcript_section)
-      } else {
-        paste(course, section, sep = ".")
-      },
-      course = as.character(course),
-      section = as.character(section),
-      student_id = as.character(student_id)
-    )
+  # Clean the roster_sessions df using base R to avoid segmentation faults
+  roster_sessions_clean <- roster_sessions
 
-  # Process the data
-  result <-
-    transcripts_metrics_df %>%
-    dplyr::rename(
-      transcript_name = name
-    ) %>%
-    dplyr::mutate(
-      # Ensure time column is character
-      time = as.character(time),
-      # Ensure course_section column is character (create if needed)
-      course_section = if ("course_section" %in% names(.)) {
-        as.character(course_section)
-      } else if ("transcript_section" %in% names(.)) {
-        as.character(transcript_section)
-      } else {
-        paste(course, section, sep = ".")
-      },
-      course = as.character(course),
-      section = as.character(section)
-    ) %>%
-    # join section_names_lookup to add any manually corrected formal_name values
-    dplyr::left_join(
-      section_names_lookup,
-      by = dplyr::join_by(
-        transcript_name,
-        course_section,
-        course,
-        section,
-        day,
-        time
-        # ,
-        # preferred_name
-      )
-    ) %>%
-    # fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
-    dplyr::mutate(
-      formal_name = dplyr::coalesce(formal_name, transcript_name)
-    ) %>%
-    # join to the roster of enrolled students
+  # Ensure course_section column is character (create if needed)
+  if ("course_section" %in% names(roster_sessions_clean)) {
+    roster_sessions_clean$course_section <- as.character(roster_sessions_clean$course_section)
+  } else if ("transcript_section" %in% names(roster_sessions_clean)) {
+    roster_sessions_clean$course_section <- as.character(roster_sessions_clean$transcript_section)
+  } else {
+    roster_sessions_clean$course_section <- paste(roster_sessions_clean$course, roster_sessions_clean$section, sep = ".")
+  }
 
-    dplyr::full_join(
-      roster_sessions_clean,
-      by = dplyr::join_by(
-        preferred_name,
-        formal_name == first_last,
-        dept,
-        course_section,
-        course,
-        section,
-        session_num,
-        start_time_local,
-        student_id
-      ),
-      keep = FALSE
-    ) %>%
-    # Ensure preferred_name and formal_name columns exist and are the correct length
-    dplyr::mutate(
-      preferred_name = if (!"preferred_name" %in% names(.)) NA_character_ else preferred_name,
-      formal_name = if (!"formal_name" %in% names(.)) NA_character_ else formal_name
-    ) %>%
-    tidyr::replace_na(list(preferred_name = NA_character_, formal_name = NA_character_)) %>%
-    dplyr::mutate(
-      formal_name = dplyr::coalesce(formal_name, NA_character_),
-      preferred_name = dplyr::case_when(
-        is.na(preferred_name) & !is.na(formal_name) ~ as.character(formal_name),
-        TRUE ~ as.character(preferred_name)
-      ),
-      student_id = dplyr::coalesce(student_id, NA_character_)
-    ) %>%
-    dplyr::select(
-      preferred_name,
-      formal_name,
-      transcript_name,
-      student_id,
-      section,
-      course_section,
-      session_num,
-      n,
-      duration,
-      wordcount,
-      comments,
-      n_perc,
-      duration_perc,
-      wordcount_perc,
-      wpm,
-      #
-      # all_of(n),
-      # all_of(duration),
-      # all_of(wordcount),
-      # all_of(comments),
-      # all_of(n_perc),
-      # all_of(duration_perc),
-      # all_of(wordcount_perc),
-      # all_of(wpm),
-      transcript_name,
-      name_raw,
-      start_time_local,
-      tidyselect::everything()
-    ) %>%
-    dplyr::arrange(student_id, formal_name)
+  roster_sessions_clean$course <- as.character(roster_sessions_clean$course)
+  roster_sessions_clean$section <- as.character(roster_sessions_clean$section)
+  roster_sessions_clean$student_id <- as.character(roster_sessions_clean$student_id)
+
+  # Process the data using base R to avoid segmentation faults
+  result <- transcripts_metrics_df
+
+  # Rename name column to transcript_name
+  names(result)[names(result) == "name"] <- "transcript_name"
+
+  # Ensure time column is character
+  result$time <- as.character(result$time)
+
+  # Ensure course_section column is character (create if needed)
+  if ("course_section" %in% names(result)) {
+    result$course_section <- as.character(result$course_section)
+  } else if ("transcript_section" %in% names(result)) {
+    result$course_section <- as.character(result$transcript_section)
+  } else {
+    result$course_section <- paste(result$course, result$section, sep = ".")
+  }
+
+  result$course <- as.character(result$course)
+  result$section <- as.character(result$section)
+
+  # Join section_names_lookup to add any manually corrected formal_name values
+  # Use base R merge instead of dplyr::left_join
+  join_cols <- c("transcript_name", "course_section", "course", "section", "day", "time")
+  result <- merge(result, section_names_lookup, by = join_cols, all.x = TRUE)
+
+  # Fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
+  result$formal_name[is.na(result$formal_name)] <- result$transcript_name[is.na(result$formal_name)]
+
+  # Join to the roster of enrolled students using base R merge
+  join_cols_roster <- c("preferred_name", "dept", "course_section", "course", "section", "session_num", "start_time_local", "student_id")
+
+  # Handle the formal_name == first_last join condition
+  roster_sessions_clean$first_last <- roster_sessions_clean$first_last # Ensure column exists
+  result <- merge(result, roster_sessions_clean,
+    by.x = c("preferred_name", "formal_name", "dept", "course_section", "course", "section", "session_num", "start_time_local", "student_id"),
+    by.y = c("preferred_name", "first_last", "dept", "course_section", "course", "section", "session_num", "start_time_local", "student_id"), all = TRUE
+  )
+
+  # Ensure preferred_name and formal_name columns exist and are the correct length
+  if (!"preferred_name" %in% names(result)) {
+    result$preferred_name <- NA_character_
+  }
+  if (!"formal_name" %in% names(result)) {
+    result$formal_name <- NA_character_
+  }
+
+  # Replace NA values
+  result$preferred_name[is.na(result$preferred_name)] <- NA_character_
+  result$formal_name[is.na(result$formal_name)] <- NA_character_
+
+  # Handle coalesce operations
+  result$formal_name[is.na(result$formal_name)] <- NA_character_
+  result$preferred_name[is.na(result$preferred_name) & !is.na(result$formal_name)] <- as.character(result$formal_name[is.na(result$preferred_name) & !is.na(result$formal_name)])
+  result$preferred_name <- as.character(result$preferred_name)
+  result$student_id[is.na(result$student_id)] <- NA_character_
+
+  # Select final columns using base R
+  # Ensure we preserve all expected columns that might be in the input
+  expected_cols <- c("preferred_name", "formal_name", "transcript_name", "student_id", "section", "course_section", "session_num", "n", "duration", "wordcount", "comments", "n_perc", "duration_perc", "wordcount_perc", "wpm", "name_raw", "start_time_local", "time", "day", "course", "dept")
+
+  # Get all available columns from the result
+  available_cols <- names(result)
+
+  # Select columns that exist in the result, prioritizing expected columns
+  final_cols <- unique(c(expected_cols[expected_cols %in% available_cols], available_cols))
+  result <- result[, final_cols, drop = FALSE]
 
   # Only fill formal_name if transcript_name is not NA (preserve NA otherwise)
   result <- result %>%

@@ -13,7 +13,7 @@ test_that("summarize_transcript_metrics minimal test with logging", {
     comment = c("Hello", "How are you?", "I'm good", "Thanks"),
     start = hms::as_hms(c("00:00:00", "00:00:05", "00:00:10", "00:00:15")),
     end = hms::as_hms(c("00:00:03", "00:00:08", "00:00:13", "00:00:18")),
-    duration = hms::as_hms(c("00:00:03", "00:00:03", "00:00:03", "00:00:03")),
+    duration = c(3, 3, 3, 3), # Use numeric duration instead of hms
     wordcount = c(1, 3, 2, 1)
   )
 
@@ -76,7 +76,7 @@ test_that("summarize_transcript_metrics with rlang::syms debugging", {
     comment = c("Hello", "How are you?"),
     start = hms::as_hms(c("00:00:00", "00:00:05")),
     end = hms::as_hms(c("00:00:03", "00:00:08")),
-    duration = hms::as_hms(c("00:00:03", "00:00:03")),
+    duration = c(3, 3), # Use numeric duration instead of hms
     wordcount = c(1, 3)
   )
 
