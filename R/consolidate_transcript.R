@@ -79,6 +79,10 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
         stringsAsFactors = FALSE
       )
 
+      # Calculate duration and wordcount
+      result_row$duration <- as.numeric(result_row$end - result_row$start)
+      result_row$wordcount <- sapply(strsplit(result_row$comment, "\\s+"), function(x) length(x[x != ""]))
+
       # Add transcript_file column if it exists in the input
       if ("transcript_file" %in% names(group_df)) {
         result_row$transcript_file <- group_df$transcript_file[1]

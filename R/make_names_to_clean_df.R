@@ -63,11 +63,19 @@ make_names_to_clean_df <- function(clean_names_df) {
     # Create a unique identifier for each group
     result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
 
+    # Count occurrences per group
+    group_counts <- table(result$group_id)
+
     # Get the first row from each group (equivalent to summarise)
     result <- result[!duplicated(result$group_id), group_cols, drop = FALSE]
 
-    # Add count column (n) - all will be 1 since we're taking first row from each group
-    result$n <- 1
+    # Add count column (n) - use actual group counts
+    # Create group_id for the deduplicated result
+    result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
+    result$n <- as.numeric(group_counts[result$group_id])
+
+    # Remove temporary group_id column
+    result$group_id <- NULL
 
     # Convert to tibble to maintain expected return type
     return(tibble::as_tibble(result))
