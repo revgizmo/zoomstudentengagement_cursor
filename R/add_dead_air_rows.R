@@ -36,44 +36,57 @@ add_dead_air_rows <- function(df, dead_air_name = "dead_air") {
     df$prev_end <- c(hms::hms(0), df$end[-length(df$end)])
     df$prior_dead_air <- as.numeric(df$start - df$prev_end)
 
-    # Create dead air rows using base R
-    dead_air_rows <- df
-    dead_air_rows$name <- dead_air_name
-    dead_air_rows$comment <- NA
-    dead_air_rows$duration <- dead_air_rows$prior_dead_air
-    dead_air_rows$end <- dead_air_rows$start
-    dead_air_rows$start <- dead_air_rows$prev_end
+    # Create dead air rows only for gaps (prior_dead_air > 0)
+    gap_indices <- which(df$prior_dead_air > 0)
+    
+    if (length(gap_indices) > 0) {
+      dead_air_rows <- df[gap_indices, , drop = FALSE]
+      dead_air_rows$name <- dead_air_name
+      dead_air_rows$comment <- NA
+      dead_air_rows$duration <- dead_air_rows$prior_dead_air
+      dead_air_rows$end <- dead_air_rows$start
+      dead_air_rows$start <- dead_air_rows$prev_end
 
-    # Only add columns that exist in the original dataframe
-    if ("raw_end" %in% names(df)) {
-      dead_air_rows$raw_end <- NA
-    }
-    if ("raw_start" %in% names(df)) {
-      dead_air_rows$raw_start <- NA
-    }
-    if ("wordcount" %in% names(df)) {
-      dead_air_rows$wordcount <- NA
-    }
+      # Only add columns that exist in the original dataframe
+      if ("raw_end" %in% names(df)) {
+        dead_air_rows$raw_end <- NA
+      }
+      if ("raw_start" %in% names(df)) {
+        dead_air_rows$raw_start <- NA
+      }
+      if ("wordcount" %in% names(df)) {
+        dead_air_rows$wordcount <- NA
+      }
 
-    # Remove temporary columns from both dataframes to ensure matching structure
-    dead_air_rows$prior_dead_air <- NULL
-    dead_air_rows$prev_end <- NULL
+      # Remove temporary columns from both dataframes to ensure matching structure
+      dead_air_rows$prior_dead_air <- NULL
+      dead_air_rows$prev_end <- NULL
 
-    # Also remove these columns from the original df if they exist
-    if ("prior_dead_air" %in% names(df)) {
-      df$prior_dead_air <- NULL
+      # Also remove these columns from the original df if they exist
+      if ("prior_dead_air" %in% names(df)) {
+        df$prior_dead_air <- NULL
+      }
+      if ("prev_end" %in% names(df)) {
+        df$prev_end <- NULL
+      }
+
+      # Ensure both dataframes have the same column order
+      common_cols <- intersect(names(df), names(dead_air_rows))
+      df <- df[, common_cols, drop = FALSE]
+      dead_air_rows <- dead_air_rows[, common_cols, drop = FALSE]
+
+      # Combine original and dead air rows using base R
+      result <- rbind(df, dead_air_rows)
+    } else {
+      # No gaps, just return original data
+      if ("prior_dead_air" %in% names(df)) {
+        df$prior_dead_air <- NULL
+      }
+      if ("prev_end" %in% names(df)) {
+        df$prev_end <- NULL
+      }
+      result <- df
     }
-    if ("prev_end" %in% names(df)) {
-      df$prev_end <- NULL
-    }
-
-    # Ensure both dataframes have the same column order
-    common_cols <- intersect(names(df), names(dead_air_rows))
-    df <- df[, common_cols, drop = FALSE]
-    dead_air_rows <- dead_air_rows[, common_cols, drop = FALSE]
-
-    # Combine original and dead air rows using base R
-    result <- rbind(df, dead_air_rows)
     return(tibble::as_tibble(result))
   }
 }
