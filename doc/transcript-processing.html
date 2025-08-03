@@ -12,7 +12,7 @@
 
 <meta name="author" content="zoomstudentengagement package" />
 
-<meta name="date" content="2025-08-01" />
+<meta name="date" content="2025-08-02" />
 
 <title>Transcript Processing with zoomstudentengagement</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Transcript Processing with
 zoomstudentengagement</h1>
 <h4 class="author">zoomstudentengagement package</h4>
-<h4 class="date">2025-08-01</h4>
+<h4 class="date">2025-08-02</h4>
 
 
 
@@ -394,17 +394,17 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># View the processed transcript</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(processed_transcript)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 10</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   transcript_file                  comment_num name  comment start              </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                                  &lt;int&gt; &lt;chr&gt; &lt;chr&gt;   &lt;Period&gt;           </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-202901_Recording.tr…           1 dead… &lt;NA&gt;    0S                 </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 GMT20240124-202901_Recording.tr…           2 Srij… Hi!     0.0499999523162842S</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 GMT20240124-202901_Recording.tr…           3 dead… &lt;NA&gt;    1.78999996185303S  </span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 GMT20240124-202901_Recording.tr…           4 Cono… Get th… 2.0699999332428S   </span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 GMT20240124-202901_Recording.tr…           5 dead… &lt;NA&gt;    4.04999995231628S  </span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 GMT20240124-202901_Recording.tr…           6 Srij… Hello!… 5.14000010490417S  </span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 5 more variables: end &lt;Period&gt;, duration &lt;dbl&gt;, wordcount &lt;int&gt;,</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   raw_end &lt;lgl&gt;, raw_start &lt;lgl&gt;</span></span></code></pre></div>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name  comment start     end       transcript_file duration wordcount prev_end </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt; &lt;time&gt;   </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 dead… &lt;NA&gt;    00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA    NA    </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srij… Hi!     00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1 00&#39;00.00&quot;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 dead… &lt;NA&gt;    00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA    NA    </span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Cono… Get th… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4 00&#39;01.79&quot;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 dead… &lt;NA&gt;    00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA    NA    </span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srij… Hello!… 00&#39;05.14&quot; 00&#39;08.31&quot; GMT20240124-20…   3.17           8 00&#39;04.05&quot;</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: prior_dead_air &lt;dbl&gt;, raw_end &lt;lgl&gt;, raw_start &lt;lgl&gt;,</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   comment_num &lt;int&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="calculating-summary-metrics" class="section level2">
@@ -618,17 +618,17 @@ transcripts using the <code>zoomstudentengagement</code> package.</p>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># View custom processed transcript</span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(custom_processed)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 10</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   transcript_file                  comment_num name  comment start              </span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                                  &lt;int&gt; &lt;chr&gt; &lt;chr&gt;   &lt;Period&gt;           </span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 GMT20240124-202901_Recording.tr…           1 sile… &lt;NA&gt;    0S                 </span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 GMT20240124-202901_Recording.tr…           2 Srij… Hi!     0.0499999523162842S</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 GMT20240124-202901_Recording.tr…           3 sile… &lt;NA&gt;    1.78999996185303S  </span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 GMT20240124-202901_Recording.tr…           4 Cono… Get th… 2.0699999332428S   </span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 GMT20240124-202901_Recording.tr…           5 sile… &lt;NA&gt;    4.04999995231628S  </span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 GMT20240124-202901_Recording.tr…           6 Srij… Hello!… 5.14000010490417S  </span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 5 more variables: end &lt;Period&gt;, duration &lt;dbl&gt;, wordcount &lt;int&gt;,</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   raw_end &lt;lgl&gt;, raw_start &lt;lgl&gt;</span></span></code></pre></div>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 12</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   name  comment start     end       transcript_file duration wordcount prev_end </span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;time&gt;    &lt;time&gt;    &lt;chr&gt;              &lt;dbl&gt;     &lt;int&gt; &lt;time&gt;   </span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 sile… &lt;NA&gt;    00&#39;00.00&quot; 00&#39;00.05&quot; GMT20240124-20…   0.0500        NA    NA    </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Srij… Hi!     00&#39;00.05&quot; 00&#39;01.79&quot; GMT20240124-20…   1.74           1 00&#39;00.00&quot;</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 sile… &lt;NA&gt;    00&#39;01.79&quot; 00&#39;02.07&quot; GMT20240124-20…   0.280         NA    NA    </span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Cono… Get th… 00&#39;02.07&quot; 00&#39;04.05&quot; GMT20240124-20…   1.98           4 00&#39;01.79&quot;</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 sile… &lt;NA&gt;    00&#39;04.05&quot; 00&#39;05.14&quot; GMT20240124-20…   1.09          NA    NA    </span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Srij… Hello!… 00&#39;05.14&quot; 00&#39;11.67&quot; GMT20240124-20…   6.53           9 00&#39;04.05&quot;</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: prior_dead_air &lt;dbl&gt;, raw_end &lt;lgl&gt;, raw_start &lt;lgl&gt;,</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   comment_num &lt;int&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="understanding-the-output" class="section level2">

@@ -23,8 +23,8 @@ load_roster <- function(
 
     # Check if enrolled column exists and filter if it does
     if ("enrolled" %in% names(roster_data)) {
-      # REVERTED: Using dplyr to reproduce segmentation fault for investigation
-      return(roster_data %>% dplyr::filter(enrolled == TRUE))
+      # Use base R subsetting to avoid segmentation faults
+      return(roster_data[roster_data$enrolled == TRUE, ])
     } else {
       return(roster_data)
     }

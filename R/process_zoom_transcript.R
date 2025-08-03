@@ -64,32 +64,25 @@ process_zoom_transcript <- function(transcript_file_path = "",
   }
 
   if (tibble::is_tibble(transcript_df)) {
-    # Ensure time columns are of type Period
-    transcript_df <- transcript_df %>%
-      dplyr::mutate(
-        start = lubridate::as.period(start),
-        end = lubridate::as.period(end),
-        duration = as.numeric(duration)
-      )
+    # Ensure time columns are of type hms (replacing lubridate::period to avoid segfaults)
+    # Use base R operations to avoid dplyr segfaults
+    transcript_df$start <- hms::as_hms(transcript_df$start)
+    transcript_df$end <- hms::as_hms(transcript_df$end)
+    transcript_df$duration <- as.numeric(transcript_df$duration)
 
-    # Add begin time and prior speaker info
-    transcript_df <- transcript_df %>%
-      dplyr::mutate(
-        begin = dplyr::lag(end, order_by = start, default = lubridate::period(0)),
-        prior_dead_air = as.numeric(lubridate::as.duration(start - begin)),
-        prior_speaker = dplyr::lag(name, order_by = start, default = NA)
-      ) %>%
-      dplyr::select(
-        transcript_file,
-        comment_num,
-        name,
-        comment,
-        start,
-        end,
-        duration,
-        prior_dead_air,
-        tidyselect::everything()
-      )
+    # Add begin time and prior speaker info using base R to avoid segfaults
+    # Sort by start time for lag operations
+    transcript_df <- transcript_df[order(transcript_df$start), ]
+
+    # Calculate lag values using base R
+    transcript_df$begin <- c(hms::hms(0), transcript_df$end[-length(transcript_df$end)])
+    transcript_df$prior_dead_air <- as.numeric(transcript_df$start - transcript_df$begin)
+    transcript_df$prior_speaker <- c(NA, transcript_df$name[-length(transcript_df$name)])
+
+    # Reorder columns using base R
+    col_order <- c("transcript_file", "comment_num", "name", "comment", "start", "end", "duration", "prior_dead_air")
+    other_cols <- setdiff(names(transcript_df), col_order)
+    transcript_df <- transcript_df[, c(col_order, other_cols)]
 
 
     if (consolidate_comments == TRUE) {
