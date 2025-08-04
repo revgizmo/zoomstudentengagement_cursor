@@ -96,15 +96,37 @@ validate_roster <- function(metadata_dir = "data/metadata") {
     
     print_status("success", paste("Roster loaded:", nrow(roster), "students"))
     
-    # Check for required columns
-    required_cols <- c("name", "id", "course")
-    missing_cols <- setdiff(required_cols, tolower(names(roster)))
+    # Check for required columns (flexible matching)
+    roster_cols <- tolower(names(roster))
     
-    if (length(missing_cols) > 0) {
-      print_status("warning", paste("Missing columns:", paste(missing_cols, collapse = ", ")))
-      print_status("info", "Expected columns: name, id, course (case insensitive)")
+    # Look for name-like columns
+    name_cols <- roster_cols[grepl("name|first|last", roster_cols)]
+    id_cols <- roster_cols[grepl("id|student", roster_cols)]
+    course_cols <- roster_cols[grepl("course|section", roster_cols)]
+    
+    if (length(name_cols) > 0) {
+      print_status("success", paste("Name columns found:", paste(name_cols, collapse = ", ")))
     } else {
-      print_status("success", "All required columns present")
+      print_status("warning", "No name-like columns found")
+    }
+    
+    if (length(id_cols) > 0) {
+      print_status("success", paste("ID columns found:", paste(id_cols, collapse = ", ")))
+    } else {
+      print_status("warning", "No ID-like columns found")
+    }
+    
+    if (length(course_cols) > 0) {
+      print_status("success", paste("Course columns found:", paste(course_cols, collapse = ", ")))
+    } else {
+      print_status("warning", "No course-like columns found")
+    }
+    
+    # Overall assessment
+    if (length(name_cols) > 0 && length(id_cols) > 0) {
+      print_status("success", "Roster has required name and ID columns")
+    } else {
+      print_status("warning", "Roster may be missing required columns")
     }
     
     # Check for empty values
@@ -266,8 +288,8 @@ main <- function() {
   print_status(ifelse(metadata_valid, "success", "error"), "Session metadata")
   print_status(ifelse(privacy_ok, "success", "warning"), "Data privacy")
   
-  # Overall assessment
-  all_valid <- transcript_valid && roster_valid && metadata_valid && privacy_ok
+  # Overall assessment (privacy warnings are informational, not blocking)
+  all_valid <- transcript_valid && roster_valid && metadata_valid
   
   cat("\n")
   if (all_valid) {
