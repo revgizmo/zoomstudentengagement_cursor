@@ -178,11 +178,16 @@ load_zoom_recorded_sessions_list <-
     result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
 
     # Aggregate using base R
-    aggregated_data <- stats::aggregate(
-      result[, c("Total Views", "Total Downloads", "Last Accessed")],
-      by = list(group_id = result$group_id),
-      FUN = function(x) if (is.character(x)) x[which.max(nchar(x))] else max(x, na.rm = TRUE)
-    )
+    if (nrow(result) > 0) {
+      aggregated_data <- stats::aggregate(
+        result[, c("Total Views", "Total Downloads", "Last Accessed")],
+        by = list(group_id = result$group_id),
+        FUN = function(x) if (is.character(x)) x[which.max(nchar(x))] else max(x, na.rm = TRUE)
+      )
+    } else {
+      # Return empty result if no data
+      return(tibble::tibble())
+    }
 
     # Get the first row from each group for the grouping columns
     group_data <- result[!duplicated(result$group_id), group_cols, drop = FALSE]
@@ -234,7 +239,7 @@ load_zoom_recorded_sessions_list <-
       tz = "America/Los_Angeles",
       quiet = TRUE # Suppress warnings for failed parses
     )
-    result$match_end_time <- result$match_start_time + lubridate::hours(scheduled_session_length_hours + 0.5)
+    result$match_end_time <- result$match_start_time + lubridate::hours(as.integer(scheduled_session_length_hours)) + lubridate::minutes(as.integer((scheduled_session_length_hours %% 1) * 60))
 
     # Debug print statements
     print("After date parsing:")

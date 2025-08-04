@@ -153,21 +153,30 @@ make_clean_names_df <- function(data_folder = "data",
 
   # Join section_names_lookup to add any manually corrected formal_name values
   # Use base R merge instead of dplyr::left_join
-  join_cols <- c("transcript_name", "course_section", "course", "section", "day", "time")
-  result <- merge(result, section_names_lookup, by = join_cols, all.x = TRUE)
+  if (nrow(section_names_lookup) > 0) {
+    join_cols <- c("transcript_name", "course_section", "course", "section", "day", "time")
+    result <- merge(result, section_names_lookup, by = join_cols, all.x = TRUE)
+  } else {
+    # If lookup table is empty, just add formal_name column
+    result$formal_name <- result$transcript_name
+  }
 
   # Fill in any formal_name values that weren't on the prior section_names_lookup that was loaded
   result$formal_name[is.na(result$formal_name)] <- result$transcript_name[is.na(result$formal_name)]
 
   # Join to the roster of enrolled students using base R merge
-  join_cols_roster <- c("preferred_name", "dept", "course_section", "course", "section", "session_num", "start_time_local", "student_id")
-
-  # Handle the formal_name == first_last join condition
-  roster_sessions_clean$first_last <- roster_sessions_clean$first_last # Ensure column exists
+  # Use left join (all.x = TRUE) to only keep rows from transcripts_metrics_df
+  # Match transcript_name with first_last
   result <- merge(result, roster_sessions_clean,
-    by.x = c("preferred_name", "formal_name", "dept", "course_section", "course", "section", "session_num", "start_time_local", "student_id"),
-    by.y = c("preferred_name", "first_last", "dept", "course_section", "course", "section", "session_num", "start_time_local", "student_id"), all = TRUE
+    by.x = c("transcript_name", "dept", "course_section", "course", "section", "session_num", "start_time_local"),
+    by.y = c("first_last", "dept", "course_section", "course", "section", "session_num", "start_time_local"), 
+    all.x = TRUE
   )
+  
+  # Add first_last column if it doesn't exist (it should match transcript_name)
+  if (!"first_last" %in% names(result)) {
+    result$first_last <- result$transcript_name
+  }
 
   # Ensure preferred_name and formal_name columns exist and are the correct length
   if (!"preferred_name" %in% names(result)) {

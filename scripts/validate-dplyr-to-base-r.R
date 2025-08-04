@@ -100,24 +100,35 @@ run_test("make_names_to_clean_df - group counts", function() {
 
 # Test 3: load_zoom_recorded_sessions_list - aggregation logic
 run_test("load_zoom_recorded_sessions_list - aggregation", function() {
-  # Create test CSV with duplicate entries
+  # Create test folder structure
+  test_data_folder <- "test_data"
+  test_transcripts_folder <- "test_transcripts"
+  test_transcripts_path <- file.path(test_data_folder, test_transcripts_folder)
+  
+  # Create directories
+  dir.create(test_data_folder, showWarnings = FALSE, recursive = TRUE)
+  dir.create(test_transcripts_path, showWarnings = FALSE, recursive = TRUE)
+  
+  # Create test CSV with duplicate entries (all grouping columns the same to test aggregation)
   test_csv <- data.frame(
     Topic = c("LTF 101 - Mon 10:00 (Dr. Smith)", "LTF 101 - Mon 10:00 (Dr. Smith)"),
-    ID = c("12345", "12346"),
-    "Start Time" = c("Jan 15, 2024 10:00:00 AM", "Jan 16, 2024 10:00 AM"),
-    "File Size (MB)" = c("100", "100"),
-    "File Count" = c(1, 1),
-    "Total Views" = c(10, 15),
-    "Total Downloads" = c(5, 8),
-    "Last Accessed" = c("Jan 15, 2024 11:00:00 AM", "Jan 16, 2024 11:00 AM")
+    ID = c("12345", "12345"),  # Same ID
+    "Start Time" = c("Jan 15, 2024 10:00:00 AM", "Jan 15, 2024 10:00:00 AM"),  # Same start time
+    "File Size (MB)" = c("100", "100"),  # Same file size
+    "File Count" = c(1, 1),  # Same file count
+    "Total Views" = c(10, 15),  # Different values to test aggregation
+    "Total Downloads" = c(5, 8),  # Different values to test aggregation
+    "Last Accessed" = c("Jan 15, 2024 11:00:00 AM", "Jan 16, 2024 11:00 AM")  # Different values to test aggregation
   )
   
-  write.csv(test_csv, "test_aggregation.csv", row.names = FALSE)
+  # Write CSV with proper Zoom naming convention
+  csv_filename <- "zoomus_recordings__20240612.csv"
+  write.csv(test_csv, file.path(test_transcripts_path, csv_filename), row.names = FALSE)
   
-  result <- load_zoom_recorded_sessions_list("test_aggregation.csv", "LTF", "01/01/2024", 2)
+  result <- load_zoom_recorded_sessions_list(test_data_folder, test_transcripts_folder, dept = "LTF", semester_start_mdy = "01/01/2024", scheduled_session_length_hours = 2)
   
   # Clean up
-  unlink("test_aggregation.csv")
+  unlink(test_data_folder, recursive = TRUE)
   
   # Check that aggregation worked (should have 1 row after aggregation)
   if (nrow(result) != 1) {
@@ -215,7 +226,7 @@ run_test("summarize_transcript_metrics - aggregation", function() {
     wordcount = c(1, 1, 2)
   )
   
-  result <- summarize_transcript_metrics(test_data)
+  result <- summarize_transcript_metrics(transcript_df = test_data)
   
   # Should have 2 rows (one per student)
   if (nrow(result) != 2) {
@@ -297,13 +308,22 @@ run_test("write_section_names_lookup - summarise", function() {
     course_section = c("101.A", "101.A", "101.B"),
     day = c("2023-01-01", "2023-01-01", "2023-01-01"),
     time = c("09:00", "09:00", "10:00"),
+    course = c("101", "101", "101"),
+    section = c("A", "A", "B"),
     preferred_name = c("Student1", "Student1", "Student2"),
     formal_name = c("Student1", "Student1", "Student2"),
     transcript_name = c("Student1", "Student1", "Student2"),
     student_id = c("S001", "S001", "S002")
   )
   
-  result <- write_section_names_lookup(clean_names_df, "test_output.csv")
+  # Create a temporary directory for testing
+  test_dir <- "test_data"
+  dir.create(test_dir, showWarnings = FALSE, recursive = TRUE)
+  
+  result <- write_section_names_lookup(clean_names_df, test_dir, "test_output.csv")
+  
+  # Clean up
+  unlink(test_dir, recursive = TRUE)
   
   # Clean up
   unlink("test_output.csv")

@@ -106,5 +106,8 @@ write_section_names_lookup <-
 
       # Write to CSV
       readr::write_csv(result, file.path(data_folder, section_names_lookup_file))
+      
+      # Return the result tibble
+      return(tibble::as_tibble(result))
     }
   }
