@@ -62,6 +62,9 @@ Temporary Items
 vignettes/*.html
 vignettes/*.pdf
 vignettes/*.R
+# But keep vignette source files
+!vignettes/*.Rmd
+!vignettes/*.md
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
@@ -94,12 +97,9 @@ rsconnect/
 example_test_results.rds
 
 # Auto-generated documentation files
-doc/*.html
-doc/*.pdf
-# But keep doc/ directory structure and source files
-!doc/.gitkeep
-!doc/*.R
-!doc/*.Rmd
+# doc/ directory contains only auto-generated HTML files from vignettes
+# Source files (.Rmd, .R) are now properly located in vignettes/
+/doc/
 
 # Package build artifacts
 /Meta/
