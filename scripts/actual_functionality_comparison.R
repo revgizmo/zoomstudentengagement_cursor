@@ -225,43 +225,41 @@ test_data <- tibble::tibble(
 # Current base R version
 current_result <- add_dead_air_rows(test_data)
 
-# Original dplyr version
+# Original dplyr version (from git history)
 original_add_dead_air_rows <- function(df, dead_air_name = "dead_air") {
-  . <- begin <- comment <- comment_num <- duration <- end <- name <- 
-    prior_dead_air <- start <- wordcount <- NULL
-
   if (tibble::is_tibble(df)) {
-    df %>%
-      dplyr::arrange(start) %>%
+    # Ensure time columns are of type Period
+    df <- df %>%
       dplyr::mutate(
-        begin = dplyr::lag(end, default = hms::hms(0))
-      ) %>%
+        start = lubridate::as.period(start),
+        end = lubridate::as.period(end)
+      )
+
+    # Check if transcript_file column exists
+    has_transcript_file <- "transcript_file" %in% names(df)
+
+    # Create dead air rows
+    dead_air_rows <- df %>%
       dplyr::mutate(
-        prior_dead_air = as.numeric(start - begin)
-      ) %>%
-      dplyr::mutate(
-        dead_air_row = prior_dead_air > 0
-      ) %>%
-      dplyr::group_by(dead_air_row) %>%
-      dplyr::group_modify(~ {
-        if (.y$dead_air_row) {
-          dead_air_rows <- .x %>%
-            dplyr::mutate(
-              name = dead_air_name,
-              comment = "",
-              start = begin,
-              end = start,
-              duration = prior_dead_air,
-              wordcount = 0
-            )
-          dplyr::bind_rows(dead_air_rows, .x)
-        } else {
-          .x
-        }
-      }) %>%
-      dplyr::ungroup() %>%
-      dplyr::select(-dead_air_row, -begin, -prior_dead_air) %>%
-      dplyr::arrange(start)
+        prev_end = dplyr::lag(end,
+          order_by = start,
+          default = lubridate::period(0)
+        ),
+        prior_dead_air = as.numeric(start - prev_end, "seconds"),
+        name = dead_air_name,
+        comment = NA,
+        duration = prior_dead_air,
+        end = start,
+        start = prev_end,
+        raw_end = NA,
+        raw_start = NA,
+        wordcount = NA,
+        prior_dead_air = NULL,
+        prev_end = NULL
+      )
+
+    # Combine original and dead air rows
+    dplyr::bind_rows(df, dead_air_rows)
   }
 }
 
@@ -283,13 +281,32 @@ test_data <- tibble::tibble(
 # Current base R version
 current_result <- mask_user_names_by_metric(test_data, "duration")
 
-# Original dplyr version
-original_mask_user_names_by_metric <- function(df, metric) {
-  df %>%
-    dplyr::arrange(desc(!!rlang::sym(metric))) %>%
-    dplyr::mutate(
-      preferred_name = paste0("Student ", sprintf("%02d", dplyr::row_number()))
-    )
+# Original dplyr version (from git history)
+original_mask_user_names_by_metric <- function(df, metric = "session_ct", target_student = "") {
+  row_num <- preferred_name <- section <- NULL
+
+  if (tibble::is_tibble(df)) {
+    metric_col <- df[metric]
+    df$metric_col <- metric_col[[1]]
+    metric_col_name <- names(metric_col)
+
+    df %>%
+      dplyr::mutate(
+        student = preferred_name,
+        row_num = dplyr::row_number(dplyr::desc(dplyr::coalesce(
+          metric_col, -Inf
+        ))),
+        student = dplyr::if_else(
+          preferred_name == target_student,
+          paste0("**", target_student, "**"),
+          paste(
+            "Student",
+            stringr::str_pad(row_num, width = 2, pad = "0"),
+            sep = " "
+          )
+        )
+      )
+  }
 }
 
 tryCatch({
