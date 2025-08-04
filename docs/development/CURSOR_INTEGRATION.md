@@ -286,6 +286,7 @@ Constraints: [any limitations or requirements]"
 ## 🔗 Related Documentation
 
 - **[AI_ASSISTED_DEVELOPMENT.md](AI_ASSISTED_DEVELOPMENT.md)** - Core AI development guidelines
+- **[BUGBOT.md](BUGBOT.md)** - R package review guidelines and patterns
 - **[CONTEXT_PROVISION.md](CONTEXT_PROVISION.md)** - How to provide effective context
 - **[PRE_PR_VALIDATION.md](PRE_PR_VALIDATION.md)** - Pre-PR validation checklist
 - **[CRAN_SUBMISSION.md](CRAN_SUBMISSION.md)** - CRAN submission requirements

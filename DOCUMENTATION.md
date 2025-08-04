@@ -30,6 +30,7 @@
 ### Detailed Guidelines
 - **[docs/development/README.md](docs/development/README.md)** - Development guidelines index and quick start
 - **[docs/development/AI_ASSISTED_DEVELOPMENT.md](docs/development/AI_ASSISTED_DEVELOPMENT.md)** - Core AI-assisted development guidelines
+- **[docs/development/BUGBOT.md](docs/development/BUGBOT.md)** - R package review guidelines and patterns
 - **[docs/development/CONTEXT_PROVISION.md](docs/development/CONTEXT_PROVISION.md)** - How to provide effective context
 - **[docs/development/CURSOR_INTEGRATION.md](docs/development/CURSOR_INTEGRATION.md)** - Cursor-specific guidelines
 - **[docs/development/PRE_PR_VALIDATION.md](docs/development/PRE_PR_VALIDATION.md)** - Pre-PR validation checklist
