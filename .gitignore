@@ -92,7 +92,13 @@ rsconnect/
 !.cursor/context.md
 .cursor.json
 example_test_results.rds
-# /doc/ - Removed to allow tracking of built vignettes
+
+# Auto-generated documentation files
+doc/*.html
+doc/*.pdf
+# But keep doc/ directory structure
+!doc/.gitkeep
+
+# Package build artifacts
 /Meta/
-/doc/
 zoom_real_world_testing/
