@@ -9,6 +9,14 @@ library(styler)
 
 cat("🔍 Running Pre-PR Validation (Bugbot-style checks)...\n\n")
 
+# Backup critical files before validation
+cat("📋 Backing up critical files...\n")
+gitignore_backup <- NULL
+if (file.exists(".gitignore")) {
+  gitignore_backup <- readLines(".gitignore")
+  cat("   ✅ .gitignore backed up\n")
+}
+
 # Initialize status tracking
 validation_status <- list(
   code_style = FALSE,
@@ -19,7 +27,11 @@ validation_status <- list(
   function_signatures = FALSE,
   data_validation = FALSE,
   testing = FALSE,
-  package_check = FALSE
+  package_check = FALSE,
+  spell_check = FALSE,
+  examples_check = FALSE,
+  coverage_check = FALSE,
+  gitignore_integrity = TRUE  # Track if .gitignore was modified
 )
 
 # 1. Code Style and Quality
@@ -68,8 +80,19 @@ tryCatch({
 # 3. Vignette Validation
 cat("\n3. Vignette Validation:\n")
 tryCatch({
+  # Monitor .gitignore before vignette build
+  gitignore_before <- readLines(".gitignore")
+  
   # Check if vignettes build
   devtools::build_vignettes()
+  
+  # Check if .gitignore was modified
+  gitignore_after <- readLines(".gitignore")
+  if (!identical(gitignore_before, gitignore_after)) {
+    cat("   ⚠️  .gitignore was modified during vignette build\n")
+    validation_status$gitignore_integrity <- FALSE
+  }
+  
   cat("   ✅ Vignettes build successfully\n")
   validation_status$vignettes <- TRUE
 }, error = function(e) {
@@ -256,9 +279,65 @@ tryCatch({
   cat("   ❌ Package check failed:", e$message, "\n")
 })
 
+# 9. CRAN-Specific Checks
+cat("\n9. CRAN-Specific Checks:\n")
+tryCatch({
+  spell_results <- devtools::spell_check()
+  if (length(spell_results) == 0) {
+    cat("   ✅ No spelling errors found\n")
+    validation_status$spell_check <- TRUE
+  } else {
+    cat("   ⚠️  Spelling errors found:", length(spell_results), "\n")
+    for (i in 1:min(3, length(spell_results))) {
+      cat("      -", spell_results[[i]]$word, "in", spell_results[[i]]$file, "\n")
+    }
+  }
+}, error = function(e) {
+  cat("   ❌ Spell check failed:", e$message, "\n")
+})
+
+tryCatch({
+  devtools::check_examples()
+  cat("   ✅ All examples run successfully\n")
+  validation_status$examples_check <- TRUE
+}, error = function(e) {
+  cat("   ❌ Examples check failed:", e$message, "\n")
+})
+
+tryCatch({
+  if (requireNamespace("covr", quietly = TRUE)) {
+    coverage <- covr::package_coverage()
+    coverage_percent <- round(attr(coverage, "coverage"), 1)
+    cat("   📊 Test coverage:", coverage_percent, "%\n")
+    if (coverage_percent >= 90) {
+      cat("   ✅ Coverage meets CRAN requirements (≥90%)\n")
+      validation_status$coverage_check <- TRUE
+    } else {
+      cat("   ⚠️  Coverage below CRAN requirements (<90%)\n")
+    }
+  } else {
+    cat("   ℹ️  covr package not available, skipping coverage check\n")
+  }
+}, error = function(e) {
+  cat("   ❌ Coverage check failed:", e$message, "\n")
+})
+
 cat("\n🎯 Pre-PR Validation Complete!\n")
 cat("Review the results above and fix any issues before creating your PR.\n")
 cat("This helps catch issues that Bugbot would identify.\n\n")
+
+# Cleanup: Restore critical files
+cat("🧹 Cleaning up...\n")
+if (!is.null(gitignore_backup)) {
+  current_gitignore <- readLines(".gitignore")
+  if (!identical(current_gitignore, gitignore_backup)) {
+    writeLines(gitignore_backup, ".gitignore")
+    cat("   ❌ .gitignore was modified and restored - this indicates a validation failure\n")
+    validation_status$gitignore_integrity <- FALSE
+  } else {
+    cat("   ✅ .gitignore integrity maintained\n")
+  }
+}
 
 # Dynamic Summary based on actual results
 cat("📊 SUMMARY:\n")
@@ -269,7 +348,11 @@ cat(ifelse(validation_status$vignettes, "✅", "❌"), "Vignettes: All build suc
 cat(ifelse(validation_status$function_signatures, "✅", "❌"), "Function Signatures: Validated\n")
 cat(ifelse(validation_status$data_validation, "✅", "❌"), "Data Validation: Completed\n")
 cat(ifelse(validation_status$testing, "✅", "❌"), "Testing: All tests pass\n")
-cat(ifelse(validation_status$package_check, "✅", "❌"), "Package Check: Completed\n\n")
+cat(ifelse(validation_status$package_check, "✅", "❌"), "Package Check: Completed\n")
+cat(ifelse(validation_status$spell_check, "✅", "❌"), "Spell Check: No errors\n")
+cat(ifelse(validation_status$examples_check, "✅", "❌"), "Examples: All run successfully\n")
+cat(ifelse(validation_status$coverage_check, "✅", "❌"), "Coverage: Meets CRAN requirements\n")
+cat(ifelse(validation_status$gitignore_integrity, "✅", "❌"), "File Integrity: .gitignore not modified\n\n")
 
 # Count issues
 total_checks <- length(validation_status)
@@ -295,8 +378,20 @@ if (!validation_status$function_signatures) {
 if (!validation_status$vignettes) {
   cat("4. Fix vignette build issues\n")
 }
+if (!validation_status$spell_check) {
+  cat("5. Fix spelling errors\n")
+}
+if (!validation_status$examples_check) {
+  cat("6. Fix example errors\n")
+}
+if (!validation_status$coverage_check) {
+  cat("7. Improve test coverage to ≥90%\n")
+}
+if (!validation_status$gitignore_integrity) {
+  cat("8. Investigate what modified .gitignore during validation\n")
+}
 if (failed_checks == 0) {
   cat("✅ Ready to create PR!\n")
 } else {
-  cat("5. Run validation again after fixes\n")
+  cat("9. Run validation again after fixes\n")
 } 
