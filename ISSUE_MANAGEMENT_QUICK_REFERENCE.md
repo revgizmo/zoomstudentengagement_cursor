@@ -94,6 +94,28 @@ Before closing any `CRAN:submission` issue:
 - [ ] Examples run successfully
 - [ ] No spelling errors
 
+## 🛠️ **GitHub CLI Commands**
+
+### Creating Issues
+```bash
+# Check available labels first
+gh label list
+
+# Basic issue creation
+gh issue create --title "Title" --body "Description"
+
+# With labels (use existing labels only)
+gh issue create --title "Title" --body "Description" --label "label1,label2"
+
+# With assignees
+gh issue create --title "Title" --body "Description" --assignee "username"
+```
+
+### Important Notes
+- **Always check available labels** with `gh label list` before creating issues
+- Use only existing labels - custom labels will cause errors
+- Common labels: `priority:high`, `priority:medium`, `priority:low`, `area:core`, `status:blocked`, `CRAN:submission`
+
 ## 📞 **Need Help?**
 
 - Check [docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/ISSUE_MANAGEMENT_GUIDELINES.md) for detailed information
