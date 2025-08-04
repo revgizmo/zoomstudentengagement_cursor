@@ -82,17 +82,17 @@ fi
 
 # Get R CMD check status dynamically
 echo "🔍 Checking R CMD check status..."
-# Run a quick check (without timeout to avoid compatibility issues)
-CHECK_OUTPUT=$(Rscript -e "devtools::check()" 2>&1 | head -50 || echo "Check failed")
-ERROR_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "ERROR" || echo "0")
-WARNING_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "WARNING" || echo "0")
-NOTE_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "NOTE" || echo "0")
+# Run a quick check and capture the summary line
+CHECK_OUTPUT=$(Rscript -e "devtools::check()" 2>&1 | tail -5 | grep -E "[0-9]+ errors.*[0-9]+ warnings.*[0-9]+ notes" || echo "Check failed")
 
 if [ "$CHECK_OUTPUT" = "Check failed" ]; then
     echo "R CMD Check: Failed (run manually with devtools::check())"
-elif [ "$ERROR_COUNT" = "0" ] && [ "$WARNING_COUNT" = "0" ] && [ "$NOTE_COUNT" = "0" ]; then
-    echo "R CMD Check: 0 errors, 0 warnings, 0 notes"
 else
+    # Extract numbers from the summary line
+    ERROR_COUNT=$(echo "$CHECK_OUTPUT" | grep -o "[0-9]* errors" | grep -o "[0-9]*" || echo "0")
+    WARNING_COUNT=$(echo "$CHECK_OUTPUT" | grep -o "[0-9]* warnings" | grep -o "[0-9]*" || echo "0")
+    NOTE_COUNT=$(echo "$CHECK_OUTPUT" | grep -o "[0-9]* notes" | grep -o "[0-9]*" || echo "0")
+    
     echo "R CMD Check: $ERROR_COUNT errors, $WARNING_COUNT warnings, $NOTE_COUNT notes"
 fi
 
