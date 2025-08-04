@@ -77,18 +77,18 @@ A comprehensive premortem analysis conducted on 2025-08-04 revealed fundamental 
 ### 🔄 **Remaining Issues (Critical - CRAN Ready Soon)**
 1. **Privacy & Ethical Issues**: CRAN submission blockers ([Issue #84](https://github.com/revgizmo/zoomstudentengagement/issues/84), [Issue #85](https://github.com/revgizmo/zoomstudentengagement/issues/85) - Priority: CRITICAL)
 2. **Performance & Stability**: Segmentation faults ([Issue #113](https://github.com/revgizmo/zoomstudentengagement/issues/113) - Priority: CRITICAL)
-3. **CRAN Compliance**: R CMD check notes are blockers ([Issue #77](https://github.com/revgizmo/zoomstudentengagement/issues/77) - Priority: CRITICAL)
+3. **CRAN Compliance**: R CMD check notes are blockers ([Issue #77](https://github.com/revgizmo/zoomstudentengagement/issues/77) - Priority: MEDIUM - **CLOSED**)
 4. **Real-World Testing**: Package may fail with actual data ([Issue #115](https://github.com/revgizmo/zoomstudentengagement/issues/115) - Priority: HIGH)
 5. **Documentation Gaps**: Could hurt adoption ([Issue #90](https://github.com/revgizmo/zoomstudentengagement/issues/90) - Priority: HIGH)
 6. **Test Coverage**: Need to reach 90% (currently 78.15%) ([Issue #20](https://github.com/revgizmo/zoomstudentengagement/issues/20) - Priority: MEDIUM)
 
-### Active Issues for CRAN Submission (34 Open Issues)
+### Active Issues for CRAN Submission (30 Open Issues)
 - **[Issue #123](https://github.com/revgizmo/zoomstudentengagement/issues/123)**: CRITICAL: Project Restructuring Based on Premortem Analysis (Priority: HIGH - CRAN submission)
 - **[Issue #84](https://github.com/revgizmo/zoomstudentengagement/issues/84)**: Review and implement FERPA/security compliance (Priority: CRITICAL - privacy/security)
 - **[Issue #85](https://github.com/revgizmo/zoomstudentengagement/issues/85)**: Review functions for ethical use and equitable participation focus (Priority: CRITICAL - ethics)
 - **[Issue #113](https://github.com/revgizmo/zoomstudentengagement/issues/113)**: Investigate dplyr segmentation faults in package test environment (Priority: CRITICAL - performance)
-- **[Issue #77](https://github.com/revgizmo/zoomstudentengagement/issues/77)**: Address remaining R CMD check notes (Priority: CRITICAL - CRAN submission)
-- **[Issue #115](https://github.com/revgizmo/zoomstudentengagement/issues/115)**: Phase 2: Comprehensive Real-World Testing for dplyr to Base R Conversions (Priority: HIGH - testing)
+- **[Issue #77](https://github.com/revgizmo/zoomstudentengagement/issues/77)**: Address remaining R CMD check notes (Priority: MEDIUM - CRAN submission) - **CLOSED**
+- **[Issue #115](https://github.com/revgizmo/zoomstudentengagement/issues/115)**: Phase 2: Comprehensive Real-World Testing for dplyr to Base R Conversions (Priority: MEDIUM - testing)
 - **[Issue #90](https://github.com/revgizmo/zoomstudentengagement/issues/90)**: Add missing function documentation (Priority: HIGH - documentation)
 - **[Issue #56](https://github.com/revgizmo/zoomstudentengagement/issues/56)**: Add transcript_file column (Priority: HIGH - core functionality)
 - **[Issue #20](https://github.com/revgizmo/zoomstudentengagement/issues/20)**: Increase test coverage (Priority: MEDIUM - target 90%)
@@ -113,6 +113,7 @@ A comprehensive premortem analysis conducted on 2025-08-04 revealed fundamental 
 - **[Issue #72](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/72)**: Create .Rbuildignore to fix R CMD check notes (CLOSED)
 - **[Issue #73](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/73)**: Update PROJECT.md to reflect current status (CLOSED)
 - **[Issue #74](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/74)**: Review and standardize issue labels (CLOSED)
+- **[Issue #77](https://github.com/revgizmo/zoomstudentengagement/issues/77)**: Address remaining R CMD check notes (CLOSED)
 
 ### Immediate Action Items (CRAN Preparation)
 1. **R CMD Check Notes** (Priority: HIGH) - PARTIALLY RESOLVED ✅
