@@ -38,7 +38,7 @@ add_dead_air_rows <- function(df, dead_air_name = "dead_air") {
 
     # Create dead air rows only for gaps (prior_dead_air > 0)
     gap_indices <- which(df$prior_dead_air > 0)
-    
+
     if (length(gap_indices) > 0) {
       dead_air_rows <- df[gap_indices, , drop = FALSE]
       dead_air_rows$name <- dead_air_name

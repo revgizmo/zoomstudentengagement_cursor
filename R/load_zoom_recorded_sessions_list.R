@@ -239,7 +239,9 @@ load_zoom_recorded_sessions_list <-
       tz = "America/Los_Angeles",
       quiet = TRUE # Suppress warnings for failed parses
     )
-    result$match_end_time <- result$match_start_time + lubridate::hours(as.integer(scheduled_session_length_hours)) + lubridate::minutes(as.integer((scheduled_session_length_hours %% 1) * 60))
+    # Calculate end time: session length + 0.5 hour buffer
+    session_end_time <- result$match_start_time + lubridate::hours(as.integer(scheduled_session_length_hours)) + lubridate::minutes(as.integer((scheduled_session_length_hours %% 1) * 60))
+    result$match_end_time <- session_end_time + lubridate::minutes(30) # Add 0.5 hour buffer (30 minutes)
 
     # Debug print statements
     print("After date parsing:")

@@ -169,21 +169,32 @@ make_clean_names_df <- function(data_folder = "data",
   # Match transcript_name with first_last
   result <- merge(result, roster_sessions_clean,
     by.x = c("transcript_name", "dept", "course_section", "course", "section", "session_num", "start_time_local"),
-    by.y = c("first_last", "dept", "course_section", "course", "section", "session_num", "start_time_local"), 
+    by.y = c("first_last", "dept", "course_section", "course", "section", "session_num", "start_time_local"),
     all.x = TRUE
   )
-  
+
   # Add first_last column if it doesn't exist (it should match transcript_name)
   if (!"first_last" %in% names(result)) {
     result$first_last <- result$transcript_name
   }
 
+  # Ensure student_id column exists and has correct length
+  if (!"student_id" %in% names(result)) {
+    result$student_id <- rep(NA_character_, nrow(result))
+  } else {
+    # Ensure student_id has correct length and type
+    result$student_id <- as.character(result$student_id)
+    if (length(result$student_id) != nrow(result)) {
+      result$student_id <- rep(NA_character_, nrow(result))
+    }
+  }
+
   # Ensure preferred_name and formal_name columns exist and are the correct length
   if (!"preferred_name" %in% names(result)) {
-    result$preferred_name <- NA_character_
+    result$preferred_name <- rep(NA_character_, nrow(result))
   }
   if (!"formal_name" %in% names(result)) {
-    result$formal_name <- NA_character_
+    result$formal_name <- rep(NA_character_, nrow(result))
   }
 
   # Replace NA values
