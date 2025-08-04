@@ -98,7 +98,7 @@ fi
 
 # Get test coverage dynamically
 echo "🔍 Checking test coverage..."
-COVERAGE_OUTPUT=$(Rscript -e "if(require(covr, quietly=TRUE)) { cov <- covr::package_coverage(); cat(round(attr(cov, \"coverage\"), 2)) } else { cat('N/A') }" 2>/dev/null || echo "N/A")
+COVERAGE_OUTPUT=$(Rscript -e "if(require(covr, quietly=TRUE)) { cov <- covr::package_coverage(); cat(round(covr::percent_coverage(cov), 2)) } else { cat('N/A') }" 2>/dev/null || echo "N/A")
 if [ "$COVERAGE_OUTPUT" = "N/A" ]; then
     echo "Test Coverage: N/A (covr not available)"
 else

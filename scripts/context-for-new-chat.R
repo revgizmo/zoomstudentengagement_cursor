@@ -51,7 +51,7 @@ tryCatch({
   if (require(covr, quietly = TRUE)) {
     cat("🔍 Calculating coverage...\n")
     coverage <- covr::package_coverage()
-    coverage_percent <- attr(coverage, "coverage")
+    coverage_percent <- covr::percent_coverage(coverage)
     if (!is.null(coverage_percent)) {
       coverage_percent <- round(coverage_percent, 2)
       cat("📈 Coverage:", coverage_percent, "%\n")
@@ -62,18 +62,8 @@ tryCatch({
         cat("   ✅ Target achieved\n")
       }
       
-      # Show files with low coverage
-      file_coverage <- covr::file_coverage()
-      low_coverage_files <- names(file_coverage)[file_coverage < 50]
-      if (length(low_coverage_files) > 0) {
-        cat("   📋 Files with <50% coverage:", length(low_coverage_files), "\n")
-        cat("      ", paste(head(low_coverage_files, 3), collapse = ", "))
-        if (length(low_coverage_files) > 3) {
-          cat(" ... and", length(low_coverage_files) - 3, "more\n")
-        } else {
-          cat("\n")
-        }
-      }
+      # Note: File-level coverage details available via covr::file_coverage()
+      cat("   💡 Run 'covr::file_coverage()' for detailed file breakdown\n")
     } else {
       cat("⚠️  Coverage calculation failed\n")
     }
