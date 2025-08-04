@@ -480,38 +480,40 @@ tryCatch({
 # Test 7: make_clean_names_df
 cat("7. Testing make_clean_names_df comparison...\n")
 
-# Create sample data
+# Create comprehensive test data with multiple students, courses, and edge cases
 transcripts_metrics_df <- tibble::tibble(
-  name = c("John Smith", "Jane Doe"),
-  course_section = c("101.A", "101.B"),
-  course = c(101, 101),
-  section = c("A", "B"),
-  day = c("Monday", "Tuesday"),
-  time = c("10:00", "11:00"),
-  n = c(10, 15),
-  duration = c(300, 450),
-  wordcount = c(500, 750),
-  comments = list("Good", "Excellent"),
-  n_perc = c(0.1, 0.15),
-  duration_perc = c(0.1, 0.15),
-  wordcount_perc = c(0.1, 0.15),
-  wpm = c(100, 100),
-  name_raw = c("John Smith", "Jane Doe"),
-  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
-  dept = c("CS", "CS"),
-  session_num = c(1, 1)
+  name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "Charlie Davis"),
+  course_section = c("101.A", "101.B", "102.A", "201.A", "201.B"),
+  course = c(101, 101, 102, 201, 201),
+  section = c("A", "B", "A", "A", "B"),
+  day = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"),
+  time = c("10:00", "11:00", "14:00", "09:00", "11:00"),
+  n = c(10, 15, 8, 12, 9),
+  duration = c(300, 450, 240, 360, 270),
+  wordcount = c(500, 750, 400, 600, 450),
+  comments = list("Good", "Excellent", "Average", "Good", "Fair"),
+  n_perc = c(0.1, 0.15, 0.08, 0.12, 0.09),
+  duration_perc = c(0.1, 0.15, 0.08, 0.12, 0.09),
+  wordcount_perc = c(0.1, 0.15, 0.08, 0.12, 0.09),
+  wpm = c(100, 100, 100, 100, 100),
+  name_raw = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "Charlie Davis"),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00", "2024-01-03 14:00:00", 
+                       "2024-01-04 09:00:00", "2024-01-05 11:00:00"),
+  dept = c("CS", "CS", "CS", "MATH", "MATH"),
+  session_num = c(1, 1, 1, 1, 1)
 )
 
 roster_sessions <- tibble::tibble(
-  first_last = c("John Smith", "Jane Doe"),
-  preferred_name = c("John Smith", "Jane Doe"),
-  course = c("101", "101"),
-  section = c("A", "B"),
-  student_id = c("12345", "67890"),
-  dept = c("CS", "CS"),
-  session_num = c(1, 1),
-  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00"),
-  course_section = c("101.A", "101.B")
+  first_last = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "Charlie Davis"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "Charlie Davis"),
+  course = c("101", "101", "102", "201", "201"),
+  section = c("A", "B", "A", "A", "B"),
+  student_id = c("12345", "67890", "11111", "22222", "33333"),
+  dept = c("CS", "CS", "CS", "MATH", "MATH"),
+  session_num = c(1, 1, 1, 1, 1),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-02 11:00:00", "2024-01-03 14:00:00", 
+                       "2024-01-04 09:00:00", "2024-01-05 11:00:00"),
+  course_section = c("101.A", "101.B", "102.A", "201.A", "201.B")
 )
 
 # Current base R version
@@ -850,6 +852,221 @@ tryCatch({
   cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
   cat("   ✅ Current base R version works - this is the goal\n\n")
 })
+
+# Test 11: make_sections_df
+cat("11. Testing make_sections_df comparison...\n")
+
+# Create comprehensive test data with edge cases
+test_data <- tibble::tibble(
+  dept = c("CS", "CS", "CS", "MATH", "MATH", "ENG", "ENG", "ENG", "CS", "MATH"),
+  course = c("101", "101", "102", "201", "201", "101", "102", "103", "103", "202"),
+  section = c("A", "B", "A", "A", "B", "A", "B", "A", "C", "A"),
+  student_id = c("12345", "67890", "11111", "22222", "33333", "44444", "55555", "66666", "77777", "88888")
+)
+
+# Current base R version
+current_result <- make_sections_df(test_data)
+
+# Original dplyr version (from git history)
+original_make_sections_df <- function(roster_df) {
+  dept <- course <- section <- n <- NULL
+
+  # Defensive: check for valid input
+  if (!tibble::is_tibble(roster_df)) {
+    stop("roster_df must be a tibble")
+  }
+
+  # Defensive: check for required columns
+  required_cols <- c("dept", "course", "section")
+  missing_cols <- setdiff(required_cols, names(roster_df))
+  if (length(missing_cols) > 0) {
+    stop("roster_df must contain columns: ", paste(missing_cols, collapse = ", "))
+  }
+
+  # Handle empty input
+  if (nrow(roster_df) == 0) {
+    return(tibble::tibble(
+      dept = character(),
+      course = character(),
+      section = character(),
+      n = integer()
+    ))
+  }
+
+  # Ensure correct column types
+  roster_df <- roster_df %>%
+    dplyr::mutate(
+      dept = as.character(dept),
+      course = as.character(course),
+      section = as.character(section)
+    )
+
+  # Count students by section, handling NA values
+  roster_df %>%
+    dplyr::group_by(dept, course, section) %>%
+    dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
+    dplyr::arrange(dept, course, section)
+}
+
+tryCatch({
+  original_result <- original_make_sections_df(test_data)
+  compare_dataframes(original_result, current_result, "make_sections_df")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test 12: make_student_roster_sessions
+cat("12. Testing make_student_roster_sessions comparison...\n")
+
+# Create comprehensive test data with multiple departments, courses, and sessions
+transcripts_list_df <- tibble::tibble(
+  dept = c("CS", "CS", "CS", "MATH", "MATH", "ENG", "ENG"),
+  course = c("101", "101", "102", "201", "201", "101", "102"),
+  section = c("A", "A", "A", "A", "B", "A", "B"),
+  session_num = c(1, 2, 1, 1, 1, 1, 1),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-08 10:00:00", "2024-01-01 14:00:00", 
+                       "2024-01-02 09:00:00", "2024-01-02 11:00:00", "2024-01-03 10:00:00", "2024-01-03 14:00:00")
+)
+
+roster_small_df <- tibble::tibble(
+  student_id = c("12345", "67890", "11111", "22222", "33333", "44444"),
+  first_last = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "Charlie Davis", "Eve Johnson"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "Charlie Davis", "Eve Johnson"),
+  dept = c("CS", "CS", "CS", "MATH", "MATH", "ENG"),
+  course = c("101", "101", "102", "201", "201", "101"),
+  section = c("A", "A", "A", "A", "B", "A")
+)
+
+# Current base R version
+current_result <- make_student_roster_sessions(transcripts_list_df, roster_small_df)
+
+# Original dplyr version (from git history)
+original_make_student_roster_sessions <- function(transcripts_list_df, roster_small_df) {
+  . <- course <- course_transcript <- dept <- dept_transcript <- first_last <- preferred_name <- section <- section_transcript <- session_num <- start_time_local <- student_id <- course_section <- NULL
+
+  # Defensive: check for valid tibbles
+  if (!tibble::is_tibble(transcripts_list_df) || !tibble::is_tibble(roster_small_df)) {
+    stop("Input must be tibbles")
+  }
+
+  # Handle empty input first
+  if (nrow(transcripts_list_df) == 0 || nrow(roster_small_df) == 0) {
+    warning("Empty input data provided")
+    return(NULL)
+  }
+
+  # Check for required columns
+  required_transcript_cols <- c("dept", "course", "section", "session_num", "start_time_local")
+  required_roster_cols <- c("student_id", "first_last", "preferred_name", "dept", "course", "section")
+
+  missing_transcript_cols <- setdiff(required_transcript_cols, names(transcripts_list_df))
+  missing_roster_cols <- setdiff(required_roster_cols, names(roster_small_df))
+
+  if (length(missing_transcript_cols) > 0 || length(missing_roster_cols) > 0) {
+    stop(sprintf(
+      "Missing required columns:\nTranscripts: %s\nRoster: %s",
+      paste(missing_transcript_cols, collapse = ", "),
+      paste(missing_roster_cols, collapse = ", ")
+    ))
+  }
+
+  # Process transcripts list
+  transcripts_processed <- transcripts_list_df %>%
+    dplyr::mutate(
+      course_section = if ("course_section" %in% names(.)) {
+        course_section
+      } else {
+        paste(course, section, sep = ".")
+      }
+    ) %>%
+    tidyr::separate(
+      col = course_section,
+      into = c("course_transcript", "section_transcript"),
+      sep = "\\.",
+      remove = FALSE,
+      fill = "right"
+    ) %>%
+    dplyr::mutate(
+      dept_transcript = toupper(dept),
+      dept = NULL,
+      course_transcript = as.character(course_transcript),
+      section_transcript = as.character(section_transcript)
+    )
+
+  # Process roster
+  roster_processed <- roster_small_df %>%
+    dplyr::mutate(
+      course = as.character(course),
+      section = as.character(section),
+      dept = toupper(dept)
+    )
+
+  # Join and filter
+  result <- dplyr::inner_join(
+    roster_processed,
+    transcripts_processed,
+    by = dplyr::join_by(
+      dept == dept_transcript,
+      course == course_transcript,
+      section == section_transcript
+    )
+  )
+
+  # If no matches found after joining, return NULL with warning
+  if (nrow(result) == 0) {
+    warning("No matching records found between transcripts and roster")
+    return(NULL)
+  }
+
+  # Select and arrange final columns
+  result %>%
+    dplyr::select(
+      student_id,
+      first_last,
+      preferred_name,
+      dept,
+      course,
+      section,
+      session_num,
+      start_time_local,
+      course_section
+    ) %>%
+    tibble::as_tibble()
+}
+
+tryCatch({
+  original_result <- original_make_student_roster_sessions(transcripts_list_df, roster_small_df)
+  compare_dataframes(original_result, current_result, "make_student_roster_sessions")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test edge cases for make_student_roster_sessions
+cat("12b. Testing make_student_roster_sessions edge cases...\n")
+
+# Test with no matching records
+transcripts_no_match <- tibble::tibble(
+  dept = c("PHYS"),
+  course = c("301"),
+  section = c("A"),
+  session_num = c(1),
+  start_time_local = c("2024-01-01 10:00:00")
+)
+
+roster_no_match <- tibble::tibble(
+  student_id = c("99999"),
+  first_last = c("No Match"),
+  preferred_name = c("No Match"),
+  dept = c("CS"),
+  course = c("101"),
+  section = c("A")
+)
+
+cat("   Testing no-match scenario...\n")
+current_result_no_match <- make_student_roster_sessions(transcripts_no_match, roster_no_match)
+cat("   Current result (no match):", if(is.null(current_result_no_match)) "NULL" else paste("Rows:", nrow(current_result_no_match)), "\n")
 
 cat("🎯 SUMMARY OF COMPARISON RESULTS\n")
 cat("===============================\n")
