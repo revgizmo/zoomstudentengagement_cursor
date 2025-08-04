@@ -1,0 +1,143 @@
+# Test file for consolidate_transcript segmentation fault analysis
+# This test uses minimal reproducible input and extensive logging
+
+test_that("consolidate_transcript minimal test with logging", {
+  # Skip on CRAN to avoid issues
+  skip_on_cran()
+
+  # Create minimal test data
+  minimal_data <- tibble::tibble(
+    transcript_file = "test.vtt",
+    comment_num = c("1", "2", "3"),
+    name = c("Student1", "Student1", "Student2"),
+    comment = c("Hello", "How are you?", "I'm good"),
+    start = hms::as_hms(c("00:00:00", "00:00:05", "00:00:10")),
+    end = hms::as_hms(c("00:00:03", "00:00:08", "00:00:13")),
+    duration = hms::as_hms(c("00:00:03", "00:00:03", "00:00:03")),
+    wordcount = c(1, 3, 2)
+  )
+
+  message("=== Testing consolidate_transcript with minimal data ===")
+  message("Input data dimensions: ", nrow(minimal_data), " x ", ncol(minimal_data))
+  message("Input data columns: ", paste(names(minimal_data), collapse = ", "))
+
+  # Test with tryCatch and extensive logging
+  result <- tryCatch(
+    {
+      message("Step 1: About to call consolidate_transcript...")
+
+      message("Step 2: Calling consolidate_transcript...")
+
+      # Call the function with correct parameters
+      result <- consolidate_transcript(
+        df = minimal_data,
+        max_pause_sec = 5
+      )
+
+      message("Step 3: consolidate_transcript completed successfully")
+      message("Result dimensions: ", nrow(result), " x ", ncol(result))
+
+      return(result)
+    },
+    error = function(e) {
+      message("ERROR in consolidate_transcript: ", e$message)
+      message("Error call: ", deparse(e$call))
+      print(traceback())
+      return(NULL)
+    },
+    warning = function(w) {
+      message("WARNING in consolidate_transcript: ", w$message)
+      return(NULL)
+    }
+  )
+
+  # Check if we got a result
+  expect_false(is.null(result), "consolidate_transcript should not return NULL")
+
+  if (!is.null(result)) {
+    expect_s3_class(result, "tbl_df")
+    expect_true(nrow(result) > 0, "Result should have at least one row")
+    expect_true(all(c("transcript_file", "name", "comment", "start", "end", "duration", "wordcount") %in% names(result)))
+  }
+})
+
+test_that("consolidate_transcript with rlang::syms debugging", {
+  # Skip on CRAN to avoid issues
+  skip_on_cran()
+
+  # Create minimal test data
+  minimal_data <- tibble::tibble(
+    transcript_file = "test.vtt",
+    comment_num = c("1", "2"),
+    name = c("Student1", "Student1"),
+    comment = c("Hello", "How are you?"),
+    start = hms::as_hms(c("00:00:00", "00:00:05")),
+    end = hms::as_hms(c("00:00:03", "00:00:08")),
+    duration = hms::as_hms(c("00:00:03", "00:00:03")),
+    wordcount = c(1, 3)
+  )
+
+  message("=== Testing consolidate_transcript with rlang::syms debugging ===")
+
+  # Test the rlang::syms part specifically
+  result <- tryCatch(
+    {
+      message("Step 1: Testing rlang::syms with dplyr::group_by...")
+
+      # Test rlang::syms directly
+      group_vars <- c("transcript_file", "comment_num")
+      message("Group vars: ", paste(group_vars, collapse = ", "))
+
+      # Test rlang::syms creation
+      syms_result <- tryCatch(
+        {
+          message("Creating rlang::syms...")
+          rlang::syms(group_vars)
+        },
+        error = function(e) {
+          message("ERROR creating rlang::syms: ", e$message)
+          return(NULL)
+        }
+      )
+
+      if (!is.null(syms_result)) {
+        message("rlang::syms created successfully: ", class(syms_result))
+      }
+
+      # Test dplyr::group_by with rlang::syms
+      grouped_result <- tryCatch(
+        {
+          message("Testing dplyr::group_by with rlang::syms...")
+          minimal_data %>% dplyr::group_by(!!!rlang::syms(group_vars))
+        },
+        error = function(e) {
+          message("ERROR in dplyr::group_by with rlang::syms: ", e$message)
+          return(NULL)
+        }
+      )
+
+      if (!is.null(grouped_result)) {
+        message("dplyr::group_by with rlang::syms completed successfully")
+      }
+
+      # Now test the full function
+      message("Step 2: Testing full consolidate_transcript function...")
+      result <- consolidate_transcript(
+        df = minimal_data,
+        max_pause_sec = 5
+      )
+
+      message("Step 3: Full function completed successfully")
+      return(result)
+    },
+    error = function(e) {
+      message("ERROR in full test: ", e$message)
+      message("Error call: ", deparse(e$call))
+      print(traceback())
+      return(NULL)
+    }
+  )
+
+  # Check if we got a result
+  expect_false(is.null(result), "consolidate_transcript should not return NULL")
+})

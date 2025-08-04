@@ -53,6 +53,7 @@
 #'   recording csvs. Returns NULL if the transcripts folder doesn't exist,
 #'   or an empty tibble with the correct column structure if no matching
 #'   files are found.
+
 #' @export
 #'
 #' @examples
@@ -177,11 +178,16 @@ load_zoom_recorded_sessions_list <-
     result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
 
     # Aggregate using base R
-    aggregated_data <- aggregate(
-      result[, c("Total Views", "Total Downloads", "Last Accessed")],
-      by = list(group_id = result$group_id),
-      FUN = function(x) if (is.character(x)) x[which.max(nchar(x))] else max(x, na.rm = TRUE)
-    )
+    if (nrow(result) > 0) {
+      aggregated_data <- stats::aggregate(
+        result[, c("Total Views", "Total Downloads", "Last Accessed")],
+        by = list(group_id = result$group_id),
+        FUN = function(x) if (is.character(x)) x[which.max(nchar(x))] else max(x, na.rm = TRUE)
+      )
+    } else {
+      # Return empty result if no data
+      return(tibble::tibble())
+    }
 
     # Get the first row from each group for the grouping columns
     group_data <- result[!duplicated(result$group_id), group_cols, drop = FALSE]
@@ -195,29 +201,24 @@ load_zoom_recorded_sessions_list <-
     print("After summarise:")
     print(result)
 
-    result <- result %>%
-      dplyr::mutate(
-        `File Size (MB)` = suppressWarnings(as.numeric(`File Size (MB)`)),
-        `Last Accessed` = as.character(`Last Accessed`)
-      )
+    # Use base R operations instead of dplyr to avoid segmentation fault
+    result$`File Size (MB)` <- suppressWarnings(as.numeric(result$`File Size (MB)`))
+    result$`Last Accessed` <- as.character(result$`Last Accessed`)
 
-    result <-
-      result %>%
-      dplyr::mutate(
-        # General pattern: <dept> <course_section> (e.g., "DATASCI 201.006" or "LTF 101")
-        topic_matches = stringr::str_match(Topic, "^(\\S+)\\s+(\\d+\\.\\d+|\\d+)"),
-        dept = topic_matches[, 2],
-        course_section = topic_matches[, 3]
-      ) %>%
-      dplyr::select(-topic_matches) %>%
-      # Optionally filter by dept if needed
-      {
-        if (!is.null(dept) && !is.na(dept) && dept != "") dplyr::filter(., !is.na(dept) & dept == !!dept) else .
-      } %>%
-      dplyr::mutate(
-        course = suppressWarnings(as.integer(stringr::str_extract(course_section, "^\\d+"))),
-        section = suppressWarnings(as.integer(stringr::str_extract(course_section, "(?<=\\.)\\d+")))
-      )
+    # Parse topic pattern using base R
+    topic_matches <- stringr::str_match(result$Topic, "^(\\S+)\\s+(\\d+\\.\\d+|\\d+)")
+    result$dept <- topic_matches[, 2]
+    result$course_section <- topic_matches[, 3]
+
+    # Filter by dept if needed using base R
+    if (!is.null(dept) && !is.na(dept) && dept != "") {
+      result <- result[!is.na(result$dept) & result$dept == dept, , drop = FALSE]
+    }
+
+    # Extract course and section using base R
+    result$course <- suppressWarnings(as.integer(stringr::str_extract(result$course_section, "^\\d+")))
+    result$section <- suppressWarnings(as.integer(stringr::str_extract(result$course_section, "(?<=\\.)\\d+")))
+
     # Optionally warn if section could not be extracted
     if (any(is.na(result$section))) {
       warning("Some Topic entries did not match the expected pattern and section could not be extracted.")
@@ -231,25 +232,24 @@ load_zoom_recorded_sessions_list <-
     print("Start Time values:")
     print(result$`Start Time`)
 
-    result <- result %>%
-      # dplyr::select(`Start Time`)
-      dplyr::mutate(
-        # Parse date with explicit format to handle Zoom's format
-        match_start_time = lubridate::parse_date_time(
-          `Start Time`,
-          orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y H:M:S", "b d, Y H:M"),
-          tz = "America/Los_Angeles",
-          quiet = TRUE # Suppress warnings for failed parses
-        ),
-        match_end_time = match_start_time + lubridate::hours(scheduled_session_length_hours + 0.5)
-      )
+    # Parse date with explicit format to handle Zoom's format using base R
+    result$match_start_time <- lubridate::parse_date_time(
+      result$`Start Time`,
+      orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y H:M:S", "b d, Y H:M"),
+      tz = "America/Los_Angeles",
+      quiet = TRUE # Suppress warnings for failed parses
+    )
+    # Calculate end time: session length + 0.5 hour buffer
+    session_end_time <- result$match_start_time + lubridate::hours(as.integer(scheduled_session_length_hours)) + lubridate::minutes(as.integer((scheduled_session_length_hours %% 1) * 60))
+    result$match_end_time <- session_end_time + lubridate::minutes(30) # Add 0.5 hour buffer (30 minutes)
 
     # Debug print statements
     print("After date parsing:")
     print(result)
 
-    result <- result %>%
-      dplyr::filter(match_start_time >= lubridate::mdy(semester_start_mdy))
+    # Filter by semester start date using base R
+    semester_start <- lubridate::mdy(semester_start_mdy)
+    result <- result[result$match_start_time >= semester_start, , drop = FALSE]
 
     # Debug print statements
     print("Final result after filtering:")

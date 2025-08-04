@@ -117,7 +117,8 @@ test_that("summarize_transcript_files validates file name matching", {
 
   # Should warn about mismatched filenames but continue processing
   expect_warning(
-    result <- summarize_transcript_files(transcript_file_names = transcript_file_names, data_folder = ".", transcripts_folder = "test_transcripts")
+    result <- summarize_transcript_files(transcript_file_names = transcript_file_names, data_folder = ".", transcripts_folder = "test_transcripts"),
+    "Found.*rows where transcript_file from summarize_transcript_metrics"
   )
 
   # Should still return a valid result

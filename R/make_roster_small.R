@@ -47,12 +47,14 @@ make_roster_small <- function(roster_df) {
     ))
   }
 
-  # Select and return required columns, ensuring character types
-  roster_df %>%
-    dplyr::select("student_id", "first_last", "preferred_name", "dept", "course", "section") %>%
-    dplyr::mutate(
-      student_id = as.character(student_id),
-      course = as.character(course),
-      section = as.character(section)
-    )
+  # Select and return required columns, ensuring character types using base R
+  result <- roster_df[, c("student_id", "first_last", "preferred_name", "dept", "course", "section"), drop = FALSE]
+
+  # Convert columns to character using base R
+  result$student_id <- as.character(result$student_id)
+  result$course <- as.character(result$course)
+  result$section <- as.character(result$section)
+
+  # Convert to tibble to maintain expected return type
+  return(tibble::as_tibble(result))
 }

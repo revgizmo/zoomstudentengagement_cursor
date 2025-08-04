@@ -53,10 +53,31 @@ make_names_to_clean_df <- function(clean_names_df) {
 
   if (tibble::is_tibble(clean_names_df)
   ) {
-    clean_names_df %>%
-      dplyr::group_by(student_id, preferred_name, transcript_name) %>%
-      dplyr::summarise(n = dplyr::n()) %>%
-      dplyr::filter(!is.na(transcript_name)) %>%
-      dplyr::filter(is.na(student_id))
+    # Use base R operations instead of dplyr to avoid segmentation fault
+    # Filter for records with transcript_name but no student_id
+    result <- clean_names_df[!is.na(clean_names_df$transcript_name) & is.na(clean_names_df$student_id), , drop = FALSE]
+
+    # Group by student_id, preferred_name, transcript_name and count occurrences
+    group_cols <- c("student_id", "preferred_name", "transcript_name")
+
+    # Create a unique identifier for each group
+    result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
+
+    # Count occurrences per group
+    group_counts <- table(result$group_id)
+
+    # Get the first row from each group (equivalent to summarise)
+    result <- result[!duplicated(result$group_id), group_cols, drop = FALSE]
+
+    # Add count column (n) - use actual group counts
+    # Create group_id for the deduplicated result
+    result$group_id <- apply(result[, group_cols], 1, paste, collapse = "|")
+    result$n <- as.numeric(group_counts[result$group_id])
+
+    # Remove temporary group_id column
+    result$group_id <- NULL
+
+    # Convert to tibble to maintain expected return type
+    return(tibble::as_tibble(result))
   }
 }

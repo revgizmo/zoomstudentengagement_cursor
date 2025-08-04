@@ -1,0 +1,109 @@
+# Test file for summarize_transcript_metrics segmentation fault analysis
+# This test uses minimal reproducible input and extensive logging
+
+test_that("summarize_transcript_metrics minimal test with logging", {
+  # Skip on CRAN to avoid issues
+  skip_on_cran()
+
+  # Create minimal test data
+  minimal_data <- tibble::tibble(
+    transcript_file = "test.vtt",
+    comment_num = c("1", "2", "3", "4"),
+    name = c("Student1", "Student1", "Student2", "Student2"),
+    comment = c("Hello", "How are you?", "I'm good", "Thanks"),
+    start = hms::as_hms(c("00:00:00", "00:00:05", "00:00:10", "00:00:15")),
+    end = hms::as_hms(c("00:00:03", "00:00:08", "00:00:13", "00:00:18")),
+    duration = c(3, 3, 3, 3), # Use numeric duration instead of hms
+    wordcount = c(1, 3, 2, 1)
+  )
+
+  message("=== Testing summarize_transcript_metrics with minimal data ===")
+  message("Input data dimensions: ", nrow(minimal_data), " x ", ncol(minimal_data))
+  message("Input data columns: ", paste(names(minimal_data), collapse = ", "))
+
+  # Test with tryCatch and extensive logging
+  result <- tryCatch(
+    {
+      message("Step 1: About to call summarize_transcript_metrics...")
+
+      message("Step 2: Calling summarize_transcript_metrics...")
+
+      # Call the function with correct parameters
+      result <- summarize_transcript_metrics(
+        transcript_df = minimal_data,
+        names_exclude = list()
+      )
+
+      message("Step 3: summarize_transcript_metrics completed successfully")
+      message("Result dimensions: ", nrow(result), " x ", ncol(result))
+
+      return(result)
+    },
+    error = function(e) {
+      message("ERROR in summarize_transcript_metrics: ", e$message)
+      message("Error call: ", deparse(e$call))
+      print(traceback())
+      return(NULL)
+    },
+    warning = function(w) {
+      message("WARNING in summarize_transcript_metrics: ", w$message)
+      return(NULL)
+    }
+  )
+
+  # Check if we got a result
+  expect_false(is.null(result), "summarize_transcript_metrics should not return NULL")
+
+  if (!is.null(result)) {
+    expect_s3_class(result, "tbl_df")
+    expect_true(nrow(result) > 0, "Result should have at least one row")
+    expect_true("name" %in% names(result), "Result should have 'name' column")
+  }
+})
+
+test_that("summarize_transcript_metrics with rlang::syms debugging", {
+  # Skip on CRAN to avoid issues
+  skip_on_cran()
+
+  # Create minimal test data
+  minimal_data <- tibble::tibble(
+    transcript_file = "test.vtt",
+    comment_num = c("1", "2"),
+    name = c("Student1", "Student1"),
+    comment = c("Hello", "How are you?"),
+    start = hms::as_hms(c("00:00:00", "00:00:05")),
+    end = hms::as_hms(c("00:00:03", "00:00:08")),
+    duration = c(3, 3), # Use numeric duration instead of hms
+    wordcount = c(1, 3)
+  )
+
+  message("=== Testing summarize_transcript_metrics with rlang::syms debugging ===")
+
+  # Test the function directly without dplyr operations
+  result <- tryCatch(
+    {
+      message("Step 1: Testing summarize_transcript_metrics function...")
+
+      # Test the function directly
+      result <- summarize_transcript_metrics(transcript_df = minimal_data, names_exclude = list())
+
+      message("Step 2: Function completed successfully")
+      return(result)
+    },
+    error = function(e) {
+      message("ERROR in test: ", e$message)
+      message("Error call: ", deparse(e$call))
+      print(traceback())
+      return(NULL)
+    }
+  )
+
+  # Check if we got a result
+  expect_false(is.null(result), "summarize_transcript_metrics should not return NULL")
+
+  if (!is.null(result)) {
+    expect_s3_class(result, "tbl_df")
+    expect_true(nrow(result) > 0, "Result should have at least one row")
+    expect_true("name" %in% names(result), "Result should have 'name' column")
+  }
+})

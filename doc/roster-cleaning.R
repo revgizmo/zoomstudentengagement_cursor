@@ -87,8 +87,10 @@ head(roster_sessions)
 
 ## ----initial-matching---------------------------------------------------------
 # Create clean names dataframe
+# Use a temporary directory since we're working with sample data
+temp_dir <- tempdir()
 clean_names_df <- make_clean_names_df(
-  data_folder = data_folder,
+  data_folder = temp_dir,
   section_names_lookup_file = "section_names_lookup.csv",
   transcripts_metrics_df,
   roster_sessions

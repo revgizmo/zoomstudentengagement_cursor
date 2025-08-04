@@ -31,6 +31,9 @@ library(testthat)
 # }
 
 # Create sample roster data for testing
+#' Create sample roster data for testing
+#' @return A tibble with sample roster data
+#' @keywords internal
 create_sample_roster <- function() {
   tibble::tibble(
     student_id = c("S001", "S002"),
@@ -46,6 +49,9 @@ create_sample_roster <- function() {
 }
 
 # Create sample section names lookup for testing
+#' Create sample section names lookup for testing
+#' @return A tibble with sample section names lookup data
+#' @keywords internal
 create_sample_section_names_lookup <- function() {
   tibble::tibble(
     transcript_name = c("Student1", "Student2", "Professor"),
@@ -61,6 +67,9 @@ create_sample_section_names_lookup <- function() {
 }
 
 # Create sample metrics lookup for testing
+#' Create sample metrics lookup for testing
+#' @return A tibble with sample metrics lookup data
+#' @keywords internal
 create_sample_metrics_lookup <- function() {
   tibble::tibble(
     metric = c("duration", "wordcount", "wpm"),
@@ -73,6 +82,9 @@ create_sample_metrics_lookup <- function() {
 }
 
 # Create sample transcript metrics data for testing
+#' Create sample transcript metrics data for testing
+#' @return A tibble with sample transcript metrics data
+#' @keywords internal
 create_sample_transcript_metrics <- function() {
   tibble::tibble(
     name = c("Student1", "Student2", "Student1"),
@@ -99,6 +111,7 @@ create_sample_transcript_metrics <- function() {
 }
 
 # Helper function to create a temporary test file
+#' @keywords internal
 create_temp_test_file <- function(content, ext = ".txt") {
   temp_file <- tempfile(fileext = ext)
   writeLines(content, temp_file)

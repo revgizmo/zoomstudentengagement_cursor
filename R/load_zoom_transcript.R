@@ -83,53 +83,40 @@ load_zoom_transcript <- function(transcript_file_path) {
     transcript_df$comment[i] <- transcript_vtt$WEBVTT[start_idx + 2]
   }
 
-  # Process the data
-  result <- transcript_df %>%
-    # Use base R strsplit for more efficient name/comment separation
-    dplyr::mutate(
-      # Split comment into name and text more efficiently
-      name_comment_split = strsplit(comment, ": ", fixed = TRUE),
-      name = sapply(name_comment_split, function(x) if (length(x) > 1) x[1] else NA_character_),
-      comment = sapply(name_comment_split, function(x) if (length(x) > 1) paste(x[-1], collapse = ": ") else x[1]),
-      # Split timestamp more efficiently
-      time_split = strsplit(timestamp, " --> ", fixed = TRUE),
-      start = sapply(time_split, function(x) if (length(x) == 2) x[1] else NA_character_),
-      end = sapply(time_split, function(x) if (length(x) == 2) x[2] else NA_character_)
-    ) %>%
-    dplyr::mutate(
-      start = hms::as_hms(start),
-      end = hms::as_hms(end),
-      duration = end - start,
-      wordcount = sapply(comment, function(x) {
-        if (is.na(x) || x == "") {
-          return(0)
-        }
-        length(strsplit(x, " +")[[1]])
-      })
-    ) %>%
-    # Remove temporary columns and select final columns
-    dplyr::select(
-      -name_comment_split,
-      -time_split
-    ) %>%
-    dplyr::select(
-      transcript_file,
-      comment_num,
-      name,
-      comment,
-      start,
-      end,
-      duration,
-      wordcount
-    )
+  # Process the data using base R to avoid segmentation faults
+  # Split comment into name and text more efficiently
+  name_comment_split <- strsplit(transcript_df$comment, ": ", fixed = TRUE)
+  transcript_df$name <- sapply(name_comment_split, function(x) if (length(x) > 1) x[1] else NA_character_)
+  transcript_df$comment <- sapply(name_comment_split, function(x) if (length(x) > 1) paste(x[-1], collapse = ": ") else x[1])
 
-  # Filter out any rows with missing timestamps or comments
-  result <- result %>%
-    dplyr::filter(!is.na(start) & !is.na(end) & !is.na(comment) & comment != "")
+  # Split timestamp more efficiently
+  time_split <- strsplit(transcript_df$timestamp, " --> ", fixed = TRUE)
+  transcript_df$start <- sapply(time_split, function(x) if (length(x) == 2) x[1] else NA_character_)
+  transcript_df$end <- sapply(time_split, function(x) if (length(x) == 2) x[2] else NA_character_)
+
+  # Convert to hms and calculate duration
+  transcript_df$start <- hms::as_hms(transcript_df$start)
+  transcript_df$end <- hms::as_hms(transcript_df$end)
+  transcript_df$duration <- transcript_df$end - transcript_df$start
+
+  # Calculate wordcount
+  transcript_df$wordcount <- sapply(transcript_df$comment, function(x) {
+    if (is.na(x) || x == "") {
+      return(0)
+    }
+    length(strsplit(x, " +")[[1]])
+  })
+
+  # Select final columns using base R
+  result <- transcript_df[, c("transcript_file", "comment_num", "name", "comment", "start", "end", "duration", "wordcount")]
+
+  # Filter out any rows with missing timestamps or comments using base R
+  result <- result[!is.na(result$start) & !is.na(result$end) & !is.na(result$comment) & result$comment != "", , drop = FALSE]
 
   if (nrow(result) == 0) {
     return(NULL)
   }
 
-  result
+  # Convert to tibble to maintain expected return type
+  return(tibble::as_tibble(result))
 }

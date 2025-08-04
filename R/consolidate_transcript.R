@@ -37,12 +37,10 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
     time_flag <- timestamp <- wordcount <- prior_speaker <- transcript_file <- NULL
 
   if (tibble::is_tibble(df)) {
-    # Ensure time columns are of type Period
-    df <- df %>%
-      dplyr::mutate(
-        start = lubridate::as.period(start),
-        end = lubridate::as.period(end)
-      )
+    # Ensure time columns are of type hms (replacing lubridate::period to avoid segfaults)
+    # Use base R operations to avoid dplyr segfaults
+    df$start <- hms::as_hms(df$start)
+    df$end <- hms::as_hms(df$end)
 
     # Check if transcript_file column exists and prepare grouping
     group_vars <- c("comment_num")
@@ -50,30 +48,53 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
       group_vars <- c("transcript_file", "comment_num")
     }
 
-    df %>%
-      dplyr::mutate(
-        prev_end = dplyr::lag(end, order_by = start, default = lubridate::period(0)),
-        prior_dead_air = as.numeric(start - prev_end, "seconds"),
-        prior_speaker = dplyr::lag(name, order_by = start, default = dplyr::first(name))
-      ) %>%
-      dplyr::mutate(
-        name_flag = ((name != prior_speaker) | is.na(name) | is.na(prior_speaker)),
-        time_flag = prior_dead_air > max_pause_sec,
-        comment_num = cumsum(name_flag | time_flag)
-      ) %>%
-      dplyr::group_by(!!!rlang::syms(group_vars)) %>%
-      dplyr::summarize(
-        name = dplyr::first(name),
-        comment = paste(comment, collapse = " "),
-        start = dplyr::first(start),
-        end = dplyr::last(end),
-        .groups = "drop"
-      ) %>%
-      dplyr::mutate(
-        duration = as.numeric(end - start, "seconds"),
-        wordcount = comment %>% sapply(function(x) {
-          strsplit(x, " +")[[1]] %>% length()
-        })
+    # Use base R operations to avoid segmentation faults with dplyr + hms
+    # Sort by start time for lag operations
+    df <- df[order(df$start), ]
+
+    # Calculate lag values using base R
+    df$prev_end <- c(hms::hms(0), df$end[-length(df$end)])
+    df$prior_dead_air <- as.numeric(df$start - df$prev_end)
+    df$prior_speaker <- c(df$name[1], df$name[-length(df$name)])
+
+    # Calculate flags
+    df$name_flag <- ((df$name != df$prior_speaker) | is.na(df$name) | is.na(df$prior_speaker))
+    df$time_flag <- df$prior_dead_air > max_pause_sec
+    df$comment_num <- cumsum(df$name_flag | df$time_flag)
+
+    # Group and summarize using base R - simplified approach
+    # Create a unique identifier for each group
+    df$group_id <- apply(df[, group_vars], 1, paste, collapse = "|")
+
+    # Use split and lapply for aggregation
+    split_data <- split(df, df$group_id)
+
+    result_list <- lapply(split_data, function(group_df) {
+      # Create base result with required columns
+      result_row <- data.frame(
+        name = group_df$name[1],
+        comment = paste(group_df$comment, collapse = " "),
+        start = group_df$start[1],
+        end = group_df$end[nrow(group_df)],
+        stringsAsFactors = FALSE
       )
+
+      # Calculate duration and wordcount
+      result_row$duration <- as.numeric(result_row$end - result_row$start)
+      result_row$wordcount <- sapply(strsplit(result_row$comment, "\\s+"), function(x) length(x[x != ""]))
+
+      # Add transcript_file column if it exists in the input
+      if ("transcript_file" %in% names(group_df)) {
+        result_row$transcript_file <- group_df$transcript_file[1]
+      }
+
+      return(result_row)
+    })
+
+    # Combine results
+    result <- do.call(rbind, result_list)
+
+    # Convert to tibble to maintain expected return type
+    return(tibble::as_tibble(result))
   }
 }

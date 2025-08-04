@@ -91,7 +91,20 @@ tryCatch({
   # Check function signatures against known patterns
   function_signature_issues <- list()
   
+  # Functions to ignore (test helpers, base R functions, etc.)
+  ignore_functions <- c(
+    "create_sample_roster", "create_sample_section_names_lookup", 
+    "create_sample_metrics_lookup", "create_sample_transcript_metrics", 
+    "create_temp_test_file", "library.dynam", "library.dynam.unload", 
+    "system.file"
+  )
+  
   for (func_name in exported_functions) {
+    # Skip functions that should be ignored
+    if (func_name %in% ignore_functions) {
+      next
+    }
+    
     if (is.function(get(func_name, envir = asNamespace("zoomstudentengagement")))) {
       # Check if function has documentation
       help_topic <- tryCatch({
@@ -218,13 +231,9 @@ tryCatch({
 cat("\n7. Testing:\n")
 tryCatch({
   # Run tests with timeout and error handling
-  test_results <- devtools::test()
-  if (test_results$failed == 0) {
-    cat("   ✅ All tests pass\n")
-    validation_status$testing <- TRUE
-  } else {
-    cat("   ❌", test_results$failed, "tests failed\n")
-  }
+  test_results <- devtools::test(reporter = "stop")
+  cat("   ✅ All tests pass\n")
+  validation_status$testing <- TRUE
 }, error = function(e) {
   if (grepl("segfault", e$message, ignore.case = TRUE)) {
     cat("   ❌ Testing failed: Segmentation fault detected\n")

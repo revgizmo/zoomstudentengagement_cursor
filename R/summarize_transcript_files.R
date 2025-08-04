@@ -12,7 +12,7 @@
 #' @return A tibble containing session details and summary metrics by speaker
 #' @export
 #'
-#' @importFrom tidyselect all_of
+
 #' @examples
 #' # Create sample transcript file names
 #' transcript_files <- c(
@@ -82,37 +82,54 @@ summarize_transcript_files <-
       # Store original metadata if preserving
       original_metadata <- NULL
       if (preserve_metadata) {
-        original_metadata <- transcript_file_names %>%
-          dplyr::select(-transcript_file) %>%
-          dplyr::mutate(row_id = dplyr::row_number())
+        # Use base R operations instead of dplyr to avoid segmentation fault
+        original_metadata <- transcript_file_names[, setdiff(names(transcript_file_names), "transcript_file"), drop = FALSE]
+        original_metadata$row_id <- seq_len(nrow(original_metadata))
       }
 
-      result <- transcript_file_names %>%
-        dplyr::rename(file_name = transcript_file) %>%
-        dplyr::mutate(
-          transcript_path = dplyr::if_else(
-            is.na(file_name),
-            NA,
-            paste0(transcripts_folder_path, "/", file_name)
-          ),
-          summarize_transcript_metrics = purrr::map2(
-            transcript_path,
-            list(c(names_exclude = names_to_exclude)),
-            summarize_transcript_metrics
-          )
-        ) %>%
-        tidyr::unnest(cols = c(summarize_transcript_metrics)) %>%
-        dplyr::mutate(
-          name_raw = name,
-          name = stringr::str_trim(name)
-        ) %>%
-        dplyr::mutate(
-          # Check if transcript_file from summarize_transcript_metrics matches file_name
-          transcript_file_match = transcript_file == file_name
-        ) %>%
-        {
-          # Check for mismatches and warn/error
-          mismatches <- dplyr::filter(., !transcript_file_match)
+      # Use base R operations instead of dplyr to avoid segmentation fault
+      result <- transcript_file_names
+
+      # Rename transcript_file to file_name
+      names(result)[names(result) == "transcript_file"] <- "file_name"
+
+      # Add transcript_path using base R
+      result$transcript_path <- ifelse(
+        is.na(result$file_name),
+        NA_character_,
+        paste0(transcripts_folder_path, "/", result$file_name)
+      )
+
+      # Process each transcript file using base R
+      all_results <- list()
+      for (i in seq_len(nrow(result))) {
+        transcript_path <- result$transcript_path[i]
+        names_exclude <- names_to_exclude
+
+        # Call summarize_transcript_metrics for each file
+        metrics_result <- summarize_transcript_metrics(transcript_path, names_exclude = names_exclude)
+
+        if (!is.null(metrics_result) && nrow(metrics_result) > 0) {
+          # Add file metadata to each row
+          metrics_result$file_name <- result$file_name[i]
+          metrics_result$transcript_path <- transcript_path
+          all_results[[i]] <- metrics_result
+        }
+      }
+
+      # Combine all results
+      if (length(all_results) > 0) {
+        result <- do.call(rbind, all_results)
+
+        # Add name_raw and trim name using base R
+        result$name_raw <- result$name
+        result$name <- stringr::str_trim(result$name)
+
+        # Check for mismatches using base R
+        if ("transcript_file" %in% names(result)) {
+          result$transcript_file_match <- result$transcript_file == result$file_name
+          mismatches <- result[!result$transcript_file_match, , drop = FALSE]
+
           if (nrow(mismatches) > 0) {
             warning(paste(
               "Found", nrow(mismatches), "rows where transcript_file from summarize_transcript_metrics",
@@ -120,26 +137,47 @@ summarize_transcript_files <-
             ))
             print(mismatches[, c("file_name", "transcript_file")])
           }
-          .
-        } %>%
-        {
-          # Only remove columns if they exist
-          cols_to_remove <- c("transcript_file_match")
-          if ("transcript_file" %in% names(.)) {
-            cols_to_remove <- c(cols_to_remove, "transcript_file")
-          }
-          dplyr::select(., -all_of(cols_to_remove))
-        } %>%
-        dplyr::rename(transcript_file = file_name)
 
-      # Restore original metadata if preserving
-      if (preserve_metadata && !is.null(original_metadata)) {
-        result <- result %>%
-          dplyr::mutate(row_id = dplyr::row_number()) %>%
-          dplyr::left_join(original_metadata, by = "row_id") %>%
-          dplyr::select(-row_id)
+          # Remove transcript_file column if it exists
+          result$transcript_file <- NULL
+        }
+
+        # Remove transcript_file_match column
+        result$transcript_file_match <- NULL
+
+        # Rename file_name back to transcript_file
+        names(result)[names(result) == "file_name"] <- "transcript_file"
+
+        # Restore original metadata if preserving
+        if (preserve_metadata && !is.null(original_metadata)) {
+          # Add row_id to result
+          result$row_id <- seq_len(nrow(result))
+
+          # Merge with original metadata using base R
+          result <- merge(result, original_metadata, by = "row_id", all.x = TRUE)
+
+          # Remove row_id column
+          result$row_id <- NULL
+        }
+
+        # Convert to tibble to maintain expected return type
+        return(tibble::as_tibble(result))
+      } else {
+        # Return empty tibble with expected columns
+        return(tibble::tibble(
+          name = character(),
+          n = numeric(),
+          duration = numeric(),
+          wordcount = numeric(),
+          comments = list(),
+          n_perc = numeric(),
+          duration_perc = numeric(),
+          wordcount_perc = numeric(),
+          wpm = numeric(),
+          transcript_file = character(),
+          transcript_path = character(),
+          name_raw = character()
+        ))
       }
-
-      result
     }
   }

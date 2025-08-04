@@ -5,8 +5,8 @@ test_that("process_zoom_transcript handles basic transcript processing", {
     comment_num = 1:3,
     name = c("Student1", "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
-    start = lubridate::period(c(0, 5, 10), "seconds"),
-    end = lubridate::period(c(3, 8, 13), "seconds"),
+    start = hms::as_hms(c("00:00:00", "00:00:05", "00:00:10")),
+    end = hms::as_hms(c("00:00:03", "00:00:08", "00:00:13")),
     duration = c(3, 3, 3)
   )
 
@@ -30,8 +30,8 @@ test_that("process_zoom_transcript consolidates comments correctly", {
     comment_num = 1:3,
     name = c("Student1", "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
-    start = lubridate::period(c(0, 5, 10), "seconds"),
-    end = lubridate::period(c(3, 8, 13), "seconds"),
+    start = hms::as_hms(c("00:00:00", "00:00:05", "00:00:10")),
+    end = hms::as_hms(c("00:00:03", "00:00:08", "00:00:13")),
     duration = c(3, 3, 3)
   )
 
@@ -54,8 +54,8 @@ test_that("process_zoom_transcript adds dead air correctly", {
     comment_num = 1:3,
     name = c("Student1", "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
-    start = lubridate::period(c(0, 5, 10), "seconds"),
-    end = lubridate::period(c(3, 8, 13), "seconds"),
+    start = hms::as_hms(c("00:00:00", "00:00:05", "00:00:10")),
+    end = hms::as_hms(c("00:00:03", "00:00:08", "00:00:13")),
     duration = c(3, 3, 3)
   )
 
@@ -77,8 +77,8 @@ test_that("process_zoom_transcript handles NA names correctly", {
     comment_num = 1:3,
     name = c(NA, "Student2", "Student1"),
     comment = c("Hello", "Hi there", "How are you?"),
-    start = lubridate::period(c(0, 5, 10), "seconds"),
-    end = lubridate::period(c(3, 8, 13), "seconds"),
+    start = hms::as_hms(c("00:00:00", "00:00:05", "00:00:10")),
+    end = hms::as_hms(c("00:00:03", "00:00:08", "00:00:13")),
     duration = c(3, 3, 3)
   )
 
@@ -101,8 +101,8 @@ test_that("process_zoom_transcript handles empty input gracefully", {
     comment_num = integer(),
     name = character(),
     comment = character(),
-    start = lubridate::period(),
-    end = lubridate::period(),
+    start = hms::hms(),
+    end = hms::hms(),
     duration = numeric()
   )
 

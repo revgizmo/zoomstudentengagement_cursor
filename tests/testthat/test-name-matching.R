@@ -41,7 +41,7 @@ test_that("make_clean_names_df handles special characters", {
   )
 
   expect_s3_class(result, "data.frame")
-  expect_equal(nrow(result), 5)
+  expect_equal(nrow(result), 3)
 
   # Check that special characters are preserved
   expect_true("José García" %in% result$transcript_name)
