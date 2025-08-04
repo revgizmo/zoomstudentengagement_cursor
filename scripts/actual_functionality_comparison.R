@@ -790,6 +790,67 @@ tryCatch({
   cat("   ✅ Current base R version works - this is the goal\n\n")
 })
 
+# Test 10: make_roster_small
+cat("10. Testing make_roster_small comparison...\n")
+
+# Create sample roster data
+test_data <- tibble::tibble(
+  student_id = c("12345", "67890", "11111"),
+  first_last = c("John Smith", "Jane Doe", "Bob Wilson"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson"),
+  dept = c("CS", "CS", "CS"),
+  course = c(101, 101, 101),
+  section = c("A", "B", "A"),
+  extra_col = c("extra1", "extra2", "extra3")  # Extra column to test selection
+)
+
+# Current base R version
+current_result <- make_roster_small(test_data)
+
+# Original dplyr version (from git history)
+original_make_roster_small <- function(roster_df) {
+  # Defensive: check for valid input type
+  if (!tibble::is_tibble(roster_df)) {
+    stop("roster_df must be a tibble")
+  }
+
+  # Defensive: check for required columns
+  required_cols <- c("student_id", "first_last", "preferred_name", "dept", "course", "section")
+  missing_cols <- setdiff(required_cols, names(roster_df))
+  if (length(missing_cols) > 0) {
+    stop("roster_df must contain columns: ", paste(missing_cols, collapse = ", "))
+  }
+
+  # Handle empty input
+  if (nrow(roster_df) == 0) {
+    return(tibble::tibble(
+      student_id = character(),
+      first_last = character(),
+      preferred_name = character(),
+      dept = character(),
+      course = character(),
+      section = character()
+    ))
+  }
+
+  # Select and return required columns, ensuring character types
+  roster_df %>%
+    dplyr::select("student_id", "first_last", "preferred_name", "dept", "course", "section") %>%
+    dplyr::mutate(
+      student_id = as.character(student_id),
+      course = as.character(course),
+      section = as.character(section)
+    )
+}
+
+tryCatch({
+  original_result <- original_make_roster_small(test_data)
+  compare_dataframes(original_result, current_result, "make_roster_small")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
 cat("🎯 SUMMARY OF COMPARISON RESULTS\n")
 cat("===============================\n")
 cat("Note: Many original dplyr versions may fail due to the very segfault issues\n")
