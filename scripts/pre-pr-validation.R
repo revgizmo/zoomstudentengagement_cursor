@@ -269,13 +269,32 @@ tryCatch({
         # Check if this line is inside a TESTTHAT conditional
         in_testthat_block <- FALSE
         
-        # Look backwards for TESTTHAT check
+        # Look backwards for TESTTHAT check with proper scope detection
+        brace_count <- 0
         for (j in i:1) {
-          if (grepl("if\\s*\\(\\s*Sys\\.getenv\\(\"TESTTHAT\"\\)\\s*!=\\s*\"true\"\\s*\\)", content[j])) {
-            in_testthat_block <- TRUE
+          line_content <- content[j]
+          
+          # Count closing braces
+          if (grepl("^\\s*}", line_content)) {
+            brace_count <- brace_count + 1
+          }
+          
+          # Count opening braces
+          if (grepl("\\{\\s*$", line_content)) {
+            brace_count <- brace_count - 1
+          }
+          
+          # Check for TESTTHAT conditional
+          if (grepl("if\\s*\\(\\s*Sys\\.getenv\\(\"TESTTHAT\"\\)\\s*!=\\s*\"true\"\\s*\\)", line_content)) {
+            # If we're at brace level 0 or 1, we're in the TESTTHAT block
+            if (brace_count <= 1) {
+              in_testthat_block <- TRUE
+            }
             break
           }
-          if (grepl("^\\s*}", content[j]) && !grepl("if\\s*\\(", content[j])) {
+          
+          # If we've gone too far back without finding the conditional, stop
+          if (j < max(1, i - 50)) {
             break
           }
         }
