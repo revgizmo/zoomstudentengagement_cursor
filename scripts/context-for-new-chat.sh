@@ -24,16 +24,68 @@ echo "🎯 PROJECT STATUS SUMMARY"
 echo "------------------------"
 echo "Package: zoomstudentengagement (R package for Zoom transcript analysis)"
 echo "Goal: CRAN submission preparation"
-echo "Current Status: EXCELLENT - Very Close to CRAN Ready"
+
+# Dynamic status check - read from PROJECT.md if available
+if [ -f "PROJECT.md" ]; then
+    STATUS_LINE=$(grep -E "^Package Status:" PROJECT.md | head -1)
+    if [ -n "$STATUS_LINE" ]; then
+        echo "$STATUS_LINE"
+    else
+        echo "Current Status: Status unknown - check PROJECT.md"
+    fi
+else
+    echo "Current Status: PROJECT.md not found"
+fi
 echo ""
 
-# 2. Key Metrics
+# 2. Key Metrics (Dynamic)
 echo "📈 KEY METRICS"
 echo "-------------"
-echo "Test Status: 0 failures, 453 tests passing"
-echo "R CMD Check: 0 errors, 0 warnings, 3 notes"
-echo "Test Coverage: 83.41% (target: 90%)"
-echo "Exported Functions: 33"
+
+# Get test status dynamically
+echo "🔍 Checking test status..."
+TEST_OUTPUT=$(Rscript -e "devtools::test()" 2>/dev/null | grep -E "FAIL|WARN|SKIP|PASS" | tail -1 || echo "Test status unavailable")
+# Extract numbers from the test output
+FAIL_COUNT=$(echo "$TEST_OUTPUT" | grep -o "FAIL [0-9]*" | grep -o "[0-9]*" || echo "0")
+WARN_COUNT=$(echo "$TEST_OUTPUT" | grep -o "WARN [0-9]*" | grep -o "[0-9]*" || echo "0")
+SKIP_COUNT=$(echo "$TEST_OUTPUT" | grep -o "SKIP [0-9]*" | grep -o "[0-9]*" || echo "0")
+PASS_COUNT=$(echo "$TEST_OUTPUT" | grep -o "PASS [0-9]*" | grep -o "[0-9]*" || echo "0")
+
+if [ "$FAIL_COUNT" = "0" ] && [ "$WARN_COUNT" = "0" ]; then
+    echo "Test Status: PASSING ($PASS_COUNT tests, $SKIP_COUNT skipped)"
+else
+    echo "Test Status: FAILING ($FAIL_COUNT failures, $WARN_COUNT warnings, $PASS_COUNT passed, $SKIP_COUNT skipped)"
+fi
+
+# Get R CMD check status dynamically
+echo "🔍 Checking R CMD check status..."
+# Run check with timeout to avoid hanging
+CHECK_OUTPUT=$(timeout 30s Rscript -e "devtools::check()" 2>&1 || echo "Check timed out")
+ERROR_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "ERROR" || echo "0")
+WARNING_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "WARNING" || echo "0")
+NOTE_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "NOTE" || echo "0")
+
+if [ "$CHECK_OUTPUT" = "Check timed out" ]; then
+    echo "R CMD Check: Timed out (run manually with devtools::check())"
+elif [ "$ERROR_COUNT" = "0" ] && [ "$WARNING_COUNT" = "0" ] && [ "$NOTE_COUNT" = "0" ]; then
+    echo "R CMD Check: 0 errors, 0 warnings, 0 notes"
+else
+    echo "R CMD Check: $ERROR_COUNT errors, $WARNING_COUNT warnings, $NOTE_COUNT notes"
+fi
+
+# Get test coverage dynamically
+echo "🔍 Checking test coverage..."
+COVERAGE_OUTPUT=$(Rscript -e "if(require(covr, quietly=TRUE)) { cov <- covr::package_coverage(); cat(round(attr(cov, \"coverage\"), 2)) } else { cat('N/A') }" 2>/dev/null || echo "N/A")
+if [ "$COVERAGE_OUTPUT" = "N/A" ]; then
+    echo "Test Coverage: N/A (covr not available)"
+else
+    echo "Test Coverage: $COVERAGE_OUTPUT% (target: 90%)"
+fi
+
+# Get exported functions count dynamically
+echo "🔍 Counting exported functions..."
+FUNCTION_COUNT=$(grep -c "^export(" NAMESPACE 2>/dev/null || echo "0")
+echo "Exported Functions: $FUNCTION_COUNT"
 echo ""
 
 # 3. Critical Issues (High Priority)
@@ -65,15 +117,32 @@ echo "• CRAN_CHECKLIST.md - CRAN submission checklist"
 echo "• docs/development/AUDIT_LOG.md - Recent audit results"
 echo ""
 
-# 7. Current Development Focus
+# 7. Current Development Focus (Dynamic based on current issues)
 echo "🎯 CURRENT DEVELOPMENT FOCUS"
 echo "---------------------------"
-echo "1. Test Coverage Improvement (83.41% → 90%)"
-echo "2. Test Warnings Cleanup (29 warnings)"
-echo "3. R CMD Check Notes Resolution (3 notes)"
-echo "4. Real-world Testing with Confidential Data"
-echo "5. FERPA/Security Compliance Review"
-echo "6. Ethical Use and Equitable Participation Review"
+# Get current high priority issues to determine focus
+HIGH_PRIORITY_COUNT=$(gh issue list --label "priority:high" --json number | jq length 2>/dev/null || echo "0")
+CRAN_ISSUES_COUNT=$(gh issue list --label "CRAN:submission" --json number | jq length 2>/dev/null || echo "0")
+
+if [ "$HIGH_PRIORITY_COUNT" -gt 0 ]; then
+    echo "1. High Priority Issues ($HIGH_PRIORITY_COUNT issues)"
+fi
+if [ "$CRAN_ISSUES_COUNT" -gt 0 ]; then
+    echo "2. CRAN Submission Blockers ($CRAN_ISSUES_COUNT issues)"
+fi
+
+# Check if test coverage needs improvement
+if [ "$COVERAGE_OUTPUT" != "N/A" ] && [ -n "$COVERAGE_OUTPUT" ] && [ "$COVERAGE_OUTPUT" -lt 90 ] 2>/dev/null; then
+    echo "3. Test Coverage Improvement ($COVERAGE_OUTPUT% → 90%)"
+fi
+
+# Check if there are R CMD check issues
+if [ -n "$ERROR_COUNT" ] && [ "$ERROR_COUNT" -gt 0 ] 2>/dev/null || [ -n "$WARNING_COUNT" ] && [ "$WARNING_COUNT" -gt 0 ] 2>/dev/null || [ -n "$NOTE_COUNT" ] && [ "$NOTE_COUNT" -gt 0 ] 2>/dev/null; then
+    echo "4. R CMD Check Issues ($ERROR_COUNT errors, $WARNING_COUNT warnings, $NOTE_COUNT notes)"
+fi
+
+echo "5. Documentation and Testing"
+echo "6. Real-world Testing"
 echo ""
 
 # 8. Quick Commands for Context
@@ -94,10 +163,10 @@ echo ""
 # 9. Project Structure
 echo "📂 PROJECT STRUCTURE"
 echo "-------------------"
-echo "R/ - Core functions (33 exported)"
-echo "tests/ - Test suite (30+ test files)"
-echo "man/ - Documentation (auto-generated)"
-echo "vignettes/ - Usage examples"
+echo "R/ - Core functions ($FUNCTION_COUNT exported)"
+echo "tests/ - Test suite ($(find tests/testthat -name "*.R" | wc -l | tr -d ' ') test files)"
+echo "man/ - Documentation ($(find man -name "*.Rd" | wc -l | tr -d ' ') files)"
+echo "vignettes/ - Usage examples ($(find vignettes -name "*.Rmd" | wc -l | tr -d ' ') files)"
 echo "inst/extdata/ - Sample data"
 echo "docs/ - Development documentation"
 echo "scripts/ - Development utilities"
@@ -115,25 +184,53 @@ echo "6. Create PR: gh pr create --title 'fix: Address #XX'"
 echo "7. Merge with admin: gh pr merge --admin"
 echo ""
 
-# 11. CRAN Readiness Status
+# 11. CRAN Readiness Status (Dynamic)
 echo "📦 CRAN READINESS STATUS"
 echo "----------------------"
-echo "✅ Test Suite: PASSING (0 failures)"
-echo "✅ R CMD Check: PASSING (0 errors, 0 warnings)"
-echo "⚠️  Test Coverage: 83.41% (need 90%)"
-echo "⚠️  R CMD Notes: 3 minor notes"
-echo "⚠️  Test Warnings: 29 warnings"
+if [ "$TEST_OUTPUT" = *"FAIL 0"* ]; then
+    echo "✅ Test Suite: PASSING (0 failures)"
+else
+    echo "❌ Test Suite: FAILING"
+fi
+
+if [ "$ERROR_COUNT" = "0" ] && [ "$WARNING_COUNT" = "0" ]; then
+    echo "✅ R CMD Check: PASSING (0 errors, 0 warnings)"
+else
+    echo "❌ R CMD Check: FAILING ($ERROR_COUNT errors, $WARNING_COUNT warnings)"
+fi
+
+if [ "$COVERAGE_OUTPUT" != "N/A" ]; then
+    if [ -n "$COVERAGE_OUTPUT" ] && [ "$COVERAGE_OUTPUT" -ge 90 ] 2>/dev/null; then
+        echo "✅ Test Coverage: $COVERAGE_OUTPUT% (target achieved)"
+    else
+        echo "⚠️  Test Coverage: $COVERAGE_OUTPUT% (need 90%)"
+    fi
+else
+    echo "⚠️  Test Coverage: Unable to check"
+fi
+
+if [ -n "$NOTE_COUNT" ] && [ "$NOTE_COUNT" -gt 0 ] 2>/dev/null; then
+    echo "⚠️  R CMD Notes: $NOTE_COUNT minor notes"
+fi
 echo ""
 
-# 12. Next Steps
+# 12. Next Steps (Dynamic based on current status)
 echo "🎯 IMMEDIATE NEXT STEPS"
 echo "---------------------"
-echo "1. Address test warnings (Issue #68)"
-echo "2. Improve test coverage to 90% (Issue #20)"
-echo "3. Resolve R CMD check notes (Issue #77)"
-echo "4. Complete real-world testing (Issue #83)"
-echo "5. Review FERPA compliance (Issue #84)"
-echo "6. Review ethical use guidelines (Issue #85)"
+if [ -n "$ERROR_COUNT" ] && [ "$ERROR_COUNT" -gt 0 ] 2>/dev/null || [ -n "$WARNING_COUNT" ] && [ "$WARNING_COUNT" -gt 0 ] 2>/dev/null; then
+    echo "1. Fix R CMD check errors/warnings"
+fi
+if [ "$COVERAGE_OUTPUT" != "N/A" ] && [ -n "$COVERAGE_OUTPUT" ] && [ "$COVERAGE_OUTPUT" -lt 90 ] 2>/dev/null; then
+    echo "2. Improve test coverage to 90% (currently $COVERAGE_OUTPUT%)"
+fi
+if [ -n "$HIGH_PRIORITY_COUNT" ] && [ "$HIGH_PRIORITY_COUNT" -gt 0 ] 2>/dev/null; then
+    echo "3. Address high priority issues ($HIGH_PRIORITY_COUNT issues)"
+fi
+if [ -n "$CRAN_ISSUES_COUNT" ] && [ "$CRAN_ISSUES_COUNT" -gt 0 ] 2>/dev/null; then
+    echo "4. Resolve CRAN submission blockers ($CRAN_ISSUES_COUNT issues)"
+fi
+echo "5. Update documentation and examples"
+echo "6. Complete real-world testing"
 echo ""
 
 echo "=================================================="
