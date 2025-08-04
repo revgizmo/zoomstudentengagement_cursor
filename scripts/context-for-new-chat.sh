@@ -9,8 +9,8 @@ set -e
 echo "🔍 Generating context for zoomstudentengagement R Package..."
 echo "=================================================="
 
-# Get current date and git status
-CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
+# Get current date and git status (use UTC for consistency with GitHub)
+CURRENT_DATE=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
 GIT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
 GIT_STATUS=$(git status --porcelain | wc -l | tr -d ' ')
 
@@ -51,7 +51,7 @@ echo ""
 # 5. Recent Activity
 echo "🕒 RECENT ACTIVITY (Last 5 Issues)"
 echo "--------------------------------"
-gh issue list --limit 5 --json number,title,state,updatedAt --jq '.[] | "#\(.number): \(.title) (\(.state)) - \(.updatedAt | fromdateiso8601 | strftime("%Y-%m-%d"))"' 2>/dev/null || echo "Unable to fetch recent issues"
+gh issue list --limit 5 --json number,title,state,createdAt --jq '.[] | "#\(.number): \(.title) (\(.state)) - \(.createdAt | fromdateiso8601 | strftime("%Y-%m-%d"))"' 2>/dev/null || echo "Unable to fetch recent issues"
 echo ""
 
 # 6. Essential Files to Review
