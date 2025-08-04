@@ -69,8 +69,11 @@ tryCatch({
 cat("\n3. Vignette Validation:\n")
 tryCatch({
   # Check if vignettes build
+  # Note: devtools::build_vignettes() will generate HTML files in doc/
+  # Source files (.Rmd, .R) are properly located in vignettes/
   devtools::build_vignettes()
   cat("   ✅ Vignettes build successfully\n")
+  cat("   ℹ️  Generated HTML files in doc/ (auto-ignored by .gitignore)\n")
   validation_status$vignettes <- TRUE
 }, error = function(e) {
   cat("   ❌ Vignette build failed:", e$message, "\n")

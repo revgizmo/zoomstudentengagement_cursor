@@ -67,6 +67,7 @@ devtools::build()                    # Create distributable package
 - [ ] Vignettes are up to date
 - [ ] All links work correctly
 - [ ] Installation instructions are clear
+- [ ] `.gitignore` updated with `/doc/` by `devtools::build_vignettes()` (expected behavior)
 
 ### Testing
 
