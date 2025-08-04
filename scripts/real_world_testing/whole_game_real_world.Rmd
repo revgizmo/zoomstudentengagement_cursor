@@ -23,6 +23,7 @@ library(ggplot2)
 library(readr)
 library(tibble)
 library(lubridate)
+library(jsonlite)
 ```
 
 # Whole Game: Real-World Workflow for Instructors
@@ -503,19 +504,19 @@ if (!dir.exists("outputs")) {
 
 # Save the clean metrics
 if (exists("clean_metrics")) {
-  write.csv(clean_metrics, "outputs/clean_engagement_metrics.csv", row.names = FALSE)
+  write_engagement_metrics(clean_metrics, "outputs/clean_engagement_metrics.csv", comments_format = "text")
   cat("Saved: outputs/clean_engagement_metrics.csv\n")
 }
 
 # Save the student summary
 if (exists("student_summary")) {
-  write.csv(student_summary, "outputs/student_participation_summary.csv", row.names = FALSE)
+  write_engagement_metrics(student_summary, "outputs/student_participation_summary.csv")
   cat("Saved: outputs/student_participation_summary.csv\n")
 }
 
 # Save the name mappings
 if (exists("custom_mappings")) {
-  write.csv(custom_mappings, "outputs/name_mappings.csv", row.names = FALSE)
+  write_engagement_metrics(custom_mappings, "outputs/name_mappings.csv")
   cat("Saved: outputs/name_mappings.csv\n")
 }
 

@@ -33,6 +33,9 @@
 #' @param na_name Character string to label the `name` column in any rows where
 #'   the transcript `name` is `NA`. Defaults to 'unknown'.
 #' @param transcript_df Tibble containing the comments from a Zoom recording transcript (which is generally the result of calling `process_zoom_transcript()`.
+#' @param comments_format Character string specifying how to format the comments column.
+#'   Options: "list" (default, preserves list structure), "text" (semicolon-separated text),
+#'   or "count" (just the number of comments). Defaults to "list".
 #'
 #' @return A tibble containing summary metrics by speaker from a Zoom recording
 #'   transcript
@@ -52,7 +55,8 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
                                          add_dead_air = TRUE,
                                          dead_air_name = "dead_air",
                                          na_name = "unknown",
-                                         transcript_df = NULL) {
+                                         transcript_df = NULL,
+                                         comments_format = c("list", "text", "count")) {
   . <-
     begin <-
     comment_num <-
@@ -66,6 +70,7 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
   add_dead_air_ <- add_dead_air
   dead_air_name_ <- dead_air_name
   na_name_ <- na_name
+  comments_format <- match.arg(comments_format)
 
 
   if (file.exists(transcript_file_path)) {
