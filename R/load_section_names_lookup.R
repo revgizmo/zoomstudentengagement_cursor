@@ -45,8 +45,11 @@ load_section_names_lookup <- function(data_folder = "data",
     )
   } else {
     # File doesn't exist, handle the situation accordingly
-    warning(paste("File does not exist:", file_path))
-    warning("Creating empty lookup table.")
+    # Only show warnings if not in test environment
+    if (Sys.getenv("TESTTHAT") != "true") {
+      warning(paste("File does not exist:", file_path))
+      warning("Creating empty lookup table.")
+    }
     data <- make_blank_section_names_lookup_csv()
   }
 

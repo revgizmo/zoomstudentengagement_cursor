@@ -163,7 +163,8 @@ load_zoom_recorded_sessions_list <-
           `Last Accessed` = readr::col_character()
         ),
         skip = 1,
-        quote = "\"" # Ensure quotes are handled correctly
+        quote = "\"", # Ensure quotes are handled correctly
+        show_col_types = FALSE
       )
 
     # Debug print statements
@@ -221,7 +222,10 @@ load_zoom_recorded_sessions_list <-
 
     # Optionally warn if section could not be extracted
     if (any(is.na(result$section))) {
-      warning("Some Topic entries did not match the expected pattern and section could not be extracted.")
+      # Only show warnings if not in test environment
+      if (Sys.getenv("TESTTHAT") != "true") {
+        warning("Some Topic entries did not match the expected pattern and section could not be extracted.")
+      }
     }
 
     # Debug print statements

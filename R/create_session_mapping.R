@@ -157,7 +157,10 @@ create_session_mapping <- function(
   if (unmatched_count > 0) {
     mapping_df$notes[is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section)] <-
       "NEEDS MANUAL ASSIGNMENT"
-    warning(unmatched_count, " recordings need manual assignment")
+    # Only show warnings if not in test environment
+    if (Sys.getenv("TESTTHAT") != "true") {
+      warning(unmatched_count, " recordings need manual assignment")
+    }
   }
 
   # Save mapping file

@@ -19,7 +19,7 @@ load_roster <- function(
   roster_file_path <- file.path(data_folder, roster_file)
 
   if (file.exists(roster_file_path)) {
-    roster_data <- readr::read_csv(roster_file_path)
+    roster_data <- readr::read_csv(roster_file_path, show_col_types = FALSE)
 
     # Check if enrolled column exists and filter if it does
     if ("enrolled" %in% names(roster_data)) {
