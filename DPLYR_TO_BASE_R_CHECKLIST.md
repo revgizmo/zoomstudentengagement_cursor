@@ -269,36 +269,52 @@ This document provides a systematic review of all functions that were converted 
 
 ---
 
-## 🧪 **Additional Testing Results**
+## 🧪 **Actual Comparison Testing Results**
 
-### **Manual Function Testing (Completed)**
-All functions that required additional verification have been manually tested with sample data:
+### **Critical Finding: Some Functions Have Output Differences**
 
-1. **`make_transcripts_summary_df`** - ✅ **VERIFIED**
-   - Tested with sample data containing section, preferred_name, n, duration, wordcount
-   - Produces correct 3-row output with proper aggregations
-   - All calculations (wpm, percentages) working correctly
+**⚠️ IMPORTANT**: The initial "comprehensive functionality test" was flawed - it only tested if functions run without errors, not if they produce identical outputs to the original dplyr versions.
 
-2. **`make_transcripts_session_summary_df`** - ✅ **VERIFIED**
-   - Tested with sample transcript data
-   - Produces correct 2-row output
-   - Session-level aggregations working properly
+### **Actual Comparison Results (Using Original vs New Code)**
 
-3. **`make_students_only_transcripts_summary_df`** - ✅ **VERIFIED**
-   - Tested with sample data including preferred_name column
-   - Correctly filters out excluded names (dead_air, Instructor Name, etc.)
-   - Produces correct 3-row output after filtering
+#### **✅ Functions with Perfect Matches**
+1. **`make_names_to_clean_df`** - ✅ **PERFECT MATCH**
+   - All comparisons passed
+   - Identical row count, column count, and values
+   - Base R version produces exact same output as dplyr version
 
-4. **`make_student_roster_sessions`** - ✅ **VERIFIED**
-   - Tested with sample transcripts_list and roster_small data
-   - Correctly joins roster and transcript data
-   - Produces correct 4-row output (2 students × 2 sessions)
+#### **❌ Functions with Output Differences**
+1. **`add_dead_air_rows`** - ❌ **ROW COUNT MISMATCH**
+   - Original dplyr version: 3 rows
+   - New base R version: 4 rows
+   - **Issue**: Base R version creates extra dead air row
+   - **Status**: Needs investigation and fix
 
-### **End-to-End Testing**
-- Package loads successfully: ✅
-- All functions accessible: ✅
-- Sample data processing works: ✅
-- No runtime errors: ✅
+2. **`mask_user_names_by_metric`** - ❌ **COLUMN COUNT MISMATCH**
+   - Original dplyr version: 2 columns
+   - New base R version: 5 columns
+   - **Issue**: Base R version adds extra columns (`metric_col`, `student`, `row_num`)
+   - **Status**: Needs investigation and fix
+
+#### **⚠️ Functions with Original Failures**
+1. **`consolidate_transcript`** - ⚠️ **ORIGINAL FAILS (EXPECTED)**
+   - Original dplyr version fails due to lubridate::period segfault
+   - New base R version works correctly
+   - **Status**: This is the intended behavior (conversion was necessary)
+
+### **Validation Status Summary**
+- **Functions Tested**: 4
+- **Perfect Matches**: 1 (25%)
+- **Output Differences**: 2 (50%)
+- **Original Failures**: 1 (25%)
+
+### **Critical Conclusion**
+**The dplyr to base R conversion is NOT complete.** Some functions produce different outputs, which means:
+- Functionality may be lost or changed
+- Package behavior may be different
+- Users may get unexpected results
+
+**Recommendation**: Comprehensive validation of all 17 converted functions is required before CRAN submission.
 
 ---
 
