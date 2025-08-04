@@ -96,8 +96,10 @@ example_test_results.rds
 # Auto-generated documentation files
 doc/*.html
 doc/*.pdf
-# But keep doc/ directory structure
+# But keep doc/ directory structure and source files
 !doc/.gitkeep
+!doc/*.R
+!doc/*.Rmd
 
 # Package build artifacts
 /Meta/
