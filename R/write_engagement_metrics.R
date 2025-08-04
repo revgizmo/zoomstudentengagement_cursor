@@ -21,43 +21,49 @@
 #' write_engagement_metrics(metrics, "engagement_metrics.csv")
 write_engagement_metrics <- function(metrics_data, file_path, comments_format = c("text", "count")) {
   comments_format <- match.arg(comments_format)
-  
+
   # Create a copy for processing
   export_data <- metrics_data
-  
+
   # Handle comments column if it exists and is a list
   if ("comments" %in% names(export_data) && is.list(export_data$comments)) {
     if (comments_format == "text") {
       # Convert to semicolon-separated text
       export_data$comments <- sapply(export_data$comments, function(x) {
-        if (is.null(x) || length(x) == 0) return("")
+        if (is.null(x) || length(x) == 0) {
+          return("")
+        }
         paste(unlist(x), collapse = "; ")
       })
     } else if (comments_format == "count") {
       # Convert to count of comments
       export_data$comments <- sapply(export_data$comments, function(x) {
-        if (is.null(x)) return(0)
+        if (is.null(x)) {
+          return(0)
+        }
         length(unlist(x))
       })
     }
   }
-  
+
   # Check for any other list columns and convert them to JSON strings
   list_columns <- sapply(export_data, is.list)
   if (any(list_columns)) {
     list_col_names <- names(export_data)[list_columns]
     warning("Converting list columns to JSON strings: ", paste(list_col_names, collapse = ", "))
-    
+
     for (col in list_col_names) {
       export_data[[col]] <- sapply(export_data[[col]], function(x) {
-        if (is.null(x) || length(x) == 0) return("")
+        if (is.null(x) || length(x) == 0) {
+          return("")
+        }
         jsonlite::toJSON(x, auto_unbox = TRUE)
       })
     }
   }
-  
+
   # Write to CSV
-  write.csv(export_data, file_path, row.names = FALSE)
-  
+  utils::write.csv(export_data, file_path, row.names = FALSE)
+
   invisible(export_data)
-} 
+}

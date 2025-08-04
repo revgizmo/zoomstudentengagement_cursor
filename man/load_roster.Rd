@@ -21,5 +21,11 @@ This function creates a tibble from a provided csv file of students enrolled
 in the class or classes
 }
 \examples{
-load_roster()
+\dontrun{
+# Load roster from default location
+roster <- load_roster()
+
+# Load roster from custom location
+roster <- load_roster(data_folder = "my_data", roster_file = "students.csv")
+}
 }
