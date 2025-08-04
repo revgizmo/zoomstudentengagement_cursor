@@ -1,0 +1,568 @@
+---
+title: "Whole Game: Real-World Workflow for Instructors"
+author: "zoomstudentengagement package"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 6,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+```{r load-packages}
+library(zoomstudentengagement)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tibble)
+library(lubridate)
+library(jsonlite)
+```
+
+# Whole Game: Real-World Workflow for Instructors
+
+This document demonstrates the complete workflow for analyzing student engagement in Zoom sessions using your actual data. It's designed to work with the real-world testing environment.
+
+## Prerequisites
+
+Before starting this workflow:
+
+1. **Run the setup script**: `./setup.sh`
+2. **Add your data files**:
+   - Put Zoom transcript files (`.transcript.vtt`) in `data/transcripts/`
+   - Put your roster file (`roster.csv`) in `data/metadata/`
+   - Put Zoom recordings list (`zoomus_recordings__*.csv`) in `data/metadata/`
+   
+   **Note**: The package processes `.transcript.vtt` files for engagement analysis. 
+   `.cc.vtt` (closed captions) and `.txt` (chat) files are not processed.
+
+## Step 1: Understanding Your Data
+
+First, let's explore what data you have available:
+
+```{r explore-data}
+# Check what transcript files are available
+transcript_files <- list.files(
+  "data/transcripts",
+  pattern = "\\.transcript\\.vtt$",
+  full.names = TRUE,
+  recursive = TRUE
+)
+
+cat("Available transcript files (.transcript.vtt):\n")
+basename(transcript_files)
+
+# Also check for other file types (for reference)
+cc_files <- list.files(
+  "data/transcripts",
+  pattern = "\\.cc\\.vtt$",
+  full.names = FALSE,
+  recursive = TRUE
+)
+
+chat_files <- list.files(
+  "data/transcripts",
+  pattern = "\\.txt$",
+  full.names = FALSE,
+  recursive = TRUE
+)
+
+cat("\nOther file types found:\n")
+if (length(cc_files) > 0) {
+  cat("- Closed caption files (.cc.vtt):", paste(cc_files, collapse = ", "), "\n")
+}
+if (length(chat_files) > 0) {
+  cat("- Chat files (.txt):", paste(chat_files, collapse = ", "), "\n")
+}
+cat("\nNote: Only .transcript.vtt files are processed for engagement analysis.\n")
+
+# Check what metadata files are available
+cat("\nAvailable metadata files:\n")
+list.files("data/metadata")
+
+# Check for specific file types
+roster_files <- list.files("data/metadata", pattern = "roster\\.csv$", full.names = TRUE)
+zoom_files <- list.files("data/metadata", pattern = "zoomus_recordings__.*\\.csv$", full.names = TRUE)
+
+cat("\nRoster files found:", length(roster_files), "\n")
+cat("Zoom recordings files found:", length(zoom_files), "\n")
+```
+
+## Step 2: Loading Your Student Roster
+
+Start by loading your student roster:
+
+```{r load-roster}
+# Load the student roster
+roster_file <- "roster.csv"
+roster_path <- file.path("data/metadata", roster_file)
+
+if (file.exists(roster_path)) {
+  tryCatch({
+    roster <- load_roster(data_folder = "data/metadata", roster_file = roster_file)
+    
+    # View the roster structure
+    head(roster)
+    cat("\nRoster dimensions:", nrow(roster), "students\n")
+    cat("Roster columns:", paste(names(roster), collapse = ", "), "\n")
+  }, error = function(e) {
+    cat("⚠️  Error loading roster:", e$message, "\n")
+    cat("Please check that your roster.csv file is properly formatted\n")
+  })
+} else {
+  cat("⚠️  Roster file not found at:", roster_path, "\n")
+  cat("Please add your roster.csv file to data/metadata/\n")
+}
+```
+
+## Step 3: Loading and Processing Transcript Files
+
+Now let's load and process your Zoom transcripts:
+
+```{r load-transcripts}
+# Find a transcript file to work with
+transcript_files <- list.files(
+  "data/transcripts",
+  pattern = "\\.transcript\\.vtt$",
+  full.names = TRUE,
+  recursive = TRUE
+)
+
+if (length(transcript_files) > 0) {
+  # Use the first transcript file
+  transcript_file <- transcript_files[1]
+  cat("Processing transcript:", basename(transcript_file), "\n")
+  
+  # Load and process the transcript
+  transcript_data <- load_zoom_transcript(transcript_file)
+  
+  # View the structure
+  head(transcript_data)
+  cat("\nTranscript dimensions:", nrow(transcript_data), "utterances\n")
+  cat("Transcript columns:", paste(names(transcript_data), collapse = ", "), "\n")
+} else {
+  cat("⚠️  No transcript files found in data/transcripts/\n")
+  cat("Please add your Zoom transcript files to data/transcripts/\n")
+}
+```
+
+## Step 4: Processing Multiple Sessions
+
+If you have multiple sessions, you can process them all at once:
+
+```{r process-multiple}
+# Get all transcript files
+transcript_files <- list.files(
+  "data/transcripts",
+  pattern = "\\.transcript\\.vtt$",
+  full.names = TRUE,
+  recursive = TRUE
+)
+
+if (length(transcript_files) > 1) {
+  cat("Processing", length(transcript_files), "transcript files...\n")
+  
+  # Process all transcripts
+  all_transcripts <- lapply(transcript_files, function(file) {
+    cat("Processing:", basename(file), "\n")
+    tryCatch({
+      load_zoom_transcript(file)
+    }, error = function(e) {
+      cat("Error processing", basename(file), ":", e$message, "\n")
+      NULL
+    })
+  })
+  
+  # Remove any failed transcript loads
+  all_transcripts <- all_transcripts[!sapply(all_transcripts, is.null)]
+  
+  if (length(all_transcripts) > 0) {
+    # Combine all transcripts
+    combined_transcripts <- dplyr::bind_rows(all_transcripts, .id = "session")
+    
+    cat("\nCombined data dimensions:", nrow(combined_transcripts), "utterances\n")
+    cat("Sessions processed:", length(all_transcripts), "\n")
+  } else {
+    cat("⚠️  No transcripts were successfully processed\n")
+  }
+} else {
+  cat("Only one transcript file found. Skipping batch processing.\n")
+}
+```
+
+## Step 5: Calculating Engagement Metrics
+
+Now let's calculate engagement metrics for each student:
+
+```{r calculate-metrics}
+# Calculate metrics for all transcript files
+transcript_files <- list.files(
+  "data/transcripts",
+  pattern = "\\.transcript\\.vtt$",
+  full.names = FALSE,
+  recursive = TRUE
+)
+
+if (length(transcript_files) > 0) {
+  cat("Calculating metrics for", length(transcript_files), "transcript files...\n")
+  
+  metrics <- summarize_transcript_files(
+    transcript_file_names = transcript_files,
+    data_folder = "data",
+    transcripts_folder = "transcripts",
+    names_to_exclude = c("dead_air", "Unknown")
+  )
+  
+  # View the metrics
+  head(metrics)
+  cat("\nMetrics dimensions:", nrow(metrics), "participants\n")
+  cat("Metrics columns:", paste(names(metrics), collapse = ", "), "\n")
+} else {
+  cat("⚠️  No transcript files found for metrics calculation\n")
+}
+```
+
+## Step 6: Matching Student Names
+
+This is often the most challenging part - matching Zoom names to your roster:
+
+```{r name-matching}
+if (exists("metrics") && nrow(metrics) > 0 && exists("roster")) {
+  # Get names from transcripts
+  transcript_names <- unique(metrics$name)
+  cat("Names in transcripts:\n")
+  print(transcript_names)
+  
+  # Get names from roster
+  roster_names <- unique(roster$preferred_name)
+  cat("\nNames in roster:\n")
+  print(roster_names)
+  
+  # Find exact matches
+  exact_matches <- intersect(transcript_names, roster_names)
+  cat("\nExact matches found:", length(exact_matches), "\n")
+  print(exact_matches)
+  
+  # Find unmatched names
+  unmatched_transcript <- setdiff(transcript_names, roster_names)
+  unmatched_roster <- setdiff(roster_names, transcript_names)
+  
+  cat("\nNames in transcripts but not in roster:\n")
+  print(unmatched_transcript)
+  
+  cat("\nNames in roster but not in transcripts:\n")
+  print(unmatched_roster)
+} else {
+  cat("⚠️  Cannot perform name matching - missing metrics or roster data\n")
+}
+```
+
+## Step 7: Creating Name Mappings
+
+For names that don't match exactly, you'll need to create mappings:
+
+```{r create-mappings}
+if (exists("metrics") && nrow(metrics) > 0) {
+  # Create a template for name mappings
+  transcript_names <- unique(metrics$name)
+  
+  # Create initial mapping (exact matches)
+  name_mapping <- data.frame(
+    name_to_clean = transcript_names,
+    clean_name = transcript_names,  # Start with exact matches
+    notes = "",
+    stringsAsFactors = FALSE
+  )
+  
+  # If roster exists, update with exact matches
+  if (exists("roster")) {
+    roster_names <- unique(roster$preferred_name)
+    exact_matches <- intersect(transcript_names, roster_names)
+    
+    name_mapping$clean_name[match(exact_matches, name_mapping$name_to_clean)] <- exact_matches
+    name_mapping$notes[match(exact_matches, name_mapping$name_to_clean)] <- "Exact match"
+  }
+  
+  # Show mapping template
+  cat("Name mapping template (edit manually as needed):\n")
+  print(name_mapping)
+  
+  # Save mapping template
+  write.csv(name_mapping, "name_mappings_template.csv", row.names = FALSE)
+  cat("\nName mapping template saved to: name_mappings_template.csv\n")
+  cat("Edit this file manually to add your name mappings, then reload it.\n")
+} else {
+  cat("⚠️  Cannot create name mappings - missing metrics data\n")
+}
+```
+
+## Step 8: Loading Custom Name Mappings
+
+If you've created custom name mappings, load them here:
+
+```{r load-mappings}
+# Check if custom mappings exist
+mapping_file <- "name_mappings_template.csv"
+
+if (file.exists(mapping_file)) {
+  custom_mappings <- read.csv(mapping_file, stringsAsFactors = FALSE)
+  cat("Loaded custom name mappings:\n")
+  print(custom_mappings)
+  
+  # Apply mappings to metrics
+  if (exists("metrics") && nrow(metrics) > 0) {
+    clean_metrics <- metrics %>%
+      left_join(custom_mappings, by = c("name" = "name_to_clean")) %>%
+      mutate(
+        student_name = coalesce(clean_name, name),
+        is_matched = !is.na(clean_name) & clean_name != name
+      )
+    
+    # Summary of matching success
+    matching_summary <- clean_metrics %>%
+      group_by(is_matched) %>%
+      summarise(
+        count = n(),
+        percentage = n() / nrow(clean_metrics) * 100
+      )
+    
+    cat("\nName matching summary:\n")
+    print(matching_summary)
+  }
+} else {
+  cat("No custom name mappings found. Using original names.\n")
+  if (exists("metrics")) {
+    clean_metrics <- metrics %>%
+      mutate(
+        student_name = name,
+        is_matched = FALSE
+      )
+  }
+}
+```
+
+## Step 9: Analyzing Participation Patterns
+
+Now let's analyze participation patterns to understand engagement:
+
+```{r analyze-patterns}
+if (exists("clean_metrics") && nrow(clean_metrics) > 0) {
+  # Create a summary by student
+  student_summary <- clean_metrics %>%
+    group_by(student_name) %>%
+    summarise(
+      total_utterances = sum(n, na.rm = TRUE),
+      total_duration = sum(duration, na.rm = TRUE),
+      total_words = sum(wordcount, na.rm = TRUE),
+      avg_words_per_minute = mean(wpm, na.rm = TRUE),
+      participation_rate = total_utterances / nrow(clean_metrics) * 100
+    ) %>%
+    arrange(desc(total_utterances))
+  
+  # View the summary
+  head(student_summary, 10)
+  
+  # Basic statistics
+  cat("\nParticipation Statistics:\n")
+  participation_stats <- student_summary %>%
+    summarise(
+      mean_utterances = mean(total_utterances, na.rm = TRUE),
+      median_utterances = median(total_utterances, na.rm = TRUE),
+      sd_utterances = sd(total_utterances, na.rm = TRUE),
+      min_utterances = min(total_utterances, na.rm = TRUE),
+      max_utterances = max(total_utterances, na.rm = TRUE)
+    )
+  print(participation_stats)
+} else {
+  cat("⚠️  Cannot analyze participation patterns - missing clean metrics data\n")
+}
+```
+
+## Step 10: Visualizing Participation
+
+Create visualizations to understand participation patterns:
+
+```{r visualize-participation}
+if (exists("student_summary") && nrow(student_summary) > 0) {
+  # Plot participation by utterance count
+  p1 <- ggplot(student_summary, aes(x = reorder(student_name, total_utterances), y = total_utterances)) +
+    geom_bar(stat = "identity", fill = "steelblue") +
+    coord_flip() +
+    labs(
+      title = "Student Participation by Utterance Count",
+      x = "Student Name",
+      y = "Number of Utterances"
+    ) +
+    theme_minimal()
+  
+  print(p1)
+  
+  # Plot participation by duration
+  p2 <- ggplot(student_summary, aes(x = reorder(student_name, total_duration), y = total_duration / 60)) +
+    geom_bar(stat = "identity", fill = "darkgreen") +
+    coord_flip() +
+    labs(
+      title = "Student Participation by Speaking Time",
+      x = "Student Name",
+      y = "Speaking Time (minutes)"
+    ) +
+    theme_minimal()
+  
+  print(p2)
+  
+  # Save plots
+  ggsave("participation_by_utterances.png", p1, width = 10, height = 8)
+  ggsave("participation_by_duration.png", p2, width = 10, height = 8)
+  
+  cat("Plots saved as:\n")
+  cat("- participation_by_utterances.png\n")
+  cat("- participation_by_duration.png\n")
+} else {
+  cat("⚠️  Cannot create visualizations - missing student summary data\n")
+}
+```
+
+## Step 11: Identifying Participation Gaps
+
+Look for students who might need encouragement to participate:
+
+```{r identify-gaps}
+if (exists("student_summary") && nrow(student_summary) > 0) {
+  # Identify students with low participation
+  median_utterances <- median(student_summary$total_utterances, na.rm = TRUE)
+  low_participation <- student_summary %>%
+    filter(total_utterances < median_utterances) %>%
+    arrange(total_utterances)
+  
+  cat("Students with below-median participation:\n")
+  print(low_participation[, c("student_name", "total_utterances", "total_duration")])
+  
+  # Create participation categories
+  participation_categories <- student_summary %>%
+    mutate(
+      participation_level = case_when(
+        total_utterances >= quantile(total_utterances, 0.75, na.rm = TRUE) ~ "High",
+        total_utterances >= quantile(total_utterances, 0.25, na.rm = TRUE) ~ "Medium",
+        TRUE ~ "Low"
+      )
+    )
+  
+  # Summary by participation level
+  level_summary <- participation_categories %>%
+    group_by(participation_level) %>%
+    summarise(
+      count = n(),
+      percentage = n() / nrow(participation_categories) * 100
+    )
+  
+  cat("\nParticipation Level Distribution:\n")
+  print(level_summary)
+} else {
+  cat("⚠️  Cannot identify participation gaps - missing student summary data\n")
+}
+```
+
+## Step 12: Creating Actionable Insights
+
+Generate insights that can help improve equitable participation:
+
+```{r actionable-insights}
+cat("=== RECOMMENDATIONS FOR EQUITABLE PARTICIPATION ===\n")
+cat("1. Students with low participation may benefit from:\n")
+cat("   - Direct invitations to contribute\n")
+cat("   - Smaller group discussions\n")
+cat("   - Alternative participation methods (chat, polls)\n\n")
+
+cat("2. Consider implementing:\n")
+cat("   - Structured discussion protocols\n")
+cat("   - Think-pair-share activities\n")
+cat("   - Anonymous participation options\n\n")
+
+cat("3. Monitor participation patterns over time to:\n")
+cat("   - Track improvement in engagement\n")
+cat("   - Identify effective interventions\n")
+cat("   - Ensure all students feel included\n\n")
+
+if (exists("student_summary") && nrow(student_summary) > 0) {
+  cat("4. Specific recommendations for your class:\n")
+  cat("   - Total students analyzed:", nrow(student_summary), "\n")
+  cat("   - Average utterances per student:", round(mean(student_summary$total_utterances, na.rm = TRUE), 1), "\n")
+  cat("   - Students with below-average participation:", sum(student_summary$total_utterances < mean(student_summary$total_utterances, na.rm = TRUE)), "\n")
+}
+```
+
+## Step 13: Saving Your Analysis
+
+Save your processed data for future reference:
+
+```{r save-analysis}
+# Create output directory
+if (!dir.exists("outputs")) {
+  dir.create("outputs")
+}
+
+# Save the clean metrics
+if (exists("clean_metrics")) {
+  write_engagement_metrics(clean_metrics, "outputs/clean_engagement_metrics.csv", comments_format = "text")
+  cat("Saved: outputs/clean_engagement_metrics.csv\n")
+}
+
+# Save the student summary
+if (exists("student_summary")) {
+  write_engagement_metrics(student_summary, "outputs/student_participation_summary.csv")
+  cat("Saved: outputs/student_participation_summary.csv\n")
+}
+
+# Save the name mappings
+if (exists("custom_mappings")) {
+  write_engagement_metrics(custom_mappings, "outputs/name_mappings.csv")
+  cat("Saved: outputs/name_mappings.csv\n")
+}
+
+cat("\nAnalysis files saved to outputs/ directory\n")
+```
+
+## Best Practices and Tips
+
+### Data Organization
+- Keep your transcript files organized by date/session
+- Maintain a consistent naming convention
+- Back up your original data files
+- Document any manual name mappings
+
+### Ethical Considerations
+- Use this data to promote equitable participation, not surveillance
+- Focus on group patterns rather than individual performance
+- Respect student privacy and preferences
+- Share insights constructively with students when appropriate
+
+### Common Pitfalls to Avoid
+- Don't assume low participation means disengagement
+- Consider cultural and personal communication preferences
+- Remember that quality of participation matters more than quantity
+- Avoid making assumptions about student abilities based on participation
+
+### Interpreting Results
+- Look for patterns, not individual judgments
+- Consider context (class size, format, topic)
+- Use data to inform teaching strategies, not student evaluation
+- Focus on creating inclusive learning environments
+
+## Next Steps
+
+This analysis provides a foundation for understanding participation patterns. Consider:
+
+1. **Regular monitoring**: Track participation patterns over the semester
+2. **Intervention strategies**: Implement targeted approaches for low-participation students
+3. **Student feedback**: Ask students about their participation preferences
+4. **Pedagogical adjustments**: Modify teaching strategies based on insights
+5. **Continuous improvement**: Refine your analysis approach over time
+
+Remember: The goal is to create an inclusive learning environment where all students feel comfortable and encouraged to participate in ways that work for them. 

@@ -78,18 +78,21 @@ check_test_data() {
     fi
     
     # Check if transcript files exist
-    if [[ ! -f "data/transcripts/GMT20240124-202901_Recording.transcript.vtt" ]]; then
-        print_error "Test transcript file not found."
+    transcript_count=$(find data/transcripts -name "*.vtt" -o -name "*.txt" -o -name "*.csv" 2>/dev/null | wc -l)
+    if [[ $transcript_count -eq 0 ]]; then
+        print_error "No transcript files found in data/transcripts/"
+        print_error "Please add Zoom transcript files (.vtt, .txt, .csv) to data/transcripts/"
         exit 1
     fi
     
     # Check if roster file exists
     if [[ ! -f "data/metadata/roster.csv" ]]; then
-        print_error "Test roster file not found."
+        print_error "Roster file not found: data/metadata/roster.csv"
+        print_error "Please add your roster.csv file to data/metadata/"
         exit 1
     fi
     
-    print_success "Test data check passed"
+    print_success "Test data check passed ($transcript_count transcript files found)"
 }
 
 # Run the tests

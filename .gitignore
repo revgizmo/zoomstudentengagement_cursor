@@ -104,3 +104,6 @@ example_test_results.rds
 # Package build artifacts
 /Meta/
 zoom_real_world_testing/
+
+# IDE files
+.vscode/

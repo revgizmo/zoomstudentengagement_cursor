@@ -63,3 +63,12 @@
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+
+# IDE and development files
+^\.vscode/
+^.*/\.gitkeep$
+
+# Real-world testing data (not part of package)
+^zoom_real_world_testing/
+
+

@@ -12,7 +12,13 @@
 #' @export
 #'
 #' @examples
-#' load_roster()
+#' \dontrun{
+#' # Load roster from default location
+#' roster <- load_roster()
+#'
+#' # Load roster from custom location
+#' roster <- load_roster(data_folder = "my_data", roster_file = "students.csv")
+#' }
 load_roster <- function(
     data_folder = "data",
     roster_file = "roster.csv") {
@@ -30,6 +36,7 @@ load_roster <- function(
       return(tibble::as_tibble(roster_data))
     }
   } else {
+    # Return empty tibble with expected structure when file doesn't exist
     return(tibble::tibble())
   }
 }

@@ -12,7 +12,8 @@ summarize_transcript_metrics(
   add_dead_air = TRUE,
   dead_air_name = "dead_air",
   na_name = "unknown",
-  transcript_df = NULL
+  transcript_df = NULL,
+  comments_format = c("list", "text", "count")
 )
 }
 \arguments{
@@ -46,6 +47,10 @@ added for dead air. Defaults to 'dead_air'.}
 the transcript `name` is `NA`. Defaults to 'unknown'.}
 
 \item{transcript_df}{Tibble containing the comments from a Zoom recording transcript (which is generally the result of calling `process_zoom_transcript()`.}
+
+\item{comments_format}{Character string specifying how to format the comments column.
+Options: "list" (default, preserves list structure), "text" (semicolon-separated text),
+or "count" (just the number of comments). Defaults to "list".}
 }
 \value{
 A tibble containing summary metrics by speaker from a Zoom recording
