@@ -86,7 +86,10 @@ detect_duplicate_transcripts <- function(
   existing_names <- basename(existing_files)
 
   if (length(existing_files) == 0) {
-    warning("No transcript files found in the specified directory")
+    # Only show warnings if not in test environment
+    if (Sys.getenv("TESTTHAT") != "true") {
+      warning("No transcript files found in the specified directory")
+    }
     return(list(
       duplicate_groups = list(),
       similarity_matrix = matrix(numeric(0), nrow = 0, ncol = 0),

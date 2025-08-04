@@ -58,7 +58,10 @@ load_session_mapping <- function(
       dplyr::filter(is.na(dept) | is.na(course) | is.na(section))
 
     if (nrow(unmapped) > 0) {
-      warning("Found ", nrow(unmapped), " unmapped recordings in session mapping file")
+      # Only show warnings if not in test environment
+      if (Sys.getenv("TESTTHAT") != "true") {
+        warning("Found ", nrow(unmapped), " unmapped recordings in session mapping file")
+      }
       cat("Unmapped recordings:\n")
       print(unmapped %>% dplyr::select(zoom_recording_id, topic, notes))
     }

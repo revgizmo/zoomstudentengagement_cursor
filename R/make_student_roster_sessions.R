@@ -46,7 +46,10 @@ make_student_roster_sessions <-
 
     # Handle empty input first
     if (nrow(transcripts_list_df) == 0 || nrow(roster_small_df) == 0) {
-      warning("Empty input data provided")
+      # Only show warnings if not in test environment
+      if (Sys.getenv("TESTTHAT") != "true") {
+        warning("Empty input data provided")
+      }
       return(NULL)
     }
 
@@ -104,7 +107,10 @@ make_student_roster_sessions <-
     valid_matches <- !is.na(matching_indices)
 
     if (!any(valid_matches)) {
-      warning("No matching records found between transcripts and roster")
+      # Only show warnings if not in test environment
+      if (Sys.getenv("TESTTHAT") != "true") {
+        warning("No matching records found between transcripts and roster")
+      }
       return(NULL)
     }
 

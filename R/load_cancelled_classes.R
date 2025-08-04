@@ -30,7 +30,8 @@ load_cancelled_classes <-
     if (file.exists(cancelled_classes_file_path)) {
       # File exists, proceed with importing it
       data <- readr::read_csv(cancelled_classes_file_path,
-        col_types = cancelled_classes_col_types
+        col_types = cancelled_classes_col_types,
+        show_col_types = FALSE
       )
     } else {
       # File doesn't exist, handle the situation accordingly

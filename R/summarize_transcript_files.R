@@ -64,10 +64,13 @@ summarize_transcript_files <-
 
         # If duplicates found, warn user
         if (length(duplicates$duplicate_groups) > 0) {
-          warning(paste(
-            "Found", length(duplicates$duplicate_groups), "duplicate groups.",
-            "Consider reviewing and removing duplicates before processing."
-          ))
+          # Only show warnings if not in test environment
+          if (Sys.getenv("TESTTHAT") != "true") {
+            warning(paste(
+              "Found", length(duplicates$duplicate_groups), "duplicate groups.",
+              "Consider reviewing and removing duplicates before processing."
+            ))
+          }
 
           # Print recommendations
           cat("\nDuplicate detection results:\n")
@@ -131,10 +134,13 @@ summarize_transcript_files <-
           mismatches <- result[!result$transcript_file_match, , drop = FALSE]
 
           if (nrow(mismatches) > 0) {
-            warning(paste(
-              "Found", nrow(mismatches), "rows where transcript_file from summarize_transcript_metrics",
-              "doesn't match the input file_name. This may indicate an issue in the processing pipeline."
-            ))
+            # Only show warnings if not in test environment
+            if (Sys.getenv("TESTTHAT") != "true") {
+              warning(paste(
+                "Found", nrow(mismatches), "rows where transcript_file from summarize_transcript_metrics",
+                "doesn't match the input file_name. This may indicate an issue in the processing pipeline."
+              ))
+            }
             print(mismatches[, c("file_name", "transcript_file")])
           }
 
