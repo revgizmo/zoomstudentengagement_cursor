@@ -70,15 +70,15 @@ summarize_transcript_files <-
               "Found", length(duplicates$duplicate_groups), "duplicate groups.",
               "Consider reviewing and removing duplicates before processing."
             ))
-          }
 
-          # Print recommendations
-          cat("\nDuplicate detection results:\n")
-          cat("============================\n")
-          for (i in seq_along(duplicates$recommendations)) {
-            cat(paste("Group", i, ":", duplicates$recommendations[i], "\n"))
+            # Print recommendations
+            cat("\nDuplicate detection results:\n")
+            cat("============================\n")
+            for (i in seq_along(duplicates$recommendations)) {
+              cat(paste("Group", i, ":", duplicates$recommendations[i], "\n"))
+            }
+            cat("\n")
           }
-          cat("\n")
         }
       }
 
@@ -140,8 +140,8 @@ summarize_transcript_files <-
                 "Found", nrow(mismatches), "rows where transcript_file from summarize_transcript_metrics",
                 "doesn't match the input file_name. This may indicate an issue in the processing pipeline."
               ))
+              print(mismatches[, c("file_name", "transcript_file")])
             }
-            print(mismatches[, c("file_name", "transcript_file")])
           }
 
           # Remove transcript_file column if it exists
