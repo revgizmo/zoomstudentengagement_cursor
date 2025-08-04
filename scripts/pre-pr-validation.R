@@ -19,7 +19,8 @@ validation_status <- list(
   function_signatures = FALSE,
   data_validation = FALSE,
   testing = FALSE,
-  package_check = FALSE
+  package_check = FALSE,
+  test_output_validation = FALSE
 )
 
 # 1. Code Style and Quality
@@ -249,6 +250,62 @@ tryCatch({
   cat("   ⚠️  Test warning:", w$message, "\n")
 })
 
+# 7.5. Test Output Validation
+cat("\n7.5. Test Output Validation:\n")
+tryCatch({
+  # Check for diagnostic output pollution in R files
+  r_files <- list.files("R", pattern = "\\.R$", full.names = TRUE)
+  output_issues <- list()
+  
+  for (r_file in r_files) {
+    content <- readLines(r_file)
+    
+    # Look for print(), cat(), message() outside of TESTTHAT checks
+    for (i in seq_along(content)) {
+      line <- content[i]
+      
+      # Check for output functions
+      if (grepl("\\b(print|cat|message)\\s*\\(", line)) {
+        # Check if this line is inside a TESTTHAT conditional
+        in_testthat_block <- FALSE
+        
+        # Look backwards for TESTTHAT check
+        for (j in i:1) {
+          if (grepl("if\\s*\\(\\s*Sys\\.getenv\\(\"TESTTHAT\"\\)\\s*!=\\s*\"true\"\\s*\\)", content[j])) {
+            in_testthat_block <- TRUE
+            break
+          }
+          if (grepl("^\\s*}", content[j]) && !grepl("if\\s*\\(", content[j])) {
+            break
+          }
+        }
+        
+        if (!in_testthat_block) {
+          output_issues[[basename(r_file)]] <- c(output_issues[[basename(r_file)]], 
+                                                paste("Line", i, ":", trimws(line)))
+        }
+      }
+    }
+  }
+  
+  if (length(output_issues) > 0) {
+    cat("   ⚠️  Found diagnostic output not conditional on test environment:\n")
+    for (file in names(output_issues)) {
+      cat("      ", file, ":\n")
+      for (issue in output_issues[[file]]) {
+        cat("         ", issue, "\n")
+      }
+    }
+    cat("   💡 Wrap print(), cat(), message() in if (Sys.getenv(\"TESTTHAT\") != \"true\")\n")
+  } else {
+    cat("   ✅ All diagnostic output properly conditional\n")
+  }
+  
+  validation_status$test_output_validation <- TRUE
+}, error = function(e) {
+  cat("   ❌ Test output validation failed:", e$message, "\n")
+})
+
 # 8. Package Check
 cat("\n8. Package Check:\n")
 tryCatch({
@@ -272,6 +329,7 @@ cat(ifelse(validation_status$vignettes, "✅", "❌"), "Vignettes: All build suc
 cat(ifelse(validation_status$function_signatures, "✅", "❌"), "Function Signatures: Validated\n")
 cat(ifelse(validation_status$data_validation, "✅", "❌"), "Data Validation: Completed\n")
 cat(ifelse(validation_status$testing, "✅", "❌"), "Testing: All tests pass\n")
+cat(ifelse(validation_status$test_output_validation, "✅", "❌"), "Test Output: Clean and minimal\n")
 cat(ifelse(validation_status$package_check, "✅", "❌"), "Package Check: Completed\n\n")
 
 # Count issues
