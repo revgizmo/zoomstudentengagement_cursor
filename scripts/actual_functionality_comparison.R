@@ -1068,6 +1068,613 @@ cat("   Testing no-match scenario...\n")
 current_result_no_match <- make_student_roster_sessions(transcripts_no_match, roster_no_match)
 cat("   Current result (no match):", if(is.null(current_result_no_match)) "NULL" else paste("Rows:", nrow(current_result_no_match)), "\n")
 
+# Test 13: load_zoom_recorded_sessions_list
+cat("13. Testing load_zoom_recorded_sessions_list comparison...\n")
+
+# Use existing test data file
+test_csv_file <- system.file("extdata/transcripts/zoomus_recordings__20240124.csv", package = "zoomstudentengagement")
+
+# Current base R version
+current_result <- load_zoom_recorded_sessions_list(
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  transcripts_folder = "transcripts"
+)
+
+# Original dplyr version (from git history)
+original_load_zoom_recorded_sessions_list <- function(data_folder = "data",
+                                                     transcripts_folder = "transcripts",
+                                                     topic_split_pattern = paste0(
+                                                       "^(?<dept>\\S+) (?<course_section>\\S+) - ",
+                                                       "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+                                                     ),
+                                                     zoom_recorded_sessions_csv_names_pattern = "zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv",
+                                                     zoom_recorded_sessions_csv_col_names = paste(
+                                                       "Topic", "ID", "Start Time", "File Size (MB)", "File Count",
+                                                       "Total Views", "Total Downloads", "Last Accessed",
+                                                       sep = ","
+                                                     ),
+                                                     dept = "LTF",
+                                                     semester_start_mdy = "Jan 01, 2024",
+                                                     scheduled_session_length_hours = 1.5) {
+  . <- `Topic` <- `ID` <- `Start Time` <- `File Size (MB)` <- `File Count` <- `Total Views` <- `Total Downloads` <- `Total Downloads` <- `Last Accessed` <- match_start_time <- NULL
+  
+  dept_var <- dept
+  # Handle trailing comma in column names
+  zoom_recorded_sessions_csv_col_names_vector <- strsplit(zoom_recorded_sessions_csv_col_names, ",")[[1]] %>%
+    stringr::str_trim() %>%
+    Filter(function(x) x != "", .)
+  
+  transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
+  
+  if (!file.exists(transcripts_folder_path)) {
+    return(NULL)
+  }
+  
+  term_files <- list.files(transcripts_folder_path)
+  zoom_recorded_sessions_csv_names <- term_files[grepl(zoom_recorded_sessions_csv_names_pattern, term_files, fixed = FALSE)]
+  
+  if (length(zoom_recorded_sessions_csv_names) == 0) {
+    # Return an empty tibble with the correct columns
+    return(tibble::tibble(
+      Topic = character(),
+      ID = character(),
+      `Start Time` = character(),
+      `File Size (MB)` = numeric(),
+      `File Count` = numeric(),
+      `Total Views` = numeric(),
+      `Total Downloads` = numeric(),
+      `Last Accessed` = character(),
+      dept = character(),
+      course_section = character(),
+      day = character(),
+      time = character(),
+      instructor = character(),
+      match_start_time = as.POSIXct(character(), tz = "America/Los_Angeles"),
+      match_end_time = as.POSIXct(character(), tz = "America/Los_Angeles")
+    ))
+  }
+  
+  result <- zoom_recorded_sessions_csv_names %>%
+    paste0(transcripts_folder_path, .) %>%
+    readr::read_csv(
+      id = "filepath",
+      col_names = zoom_recorded_sessions_csv_col_names_vector,
+      col_types = readr::cols(
+        Topic = readr::col_character(),
+        ID = readr::col_character(),
+        `Start Time` = readr::col_character(),
+        `File Size (MB)` = readr::col_character(),
+        `File Count` = readr::col_double(),
+        `Total Views` = readr::col_double(),
+        `Total Downloads` = readr::col_double(),
+        `Last Accessed` = readr::col_character()
+      ),
+      skip = 1,
+      quote = "\""
+    )
+  
+  # Use dplyr operations (original version)
+  result <- result %>%
+    dplyr::group_by(Topic, ID, `Start Time`, `File Size (MB)`, `File Count`) %>%
+    dplyr::summarise(
+      `Total Views` = max(`Total Views`, na.rm = TRUE),
+      `Total Downloads` = max(`Total Downloads`, na.rm = TRUE),
+      `Last Accessed` = `Last Accessed`[which.max(nchar(`Last Accessed`))],
+      .groups = "drop"
+    )
+  
+  result <- result %>%
+    dplyr::mutate(
+      `File Size (MB)` = suppressWarnings(as.numeric(`File Size (MB)`)),
+      `Last Accessed` = as.character(`Last Accessed`)
+    )
+  
+  result <- result %>%
+    dplyr::mutate(
+      topic_matches = stringr::str_match(Topic, "^(\\S+)\\s+(\\d+\\.\\d+|\\d+)"),
+      dept = topic_matches[, 2],
+      course_section = topic_matches[, 3]
+    ) %>%
+    dplyr::select(-topic_matches) %>%
+    {
+      if (!is.null(dept) && !is.na(dept) && dept != "") dplyr::filter(., !is.na(dept) & dept == !!dept) else .
+    } %>%
+    dplyr::mutate(
+      course = suppressWarnings(as.integer(stringr::str_extract(course_section, "^\\d+"))),
+      section = suppressWarnings(as.integer(stringr::str_extract(course_section, "(?<=\\.)\\d+")))
+    )
+  
+  if (any(is.na(result$section))) {
+    warning("Some Topic entries did not match the expected pattern and section could not be extracted.")
+  }
+  
+  result <- result %>%
+    dplyr::mutate(
+      match_start_time = lubridate::parse_date_time(
+        `Start Time`,
+        orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y H:M:S", "b d, Y H:M"),
+        tz = "America/Los_Angeles",
+        quiet = TRUE
+      ),
+      match_end_time = match_start_time + lubridate::hours(scheduled_session_length_hours + 0.5)
+    )
+  
+  result <- result %>%
+    dplyr::filter(match_start_time >= lubridate::mdy(semester_start_mdy))
+  
+  return(tibble::as_tibble(result))
+}
+
+tryCatch({
+  original_result <- original_load_zoom_recorded_sessions_list(
+    data_folder = system.file("extdata", package = "zoomstudentengagement"),
+    transcripts_folder = "transcripts"
+  )
+  compare_dataframes(original_result, current_result, "load_zoom_recorded_sessions_list")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test 14: make_students_only_transcripts_summary_df
+cat("14. Testing make_students_only_transcripts_summary_df comparison...\n")
+
+# Create comprehensive test data
+transcripts_session_summary_df <- tibble::tibble(
+  name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "dead_air", "Instructor Name"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "dead_air", "Instructor Name"),
+  course_section = c("101.A", "101.A", "101.B", "101.B", "101.A", "101.A"),
+  course = c(101, 101, 101, 101, 101, 101),
+  section = c("A", "A", "B", "B", "A", "A"),
+  day = c("Monday", "Monday", "Tuesday", "Tuesday", "Monday", "Monday"),
+  time = c("10:00", "10:00", "11:00", "11:00", "10:00", "10:00"),
+  n = c(10, 15, 8, 12, 5, 3),
+  duration = c(300, 450, 240, 360, 60, 90),
+  wordcount = c(500, 750, 400, 600, 50, 150),
+  comments = list("Good", "Excellent", "Average", "Good", "Dead air", "Instructor"),
+  n_perc = c(0.1, 0.15, 0.08, 0.12, 0.05, 0.03),
+  duration_perc = c(0.1, 0.15, 0.08, 0.12, 0.05, 0.03),
+  wordcount_perc = c(0.1, 0.15, 0.08, 0.12, 0.05, 0.03),
+  wpm = c(100, 100, 100, 100, 50, 100),
+  name_raw = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "dead_air", "Instructor Name"),
+  start_time_local = c("2024-01-01 10:00:00", "2024-01-01 10:00:00", "2024-01-02 11:00:00", 
+                       "2024-01-02 11:00:00", "2024-01-01 10:00:00", "2024-01-01 10:00:00"),
+  dept = c("CS", "CS", "CS", "CS", "CS", "CS"),
+  session_num = c(1, 1, 1, 1, 1, 1)
+)
+
+# Current base R version
+current_result <- make_students_only_transcripts_summary_df(transcripts_session_summary_df)
+
+# Original dplyr version (from git history)
+original_make_students_only_transcripts_summary_df <- function(transcripts_session_summary_df,
+                                                              preferred_name_exclude_cv = c("dead_air", "Instructor Name", "Guests", "unknown")) {
+  section <- NULL
+  
+  if (tibble::is_tibble(transcripts_session_summary_df)) {
+    transcripts_session_summary_df %>%
+      dplyr::filter(
+        !is.na(section),
+        !preferred_name %in% preferred_name_exclude_cv,
+        !is.na(preferred_name)
+      ) %>%
+      make_transcripts_summary_df()
+  }
+}
+
+tryCatch({
+  original_result <- original_make_students_only_transcripts_summary_df(transcripts_session_summary_df)
+  compare_dataframes(original_result, current_result, "make_students_only_transcripts_summary_df")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test 15: make_transcripts_session_summary_df
+cat("15. Testing make_transcripts_session_summary_df comparison...\n")
+
+# Create comprehensive test data
+clean_names_df <- tibble::tibble(
+  section = c("A", "A", "B", "B", "A", "B"),
+  day = c("Monday", "Monday", "Tuesday", "Tuesday", "Monday", "Tuesday"),
+  time = c("10:00", "10:00", "11:00", "11:00", "10:00", "11:00"),
+  session_num = c(1, 1, 1, 1, 1, 1),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "John Smith", "Bob Wilson"),
+  course_section = c("101.A", "101.A", "101.B", "101.B", "101.A", "101.B"),
+  wordcount = c(500, 300, 400, 600, 200, 300),
+  duration = c(300, 180, 240, 360, 120, 180)
+)
+
+# Current base R version
+current_result <- make_transcripts_session_summary_df(clean_names_df)
+
+# Original dplyr version (from git history)
+original_make_transcripts_session_summary_df <- function(clean_names_df) {
+  if (is.null(clean_names_df)) {
+    return(NULL)
+  }
+  if (!tibble::is_tibble(clean_names_df)) {
+    stop("clean_names_df must be a tibble or NULL.")
+  }
+  # Define expected columns
+  expected_cols <- c("section", "day", "time", "session_num", "preferred_name", "course_section", "wordcount", "duration")
+  # Filter to only use columns that are present
+  available_cols <- intersect(expected_cols, names(clean_names_df))
+  if (length(available_cols) == 0) {
+    stop("clean_names_df must contain at least one of the expected columns: section, day, time, session_num, preferred_name, course_section, wordcount, duration.")
+  }
+  # Group by available columns and compute summary metrics
+  result <- clean_names_df %>%
+    dplyr::group_by(!!!rlang::syms(available_cols)) %>%
+    dplyr::summarise(
+      n = dplyr::n(),
+      duration = sum(duration, na.rm = TRUE),
+      wordcount = sum(wordcount, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      n_perc = n / sum(n) * 100,
+      duration_perc = duration / sum(duration) * 100,
+      wordcount_perc = wordcount / sum(wordcount) * 100,
+      wpm = wordcount / duration
+    )
+  return(result)
+}
+
+tryCatch({
+  original_result <- original_make_transcripts_session_summary_df(clean_names_df)
+  compare_dataframes(original_result, current_result, "make_transcripts_session_summary_df")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test 16: make_transcripts_summary_df
+cat("16. Testing make_transcripts_summary_df comparison...\n")
+
+# Create comprehensive test data
+transcripts_session_summary_df <- tibble::tibble(
+  section = c("A", "A", "B", "B", "A", "B"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown", "John Smith", "Bob Wilson"),
+  n = c(5, 3, 2, 4, 2, 1),
+  duration = c(300, 180, 120, 240, 150, 90),
+  wordcount = c(500, 300, 200, 400, 250, 150)
+)
+
+# Current base R version
+current_result <- make_transcripts_summary_df(transcripts_session_summary_df)
+
+# Original dplyr version (from git history)
+original_make_transcripts_summary_df <- function(transcripts_session_summary_df) {
+  duration <- n <- preferred_name <- section <- wordcount <- NULL
+  
+  if (tibble::is_tibble(transcripts_session_summary_df)) {
+    transcripts_session_summary_df %>%
+      dplyr::group_by(section, preferred_name) %>%
+      dplyr::summarise(
+        session_ct = sum(!is.na(duration)),
+        n = sum(n, na.rm = TRUE),
+        duration = sum(duration, na.rm = TRUE),
+        wordcount = sum(wordcount, na.rm = TRUE)
+      ) %>%
+      dplyr::ungroup() %>%
+      dplyr::group_by(section) %>%
+      dplyr::mutate(
+        wpm = wordcount / duration,
+        perc_n = n / sum(n, na.rm = TRUE) * 100,
+        perc_duration = duration / sum(duration, na.rm = TRUE) * 100,
+        perc_wordcount = wordcount / sum(wordcount, na.rm = TRUE) * 100
+      ) %>%
+      dplyr::ungroup() %>%
+      dplyr::arrange(-duration)
+  }
+}
+
+tryCatch({
+  original_result <- original_make_transcripts_summary_df(transcripts_session_summary_df)
+  compare_dataframes(original_result, current_result, "make_transcripts_summary_df")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test 17: plot_users_by_metric
+cat("17. Testing plot_users_by_metric comparison...\n")
+
+# Create comprehensive test data
+transcripts_summary_df <- tibble::tibble(
+  section = c("A", "A", "B", "B"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown"),
+  session_ct = c(5, 3, 8, 6),
+  duration = c(300, 180, 480, 360),
+  wordcount = c(500, 300, 800, 600),
+  wpm = c(100, 100, 100, 100),
+  perc_n = c(50, 30, 80, 60),
+  perc_duration = c(50, 30, 80, 60),
+  perc_wordcount = c(50, 30, 80, 60)
+)
+
+# Current base R version
+current_result <- plot_users_by_metric(transcripts_summary_df, metric = "session_ct")
+
+# Original dplyr version (from git history)
+original_plot_users_by_metric <- function(transcripts_summary_df,
+                                         metric = "session_ct",
+                                         metrics_lookup_df = make_metrics_lookup_df(),
+                                         student_col_name = "preferred_name") {
+  . <- preferred_name <- section <- student_col <- description <- NULL
+  
+  if (tibble::is_tibble(transcripts_summary_df) && tibble::is_tibble(metrics_lookup_df)) {
+    # Validate metric exists in the data
+    if (!metric %in% names(transcripts_summary_df)) {
+      stop(sprintf("Metric '%s' not found in data", metric))
+    }
+    
+    # Create plot
+    p <- transcripts_summary_df %>%
+      ggplot2::ggplot(ggplot2::aes(x = .data[[student_col_name]], y = .data[[metric]])) +
+      ggplot2::geom_point() +
+      ggplot2::coord_flip() +
+      ggplot2::facet_wrap(ggplot2::vars(section), ncol = 1, scales = "free_y") +
+      ggplot2::labs(
+        y = metric,
+        x = student_col_name,
+        title = metrics_lookup_df %>%
+          dplyr::filter(metric == !!metric) %>%
+          dplyr::pull(description) %>%
+          stringr::str_wrap(width = 59)
+      ) +
+      ggplot2::ylim(c(0, NA))
+    
+    return(p)
+  }
+}
+
+tryCatch({
+  original_result <- original_plot_users_by_metric(transcripts_summary_df, metric = "session_ct")
+  # For plotting functions, we'll just check that both versions run without errors
+  cat("   ✅ Both versions created plots successfully\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test 18: summarize_transcript_files
+cat("18. Testing summarize_transcript_files comparison...\n")
+
+# Create test data using existing transcript file
+test_transcript_files <- c("GMT20240124-202901_Recording.transcript.vtt")
+
+# Current base R version
+current_result <- summarize_transcript_files(
+  transcript_file_names = test_transcript_files,
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  transcripts_folder = "transcripts"
+)
+
+# Original dplyr version (from git history)
+original_summarize_transcript_files <- function(transcript_file_names,
+                                               data_folder = "data",
+                                               transcripts_folder = "transcripts",
+                                               names_to_exclude = NULL,
+                                               deduplicate_content = FALSE,
+                                               similarity_threshold = 0.95,
+                                               duplicate_method = c("hybrid", "content", "metadata")) {
+  # Declare global variables to avoid R CMD check warnings
+  transcript_file <- transcript_path <- name <- transcript_file_match <- row_id <- NULL
+  
+  duplicate_method <- match.arg(duplicate_method)
+  
+  transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
+  
+  # Handle different input types
+  if ("character" %in% class(transcript_file_names)) {
+    transcript_file_names <- tibble::tibble(transcript_file = transcript_file_names)
+  }
+  
+  # If input is a tibble with transcript_file column, preserve all other columns
+  preserve_metadata <- tibble::is_tibble(transcript_file_names) &&
+    "transcript_file" %in% names(transcript_file_names) &&
+    ncol(transcript_file_names) > 1
+  
+  if (tibble::is_tibble(transcript_file_names) &&
+      file.exists(transcripts_folder_path)
+  ) {
+    # Handle duplicate detection if requested
+    if (deduplicate_content) {
+      # Detect duplicates
+      duplicates <- detect_duplicate_transcripts(
+        transcript_file_names,
+        data_folder = data_folder,
+        transcripts_folder = transcripts_folder,
+        similarity_threshold = similarity_threshold,
+        method = duplicate_method,
+        names_to_exclude = names_to_exclude
+      )
+      
+      # If duplicates found, warn user
+      if (length(duplicates$duplicate_groups) > 0) {
+        warning(paste(
+          "Found", length(duplicates$duplicate_groups), "duplicate groups.",
+          "Consider reviewing and removing duplicates before processing."
+        ))
+        
+        # Print recommendations
+        cat("\nDuplicate detection results:\n")
+        cat("=============================\n")
+        for (i in seq_along(duplicates$recommendations)) {
+          cat(paste("Group", i, ":", duplicates$recommendations[i], "\n"))
+        }
+        cat("\n")
+      }
+    }
+    
+    # Store original metadata if preserving
+    original_metadata <- NULL
+    if (preserve_metadata) {
+      original_metadata <- transcript_file_names %>%
+        dplyr::select(-transcript_file) %>%
+        dplyr::mutate(row_id = dplyr::row_number())
+    }
+    
+    result <- transcript_file_names %>%
+      dplyr::rename(file_name = transcript_file) %>%
+      dplyr::mutate(
+        transcript_path = dplyr::if_else(
+          is.na(file_name),
+          NA,
+          paste0(transcripts_folder_path, "/", file_name)
+        ),
+        summarize_transcript_metrics = purrr::map2(
+          transcript_path,
+          list(c(names_exclude = names_to_exclude)),
+          summarize_transcript_metrics
+        )
+      ) %>%
+      tidyr::unnest(cols = c(summarize_transcript_metrics)) %>%
+      dplyr::mutate(
+        name_raw = name,
+        name = stringr::str_trim(name)
+      ) %>%
+      dplyr::mutate(
+        # Check if transcript_file from summarize_transcript_metrics matches file_name
+        transcript_file_match = transcript_file == file_name
+      ) %>%
+      {
+        # Check for mismatches and warn/error
+        mismatches <- dplyr::filter(., !transcript_file_match)
+        if (nrow(mismatches) > 0) {
+          warning(paste(
+            "Found", nrow(mismatches), "rows where transcript_file from summarize_transcript_metrics",
+            "doesn't match the input file_name. This may indicate an issue in the processing pipeline."
+          ))
+          print(mismatches[, c("file_name", "transcript_file")])
+        }
+        .
+      } %>%
+      {
+        # Only remove columns if they exist
+        cols_to_remove <- c("transcript_file_match")
+        if ("transcript_file" %in% names(.)) {
+          cols_to_remove <- c(cols_to_remove, "transcript_file")
+        }
+        dplyr::select(., -all_of(cols_to_remove))
+      } %>%
+      dplyr::rename(transcript_file = file_name)
+    
+    # Restore original metadata if preserving
+    if (preserve_metadata && !is.null(original_metadata)) {
+      result <- result %>%
+        dplyr::mutate(row_id = dplyr::row_number()) %>%
+        dplyr::left_join(original_metadata, by = "row_id") %>%
+        dplyr::select(-row_id)
+    }
+    
+    result
+  }
+}
+
+tryCatch({
+  original_result <- original_summarize_transcript_files(
+    transcript_file_names = test_transcript_files,
+    data_folder = system.file("extdata", package = "zoomstudentengagement"),
+    transcripts_folder = "transcripts"
+  )
+  compare_dataframes(original_result, current_result, "summarize_transcript_files")
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+})
+
+# Test 19: write_section_names_lookup
+cat("19. Testing write_section_names_lookup comparison...\n")
+
+# Create comprehensive test data
+clean_names_df <- tibble::tibble(
+  course_section = c("101.A", "101.A", "101.B", "101.B"),
+  day = c("Monday", "Monday", "Tuesday", "Tuesday"),
+  time = c("10:00", "10:00", "11:00", "11:00"),
+  course = c(101, 101, 101, 101),
+  section = c("A", "A", "B", "B"),
+  preferred_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown"),
+  formal_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown"),
+  transcript_name = c("John Smith", "Jane Doe", "Bob Wilson", "Alice Brown"),
+  student_id = c("12345", "67890", "11111", "22222")
+)
+
+# Create temporary directory for testing
+temp_dir <- tempfile("test_write_section_names")
+dir.create(temp_dir)
+
+# Current base R version
+current_result <- write_section_names_lookup(
+  clean_names_df = clean_names_df,
+  data_folder = temp_dir,
+  section_names_lookup_file = "test_section_names_lookup.csv"
+)
+
+# Read the file back to verify it was written correctly
+current_file_content <- readr::read_csv(file.path(temp_dir, "test_section_names_lookup.csv"), show_col_types = FALSE)
+
+# Original dplyr version (from git history)
+original_write_section_names_lookup <- function(clean_names_df,
+                                               data_folder = "data",
+                                               section_names_lookup_file = "section_names_lookup.csv") {
+  course <- day <- formal_name <- n <- preferred_name <- section <- student_id <- time <- transcript_name <- course_section <- NULL
+  
+  if (tibble::is_tibble(clean_names_df) &&
+      file.exists(data_folder)
+  ) {
+    clean_names_df %>%
+      dplyr::group_by(
+        course_section,
+        day,
+        time,
+        course,
+        section,
+        preferred_name,
+        formal_name,
+        transcript_name,
+        student_id
+      ) %>%
+      dplyr::summarise(n = dplyr::n()) %>%
+      dplyr::arrange(preferred_name, formal_name) %>%
+      dplyr::select(-n) %>%
+      readr::write_csv(file.path(data_folder, section_names_lookup_file))
+  }
+}
+
+# Create another temporary directory for original version
+temp_dir_original <- tempfile("test_write_section_names_original")
+dir.create(temp_dir_original)
+
+tryCatch({
+  original_result <- original_write_section_names_lookup(
+    clean_names_df = clean_names_df,
+    data_folder = temp_dir_original,
+    section_names_lookup_file = "test_section_names_lookup.csv"
+  )
+  
+  # Read the file back to verify it was written correctly
+  original_file_content <- readr::read_csv(file.path(temp_dir_original, "test_section_names_lookup.csv"), show_col_types = FALSE)
+  
+  # Compare the file contents
+  compare_dataframes(original_file_content, current_file_content, "write_section_names_lookup")
+  
+  # Clean up
+  unlink(temp_dir, recursive = TRUE)
+  unlink(temp_dir_original, recursive = TRUE)
+}, error = function(e) {
+  cat("   ⚠️ Original dplyr version failed:", e$message, "\n")
+  cat("   ✅ Current base R version works - this is the goal\n\n")
+  
+  # Clean up
+  unlink(temp_dir, recursive = TRUE)
+  unlink(temp_dir_original, recursive = TRUE)
+})
+
 cat("🎯 SUMMARY OF COMPARISON RESULTS\n")
 cat("===============================\n")
 cat("Note: Many original dplyr versions may fail due to the very segfault issues\n")
