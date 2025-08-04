@@ -231,6 +231,7 @@ devtools::build()                    # Create distributable package
 - RStudio (recommended)
 - Git
 - GitHub CLI
+  - **For AI agents**: See [GitHub CLI Best Practices](docs/development/CURSOR_INTEGRATION.md#-github-cli-best-practices-for-ai-agents) for detailed PR comment analysis
 
 ### Environment Setup
 
