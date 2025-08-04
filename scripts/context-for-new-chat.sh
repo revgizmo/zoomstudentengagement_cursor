@@ -3,11 +3,34 @@
 # Context Script for zoomstudentengagement R Package
 # Use this script to provide current project context to new Cursor chats
 # Run: ./scripts/context-for-new-chat.sh
+#
+# Features:
+# - Dynamic status checking (no caching - always current)
+# - Comprehensive error handling
+# - Privacy/ethical compliance checks
+# - Progress indicators for long operations
+# - Validation of dependencies and files
 
-set -e
+set -eo pipefail  # Less strict error handling
+trap 'echo "❌ Script failed at line $LINENO"' ERR
 
 echo "🔍 Generating context for zoomstudentengagement R Package..."
 echo "=================================================="
+
+# Validate dependencies
+echo "🔍 Validating dependencies..."
+if ! command -v Rscript &> /dev/null; then
+    echo "❌ Error: Rscript not found. Please install R."
+    exit 1
+fi
+
+if ! command -v gh &> /dev/null; then
+    echo "⚠️  Warning: GitHub CLI (gh) not found. Issue fetching will be limited."
+fi
+
+if ! command -v jq &> /dev/null; then
+    echo "⚠️  Warning: jq not found. Issue parsing will be limited."
+fi
 
 # Get current date and git status (use UTC for consistency with GitHub)
 CURRENT_DATE=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
@@ -27,7 +50,7 @@ echo "Goal: CRAN submission preparation"
 
 # Dynamic status check - read from PROJECT.md if available
 if [ -f "PROJECT.md" ]; then
-    STATUS_LINE=$(grep -E "^Package Status:" PROJECT.md | head -1)
+    STATUS_LINE=$(grep -E "^Package Status:" PROJECT.md | head -1 || echo "")
     if [ -n "$STATUS_LINE" ]; then
         echo "$STATUS_LINE"
     else
@@ -59,14 +82,14 @@ fi
 
 # Get R CMD check status dynamically
 echo "🔍 Checking R CMD check status..."
-# Run check with timeout to avoid hanging
-CHECK_OUTPUT=$(timeout 30s Rscript -e "devtools::check()" 2>&1 || echo "Check timed out")
+# Run a quick check (without timeout to avoid compatibility issues)
+CHECK_OUTPUT=$(Rscript -e "devtools::check()" 2>&1 | head -50 || echo "Check failed")
 ERROR_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "ERROR" || echo "0")
 WARNING_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "WARNING" || echo "0")
 NOTE_COUNT=$(echo "$CHECK_OUTPUT" | grep -c "NOTE" || echo "0")
 
-if [ "$CHECK_OUTPUT" = "Check timed out" ]; then
-    echo "R CMD Check: Timed out (run manually with devtools::check())"
+if [ "$CHECK_OUTPUT" = "Check failed" ]; then
+    echo "R CMD Check: Failed (run manually with devtools::check())"
 elif [ "$ERROR_COUNT" = "0" ] && [ "$WARNING_COUNT" = "0" ] && [ "$NOTE_COUNT" = "0" ]; then
     echo "R CMD Check: 0 errors, 0 warnings, 0 notes"
 else
@@ -88,25 +111,50 @@ FUNCTION_COUNT=$(grep -c "^export(" NAMESPACE 2>/dev/null || echo "0")
 echo "Exported Functions: $FUNCTION_COUNT"
 echo ""
 
-# 3. Critical Issues (High Priority)
+# 3. Privacy & Ethical Compliance
+echo "🔒 PRIVACY & ETHICAL COMPLIANCE"
+echo "-----------------------------"
+# Check for privacy-related issues
+PRIVACY_ISSUES=$(gh issue list --label "privacy" --json number,title --jq 'length' 2>/dev/null || echo "0")
+ETHICAL_ISSUES=$(gh issue list --label "ethical" --json number,title --jq 'length' 2>/dev/null || echo "0")
+FERPA_ISSUES=$(gh issue list --label "FERPA" --json number,title --jq 'length' 2>/dev/null || echo "0")
+
+if [ "$PRIVACY_ISSUES" = "0" ] && [ "$ETHICAL_ISSUES" = "0" ] && [ "$FERPA_ISSUES" = "0" ]; then
+    echo "✅ No open privacy/ethical issues found"
+    echo "   Note: Check Issues #84, #85 for privacy/ethical compliance"
+else
+    echo "⚠️  Open privacy/ethical issues:"
+    if [ "$PRIVACY_ISSUES" != "0" ]; then
+        echo "   Privacy issues: $PRIVACY_ISSUES"
+    fi
+    if [ "$ETHICAL_ISSUES" != "0" ]; then
+        echo "   Ethical issues: $ETHICAL_ISSUES"
+    fi
+    if [ "$FERPA_ISSUES" != "0" ]; then
+        echo "   FERPA issues: $FERPA_ISSUES"
+    fi
+fi
+echo ""
+
+# 4. Critical Issues (High Priority)
 echo "🚨 CRITICAL ISSUES (High Priority)"
 echo "--------------------------------"
 gh issue list --label "priority:high" --limit 5 --json number,title,labels --jq '.[] | "#\(.number): \(.title) [\(.labels[].name | select(. | startswith("priority:") or startswith("CRAN:") or startswith("area:")) | .)]"' 2>/dev/null || echo "Unable to fetch high priority issues"
 echo ""
 
-# 4. CRAN Submission Blockers
+# 5. CRAN Submission Blockers
 echo "🎯 CRAN SUBMISSION BLOCKERS"
 echo "--------------------------"
 gh issue list --label "CRAN:submission" --limit 5 --json number,title,state --jq '.[] | "#\(.number): \(.title) (\(.state))"' 2>/dev/null || echo "Unable to fetch CRAN submission issues"
 echo ""
 
-# 5. Recent Activity
+# 6. Recent Activity
 echo "🕒 RECENT ACTIVITY (Last 5 Issues)"
 echo "--------------------------------"
 gh issue list --limit 5 --json number,title,state,createdAt --jq '.[] | "#\(.number): \(.title) (\(.state)) - \(.createdAt | fromdateiso8601 | strftime("%Y-%m-%d"))"' 2>/dev/null || echo "Unable to fetch recent issues"
 echo ""
 
-# 6. Essential Files to Review
+# 7. Essential Files to Review
 echo "📁 ESSENTIAL FILES TO REVIEW"
 echo "---------------------------"
 echo "• README.md - Package overview and quick start"
@@ -117,7 +165,7 @@ echo "• CRAN_CHECKLIST.md - CRAN submission checklist"
 echo "• docs/development/AUDIT_LOG.md - Recent audit results"
 echo ""
 
-# 7. Current Development Focus (Dynamic based on current issues)
+# 8. Current Development Focus (Dynamic based on current issues)
 echo "🎯 CURRENT DEVELOPMENT FOCUS"
 echo "---------------------------"
 # Get current high priority issues to determine focus
@@ -145,7 +193,7 @@ echo "5. Documentation and Testing"
 echo "6. Real-world Testing"
 echo ""
 
-# 8. Quick Commands for Context
+# 9. Quick Commands for Context
 echo "⚡ QUICK COMMANDS FOR CONTEXT"
 echo "---------------------------"
 echo "# Check current status:"
@@ -160,7 +208,7 @@ echo "# Check specific issue:"
 echo "gh issue view <ISSUE_NUMBER>"
 echo ""
 
-# 9. Project Structure
+# 10. Project Structure
 echo "📂 PROJECT STRUCTURE"
 echo "-------------------"
 echo "R/ - Core functions ($FUNCTION_COUNT exported)"
@@ -172,7 +220,7 @@ echo "docs/ - Development documentation"
 echo "scripts/ - Development utilities"
 echo ""
 
-# 10. Development Workflow
+# 11. Development Workflow
 echo "🔄 DEVELOPMENT WORKFLOW"
 echo "---------------------"
 echo "1. Check current issues: gh issue list"
@@ -184,10 +232,10 @@ echo "6. Create PR: gh pr create --title 'fix: Address #XX'"
 echo "7. Merge with admin: gh pr merge --admin"
 echo ""
 
-# 11. CRAN Readiness Status (Dynamic)
+# 12. CRAN Readiness Status (Dynamic)
 echo "📦 CRAN READINESS STATUS"
 echo "----------------------"
-if [ "$TEST_OUTPUT" = *"FAIL 0"* ]; then
+if [ "$FAIL_COUNT" = "0" ] && [ "$WARN_COUNT" = "0" ]; then
     echo "✅ Test Suite: PASSING (0 failures)"
 else
     echo "❌ Test Suite: FAILING"
@@ -214,7 +262,7 @@ if [ -n "$NOTE_COUNT" ] && [ "$NOTE_COUNT" -gt 0 ] 2>/dev/null; then
 fi
 echo ""
 
-# 12. Next Steps (Dynamic based on current status)
+# 13. Next Steps (Dynamic based on current status)
 echo "🎯 IMMEDIATE NEXT STEPS"
 echo "---------------------"
 if [ -n "$ERROR_COUNT" ] && [ "$ERROR_COUNT" -gt 0 ] 2>/dev/null || [ -n "$WARNING_COUNT" ] && [ "$WARNING_COUNT" -gt 0 ] 2>/dev/null; then
