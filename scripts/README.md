@@ -2,21 +2,71 @@
 
 This directory contains utility scripts for development and project management.
 
+## 🎯 **Quick Start - Most Common Commands**
+
+### For Getting Current Status (RECOMMENDED)
+```bash
+# Save context to files for linking in Cursor
+./scripts/save-context.sh
+
+# Then link in Cursor with: @full-context.md
+```
+
+### For New Cursor Chats
+```bash
+# Generate context for copying to new chat
+./scripts/context-for-new-chat.sh
+```
+
+### Before Creating PRs
+```bash
+# Run comprehensive validation
+Rscript scripts/pre-pr-validation.R
+```
+
 ## Context Scripts for Cursor
+
+### `save-context.sh` ⭐ **RECOMMENDED**
+**Purpose**: Save context output to files for linking in Cursor chats
+
+**Usage**:
+```bash
+# Save context to files
+./scripts/save-context.sh
+
+# Then link in Cursor:
+# @context.md - Shell context
+# @r-context.md - R-specific context  
+# @full-context.md - Combined context (RECOMMENDED)
+```
+
+**Why This is Best**: 
+- Saves context to files you can link with `@full-context.md`
+- Includes backups and validation
+- Perfect for ongoing development work
+- No need to copy/paste - just link the file
+
+**Creates**:
+- `.cursor/context.md` - Shell context
+- `.cursor/r-context.md` - R-specific context
+- `.cursor/full-context.md` - Combined context (use this one!)
+- `.cursor/context_YYYYMMDD_HHMMSS.md` - Timestamped version
 
 ### `context-for-new-chat.sh`
 **Purpose**: Generate comprehensive project context for new Cursor chats
 
 **Usage**:
 ```bash
-# Make executable (first time only)
-chmod +x scripts/context-for-new-chat.sh
-
 # Generate context
 ./scripts/context-for-new-chat.sh
 
 # Copy output to new Cursor chat
 ```
+
+**When to Use**: 
+- Starting a completely new Cursor chat
+- Need to copy/paste context into chat
+- Don't need persistent context files
 
 **Provides**:
 - Project status and metrics
@@ -35,6 +85,11 @@ Rscript scripts/context-for-new-chat.R
 
 # Copy output to new Cursor chat
 ```
+
+**When to Use**:
+- Need detailed R package information
+- Debugging R-specific issues
+- Want to see package structure and dependencies
 
 **Provides**:
 - Package loading status
@@ -59,34 +114,15 @@ For complete context, run both scripts:
 ./scripts/get-context.sh
 ```
 
-### `save-context.sh`
-**Purpose**: Save context output to files for linking in Cursor chats
-
-**Usage**:
-```bash
-# Save context to files
-./scripts/save-context.sh
-
-# Then link in Cursor:
-# @context.md - Shell context
-# @r-context.md - R-specific context  
-# @full-context.md - Combined context
-```
-
-**Creates**:
-- `.cursor/context.md` - Shell context
-- `.cursor/r-context.md` - R-specific context
-- `.cursor/full-context.md` - Combined context
-- `.cursor/context_YYYYMMDD_HHMMSS.md` - Timestamped version
-
 ## Pre-PR Validation
 
-### `pre-pr-validation.R`
+### `pre-pr-validation.R` ⭐ **ALWAYS RUN BEFORE PRs**
 **Purpose**: Comprehensive validation before creating pull requests
 
 **Usage**:
-```r
-source("scripts/pre-pr-validation.R")
+```bash
+# Run validation
+Rscript scripts/pre-pr-validation.R
 ```
 
 **Checks**:
@@ -96,6 +132,12 @@ source("scripts/pre-pr-validation.R")
 - R CMD check
 - Spell checking
 - Coverage analysis
+
+**Why This is Critical**:
+- Catches issues that would fail in CI/CD
+- Ensures CRAN compliance
+- Validates all documentation
+- Runs full package check
 
 ## Real-World Testing
 
@@ -115,18 +157,36 @@ cd zoom_real_world_testing
 ./run_tests.sh
 ```
 
+## 🚀 **Development Workflow**
+
+### Daily Development
+1. **Get current status**: `./scripts/save-context.sh`
+2. **Link context**: Use `@full-context.md` in Cursor
+3. **Make changes and test**: `Rscript scripts/pre-pr-validation.R`
+4. **Create PR**: Use GitHub CLI or web interface
+
+### New Chat Setup
+1. **Generate context**: `./scripts/context-for-new-chat.sh`
+2. **Copy output** to new Cursor chat
+3. **Start development work**
+
+### Before PR Creation
+1. **Run validation**: `Rscript scripts/pre-pr-validation.R`
+2. **Fix any issues** that come up
+3. **Create PR** only after all checks pass
+
 ## Quick Reference
 
-### Common Commands
+### Essential Commands
 ```bash
-# Get project context
+# Get project status (RECOMMENDED)
+./scripts/save-context.sh
+
+# Generate context for new chat
 ./scripts/context-for-new-chat.sh
 
-# Get R-specific context
-Rscript scripts/context-for-new-chat.R
-
-# Run pre-PR validation
-Rscript -e "source('scripts/pre-pr-validation.R')"
+# Validate before PR
+Rscript scripts/pre-pr-validation.R
 
 # Check current issues
 gh issue list --limit 10
@@ -161,9 +221,17 @@ For quick context, copy and paste:
 5. FERPA/Security compliance review
 ```
 
-## Documentation
+## 📚 **Documentation**
 
 For detailed information about using context scripts with Cursor, see:
 - [Cursor Integration Guide](../docs/development/CURSOR_INTEGRATION.md)
 - [Issue Management Quick Reference](../ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
-- [Real-World Testing Guide](../zoom_real_world_testing/README.md) 
+- [Real-World Testing Guide](../zoom_real_world_testing/README.md)
+
+## 💡 **Pro Tips**
+
+1. **Use `save-context.sh` for ongoing work** - Link with `@full-context.md`
+2. **Use `context-for-new-chat.sh` for new chats** - Copy/paste output
+3. **Always run `pre-pr-validation.R` before PRs** - Catches issues early
+4. **Keep context files updated** - Run `save-context.sh` after major changes
+5. **Link context files in Cursor** - Much easier than copying/pasting 

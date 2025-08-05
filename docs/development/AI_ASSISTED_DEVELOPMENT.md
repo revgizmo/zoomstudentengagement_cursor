@@ -12,6 +12,7 @@
 ## 🤖 Core Principles for AI Collaboration
 
 ### 1. **Context-First Approach**
+- **FIRST STEP**: Run `./scripts/save-context.sh` to get current project status
 - Always provide comprehensive project context before asking questions
 - Include current status, priorities, and constraints
 - Reference relevant issues, documentation, and recent changes
