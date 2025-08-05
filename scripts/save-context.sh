@@ -36,7 +36,7 @@ update_project_sections() {
     echo "✅ Backup created"
     
     # Create unique temp files to avoid race conditions
-    TIMESTAMP=$(date '+%Y%m%d_%H%M%S_%N')
+    TIMESTAMP=$(date '+%Y%m%d_%H%M%S')_$$
     TEMP_CRITICAL="/tmp/fresh_critical_${TIMESTAMP}.md"
     TEMP_CRAN="/tmp/fresh_cran_${TIMESTAMP}.md"
     
