@@ -11,6 +11,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Load sample data
 #' transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
 #'   package = "zoomstudentengagement"
@@ -19,6 +20,7 @@
 #'
 #' # Export to CSV
 #' write_engagement_metrics(metrics, "engagement_metrics.csv")
+#' }
 write_engagement_metrics <- function(metrics_data, file_path, comments_format = c("text", "count")) {
   comments_format <- match.arg(comments_format)
 

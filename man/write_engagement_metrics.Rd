@@ -25,6 +25,7 @@ Export engagement metrics data to CSV format with proper handling of list column
 This function converts list columns (like comments) to CSV-compatible formats.
 }
 \examples{
+\dontrun{
 # Load sample data
 transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
   package = "zoomstudentengagement"
@@ -33,4 +34,5 @@ metrics <- summarize_transcript_metrics(transcript_file_path = transcript_file)
 
 # Export to CSV
 write_engagement_metrics(metrics, "engagement_metrics.csv")
+}
 }

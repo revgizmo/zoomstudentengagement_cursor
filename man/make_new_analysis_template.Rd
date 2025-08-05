@@ -25,7 +25,9 @@ from the `zoomstudentengagement` package) and saves it as a new .Rmd file that c
 used as a starting point for running analyses with the `zoomstudentengagement` library.
 }
 \examples{
+\dontrun{
 make_new_analysis_template(
   new_template_file_name = "my_analysis.Rmd"
 )
+}
 }
