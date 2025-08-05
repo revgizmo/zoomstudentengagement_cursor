@@ -123,6 +123,26 @@
 
 ---
 
+## Critical Development Rules
+
+### R Command Execution
+**CRITICAL**: Never run R commands directly in shell (zsh/bash). Always use:
+- `Rscript -e "command"` for single commands
+- `Rscript script.R` for R scripts
+- `R` to enter interactive R session
+
+**Common Mistakes to Avoid:**
+- ❌ `devtools::test()` in shell
+- ❌ `devtools::check()` in shell
+- ❌ `R -e "command"` (use Rscript instead)
+
+**Correct Usage:**
+- ✅ `Rscript -e "devtools::test()"`
+- ✅ `Rscript -e "devtools::check()"`
+- ✅ `Rscript scripts/test_script.R`
+
+---
+
 ## 🔗 Related Documentation
 
 - **[CONTEXT_PROVISION.md](CONTEXT_PROVISION.md)** - How to provide effective context to AI assistants
