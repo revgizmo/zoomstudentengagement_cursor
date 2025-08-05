@@ -80,7 +80,7 @@
 
 # Test artifacts
 ^engagement_metrics\.csv$
-^my_analysis\.Rmd$
+# ^my_analysis\.Rmd$  # Already covered above
 
 # Development planning files
 ^ISSUE_128_RESOLUTION_PLAN\.md$
