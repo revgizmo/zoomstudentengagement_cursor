@@ -180,7 +180,7 @@ if [ "$CRAN_ISSUES_COUNT" -gt 0 ]; then
 fi
 
 # Check if test coverage needs improvement
-if [ "$COVERAGE_OUTPUT" != "N/A" ] && [ -n "$COVERAGE_OUTPUT" ] && [ "$COVERAGE_OUTPUT" -lt 90 ] 2>/dev/null; then
+if [ "$COVERAGE_OUTPUT" != "N/A" ] && [ -n "$COVERAGE_OUTPUT" ] && echo "$COVERAGE_OUTPUT" | awk '{exit $1 < 90}' 2>/dev/null; then
     echo "3. Test Coverage Improvement ($COVERAGE_OUTPUT% → 90%)"
 fi
 
@@ -248,7 +248,7 @@ else
 fi
 
 if [ "$COVERAGE_OUTPUT" != "N/A" ]; then
-    if [ -n "$COVERAGE_OUTPUT" ] && [ "$COVERAGE_OUTPUT" -ge 90 ] 2>/dev/null; then
+    if [ -n "$COVERAGE_OUTPUT" ] && echo "$COVERAGE_OUTPUT" | awk '{exit $1 >= 90}' 2>/dev/null; then
         echo "✅ Test Coverage: $COVERAGE_OUTPUT% (target achieved)"
     else
         echo "⚠️  Test Coverage: $COVERAGE_OUTPUT% (need 90%)"
@@ -268,7 +268,7 @@ echo "---------------------"
 if [ -n "$ERROR_COUNT" ] && [ "$ERROR_COUNT" -gt 0 ] 2>/dev/null || [ -n "$WARNING_COUNT" ] && [ "$WARNING_COUNT" -gt 0 ] 2>/dev/null; then
     echo "1. Fix R CMD check errors/warnings"
 fi
-if [ "$COVERAGE_OUTPUT" != "N/A" ] && [ -n "$COVERAGE_OUTPUT" ] && [ "$COVERAGE_OUTPUT" -lt 90 ] 2>/dev/null; then
+if [ "$COVERAGE_OUTPUT" != "N/A" ] && [ -n "$COVERAGE_OUTPUT" ] && echo "$COVERAGE_OUTPUT" | awk '{exit $1 < 90}' 2>/dev/null; then
     echo "2. Improve test coverage to 90% (currently $COVERAGE_OUTPUT%)"
 fi
 if [ -n "$HIGH_PRIORITY_COUNT" ] && [ "$HIGH_PRIORITY_COUNT" -gt 0 ] 2>/dev/null; then
