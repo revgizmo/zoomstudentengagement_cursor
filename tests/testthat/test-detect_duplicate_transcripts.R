@@ -107,3 +107,154 @@ test_that("summarize_transcript_files handles deduplicate_content parameter", {
   expect_no_error(summarize_transcript_files(test_tibble, deduplicate_content = TRUE, duplicate_method = "metadata"))
   expect_error(summarize_transcript_files(test_tibble, deduplicate_content = TRUE, duplicate_method = "invalid"))
 })
+
+test_that("detect_duplicate_transcripts handles NA values in transcript_file column", {
+  # Test with NA values in transcript_file column
+  test_tibble <- tibble::tibble(transcript_file = c("file1.vtt", NA_character_, "file2.vtt"))
+  result <- detect_duplicate_transcripts(test_tibble)
+
+  expect_type(result, "list")
+  expect_length(result$duplicate_groups, 0)
+  expect_equal(result$summary$total_files, 0)  # NA files are filtered out
+})
+
+test_that("detect_duplicate_transcripts handles different methods correctly", {
+  # Test with empty tibble to avoid file loading issues
+  test_tibble <- tibble::tibble(transcript_file = character())
+  
+  # Test metadata method
+  result_metadata <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "metadata"
+  )
+  
+  expect_type(result_metadata, "list")
+  expect_true("duplicate_groups" %in% names(result_metadata))
+  expect_true("similarity_matrix" %in% names(result_metadata))
+  expect_true("recommendations" %in% names(result_metadata))
+  expect_true("summary" %in% names(result_metadata))
+  
+  # Test content method
+  result_content <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "content"
+  )
+  
+  expect_type(result_content, "list")
+  expect_true("duplicate_groups" %in% names(result_content))
+  
+  # Test hybrid method
+  result_hybrid <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "hybrid"
+  )
+  
+  expect_type(result_hybrid, "list")
+  expect_true("duplicate_groups" %in% names(result_hybrid))
+})
+
+test_that("detect_duplicate_transcripts handles file loading errors gracefully", {
+  # Test with non-existent files to trigger file loading errors
+  test_tibble <- tibble::tibble(
+    transcript_file = c("nonexistent1.vtt", "nonexistent2.vtt")
+  )
+  
+  # Should handle gracefully with warnings
+  result <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "content"
+  )
+  
+  expect_type(result, "list")
+  expect_true("duplicate_groups" %in% names(result))
+  expect_equal(result$summary$total_files, 0)
+})
+
+test_that("detect_duplicate_transcripts generates correct recommendations", {
+  # Test with empty tibble to avoid file loading issues
+  test_tibble <- tibble::tibble(transcript_file = character())
+  
+  # Test with high similarity threshold
+  result <- detect_duplicate_transcripts(
+    test_tibble, 
+    similarity_threshold = 0.8,
+    method = "content"
+  )
+  
+  expect_type(result, "list")
+  expect_true("recommendations" %in% names(result))
+  expect_true("duplicate_groups" %in% names(result))
+  expect_true("summary" %in% names(result))
+  
+  # Should have empty recommendations for empty input
+  expect_equal(length(result$recommendations), 0)
+  expect_equal(length(result$duplicate_groups), 0)
+})
+
+test_that("detect_duplicate_transcripts handles names_to_exclude parameter", {
+  # Test with empty tibble to avoid file loading issues
+  test_tibble <- tibble::tibble(transcript_file = character())
+  
+  # Test with default names_to_exclude
+  result_default <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "content"
+  )
+  
+  # Test with custom names_to_exclude
+  result_custom <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "content",
+    names_to_exclude = c("dead_air", "silence")
+  )
+  
+  expect_type(result_default, "list")
+  expect_type(result_custom, "list")
+  expect_equal(result_default$summary$total_files, 0)
+  expect_equal(result_custom$summary$total_files, 0)
+})
+
+test_that("detect_duplicate_transcripts handles similarity matrix correctly", {
+  # Test with empty tibble to avoid file loading issues
+  test_tibble <- tibble::tibble(transcript_file = character())
+  
+  # Test similarity matrix
+  result <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "content"
+  )
+  
+  expect_type(result, "list")
+  expect_true("similarity_matrix" %in% names(result))
+  
+  # Check similarity matrix structure for empty input
+  sim_matrix <- result$similarity_matrix
+  expect_true(is.matrix(sim_matrix))
+  expect_equal(nrow(sim_matrix), 0)
+  expect_equal(ncol(sim_matrix), 0)
+})
+
+test_that("detect_duplicate_transcripts handles summary statistics correctly", {
+  # Test with empty tibble to avoid file loading issues
+  test_tibble <- tibble::tibble(transcript_file = character())
+  
+  # Test summary statistics
+  result <- detect_duplicate_transcripts(
+    test_tibble, 
+    method = "content"
+  )
+  
+  expect_type(result, "list")
+  expect_true("summary" %in% names(result))
+  
+  # Check summary structure
+  summary <- result$summary
+  expect_true("total_files" %in% names(summary))
+  expect_true("duplicate_groups" %in% names(summary))
+  expect_true("total_duplicates" %in% names(summary))
+  
+  # Check summary values for empty input
+  expect_equal(summary$total_files, 0)
+  expect_equal(summary$duplicate_groups, 0)
+  expect_equal(summary$total_duplicates, 0)
+})
