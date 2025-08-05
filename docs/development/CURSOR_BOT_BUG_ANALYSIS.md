@@ -2,7 +2,7 @@
 
 ## 🐛 **Bugs Identified by Cursor Bot**
 
-### **Bug #1: Bash Script Floating Point Comparison (PR #131)**
+### **Bug #1: Bash Script Floating Point Comparison (PR #131)** ✅ **FIXED**
 
 #### **Issue Description**
 - **File**: `scripts/context-for-new-chat.sh`
@@ -26,7 +26,7 @@
 - Add input validation for numeric format
 - Implement proper error handling for non-numeric values
 
-### **Bug #2: Unused Parameter (PR #124)**
+### **Bug #2: Unused Parameter (PR #124)** ✅ **FIXED**
 
 #### **Issue Description**
 - **File**: `R/summarize_transcript_metrics.R`
@@ -50,6 +50,31 @@
 - Add format conversion functions
 - Update tests to verify parameter functionality
 - Add examples demonstrating different formats
+
+### **Bug #3: Script Misinterprets Test Coverage Logic (PR #131)** ✅ **FIXED**
+
+#### **Issue Description**
+- **File**: `scripts/context-for-new-chat.sh`
+- **Lines**: 182-185, 249-254, 270-273
+- **Problem**: `awk` commands used inverted exit status logic for comparisons
+- **Example**: `awk '{exit $1 < 90}'` returns exit code 0 when condition is FALSE
+
+#### **Impact**
+- Incorrect test coverage status messages
+- Wrong next steps recommendations
+- Misleading project status reporting
+- Confusing user experience
+
+#### **Root Cause**
+- Misunderstanding of `awk` exit status behavior
+- `awk '{exit condition}'` returns exit code 0 when condition is FALSE
+- Bash `if command` executes when command returns exit code 0 (success)
+
+#### **Fix Required**
+- Invert `awk` logic to match intended behavior
+- Use `awk '{exit $1 >= 90}'` for "needs improvement" checks
+- Use `awk '{exit $1 < 90}'` for "target achieved" checks
+- Add comprehensive testing of logic
 
 ## 🔍 **Process Gap Analysis**
 
@@ -98,6 +123,17 @@ if (comments_format == "text") {
 } else {
   comments_col <- comments_list  # "list" format
 }
+```
+
+#### **Fix #3: Correct awk Logic for Test Coverage**
+```bash
+# Current problematic code (inverted logic):
+if echo "$COVERAGE_OUTPUT" | awk '{exit $1 < 90}'; then  # Shows improvement when coverage >= 90
+if echo "$COVERAGE_OUTPUT" | awk '{exit $1 >= 90}'; then # Shows achieved when coverage < 90
+
+# Fixed code (correct logic):
+if echo "$COVERAGE_OUTPUT" | awk '{exit $1 >= 90}'; then  # Shows improvement when coverage < 90
+if echo "$COVERAGE_OUTPUT" | awk '{exit $1 < 90}'; then   # Shows achieved when coverage >= 90
 ```
 
 ### **Phase 2: Enhanced Pre-PR Validation**
