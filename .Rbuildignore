@@ -71,4 +71,18 @@
 # Real-world testing data (not part of package)
 ^zoom_real_world_testing/
 
+# Development scripts and utilities
+^scripts/
+
+# Development documentation files
+^ISSUE_ALIGNMENT_ANALYSIS\.md$
+^pr_body_project_update\.md$
+
+# Test artifacts
+^engagement_metrics\.csv$
+^my_analysis\.Rmd$
+
+# Development planning files
+^ISSUE_128_RESOLUTION_PLAN\.md$
+
 

@@ -12,9 +12,11 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' make_new_analysis_template(
 #'   new_template_file_name = "my_analysis.Rmd"
 #' )
+#' }
 make_new_analysis_template <-
   function(new_template_file_name = "new_analysis.Rmd",
            template_file = system.file("new_analysis_template.Rmd", package = "zoomstudentengagement")) {
