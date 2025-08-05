@@ -125,7 +125,17 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
       n_count <- nrow(group_data)
       duration_sum <- sum(as.numeric(group_data$duration), na.rm = TRUE)
       wordcount_sum <- sum(as.numeric(group_data$wordcount), na.rm = TRUE)
-      comments_list <- list(group_data$comment)
+
+      # Format comments based on comments_format parameter
+      raw_comments <- group_data$comment
+      if (comments_format == "text") {
+        comments_col <- paste(unlist(raw_comments), collapse = "; ")
+      } else if (comments_format == "count") {
+        comments_col <- length(unlist(raw_comments))
+      } else {
+        # "list" format (default)
+        comments_col <- list(raw_comments)
+      }
 
       # Get group identifiers
       group_parts <- strsplit(group_id, "\\|")[[1]]
@@ -137,7 +147,7 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
           n = n_count,
           duration = duration_sum,
           wordcount = wordcount_sum,
-          comments = I(comments_list),
+          comments = I(comments_col),
           stringsAsFactors = FALSE
         )
       } else {
@@ -147,7 +157,7 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
           n = n_count,
           duration = duration_sum,
           wordcount = wordcount_sum,
-          comments = I(comments_list),
+          comments = I(comments_col),
           stringsAsFactors = FALSE
         )
       }

@@ -325,8 +325,76 @@ tryCatch({
   cat("   ❌ Test output validation failed:", e$message, "\n")
 })
 
-# 8. Package Check
-cat("\n8. Package Check:\n")
+# 8. Shell Script Validation
+cat("\n8. Shell Script Validation:\n")
+tryCatch({
+  # Check for bash integer comparisons on floating point values
+  shell_files <- list.files("scripts", pattern = "\\.sh$", full.names = TRUE)
+  issues_found <- FALSE
+  
+  for (file in shell_files) {
+    content <- readLines(file)
+    # Look for integer comparisons on variables that might be decimal
+    decimal_comparisons <- grep("\\[.*\\$.*\\..*\\s+[-][lg][te]\\s+[0-9]", content)
+    if (length(decimal_comparisons) > 0) {
+      cat("   ⚠️  Potential floating point comparison issues in", basename(file), "\n")
+      issues_found <- TRUE
+    }
+  }
+  
+  if (!issues_found) {
+    cat("   ✅ Shell script validation completed\n")
+  }
+}, error = function(e) {
+  cat("   ❌ Shell script validation failed:", e$message, "\n")
+})
+
+# 9. Parameter Usage Validation
+cat("\n9. Parameter Usage Validation:\n")
+tryCatch({
+  # Check for parameters that are validated but not used
+  r_files <- list.files("R", pattern = "\\.R$", full.names = TRUE)
+  issues_found <- FALSE
+  
+  for (file in r_files) {
+    content <- readLines(file)
+    # Look for match.arg() calls
+    match_args <- grep("match\\.arg\\(", content)
+    
+    for (line_num in match_args) {
+      line <- content[line_num]
+      # Extract parameter name from match.arg() call
+      param_match <- regexpr("match\\.arg\\(([^,)]+)", line)
+      if (param_match > 0) {
+        param_name <- substr(line, param_match + 10, param_match + attr(param_match, "match.length") - 1)
+        param_name <- gsub("^\\s+|\\s+$", "", param_name) # trim whitespace
+        
+        # Check if parameter is actually used in the function
+        function_start <- max(1, line_num - 50) # Look back 50 lines for function start
+        function_end <- min(length(content), line_num + 100) # Look forward 100 lines
+        function_content <- content[function_start:function_end]
+        
+        # Look for parameter usage (excluding the match.arg line itself)
+        usage_lines <- grep(paste0("\\b", param_name, "\\b"), function_content)
+        usage_lines <- usage_lines[usage_lines != (line_num - function_start + 1)] # Exclude match.arg line
+        
+        if (length(usage_lines) == 0) {
+          cat("   ⚠️  Parameter", param_name, "validated but not used in", basename(file), "\n")
+          issues_found <- TRUE
+        }
+      }
+    }
+  }
+  
+  if (!issues_found) {
+    cat("   ✅ Parameter usage validation completed\n")
+  }
+}, error = function(e) {
+  cat("   ❌ Parameter usage validation failed:", e$message, "\n")
+})
+
+# 10. Package Check
+cat("\n10. Package Check:\n")
 tryCatch({
   check_results <- devtools::check()
   cat("   ✅ Package check completed\n")
