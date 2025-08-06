@@ -66,8 +66,20 @@ calculate_content_similarity <- function(transcript1, transcript2, names_to_excl
   # 2. Duration similarity
   duration_sim <- 0.0
   if ("duration" %in% names(transcript1) && "duration" %in% names(transcript2)) {
-    total_duration1 <- sum(transcript1$duration, na.rm = TRUE)
-    total_duration2 <- sum(transcript2$duration, na.rm = TRUE)
+    # Convert difftime to numeric seconds if needed
+    duration1_numeric <- if (inherits(transcript1$duration, "difftime")) {
+      as.numeric(transcript1$duration, units = "secs")
+    } else {
+      transcript1$duration
+    }
+    duration2_numeric <- if (inherits(transcript2$duration, "difftime")) {
+      as.numeric(transcript2$duration, units = "secs")
+    } else {
+      transcript2$duration
+    }
+
+    total_duration1 <- sum(duration1_numeric, na.rm = TRUE)
+    total_duration2 <- sum(duration2_numeric, na.rm = TRUE)
     if (total_duration1 > 0 || total_duration2 > 0) {
       duration_sim <- 1 - abs(total_duration1 - total_duration2) / max(total_duration1, total_duration2)
     }
