@@ -678,20 +678,23 @@ test_that("detect_duplicate_transcripts handles summary statistics correctly", {
 test_that("detect_duplicate_transcripts shows warning when no files found outside test environment", {
   # Test with non-existent files
   test_tibble <- tibble::tibble(transcript_file = c("nonexistent1.vtt", "nonexistent2.vtt"))
-  
+
   # Temporarily unset TESTTHAT environment variable to trigger warning
   old_testthat <- Sys.getenv("TESTTHAT")
   Sys.setenv("TESTTHAT" = "")
-  
+
   # Should produce warning when no files exist and not in test environment
-  expect_warning({
-    result <- detect_duplicate_transcripts(test_tibble)
-  }, "No transcript files found in the specified directory")
-  
+  expect_warning(
+    {
+      result <- detect_duplicate_transcripts(test_tibble)
+    },
+    "No transcript files found in the specified directory"
+  )
+
   expect_type(result, "list")
   expect_length(result$duplicate_groups, 0)
   expect_equal(result$summary$total_files, 0)
-  
+
   # Restore original TESTTHAT environment variable
   if (old_testthat == "") {
     Sys.unsetenv("TESTTHAT")
@@ -720,7 +723,7 @@ test_that("detect_duplicate_transcripts handles transcript loading errors gracef
     "And will definitely cause errors"
   )
   writeLines(invalid_content, temp_file1)
-  
+
   # Create a valid VTT file
   valid_content <- c(
     "WEBVTT", "",
@@ -773,12 +776,12 @@ test_that("detect_duplicate_transcripts handles all NA transcript files", {
   expect_equal(result$summary$total_files, 0)
   expect_equal(result$summary$duplicate_groups, 0)
   expect_equal(result$summary$total_duplicates, 0)
-  
+
   # Check that similarity matrix is empty
   expect_true(is.matrix(result$similarity_matrix))
   expect_equal(nrow(result$similarity_matrix), 0)
   expect_equal(ncol(result$similarity_matrix), 0)
-  
+
   # Check that recommendations is empty
   expect_equal(length(result$recommendations), 0)
 })

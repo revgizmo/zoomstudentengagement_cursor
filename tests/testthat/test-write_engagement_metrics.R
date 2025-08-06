@@ -262,25 +262,28 @@ test_that("write_engagement_metrics warns about list columns other than comments
     duration = c(1, 2),
     wordcount = c(1, 2),
     comments = list("Hi", "Hello"),
-    other_list_col = list(c("a", "b"), c("c", "d")),  # Additional list column
-    nested_data = list(list(x = 1, y = 2), list(x = 3, y = 4))  # Another list column
+    other_list_col = list(c("a", "b"), c("c", "d")), # Additional list column
+    nested_data = list(list(x = 1, y = 2), list(x = 3, y = 4)) # Another list column
   )
-  
+
   temp_file <- tempfile(fileext = ".csv")
   on.exit(unlink(temp_file), add = TRUE)
-  
+
   # Should produce warning about converting list columns to JSON
-  expect_warning({
-    result <- write_engagement_metrics(test_data, temp_file)
-  }, "Converting list columns to JSON strings")
-  
+  expect_warning(
+    {
+      result <- write_engagement_metrics(test_data, temp_file)
+    },
+    "Converting list columns to JSON strings"
+  )
+
   # Check that file was created
   expect_true(file.exists(temp_file))
-  
+
   # Check that the result contains the processed data
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 2)
-  
+
   # Check that list columns were converted to character
   expect_true(is.character(result$other_list_col))
   expect_true(is.character(result$nested_data))

@@ -122,14 +122,17 @@ test_that("make_student_roster_sessions shows warning when empty input provided 
   # Temporarily unset TESTTHAT environment variable to trigger warning
   old_testthat <- Sys.getenv("TESTTHAT")
   Sys.setenv("TESTTHAT" = "")
-  
+
   # Should produce warning when empty input is provided and not in test environment
-  expect_warning({
-    result <- make_student_roster_sessions(empty_transcripts, empty_roster)
-  }, "Empty input data provided")
-  
+  expect_warning(
+    {
+      result <- make_student_roster_sessions(empty_transcripts, empty_roster)
+    },
+    "Empty input data provided"
+  )
+
   expect_null(result)
-  
+
   # Restore original TESTTHAT environment variable
   if (old_testthat == "") {
     Sys.unsetenv("TESTTHAT")
@@ -160,14 +163,17 @@ test_that("make_student_roster_sessions shows warning when no matches found outs
   # Temporarily unset TESTTHAT environment variable to trigger warning
   old_testthat <- Sys.getenv("TESTTHAT")
   Sys.setenv("TESTTHAT" = "")
-  
+
   # Should produce warning when no matches are found and not in test environment
-  expect_warning({
-    result <- make_student_roster_sessions(transcripts_list_df, roster_small_df)
-  }, "No matching records found between transcripts and roster")
-  
+  expect_warning(
+    {
+      result <- make_student_roster_sessions(transcripts_list_df, roster_small_df)
+    },
+    "No matching records found between transcripts and roster"
+  )
+
   expect_null(result)
-  
+
   # Restore original TESTTHAT environment variable
   if (old_testthat == "") {
     Sys.unsetenv("TESTTHAT")

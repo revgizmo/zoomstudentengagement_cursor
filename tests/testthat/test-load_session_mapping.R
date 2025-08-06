@@ -241,23 +241,26 @@ test_that("load_session_mapping shows validation warnings outside test environme
     topic = c("CS 101 - Introduction", "Unknown Course"),
     notes = c(NA_character_, "NEEDS MANUAL ASSIGNMENT")
   )
-  
+
   temp_file <- tempfile(fileext = ".csv")
   readr::write_csv(temp_mapping, temp_file)
   on.exit(unlink(temp_file), add = TRUE)
-  
+
   # Temporarily unset TESTTHAT environment variable to trigger warnings
   old_testthat <- Sys.getenv("TESTTHAT")
   Sys.setenv("TESTTHAT" = "")
-  
+
   # Should produce warning when unmapped recordings exist and not in test environment
-  expect_warning({
-    result <- load_session_mapping(temp_file, validate_mapping = TRUE)
-  }, "Found.*unmapped recordings")
-  
+  expect_warning(
+    {
+      result <- load_session_mapping(temp_file, validate_mapping = TRUE)
+    },
+    "Found.*unmapped recordings"
+  )
+
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 2)
-  
+
   # Restore original TESTTHAT environment variable
   if (old_testthat == "") {
     Sys.unsetenv("TESTTHAT")

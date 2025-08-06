@@ -44,7 +44,7 @@ test_that("add_dead_air_rows handles empty input", {
     end = character(),
     duration = numeric()
   )
-  
+
   # The function returns empty tibble without optional columns for empty input
   result <- add_dead_air_rows(df)
   expect_s3_class(result, "tbl_df")

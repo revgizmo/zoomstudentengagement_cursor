@@ -48,7 +48,7 @@ test_that("make_transcripts_session_summary_df validates input type", {
     duration = c(100, 200),
     wordcount = c(50, 100)
   )
-  
+
   # Should error when input is not a tibble
   expect_error(
     make_transcripts_session_summary_df(df_input),
@@ -62,7 +62,7 @@ test_that("make_transcripts_session_summary_df validates required columns", {
     unrelated_col = c("A", "B"),
     another_col = c(1, 2)
   )
-  
+
   # Should error when no expected columns are found
   expect_error(
     make_transcripts_session_summary_df(invalid_input),

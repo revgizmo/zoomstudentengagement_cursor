@@ -913,12 +913,15 @@ test_that("create_session_mapping shows warning when unmatched recordings exist 
   Sys.setenv("TESTTHAT" = "")
 
   # Should produce warning when unmatched recordings exist and not in test environment
-  expect_warning({
-    session_mapping <- create_session_mapping(
-      zoom_recordings_df = zoom_recordings,
-      course_info_df = course_info
-    )
-  }, "recordings need manual assignment")
+  expect_warning(
+    {
+      session_mapping <- create_session_mapping(
+        zoom_recordings_df = zoom_recordings,
+        course_info_df = course_info
+      )
+    },
+    "recordings need manual assignment"
+  )
 
   expect_s3_class(session_mapping, "tbl_df")
   expect_equal(nrow(session_mapping), 2)

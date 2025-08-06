@@ -68,17 +68,17 @@ test_that("load_transcript_files_list handles empty transcripts folder", {
   transcripts_dir <- file.path(temp_dir, "transcripts")
   dir.create(transcripts_dir, recursive = TRUE)
   on.exit(unlink(temp_dir, recursive = TRUE), add = TRUE)
-  
+
   # Create a non-matching file in the transcripts folder
   non_matching_file <- file.path(transcripts_dir, "non_matching_file.txt")
   writeLines("test content", non_matching_file)
-  
+
   # Should return empty data.frame when no matching files are found
   result <- load_transcript_files_list(
     data_folder = temp_dir,
     transcripts_folder = "transcripts"
   )
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
 })

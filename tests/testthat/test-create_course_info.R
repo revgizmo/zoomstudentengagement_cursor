@@ -6,7 +6,7 @@ test_that("create_course_info creates basic course info", {
     instructor = c("Dr. Smith", "Dr. Johnson"),
     session_length_hours = c(1.5, 2.0)
   )
-  
+
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 2)
   expect_equal(result$dept, c("CS", "MATH"))
@@ -21,7 +21,7 @@ test_that("create_course_info validates input lengths", {
   expect_error(
     create_course_info(
       dept = c("CS", "CS"),
-      course = c("101"),  # Only 1 course for 2 depts
+      course = c("101"), # Only 1 course for 2 depts
       section = c("1", "2"),
       instructor = c("Dr. Smith", "Dr. Johnson"),
       session_length_hours = c(1.5, 1.5)
@@ -39,7 +39,7 @@ test_that("create_course_info validates session_days length", {
       section = c("1", "2"),
       instructor = c("Dr. Smith", "Dr. Johnson"),
       session_length_hours = c(1.5, 1.5),
-      session_days = c("Mon")  # Only 1 day for 2 courses
+      session_days = c("Mon") # Only 1 day for 2 courses
     ),
     "session_days must have the same length as other inputs"
   )
@@ -54,7 +54,7 @@ test_that("create_course_info validates session_times length", {
       section = c("1", "2"),
       instructor = c("Dr. Smith", "Dr. Johnson"),
       session_length_hours = c(1.5, 1.5),
-      session_times = c("10:00")  # Only 1 time for 2 courses
+      session_times = c("10:00") # Only 1 time for 2 courses
     ),
     "session_times must have the same length as other inputs"
   )
@@ -70,11 +70,11 @@ test_that("create_course_info handles optional session information", {
     session_days = c("Mon", "Tue"),
     session_times = c("10:00", "09:00")
   )
-  
+
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 2)
   expect_equal(result$session_days, c("Mon", "Tue"))
   expect_equal(result$session_times, c("10:00", "09:00"))
   expect_true("course_id" %in% names(result))
   expect_true("course_name" %in% names(result))
-}) 
+})
