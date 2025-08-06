@@ -50,3 +50,19 @@ test_that("load_roster returns all students if all are enrolled", {
 
   unlink(temp_file)
 })
+
+test_that("load_roster returns all students if enrolled column does not exist", {
+  roster_content <- "student_id,name\n1,Alice\n2,Bob\n3,Carol"
+  temp_dir <- tempdir()
+  temp_file <- file.path(temp_dir, "roster.csv")
+  writeLines(roster_content, temp_file)
+
+  result <- load_roster(data_folder = temp_dir, roster_file = "roster.csv")
+
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 3)
+  expect_equal(result$name, c("Alice", "Bob", "Carol"))
+  expect_false("enrolled" %in% names(result))
+
+  unlink(temp_file)
+})

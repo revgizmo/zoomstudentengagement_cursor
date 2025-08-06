@@ -45,3 +45,36 @@ test_that("load_cancelled_classes returns tibble with correct columns for empty 
 
   unlink(temp_file)
 })
+
+test_that("load_cancelled_classes creates blank file when write_blank_cancelled_classes is TRUE", {
+  temp_dir <- tempdir()
+  temp_file <- file.path(temp_dir, "new_cancelled_classes.csv")
+
+  # Ensure the file doesn't exist initially
+  if (file.exists(temp_file)) {
+    unlink(temp_file)
+  }
+
+  # Test with write_blank_cancelled_classes = TRUE
+  result <- load_cancelled_classes(
+    data_folder = temp_dir,
+    cancelled_classes_file = "new_cancelled_classes.csv",
+    cancelled_classes_col_types = "cc",
+    write_blank_cancelled_classes = TRUE
+  )
+
+  # Check that the function returned a blank tibble
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 0)
+
+  # Check that the file was actually created
+  expect_true(file.exists(temp_file))
+
+  # Check that the created file contains the expected structure
+  created_data <- readr::read_csv(temp_file, show_col_types = FALSE)
+  expect_s3_class(created_data, "tbl_df")
+  expect_equal(nrow(created_data), 0)
+
+  # Clean up
+  unlink(temp_file)
+})
