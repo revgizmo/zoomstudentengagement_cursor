@@ -37,6 +37,7 @@
 - **[docs/development/CRAN_SUBMISSION.md](docs/development/CRAN_SUBMISSION.md)** - CRAN submission requirements
 - **[docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/ISSUE_MANAGEMENT_GUIDELINES.md)** - Comprehensive issue management
 - **[docs/development/AUDIT_LOG.md](docs/development/AUDIT_LOG.md)** - Codebase audit tracking and decisions
+- **[docs/development/TEST_COVERAGE_LEARNINGS.md](docs/development/TEST_COVERAGE_LEARNINGS.md)** - Test coverage improvement patterns and best practices
 
 ---
 

@@ -38,3 +38,34 @@ test_that("make_transcripts_session_summary_df returns NULL for invalid input", 
   result <- make_transcripts_session_summary_df(NULL)
   expect_null(result)
 })
+
+test_that("make_transcripts_session_summary_df validates input type", {
+  # Test with data.frame instead of tibble
+  df_input <- data.frame(
+    section = c("A", "B"),
+    preferred_name = c("John", "Jane"),
+    n = c(1, 2),
+    duration = c(100, 200),
+    wordcount = c(50, 100)
+  )
+  
+  # Should error when input is not a tibble
+  expect_error(
+    make_transcripts_session_summary_df(df_input),
+    "clean_names_df must be a tibble or NULL"
+  )
+})
+
+test_that("make_transcripts_session_summary_df validates required columns", {
+  # Test with tibble that has no expected columns
+  invalid_input <- tibble::tibble(
+    unrelated_col = c("A", "B"),
+    another_col = c(1, 2)
+  )
+  
+  # Should error when no expected columns are found
+  expect_error(
+    make_transcripts_session_summary_df(invalid_input),
+    "clean_names_df must contain at least one of the expected columns"
+  )
+})

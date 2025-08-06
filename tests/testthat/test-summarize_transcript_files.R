@@ -403,3 +403,70 @@ test_that("summarize_transcript_files handles names_to_exclude parameter", {
 
   unlink("test_transcripts", recursive = TRUE)
 })
+
+test_that("summarize_transcript_files handles metadata preservation with row_id", {
+  # Test with tibble that has additional metadata columns
+  transcript_file_names <- tibble::tibble(
+    transcript_file = c("file1.vtt", "file2.vtt"),
+    session_date = c("2024-01-15", "2024-01-16"),
+    instructor = c("Dr. Smith", "Dr. Jones"),
+    course_code = c("MATH101", "MATH101")
+  )
+
+  # Patch summarize_transcript_metrics to return different numbers of rows per file
+  stub <- function(transcript_path, ...) {
+    if (basename(transcript_path) == "file1.vtt") {
+      # Return 2 speakers for first file
+      tibble::tibble(
+        transcript_file = basename(transcript_path),
+        name = c("Alice", "Bob"),
+        n = c(1, 2),
+        duration = c(1, 2),
+        wordcount = c(1, 2),
+        comments = list("Hi", "Hello"),
+        n_perc = c(33, 67),
+        duration_perc = c(33, 67),
+        wordcount_perc = c(33, 67),
+        wpm = c(1, 1)
+      )
+    } else {
+      # Return 1 speaker for second file
+      tibble::tibble(
+        transcript_file = basename(transcript_path),
+        name = c("Charlie"),
+        n = c(3),
+        duration = c(3),
+        wordcount = c(3),
+        comments = list("Goodbye"),
+        n_perc = c(100),
+        duration_perc = c(100),
+        wordcount_perc = c(100),
+        wpm = c(1)
+      )
+    }
+  }
+
+  # Temporarily override summarize_transcript_metrics
+  orig <- zoomstudentengagement::summarize_transcript_metrics
+  assignInNamespace("summarize_transcript_metrics", stub, ns = "zoomstudentengagement")
+  on.exit(assignInNamespace("summarize_transcript_metrics", orig, ns = "zoomstudentengagement"))
+
+  # Create a fake transcripts folder
+  dir.create("test_transcripts", showWarnings = FALSE)
+
+  result <- summarize_transcript_files(
+    transcript_file_names = transcript_file_names,
+    data_folder = ".",
+    transcripts_folder = "test_transcripts"
+  )
+
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 3) # 2 speakers from file1 + 1 speaker from file2
+
+  # Check that we have the expected speakers
+  expect_true("Alice" %in% result$name)
+  expect_true("Bob" %in% result$name)
+  expect_true("Charlie" %in% result$name)
+
+  unlink("test_transcripts", recursive = TRUE)
+})

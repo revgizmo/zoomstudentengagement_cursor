@@ -227,3 +227,41 @@ test_that("load_session_mapping handles edge cases", {
   # as it causes issues with empty data handling
   skip("Skipping empty zoom recordings test due to data handling issues")
 })
+
+test_that("load_session_mapping shows validation warnings outside test environment", {
+  # Create a temporary mapping file with unmapped recordings
+  temp_mapping <- tibble::tibble(
+    zoom_recording_id = c("recording1", "recording2"),
+    dept = c("CS", NA_character_),
+    course = c("101", NA_character_),
+    section = c("1", NA_character_),
+    session_date = as.POSIXct(c("2024-01-15 10:00:00", "2024-01-16 10:00:00")),
+    session_time = c("10:00", "10:00"),
+    instructor = c("Dr. Smith", NA_character_),
+    topic = c("CS 101 - Introduction", "Unknown Course"),
+    notes = c(NA_character_, "NEEDS MANUAL ASSIGNMENT")
+  )
+  
+  temp_file <- tempfile(fileext = ".csv")
+  readr::write_csv(temp_mapping, temp_file)
+  on.exit(unlink(temp_file), add = TRUE)
+  
+  # Temporarily unset TESTTHAT environment variable to trigger warnings
+  old_testthat <- Sys.getenv("TESTTHAT")
+  Sys.setenv("TESTTHAT" = "")
+  
+  # Should produce warning when unmapped recordings exist and not in test environment
+  expect_warning({
+    result <- load_session_mapping(temp_file, validate_mapping = TRUE)
+  }, "Found.*unmapped recordings")
+  
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 2)
+  
+  # Restore original TESTTHAT environment variable
+  if (old_testthat == "") {
+    Sys.unsetenv("TESTTHAT")
+  } else {
+    Sys.setenv("TESTTHAT" = old_testthat)
+  }
+})

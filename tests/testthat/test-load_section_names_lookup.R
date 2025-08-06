@@ -259,3 +259,38 @@ test_that("load_section_names_lookup handles file with only one column", {
 
   unlink(temp_file)
 })
+
+test_that("load_section_names_lookup shows warnings when file does not exist outside test environment", {
+  temp_dir <- tempdir()
+  
+  # Temporarily unset TESTTHAT environment variable to trigger warnings
+  old_testthat <- Sys.getenv("TESTTHAT")
+  Sys.setenv("TESTTHAT" = "")
+  
+  # Should produce warnings when file doesn't exist and not in test environment
+  expect_warning({
+    result <- load_section_names_lookup(
+      data_folder = temp_dir,
+      names_lookup_file = "nonexistent.csv",
+      section_names_lookup_col_types = "ccccccccc"
+    )
+  }, "File does not exist:")
+  
+  expect_warning({
+    result <- load_section_names_lookup(
+      data_folder = temp_dir,
+      names_lookup_file = "nonexistent.csv",
+      section_names_lookup_col_types = "ccccccccc"
+    )
+  }, "Creating empty lookup table.")
+  
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 0)
+  
+  # Restore original TESTTHAT environment variable
+  if (old_testthat == "") {
+    Sys.unsetenv("TESTTHAT")
+  } else {
+    Sys.setenv("TESTTHAT" = old_testthat)
+  }
+})

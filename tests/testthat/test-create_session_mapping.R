@@ -892,3 +892,103 @@ test_that("create_session_mapping handles interactive mode with no unmatched rec
   expect_equal(session_mapping$section, "1")
   expect_true(is.na(session_mapping$notes[1])) # No manual assignment needed
 })
+
+test_that("create_session_mapping shows warning when unmatched recordings exist outside test environment", {
+  zoom_recordings <- tibble::tibble(
+    ID = c("recording1", "recording2"),
+    Topic = c("Unknown Course", "MATH 250 - Tue 09:00 (Dr. Johnson)"),
+    `Start Time` = c("Jan 15, 2024 10:00 AM", "Jan 16, 2024 09:00 AM")
+  )
+
+  course_info <- create_course_info(
+    dept = c("MATH"),
+    course = c("250"),
+    section = c("1"),
+    instructor = c("Dr. Johnson"),
+    session_length_hours = c(2.0)
+  )
+
+  # Temporarily unset TESTTHAT environment variable to trigger warning
+  old_testthat <- Sys.getenv("TESTTHAT")
+  Sys.setenv("TESTTHAT" = "")
+
+  # Should produce warning when unmatched recordings exist and not in test environment
+  expect_warning({
+    session_mapping <- create_session_mapping(
+      zoom_recordings_df = zoom_recordings,
+      course_info_df = course_info
+    )
+  }, "recordings need manual assignment")
+
+  expect_s3_class(session_mapping, "tbl_df")
+  expect_equal(nrow(session_mapping), 2)
+  expect_equal(session_mapping$notes[1], "NEEDS MANUAL ASSIGNMENT")
+
+  # Restore original TESTTHAT environment variable
+  if (old_testthat == "") {
+    Sys.unsetenv("TESTTHAT")
+  } else {
+    Sys.setenv("TESTTHAT" = old_testthat)
+  }
+})
+
+test_that("create_session_mapping handles course_section with missing columns gracefully", {
+  zoom_recordings <- tibble::tibble(
+    ID = c("recording1"),
+    Topic = c("CS 101 - Mon 10:00 (Dr. Smith)"),
+    `Start Time` = c("Jan 15, 2024 10:00 AM")
+  )
+
+  course_info <- create_course_info(
+    dept = c("CS"),
+    course = c("101"),
+    section = c("1"),
+    instructor = c("Dr. Smith"),
+    session_length_hours = c(1.5)
+  )
+
+  # Test with NULL output_file to avoid file creation issues
+  session_mapping <- create_session_mapping(
+    zoom_recordings_df = zoom_recordings,
+    course_info_df = course_info,
+    output_file = NULL,
+    auto_assign_patterns = list(
+      "CS 101" = "CS.*101"
+    )
+  )
+
+  expect_s3_class(session_mapping, "tbl_df")
+  expect_equal(nrow(session_mapping), 1)
+  expect_equal(session_mapping$course_section, "CS.101.1")
+  expect_equal(session_mapping$recording_id, "recording1")
+})
+
+test_that("create_session_mapping handles empty auto_assign_patterns with unmatched recordings", {
+  zoom_recordings <- tibble::tibble(
+    ID = c("recording1", "recording2"),
+    Topic = c("CS 101 - Mon 10:00 (Dr. Smith)", "MATH 250 - Tue 09:00 (Dr. Johnson)"),
+    `Start Time` = c("Jan 15, 2024 10:00 AM", "Jan 16, 2024 09:00 AM")
+  )
+
+  course_info <- create_course_info(
+    dept = c("CS", "MATH"),
+    course = c("101", "250"),
+    section = c("1", "1"),
+    instructor = c("Dr. Smith", "Dr. Johnson"),
+    session_length_hours = c(1.5, 2.0)
+  )
+
+  # Test with empty patterns and NULL output_file
+  session_mapping <- create_session_mapping(
+    zoom_recordings_df = zoom_recordings,
+    course_info_df = course_info,
+    auto_assign_patterns = list(), # Empty patterns
+    output_file = NULL
+  )
+
+  expect_s3_class(session_mapping, "tbl_df")
+  expect_equal(nrow(session_mapping), 2)
+  # Should not match any patterns
+  expect_true(all(is.na(session_mapping$course)))
+  expect_true(all(session_mapping$notes == "NEEDS MANUAL ASSIGNMENT"))
+})

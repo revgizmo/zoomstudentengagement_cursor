@@ -50,3 +50,31 @@ test_that("make_sections_df preserves column types", {
   expect_type(result$section, "character")
   expect_type(result$n, "integer")
 })
+
+test_that("make_sections_df validates input type", {
+  # Test with data.frame instead of tibble
+  df_input <- data.frame(
+    dept = c("CS", "CS"),
+    course = c("101", "101"),
+    section = c("1", "2")
+  )
+  
+  # Should error when input is not a tibble
+  expect_error(
+    make_sections_df(df_input),
+    "roster_df must be a tibble"
+  )
+  
+  # Test with list input
+  list_input <- list(
+    dept = c("CS", "CS"),
+    course = c("101", "101"),
+    section = c("1", "2")
+  )
+  
+  # Should error when input is not a tibble
+  expect_error(
+    make_sections_df(list_input),
+    "roster_df must be a tibble"
+  )
+})

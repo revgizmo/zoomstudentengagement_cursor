@@ -121,3 +121,14 @@ test_that("load_zoom_transcript handles comments without names", {
   # Clean up
   unlink(temp_file)
 })
+
+test_that("load_zoom_transcript handles VTT file with insufficient entries", {
+  # Create a VTT file with only 1 line after WEBVTT header (not enough for a complete entry)
+  temp_file <- tempfile(fileext = ".vtt")
+  writeLines(c("WEBVTT", "1"), temp_file)
+  on.exit(unlink(temp_file), add = TRUE)
+  
+  # Should return NULL when there aren't enough lines for complete entries
+  result <- load_zoom_transcript(temp_file)
+  expect_null(result)
+})

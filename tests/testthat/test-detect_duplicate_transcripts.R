@@ -674,3 +674,111 @@ test_that("detect_duplicate_transcripts handles summary statistics correctly", {
   expect_equal(summary$duplicate_groups, 0)
   expect_equal(summary$total_duplicates, 0)
 })
+
+test_that("detect_duplicate_transcripts shows warning when no files found outside test environment", {
+  # Test with non-existent files
+  test_tibble <- tibble::tibble(transcript_file = c("nonexistent1.vtt", "nonexistent2.vtt"))
+  
+  # Temporarily unset TESTTHAT environment variable to trigger warning
+  old_testthat <- Sys.getenv("TESTTHAT")
+  Sys.setenv("TESTTHAT" = "")
+  
+  # Should produce warning when no files exist and not in test environment
+  expect_warning({
+    result <- detect_duplicate_transcripts(test_tibble)
+  }, "No transcript files found in the specified directory")
+  
+  expect_type(result, "list")
+  expect_length(result$duplicate_groups, 0)
+  expect_equal(result$summary$total_files, 0)
+  
+  # Restore original TESTTHAT environment variable
+  if (old_testthat == "") {
+    Sys.unsetenv("TESTTHAT")
+  } else {
+    Sys.setenv("TESTTHAT" = old_testthat)
+  }
+})
+
+test_that("detect_duplicate_transcripts handles transcript loading errors gracefully", {
+  # Create temporary directory for test files
+  temp_dir <- tempdir()
+  temp_file1 <- file.path(temp_dir, "test1.vtt")
+  temp_file2 <- file.path(temp_dir, "test2.vtt")
+
+  on.exit(
+    {
+      unlink(c(temp_file1, temp_file2), force = TRUE)
+    },
+    add = TRUE
+  )
+
+  # Create a completely invalid file that will definitely cause loading errors
+  invalid_content <- c(
+    "This is not a valid VTT file",
+    "It has no proper structure",
+    "And will definitely cause errors"
+  )
+  writeLines(invalid_content, temp_file1)
+  
+  # Create a valid VTT file
+  valid_content <- c(
+    "WEBVTT", "",
+    "1",
+    "00:00:01.000 --> 00:00:05.000",
+    "Speaker: Hello world"
+  )
+  writeLines(valid_content, temp_file2)
+
+  # Create test tibble
+  test_tibble <- tibble::tibble(
+    transcript_file = c(basename(temp_file1), basename(temp_file2))
+  )
+
+  # Test content method - should handle loading errors gracefully
+  result <- detect_duplicate_transcripts(
+    test_tibble,
+    data_folder = temp_dir,
+    transcripts_folder = "",
+    method = "content"
+  )
+
+  # Should return a list with expected structure
+  expect_type(result, "list")
+  expect_true("duplicate_groups" %in% names(result))
+  expect_true("similarity_matrix" %in% names(result))
+  expect_true("recommendations" %in% names(result))
+  expect_true("summary" %in% names(result))
+
+  # Should have 2 files (even if one fails to load)
+  expect_equal(result$summary$total_files, 2)
+
+  # Should have similarity matrix
+  sim_matrix <- result$similarity_matrix
+  expect_true(is.matrix(sim_matrix))
+  expect_equal(nrow(sim_matrix), 2)
+  expect_equal(ncol(sim_matrix), 2)
+
+  # Diagonal should be 1.0
+  expect_equal(as.numeric(diag(sim_matrix)), c(1.0, 1.0))
+})
+
+test_that("detect_duplicate_transcripts handles all NA transcript files", {
+  # Test with all NA values in transcript_file column
+  test_tibble <- tibble::tibble(transcript_file = c(NA_character_, NA_character_, NA_character_))
+  result <- detect_duplicate_transcripts(test_tibble)
+
+  expect_type(result, "list")
+  expect_length(result$duplicate_groups, 0)
+  expect_equal(result$summary$total_files, 0)
+  expect_equal(result$summary$duplicate_groups, 0)
+  expect_equal(result$summary$total_duplicates, 0)
+  
+  # Check that similarity matrix is empty
+  expect_true(is.matrix(result$similarity_matrix))
+  expect_equal(nrow(result$similarity_matrix), 0)
+  expect_equal(ncol(result$similarity_matrix), 0)
+  
+  # Check that recommendations is empty
+  expect_equal(length(result$recommendations), 0)
+})
