@@ -78,7 +78,7 @@ Rscript scripts/context-for-new-chat.R
 
 ### 3. `scripts/save-context.sh` - Context File Saver
 
-**Purpose**: Saves context output to files for linking in Cursor chats.
+**Purpose**: Saves context output to files for linking in Cursor chats and optionally updates PROJECT.md.
 
 **Features**:
 - Validation of required scripts and dependencies
@@ -86,10 +86,24 @@ Rscript scripts/context-for-new-chat.R
 - Progress indicators
 - Backup of existing files
 - Clean error messages
+- Automated PROJECT.md metrics updates
 
 **Usage**:
 ```bash
+# Save context files only
 ./scripts/save-context.sh
+
+# Check if PROJECT.md needs updating (dry-run)
+./scripts/save-context.sh --check-project-md
+
+# Update PROJECT.md metrics and status
+./scripts/save-context.sh --fix-project-md
+
+# Update PROJECT.md issue sections
+./scripts/save-context.sh --update-sections
+
+# Show help
+./scripts/save-context.sh --help
 ```
 
 **Output Files**:
@@ -97,11 +111,13 @@ Rscript scripts/context-for-new-chat.R
 - `.cursor/r-context.md` - R-specific context (link with `@r-context.md`)
 - `.cursor/full-context.md` - Combined context (link with `@full-context.md`)
 - `.cursor/context_YYYYMMDD_HHMMSS.md` - Timestamped version
+- `.cursor/metrics.json` - Current metrics for automated updates
 
 **Backup Files**:
 - `.cursor/context_backup_YYYYMMDD_HHMMSS.md`
 - `.cursor/r-context_backup_YYYYMMDD_HHMMSS.md`
 - `.cursor/full-context_backup_YYYYMMDD_HHMMSS.md`
+- `PROJECT.md.backup.YYYYMMDD_HHMMSS` (when using --fix-project-md)
 
 ### 4. `scripts/get-context.sh` - Combined Context Script
 
@@ -187,6 +203,31 @@ Rscript scripts/context-for-new-chat.R
 # @r-context.md
 # @full-context.md
 ```
+
+### Automated PROJECT.md Updates
+```bash
+# Check if PROJECT.md needs updating (dry-run)
+./scripts/save-context.sh --check-project-md
+
+# Update PROJECT.md with current metrics
+./scripts/save-context.sh --fix-project-md
+
+# Update both metrics and issue sections
+./scripts/save-context.sh --fix-project-md --update-sections
+```
+
+**What gets updated automatically:**
+- Last updated date
+- Package status
+- Test suite counts
+- R CMD check notes
+- Test coverage percentage
+
+**Safety features:**
+- Automatic backups before changes
+- Dry-run mode to preview changes
+- Clear diff output showing exactly what will change
+- Cross-platform compatibility (uses awk instead of sed)
 
 ### Integration with Development Workflow
 ```bash

@@ -249,56 +249,72 @@ grep -n "Test Coverage:\|Test Suite:\|R CMD Check:\|Package Status:" PROJECT.md
 - Provide reliable, idempotent tooling with dry-run verification and CI
   enforcement to prevent drift.
 
-### Deliverables
-- `scripts/collect-metrics.R` (JSON emitter of current metrics)
-- `scripts/update-project-md.sh` (or equivalent
-  `update_project_metrics()` inside `scripts/save-context.sh`)
-- Enhanced prompts in `scripts/get-context.sh` and
-  `scripts/save-context.sh` referencing the automated updater
-- Documentation updates in `docs/development/CONTEXT_SCRIPTS_DOCUMENTATION.md`
-- CI guard that fails when `PROJECT.md` is out-of-date
+### Deliverables (Lean Scope)
+- Augment existing `scripts/context-for-new-chat.R` to also emit
+  `.cursor/metrics.json` (JSON with metrics) when run by
+  `scripts/save-context.sh`.
+- Integrate an `update_project_metrics()` function into
+  `scripts/save-context.sh` with `--check-project-md` (dry-run) and
+  `--fix-project-md` (apply) flags.
+- Enhance prompts in `scripts/get-context.sh` and `scripts/save-context.sh`
+  to reference the integrated updater (no separate script file required).
+- Documentation updates in
+  `docs/development/CONTEXT_SCRIPTS_DOCUMENTATION.md`.
+- Optional Phase 2: CI guard that fails when `PROJECT.md` is out-of-date.
 
 ### Task Breakdown
-- [ ] Metrics collector (`scripts/collect-metrics.R`)
-  - [ ] Emit JSON: `coverage`, `tests_passed`, `failures`, `skipped`,
-        `rcmd_notes`, `exported_functions`.
-  - [ ] Exit non-zero with helpful message if unavailable.
-- [ ] Updater (choose one implementation path):
-  - [ ] Add `scripts/update-project-md.sh` with:
-        - [ ] Backups and `--dry-run`/`--fix` flags
-        - [ ] Stable regex replacements for:
-              last updated date, package status, test suite, R CMD check,
-              coverage lines
-        - [ ] Unified diff output on dry-run when changes would be made
-        - [ ] Clear failure when expected anchors are missing
-  - or
-  - [ ] Implement `update_project_metrics()` inside `scripts/save-context.sh`
-        with the same behavior as above
+- [ ] Metrics JSON emission (single source):
+  - [ ] Update `scripts/context-for-new-chat.R` to also write
+        `.cursor/metrics.json` containing:
+        `coverage`, `tests_passed`, `failures`, `skipped`, `rcmd_notes`,
+        `exported_functions`.
+  - [ ] Ensure `save-context.sh` triggers R context once, both prints and writes
+        metrics in same run (no second coverage calculation).
+  - [ ] Exit non-zero with helpful message if metrics unavailable.
+- [ ] Updater (integrated, robust):
+  - [ ] Implement `update_project_metrics()` in `scripts/save-context.sh` with:
+        - [ ] Backups and flags `--check-project-md` (dry-run) and
+              `--fix-project-md` (apply)
+        - [ ] Cross-platform replacements (prefer awk/Rscript over sed -i)
+        - [ ] Stable regex anchors for exactly these lines in `PROJECT.md`:
+              - Header date: `^## Current Status \(Updated: YYYY-MM-DD\)`
+              - Status: `^\*\*Package Status: .*\*\*$`
+              - Test suite: `^- \*\*Test Suite\*\*: .*$`
+              - R CMD check: `^- \*\*R CMD Check\*\*: .*$`
+              - Coverage: `^- \*\*Test Coverage\*\*: .*$`
+        - [ ] Clear failure when any expected anchor is missing (no guessing)
+        - [ ] Dry-run: generate temp copy, show `git diff --no-index PROJECT.md PROJECT.md.updated`
+        - [ ] Optional: add HTML anchors for future-proofing:
+              `<!-- PROJECT_MD:DATE -->`, `<!-- PROJECT_MD:STATUS -->`, etc.
+              (prefer if present, fall back to regex)
 - [ ] Integrations
-  - [ ] Have `scripts/get-context.sh` and `scripts/save-context.sh` mention
-        `./scripts/update-project-md.sh --dry-run` and `--fix` as the
-        preferred update flow
-  - [ ] Keep existing issue-section updater intact
+  - [ ] Update `scripts/get-context.sh` and `scripts/save-context.sh` prompts
+        to mention `--check-project-md` and `--fix-project-md`
+  - [ ] Keep existing issue-section updater intact; do not expand scope
 - [ ] Documentation
   - [ ] Add usage, flags, and verification steps to
         `docs/development/CONTEXT_SCRIPTS_DOCUMENTATION.md`
-- [ ] CI Guard (GitHub Actions)
-  - [ ] New job: run `./scripts/collect-metrics.R`, then
-        `./scripts/update-project-md.sh --dry-run`
+- [ ] CI Guard (Phase 2 - optional)
+  - [ ] New job: run `./scripts/save-context.sh` to refresh metrics JSON,
+        then run updater with `--check-project-md`
   - [ ] Fail if any changes would be made (non-empty diff)
 
 ### Definition of Done
-- [ ] Running `./scripts/update-project-md.sh --dry-run` reports no diff when
-      `PROJECT.md` is up to date.
-- [ ] Running `./scripts/update-project-md.sh --fix` updates the five metric
-      lines deterministically and creates a timestamped backup.
-- [ ] CI fails when `PROJECT.md` drifts from current metrics and passes once it
-      is updated.
-- [ ] Context scripts display the automated option and link to documentation.
+- [ ] Running `./scripts/save-context.sh --check-project-md` reports no diff
+      when `PROJECT.md` is up to date.
+- [ ] Running `./scripts/save-context.sh --fix-project-md` updates the five
+      metric/status lines deterministically and creates a timestamped backup.
+- [ ] Single R context run generates both printed output and `metrics.json`.
+- [ ] Clear failure messages when anchors are missing (no silent failures).
+- [ ] Context scripts display the integrated automated option and link to
+      documentation.
+- [ ] Phase 2 (optional): CI fails when drift is detected and passes once
+      updated.
 
 ### Timeline
-- Day 1: Implement collector + updater with dry-run/fix, update docs
-- Day 2: Wire prompts in context scripts, add CI guard
+- Day 1: Emit metrics JSON in existing R script; implement integrated updater
+         with dry-run/fix; update docs
+- Day 2: Wire prompts in context scripts; optional CI guard
 - Day 3: Validate across fresh clones; refine regex anchors if needed
 
 ### Risks & Mitigations
