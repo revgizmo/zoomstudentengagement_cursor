@@ -187,9 +187,9 @@ create_session_mapping <- function(
     course_section_vals <- rep(NA_character_, nrow(mapping_df))
     valid_indices <- !is.na(mapping_df$dept) & !is.na(mapping_df$course) & !is.na(mapping_df$section)
     course_section_vals[valid_indices] <- paste(
-      mapping_df$dept[valid_indices], 
-      mapping_df$course[valid_indices], 
-      mapping_df$section[valid_indices], 
+      mapping_df$dept[valid_indices],
+      mapping_df$course[valid_indices],
+      mapping_df$section[valid_indices],
       sep = "."
     )
     mapping_df$course_section <- course_section_vals

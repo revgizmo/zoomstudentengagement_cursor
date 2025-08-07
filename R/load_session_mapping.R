@@ -38,7 +38,7 @@ load_session_mapping <- function(
 
   # Load mapping file with proper column types (flexible for optional columns)
   mapping_df <- readr::read_csv(
-    mapping_file, 
+    mapping_file,
     show_col_types = FALSE,
     col_types = readr::cols(
       zoom_recording_id = readr::col_character(),
@@ -135,7 +135,7 @@ load_session_mapping <- function(
       # Handle NA values properly
       course_vals <- ifelse(is.na(result$course), NA_character_, as.character(result$course))
       section_vals <- ifelse(is.na(result$section), NA_character_, as.character(result$section))
-      
+
       # Create course_section only when both course and section are not NA
       course_section_vals <- rep(NA_character_, nrow(result))
       valid_indices <- !is.na(course_vals) & !is.na(section_vals)
