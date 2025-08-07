@@ -11,7 +11,7 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - Ensure robust testing and error handling
 
 ## Current Status (Updated: 2025-08-07)
-**Package Status: EXCELLENT TECHNICAL STATUS - CRITICAL ETHICAL BLOCKERS IDENTIFIED**
+**Package Status: EXCELLENT - Very Close to CRAN Ready**
 
 ### 🚨 **Critical Ethical Research Findings**
 A comprehensive ethical analysis conducted on 2025-08-04 revealed **CATASTROPHIC risks** that must be addressed before CRAN submission, despite excellent technical metrics. See `docs/development/ethical-issues-research/ETHICAL_ISSUES_ANALYSIS.md` for complete analysis.
@@ -143,7 +143,7 @@ A comprehensive premortem analysis conducted on 2025-08-04 revealed fundamental 
 5. **[Issue #129](https://github.com/revgizmo/zoomstudentengagement/issues/129)**: HIGH: Complete Real-World Testing with Confidential Data
 6. **[Issue #130](https://github.com/revgizmo/zoomstudentengagement/issues/130)**: HIGH: Complete Function Documentation and Examples
 
-### Active Issues for CRAN Submission (38 Open Issues)
+### Active Issues for CRAN Submission (37 Open Issues)
 - **[Issue #123](https://github.com/revgizmo/zoomstudentengagement/issues/123)**: CRITICAL: Project Restructuring Based on Premortem Analysis (Priority: HIGH - CRAN submission)
 - **[Issue #84](https://github.com/revgizmo/zoomstudentengagement/issues/84)**: Review and implement FERPA/security compliance (Priority: HIGH - privacy/security)
 - **[Issue #85](https://github.com/revgizmo/zoomstudentengagement/issues/85)**: Review functions for ethical use and equitable participation focus (Priority: HIGH - ethics)
@@ -198,9 +198,9 @@ A comprehensive premortem analysis conducted on 2025-08-04 revealed fundamental 
    - Replace deprecated function usage
 
 6. **Test Coverage Improvement** (Priority: HIGH) - [Issue #20](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/20)
-   - Current: 78.15%
+   - Current: 93.82% ✅ **TARGET ACHIEVED**
    - Target: 90%
-   - Focus on: `load_and_process_zoom_transcript.R` (0%), `load_session_mapping.R` (0%), `detect_duplicate_transcripts.R` (29.51%)
+   - Focus on: `load_and_process_zoom_transcript.R` (100%), `load_session_mapping.R` (87%), `detect_duplicate_transcripts.R` (100%)
 
 7. **Code Quality Improvements** (Priority: HIGH) - [Issues #16, #17, #18, #23](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/)
    - Refactor function names and API consistency
@@ -242,6 +242,12 @@ A comprehensive premortem analysis conducted on 2025-08-04 revealed fundamental 
 13. **Development Efficiency** (Priority: MEDIUM) - [Issue #47](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/47)
    - Create verification helper script
    - Automate pre-CRAN validation process
+
+14. **Automate PROJECT.md Metrics Update** (Priority: HIGH) - [Issue #141](https://github.com/revgizmo/zoomstudentengagement/issues/141)
+    - Implement `scripts/collect-metrics.R` (JSON metrics)
+    - Add `scripts/update-project-md.sh` with `--dry-run`/`--fix`, backups, regex anchors
+    - Integrate prompts in context scripts to use the updater
+    - Add CI guard to fail on drift
 
 ### 🎉 **Major Success Achieved**
 The project has made **outstanding progress** toward CRAN submission:
