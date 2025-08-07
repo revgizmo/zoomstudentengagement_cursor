@@ -523,8 +523,8 @@ test_that("create_session_mapping handles course_section with partial data", {
   expect_s3_class(session_mapping, "tbl_df")
   expect_equal(nrow(session_mapping), 2)
 
-  # First recording should have course_section, second should be "NA.NA.NA" (function behavior)
-  expect_equal(session_mapping$course_section, c("CS.101.1", "NA.NA.NA"))
+  # First recording should have course_section, second should be NA (correct behavior)
+  expect_equal(session_mapping$course_section, c("CS.101.1", NA_character_))
 })
 
 test_that("create_session_mapping handles multiple pattern matches correctly", {

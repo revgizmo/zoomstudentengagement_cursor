@@ -181,11 +181,20 @@ create_session_mapping <- function(
   }
 
   # Return mapping with base R operations instead of dplyr to avoid segmentation fault
-  # Add course_section column
+  # Add course_section column with proper NA handling
   if (all(c("dept", "course", "section") %in% names(mapping_df))) {
-    mapping_df$course_section <- paste(mapping_df$dept, mapping_df$course, mapping_df$section, sep = ".")
+    # Handle NA values properly
+    course_section_vals <- rep(NA_character_, nrow(mapping_df))
+    valid_indices <- !is.na(mapping_df$dept) & !is.na(mapping_df$course) & !is.na(mapping_df$section)
+    course_section_vals[valid_indices] <- paste(
+      mapping_df$dept[valid_indices], 
+      mapping_df$course[valid_indices], 
+      mapping_df$section[valid_indices], 
+      sep = "."
+    )
+    mapping_df$course_section <- course_section_vals
   } else {
-    mapping_df$course_section <- NA_character_
+    mapping_df$course_section <- rep(NA_character_, nrow(mapping_df))
   }
 
   # Select and rename columns using base R
