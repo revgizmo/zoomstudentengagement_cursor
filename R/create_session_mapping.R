@@ -72,27 +72,38 @@ create_session_mapping <- function(
     stop("course_info_df must contain columns: ", paste(missing_cols, collapse = ", "))
   }
 
-  # Create base mapping structure
-  mapping_df <- zoom_recordings_df %>%
-    dplyr::select(
-      zoom_recording_id = ID,
-      topic = Topic,
-      start_time = `Start Time`
-    )
+  # Create base mapping structure using base R instead of dplyr to avoid segmentation fault
+  mapping_df <- data.frame(
+    zoom_recording_id = zoom_recordings_df$ID,
+    topic = zoom_recordings_df$Topic,
+    start_time = zoom_recordings_df$`Start Time`,
+    stringsAsFactors = FALSE
+  )
 
   # Use base R operations instead of dplyr to avoid segmentation fault
-  mapping_df$dept <- NA_character_
-  mapping_df$course <- NA_character_
-  mapping_df$section <- NA_character_
-  mapping_df$session_date <- lubridate::parse_date_time(
-    mapping_df$start_time,
-    orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
-    tz = "America/Los_Angeles",
-    quiet = TRUE
-  )
-  mapping_df$session_time <- format(mapping_df$session_date, "%H:%M")
-  mapping_df$instructor <- NA_character_
-  mapping_df$notes <- NA_character_
+  # Handle empty data frame case
+  if (nrow(mapping_df) == 0) {
+    mapping_df$dept <- character(0)
+    mapping_df$course <- character(0)
+    mapping_df$section <- character(0)
+    mapping_df$session_date <- as.POSIXct(character(0))
+    mapping_df$session_time <- character(0)
+    mapping_df$instructor <- character(0)
+    mapping_df$notes <- character(0)
+  } else {
+    mapping_df$dept <- NA_character_
+    mapping_df$course <- NA_character_
+    mapping_df$section <- NA_character_
+    mapping_df$session_date <- lubridate::parse_date_time(
+      mapping_df$start_time,
+      orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y I:M:S", "b d, Y I:M"),
+      tz = "America/Los_Angeles",
+      quiet = TRUE
+    )
+    mapping_df$session_time <- format(mapping_df$session_date, "%H:%M")
+    mapping_df$instructor <- NA_character_
+    mapping_df$notes <- NA_character_
+  }
 
   # Attempt automatic assignment based on patterns
   if (length(auto_assign_patterns) > 0) {
@@ -115,10 +126,11 @@ create_session_mapping <- function(
     }
   }
 
-  # Interactive assignment for unmatched recordings
+  # Interactive assignment for unmatched recordings using base R instead of dplyr
   if (interactive) {
-    unmatched <- mapping_df %>%
-      dplyr::filter(is.na(dept) | is.na(course) | is.na(section))
+    # Use base R subsetting instead of dplyr::filter to avoid segmentation fault
+    unmatched_indices <- which(is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section))
+    unmatched <- mapping_df[unmatched_indices, , drop = FALSE]
 
     if (nrow(unmatched) > 0) {
       cat("Found", nrow(unmatched), "unmatched recordings:\n")
@@ -182,6 +194,9 @@ create_session_mapping <- function(
     "course_section", "session_date", "session_time", "instructor", "notes"
   )]
   names(result)[names(result) == "zoom_recording_id"] <- "recording_id"
+
+  # Convert to tibble to maintain expected return type
+  result <- tibble::as_tibble(result)
 
   return(result)
 }

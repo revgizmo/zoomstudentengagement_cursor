@@ -52,22 +52,24 @@ load_session_mapping <- function(
     )
   }
 
-  # Validate mapping if requested
+  # Validate mapping if requested using base R instead of dplyr to avoid segmentation fault
   if (validate_mapping) {
-    unmapped <- mapping_df %>%
-      dplyr::filter(is.na(dept) | is.na(course) | is.na(section))
+    # Use base R subsetting instead of dplyr::filter to avoid segmentation fault
+    unmapped_indices <- which(is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section))
+    unmapped <- mapping_df[unmapped_indices, , drop = FALSE]
 
     if (nrow(unmapped) > 0) {
       # Only show warnings if not in test environment
       if (Sys.getenv("TESTTHAT") != "true") {
         warning("Found ", nrow(unmapped), " unmapped recordings in session mapping file")
         cat("Unmapped recordings:\n")
-        print(unmapped %>% dplyr::select(zoom_recording_id, topic, notes))
+        # Use base R subsetting instead of dplyr::select
+        print(unmapped[, c("zoom_recording_id", "topic", "notes")])
       }
     }
   }
 
-  # Merge with Zoom recordings if provided
+  # Merge with Zoom recordings if provided using base R instead of dplyr
   if (!is.null(zoom_recordings_df)) {
     if (!tibble::is_tibble(zoom_recordings_df)) {
       stop("zoom_recordings_df must be a tibble")
@@ -78,25 +80,51 @@ load_session_mapping <- function(
       stop("zoom_recordings_df must contain 'ID' column")
     }
 
-    # Merge mapping with recordings
-    result <- zoom_recordings_df %>%
-      dplyr::left_join(
-        mapping_df,
-        by = c("ID" = "zoom_recording_id")
-      ) %>%
-      dplyr::mutate(
-        dept = if ("dept" %in% names(.)) dept else NA_character_,
-        course = if ("course" %in% names(.)) course else NA_character_,
-        section = if ("section" %in% names(.)) section else NA_character_,
-        instructor = if ("instructor" %in% names(.)) instructor else NA_character_,
-        course_section = if (all(c("course", "section") %in% names(.))) paste(course, section, sep = ".") else NA_character_,
-        match_start_time = if ("session_date" %in% names(.)) session_date else NA,
-        match_end_time = if ("session_date" %in% names(.)) session_date + lubridate::duration(1.5, "hours") else NA
-      ) %>%
-      dplyr::select(
-        -dplyr::any_of(c("dept_zoom")),
-        -dplyr::any_of(c("session_date", "session_time"))
-      )
+    # Merge mapping with recordings using base R instead of dplyr to avoid segmentation fault
+    # Convert to data.frame for base R operations
+    zoom_df <- as.data.frame(zoom_recordings_df)
+    mapping_data <- as.data.frame(mapping_df)
+
+    # Perform left join using base R merge
+    result <- merge(
+      zoom_df,
+      mapping_data,
+      by.x = "ID",
+      by.y = "zoom_recording_id",
+      all.x = TRUE
+    )
+
+    # Add missing columns if they don't exist
+    if (!"dept" %in% names(result)) result$dept <- NA_character_
+    if (!"course" %in% names(result)) result$course <- NA_character_
+    if (!"section" %in% names(result)) result$section <- NA_character_
+    if (!"instructor" %in% names(result)) result$instructor <- NA_character_
+
+    # Add computed columns
+    result$course_section <- if (all(c("course", "section") %in% names(result))) {
+      paste(result$course, result$section, sep = ".")
+    } else {
+      NA_character_
+    }
+
+    result$match_start_time <- if ("session_date" %in% names(result)) {
+      result$session_date
+    } else {
+      NA
+    }
+
+    result$match_end_time <- if ("session_date" %in% names(result)) {
+      result$session_date + lubridate::duration(1.5, "hours")
+    } else {
+      NA
+    }
+
+    # Remove unwanted columns using base R
+    cols_to_remove <- c("dept_zoom", "session_date", "session_time")
+    result <- result[, !names(result) %in% cols_to_remove, drop = FALSE]
+
+    # Convert back to tibble
+    result <- tibble::as_tibble(result)
 
     return(result)
   }
