@@ -17,6 +17,8 @@
 #'
 #' @return The object with privacy rules applied. For data frames, the same
 #'   structure is preserved with identifying fields masked when appropriate.
+#'
+#' @seealso [set_privacy_defaults()]
 #' @export
 #'
 #' @examples

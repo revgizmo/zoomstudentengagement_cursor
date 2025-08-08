@@ -254,6 +254,26 @@ test_that("write_engagement_metrics works with real transcript data", {
   }
 })
 
+test_that("write_engagement_metrics masks identifier columns by default", {
+  metrics_data <- tibble::tibble(
+    name = c("Alice", "Bob"),
+    student_id = c("S1", "S2"),
+    duration = c(10, 20)
+  )
+
+  temp_file <- tempfile(fileext = ".csv")
+  on.exit(unlink(temp_file), add = TRUE)
+
+  result <- write_engagement_metrics(metrics_data, temp_file)
+  # name and student_id should be masked to Student NN pattern
+  expect_true(all(grepl("^Student \\d{2}$", result$name)))
+  expect_true(all(grepl("^Student \\d{2}$", result$student_id)))
+
+  written <- readr::read_csv(temp_file, show_col_types = FALSE)
+  expect_true(all(grepl("^Student \\d{2}$", written$name)))
+  expect_true(all(grepl("^Student \\d{2}$", written$student_id)))
+})
+
 test_that("write_engagement_metrics warns about list columns other than comments", {
   # Create test data with list columns other than comments
   test_data <- tibble::tibble(

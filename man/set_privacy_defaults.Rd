@@ -25,3 +25,6 @@ set_privacy_defaults("mask")
 # Temporarily disable masking (will emit a warning)
 set_privacy_defaults("none")
 }
+\seealso{
+[ensure_privacy()]
+}

@@ -8,6 +8,8 @@
 #' @param privacy_level One of `c("mask", "none")`. Defaults to `"mask"`.
 #'
 #' @return Invisibly returns the chosen privacy level.
+#'
+#' @seealso [ensure_privacy()]
 #' @export
 #'
 #' @examples

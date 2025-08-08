@@ -163,6 +163,9 @@ set_privacy_defaults("none")  # will emit a warning
 set_privacy_defaults("mask")  # restore safe default
 ```
 
+Masked by default: `preferred_name`, `name`, `first_last`, `name_raw`,
+`student_id`, `email`.
+
 See the vignette “Ethical & FERPA Guide” for details.
 
 ## 🤝 Contributing
