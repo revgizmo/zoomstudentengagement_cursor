@@ -48,3 +48,43 @@ test_that("writers and plots apply privacy by default", {
   expect_true(all(written$preferred_name %in% paste("Student", stringr::str_pad(1:2, 2, pad = "0"))))
 })
 
+test_that("plot data has masked names", {
+  df <- tibble::tibble(
+    section = c("A", "A"),
+    preferred_name = c("Alice", "Bob"),
+    session_ct = c(1, 2),
+    duration = c(10, 20),
+    wordcount = c(100, 200)
+  )
+  p <- plot_users_by_metric(df, metric = "duration")
+  # Verify the underlying plot data has masked names
+  expect_true(all(grepl("^Student \\d{2}$", as.character(p$data$preferred_name))))
+})
+
+test_that("write_transcripts_session_summary writes masked identifiers", {
+  df <- tibble::tibble(
+    section = c("A", "A"),
+    preferred_name = c("Alice", "Bob"),
+    session_ct = c(1, 2),
+    duration = c(10, 20),
+    wordcount = c(100, 200)
+  )
+  tmpdir <- tempfile("privacy_session")
+  dir.create(tmpdir)
+  on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
+  write_transcripts_session_summary(df, data_folder = tmpdir, transcripts_session_summary_file = "out.csv")
+  written <- readr::read_csv(file.path(tmpdir, "out.csv"), show_col_types = FALSE)
+  expect_true(all(grepl("^Student \\d{2}$", written$preferred_name)))
+})
+
+test_that("summarize_transcript_metrics is masked by default", {
+  df <- tibble::tibble(
+    name = c("Alice", "Bob", "Alice"),
+    comment = c("Hi", "Hello", "Bye"),
+    duration = c(1, 2, 1),
+    wordcount = c(1, 1, 1)
+  )
+  res <- summarize_transcript_metrics(transcript_df = df, add_dead_air = FALSE)
+  expect_true(all(grepl("^Student \\d{2}$", res$name)))
+})
+

@@ -111,6 +111,24 @@ The `zoomstudentengagement` package provides tools for:
 5. **Analyze**: Calculate metrics and create visualizations
 6. **Report**: Generate insights and reports
 
+## 🔒 Privacy Defaults
+
+This package is privacy-first by default. On load, it sets the global option
+`zoomstudentengagement.privacy_level` to `"mask"` (unless you set it yourself).
+This means identifiers like names and student IDs are masked to labels such as
+`Student 01` in summaries, plots, and writers.
+
+To change behavior temporarily (not recommended for student data):
+
+```r
+library(zoomstudentengagement)
+set_privacy_defaults("none")  # will emit a warning
+# ... analysis that may include identifiable outputs ...
+set_privacy_defaults("mask")  # restore safe default
+```
+
+See the vignette "Ethical & FERPA Guide" for details.
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
