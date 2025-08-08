@@ -23,6 +23,9 @@
 
 # Development documentation
 ^docs/
+^CONTEXT_SCRIPTS_ENHANCEMENT\.md$
+^ISSUE_20_COVERAGE_TODO\.md$
+^PROJECT\.md\.backup\..*$
 ^AUDIT_LOG\.md$
 ^CONTRIBUTING\.md$
 ^CRAN_CHECKLIST\.md$

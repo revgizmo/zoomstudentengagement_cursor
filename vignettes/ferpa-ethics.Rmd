@@ -20,7 +20,8 @@ getOption("zoomstudentengagement.privacy_level")
 ```
 
 to `"mask"` unless you have set it otherwise. This ensures personally
-identifying fields such as `preferred_name`, `name`, and `student_id` are
+identifying fields such as `preferred_name`, `name`, `first_last`, `name_raw`,
+`student_id`, and `email` are
 masked to generic labels like `Student 01`.
 
 ## Changing behavior (not recommended)

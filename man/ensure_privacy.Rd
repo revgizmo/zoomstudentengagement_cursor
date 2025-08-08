@@ -44,3 +44,6 @@ df <- tibble::tibble(
 )
 ensure_privacy(df)
 }
+\seealso{
+[set_privacy_defaults()]
+}
