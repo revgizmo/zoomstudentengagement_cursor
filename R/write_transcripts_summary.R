@@ -80,7 +80,9 @@ write_transcripts_summary <-
            transcripts_summary_file = "transcripts_summary.csv") {
     if (tibble::is_tibble(transcripts_summary_df)
     ) {
-      transcripts_summary_df %>%
+      safe_df <- zoomstudentengagement::ensure_privacy(transcripts_summary_df)
+      safe_df %>%
         readr::write_csv(paste0(data_folder, "/", transcripts_summary_file))
+      return(invisible(safe_df))
     }
   }

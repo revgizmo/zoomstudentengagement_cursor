@@ -81,6 +81,8 @@ plot_users_by_metric <- function(transcripts_summary_df,
   . <- preferred_name <- section <- student_col <- description <- NULL
 
   if (tibble::is_tibble(transcripts_summary_df) && tibble::is_tibble(metrics_lookup_df)) {
+    # Enforce privacy on data before plotting
+    transcripts_summary_df <- zoomstudentengagement::ensure_privacy(transcripts_summary_df)
     # Validate metric exists in the data
     if (!metric %in% names(transcripts_summary_df)) {
       stop(sprintf("Metric '%s' not found in data", metric))

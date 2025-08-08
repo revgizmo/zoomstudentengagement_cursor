@@ -24,8 +24,8 @@
 write_engagement_metrics <- function(metrics_data, file_path, comments_format = c("text", "count")) {
   comments_format <- match.arg(comments_format)
 
-  # Create a copy for processing
-  export_data <- metrics_data
+  # Create a copy for processing and apply privacy by default
+  export_data <- zoomstudentengagement::ensure_privacy(metrics_data)
 
   # Handle comments column if it exists and is a list
   if ("comments" %in% names(export_data) && is.list(export_data$comments)) {

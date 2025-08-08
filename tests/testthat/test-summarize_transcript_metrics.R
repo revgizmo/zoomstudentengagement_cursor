@@ -1,4 +1,7 @@
 test_that("summarize_transcript_metrics summarizes a simple transcript correctly", {
+  old <- getOption("zoomstudentengagement.privacy_level")
+  on.exit(options(zoomstudentengagement.privacy_level = old), add = TRUE)
+  set_privacy_defaults("none")
   df <- tibble::tibble(
     name = c("Alice", "Bob", "Alice"),
     comment = c("Hi", "Hello", "Bye"),
@@ -26,6 +29,9 @@ test_that("summarize_transcript_metrics handles empty input", {
 })
 
 test_that("summarize_transcript_metrics excludes dead_air by default", {
+  old <- getOption("zoomstudentengagement.privacy_level")
+  on.exit(options(zoomstudentengagement.privacy_level = old), add = TRUE)
+  set_privacy_defaults("none")
   df <- tibble::tibble(
     name = c("dead_air", "Alice"),
     comment = c(NA, "Hi"),
@@ -38,6 +44,9 @@ test_that("summarize_transcript_metrics excludes dead_air by default", {
 })
 
 test_that("summarize_transcript_metrics handles NA names as 'unknown'", {
+  old <- getOption("zoomstudentengagement.privacy_level")
+  on.exit(options(zoomstudentengagement.privacy_level = old), add = TRUE)
+  set_privacy_defaults("none")
   df <- tibble::tibble(
     name = c(NA, "Alice"),
     comment = c("Hi", "Hello"),
@@ -54,6 +63,9 @@ test_that("summarize_transcript_metrics returns NULL for completely invalid inpu
 
 # Test comments_format parameter functionality
 test_that("comments_format parameter works correctly", {
+  old <- getOption("zoomstudentengagement.privacy_level")
+  on.exit(options(zoomstudentengagement.privacy_level = old), add = TRUE)
+  set_privacy_defaults("none")
   # Create test data
   test_data <- tibble::tibble(
     name = c("Student A", "Student B", "Student A"),

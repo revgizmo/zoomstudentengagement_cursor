@@ -15,6 +15,8 @@
       id="toc-analysis-and-visualization">Analysis and Visualization</a>
   - <a href="#-typical-workflow" id="toc--typical-workflow">📊 Typical
     Workflow</a>
+  - <a href="#-privacy-defaults" id="toc--privacy-defaults">🔒 Privacy
+    Defaults</a>
   - <a href="#-contributing" id="toc--contributing">🤝 Contributing</a>
   - <a href="#-license" id="toc--license">📄 License</a>
   - <a href="#-links" id="toc--links">🔗 Links</a>
@@ -144,6 +146,24 @@ currently supported but may be added in future versions.
 4.  **Clean Names**: Match transcript names to student records
 5.  **Analyze**: Calculate metrics and create visualizations
 6.  **Report**: Generate insights and reports
+
+## 🔒 Privacy Defaults
+
+This package is privacy-first by default. On load, it sets the global
+option `zoomstudentengagement.privacy_level` to `"mask"` (unless you set
+it yourself). This means identifiers like names and student IDs are
+masked to labels such as `Student 01` in summaries, plots, and writers.
+
+To change behavior temporarily (not recommended for student data):
+
+``` r
+library(zoomstudentengagement)
+set_privacy_defaults("none")  # will emit a warning
+# ... analysis that may include identifiable outputs ...
+set_privacy_defaults("mask")  # restore safe default
+```
+
+See the vignette “Ethical & FERPA Guide” for details.
 
 ## 🤝 Contributing
 
