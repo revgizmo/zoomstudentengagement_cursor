@@ -87,3 +87,12 @@ if (getRversion() >= "2.15.1") {
 }
 
 NULL
+
+#' @keywords internal
+.onLoad <- function(libname, pkgname) {
+  # Set privacy option to mask by default if user has not set it
+  current <- getOption("zoomstudentengagement.privacy_level", default = NULL)
+  if (is.null(current)) {
+    options(zoomstudentengagement.privacy_level = "mask")
+  }
+}

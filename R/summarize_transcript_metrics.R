@@ -182,6 +182,8 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
     result <- result[order(-result$duration), , drop = FALSE]
 
     # Convert to tibble to maintain expected return type
-    return(tibble::as_tibble(result))
+    result <- tibble::as_tibble(result)
+    # Apply privacy before returning
+    return(zoomstudentengagement::ensure_privacy(result))
   }
 }

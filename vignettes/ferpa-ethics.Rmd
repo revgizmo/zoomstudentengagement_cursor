@@ -1,0 +1,56 @@
+---
+title: "Ethical & FERPA Guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Ethical & FERPA Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```r
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Privacy-first defaults
+
+The package defaults to privacy-safe outputs. On load, it sets:
+
+```r
+getOption("zoomstudentengagement.privacy_level")
+```
+
+to `"mask"` unless you have set it otherwise. This ensures personally
+identifying fields such as `preferred_name`, `name`, and `student_id` are
+masked to generic labels like `Student 01`.
+
+## Changing behavior (not recommended)
+
+You can opt out, but this will emit a warning and is not recommended for
+student data:
+
+```r
+library(zoomstudentengagement)
+set_privacy_defaults("none")
+# ... your analysis ...
+set_privacy_defaults("mask")  # restore default
+```
+
+## Example
+
+```r
+library(zoomstudentengagement)
+df <- tibble::tibble(
+  section = c("A", "A"),
+  preferred_name = c("Alice", "Bob"),
+  session_ct = c(3, 5)
+)
+df_masked <- ensure_privacy(df)
+df_masked
+```
+
+## Ethical use
+
+- Use this package to support participation equity, not surveillance.
+- Avoid publishing identifiable student data without consent.
+- Review institutional FERPA guidance and your IRB requirements.
+
