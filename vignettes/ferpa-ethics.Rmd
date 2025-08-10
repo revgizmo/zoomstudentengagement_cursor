@@ -1,8 +1,8 @@
 ---
-title: "Ethical & FERPA Guide"
+title: "FERPA Compliance & Ethical Use Guide"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ethical & FERPA Guide}
+  %\VignetteIndexEntry{FERPA Compliance & Ethical Use Guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -11,47 +11,406 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-## Privacy-first defaults
+# FERPA Compliance & Ethical Use Guide
 
-The package defaults to privacy-safe outputs. On load, it sets:
+This vignette provides comprehensive guidance on using the `zoomstudentengagement` package in compliance with the Family Educational Rights and Privacy Act (FERPA) and ethical best practices for educational data analysis.
+
+## FERPA Overview
+
+The Family Educational Rights and Privacy Act (FERPA) is a federal law that protects the privacy of student education records. When using this package with student data, you must ensure compliance with FERPA requirements.
+
+### Key FERPA Requirements
+
+- **Student Consent**: Generally, written consent is required to disclose personally identifiable information from education records
+- **Directory Information**: Some information may be disclosed without consent if designated as "directory information"
+- **Legitimate Educational Interest**: Faculty and staff may access student records for legitimate educational purposes
+- **Data Security**: Institutions must protect student data from unauthorized access
+- **Data Retention**: Institutions must establish and follow data retention policies
+
+## Privacy-First Design
+
+The package implements privacy-first defaults to help ensure FERPA compliance:
 
 ```r
+library(zoomstudentengagement)
+
+# Check current privacy level
 getOption("zoomstudentengagement.privacy_level")
 ```
 
-to `"mask"` unless you have set it otherwise. This ensures personally
-identifying fields such as `preferred_name`, `name`, `first_last`, `name_raw`,
-`student_id`, and `email` are
-masked to generic labels like `Student 01`.
+By default, the package sets privacy level to `"mask"`, which automatically masks personally identifiable information.
 
-## Changing behavior (not recommended)
+## Privacy Levels
 
-You can opt out, but this will emit a warning and is not recommended for
-student data:
+The package supports multiple privacy levels to accommodate different institutional requirements:
+
+### 1. FERPA Strict (`"ferpa_strict"`)
+Maximum privacy protection for institutions requiring the highest level of compliance:
 
 ```r
-library(zoomstudentengagement)
-set_privacy_defaults("none")
-# ... your analysis ...
-set_privacy_defaults("mask")  # restore default
+set_privacy_defaults("ferpa_strict")
 ```
 
-## Example
+This level masks:
+- Student names and IDs
+- Email addresses
+- Phone numbers
+- Addresses
+- Social security numbers
+- Birth dates
+- Parent/guardian names
+- Instructor names and IDs
+
+### 2. FERPA Standard (`"ferpa_standard"`)
+Standard educational compliance for most institutions:
 
 ```r
-library(zoomstudentengagement)
-df <- tibble::tibble(
-  section = c("A", "A"),
-  preferred_name = c("Alice", "Bob"),
-  session_ct = c(3, 5)
+set_privacy_defaults("ferpa_standard")
+```
+
+This level masks:
+- Student names and IDs
+- Email addresses
+- Phone numbers
+- Instructor names and IDs
+
+### 3. Basic Mask (`"mask"`)
+Default level for basic privacy protection:
+
+```r
+set_privacy_defaults("mask")
+```
+
+This level masks:
+- Student names and IDs
+- Email addresses
+
+### 4. No Masking (`"none"`)
+Disables privacy protection (not recommended):
+
+```r
+set_privacy_defaults("none")  # Will emit a warning
+```
+
+## FERPA Compliance Functions
+
+The package provides specialized functions to help ensure FERPA compliance:
+
+### Data Validation
+
+Validate your data for FERPA compliance:
+
+```r
+# Sample data with PII
+sample_data <- tibble::tibble(
+  student_id = c("12345", "67890"),
+  preferred_name = c("Alice Johnson", "Bob Smith"),
+  email = c("alice@university.edu", "bob@university.edu"),
+  participation_score = c(85, 92)
 )
-df_masked <- ensure_privacy(df)
-df_masked
+
+# Validate for FERPA compliance
+validation_result <- validate_ferpa_compliance(sample_data)
+print(validation_result$compliant)
+print(validation_result$recommendations)
 ```
 
-## Ethical use
+### Data Anonymization
 
-- Use this package to support participation equity, not surveillance.
-- Avoid publishing identifiable student data without consent.
-- Review institutional FERPA guidance and your IRB requirements.
+Anonymize data using various methods:
+
+```r
+# Basic masking
+masked_data <- anonymize_educational_data(sample_data, method = "mask")
+
+# Hash-based anonymization
+hashed_data <- anonymize_educational_data(sample_data, method = "hash", hash_salt = "institution_salt")
+
+# Pseudonymization
+pseudonymized_data <- anonymize_educational_data(sample_data, method = "pseudonymize")
+
+# Aggregation-based anonymization
+aggregated_data <- anonymize_educational_data(sample_data, method = "aggregate", aggregation_level = "section")
+```
+
+### Compliance Reporting
+
+Generate comprehensive FERPA compliance reports:
+
+```r
+# Generate compliance report
+report <- generate_ferpa_report(sample_data)
+
+# Save report to file
+generate_ferpa_report(
+  sample_data, 
+  output_file = "ferpa_compliance_report.json",
+  report_format = "json"
+)
+```
+
+### Data Retention
+
+Check data retention policies:
+
+```r
+# Add date column for retention checking
+sample_data_with_dates <- sample_data %>%
+  dplyr::mutate(session_date = as.Date(c("2024-01-15", "2024-02-20")))
+
+# Check retention policy
+retention_check <- check_data_retention_policy(
+  sample_data_with_dates,
+  retention_period = "academic_year",
+  date_column = "session_date"
+)
+
+print(retention_check$compliant)
+print(retention_check$recommendations)
+```
+
+## Institutional Compliance Guidelines
+
+### Educational Institutions
+
+For traditional educational institutions:
+
+```r
+# Validate with educational institution settings
+edu_validation <- validate_ferpa_compliance(
+  sample_data,
+  institution_type = "educational"
+)
+
+print(edu_validation$institution_guidance)
+```
+
+### Research Institutions
+
+For research-focused institutions:
+
+```r
+# Validate with research institution settings
+research_validation <- validate_ferpa_compliance(
+  sample_data,
+  institution_type = "research"
+)
+
+print(research_validation$institution_guidance)
+```
+
+### Mixed Institutions
+
+For institutions with both educational and research functions:
+
+```r
+# Validate with mixed institution settings
+mixed_validation <- validate_ferpa_compliance(
+  sample_data,
+  institution_type = "mixed"
+)
+
+print(mixed_validation$institution_guidance)
+```
+
+## Data Handling Best Practices
+
+### 1. Data Classification
+
+Classify your data appropriately:
+
+- **Public Data**: Aggregated statistics, anonymized results
+- **Internal Data**: Student records for legitimate educational purposes
+- **Confidential Data**: Personally identifiable information requiring special protection
+
+### 2. Access Controls
+
+Implement appropriate access controls:
+
+- Limit access to authorized personnel only
+- Use role-based access controls
+- Document all data access and usage
+- Implement secure authentication
+
+### 3. Data Storage
+
+Ensure secure data storage:
+
+- Use encrypted storage for sensitive data
+- Implement secure backup procedures
+- Use secure transmission protocols
+- Regularly audit data access
+
+### 4. Data Disposal
+
+Follow proper data disposal procedures:
+
+- Implement automated data disposal
+- Document disposal procedures
+- Verify complete data removal
+- Maintain disposal audit trails
+
+## Instructor Guidelines
+
+### Before Analysis
+
+1. **Review Institutional Policies**: Understand your institution's FERPA policies
+2. **Obtain Necessary Permissions**: Ensure you have authorization to access student data
+3. **Plan Data Handling**: Determine how you will protect and dispose of data
+4. **Document Procedures**: Create clear procedures for data handling
+
+### During Analysis
+
+1. **Use Privacy Defaults**: Always use privacy-safe settings
+2. **Validate Data**: Use compliance functions to check your data
+3. **Limit Access**: Restrict access to only necessary personnel
+4. **Monitor Usage**: Track how data is being used
+
+### After Analysis
+
+1. **Anonymize Results**: Ensure all outputs are privacy-safe
+2. **Secure Storage**: Store results securely
+3. **Dispose of Data**: Follow institutional disposal procedures
+4. **Document Process**: Maintain records of your analysis
+
+## Institutional Compliance Checklist
+
+Use this checklist to ensure FERPA compliance:
+
+### Pre-Analysis
+- [ ] Review institutional FERPA policies
+- [ ] Obtain necessary permissions
+- [ ] Set up secure data environment
+- [ ] Configure privacy defaults
+
+### During Analysis
+- [ ] Use privacy-safe functions
+- [ ] Validate data for compliance
+- [ ] Limit data access
+- [ ] Monitor data usage
+
+### Post-Analysis
+- [ ] Anonymize all outputs
+- [ ] Secure result storage
+- [ ] Dispose of raw data
+- [ ] Document procedures
+
+### Ongoing
+- [ ] Regular compliance audits
+- [ ] Staff training updates
+- [ ] Policy reviews
+- [ ] Security assessments
+
+## Troubleshooting Common Issues
+
+### Privacy Level Not Working
+
+If privacy masking isn't working as expected:
+
+```r
+# Check current privacy level
+getOption("zoomstudentengagement.privacy_level")
+
+# Reset to default
+set_privacy_defaults("mask")
+
+# Verify with sample data
+test_data <- tibble::tibble(name = "Test Student")
+ensure_privacy(test_data)
+```
+
+### Compliance Validation Failing
+
+If compliance validation is failing:
+
+```r
+# Check what PII was detected
+validation_result <- validate_ferpa_compliance(your_data)
+print(validation_result$pii_detected)
+
+# Anonymize the data
+anonymized_data <- anonymize_educational_data(your_data, method = "mask")
+
+# Re-validate
+validate_ferpa_compliance(anonymized_data)
+```
+
+### Data Retention Issues
+
+If data retention checks are flagging issues:
+
+```r
+# Check retention policy
+retention_check <- check_data_retention_policy(
+  your_data,
+  retention_period = "academic_year",
+  date_column = "your_date_column"
+)
+
+# Review recommendations
+print(retention_check$recommendations)
+```
+
+## Ethical Use Principles
+
+### 1. Educational Purpose
+
+Use this package to support educational outcomes:
+
+- Focus on participation equity
+- Identify students who need support
+- Improve teaching effectiveness
+- Support student success
+
+### 2. Avoid Surveillance
+
+Do not use this package for surveillance:
+
+- Avoid tracking individual students without educational purpose
+- Don't use data for punitive measures
+- Focus on positive interventions
+- Respect student privacy
+
+### 3. Transparency
+
+Be transparent about data use:
+
+- Inform students about data collection
+- Explain how data will be used
+- Provide opt-out options when possible
+- Document all data usage
+
+### 4. Beneficence
+
+Ensure data use benefits students:
+
+- Use insights to improve teaching
+- Provide targeted support
+- Identify systemic issues
+- Promote equitable participation
+
+## Resources
+
+### FERPA Resources
+- [FERPA Regulations](https://www2.ed.gov/policy/gen/guid/fpco/ferpa/index.html)
+- [FERPA Guidance for Educational Institutions](https://studentprivacy.ed.gov/)
+- [FERPA and Research](https://www2.ed.gov/policy/gen/guid/fpco/ferpa/students.html)
+
+### Institutional Resources
+- Contact your institution's FERPA compliance officer
+- Review institutional data handling policies
+- Consult with your institutional review board (IRB)
+- Attend FERPA training sessions
+
+### Package Resources
+- Package documentation: `?zoomstudentengagement`
+- Privacy functions: `?ensure_privacy`, `?set_privacy_defaults`
+- FERPA functions: `?validate_ferpa_compliance`, `?anonymize_educational_data`
+- Report generation: `?generate_ferpa_report`
+
+## Conclusion
+
+FERPA compliance is essential when working with student data. This package provides tools to help ensure compliance, but ultimate responsibility lies with the user and their institution. Always review institutional policies and consult with compliance officers when in doubt.
+
+Remember: **Privacy by design, ethical by default.**
 

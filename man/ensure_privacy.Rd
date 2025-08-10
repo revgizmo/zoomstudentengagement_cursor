@@ -15,7 +15,7 @@ ensure_privacy(
 \item{x}{An object to make privacy-safe. Currently supports `data.frame` or
 `tibble`. Other object types are returned unchanged.}
 
-\item{privacy_level}{Privacy level to apply. One of `c("mask", "none")`.
+\item{privacy_level}{Privacy level to apply. One of `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
 Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.}
 
 \item{id_columns}{Character vector of column names to treat as identifiers.

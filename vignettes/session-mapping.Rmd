@@ -332,8 +332,36 @@ if (nrow(unmapped) > 0) {
 - Validate mappings before processing transcripts
 - Use consistent naming conventions
 
+## Privacy and Data Protection
+
+When working with session mapping data:
+
+```{r privacy-check}
+# Validate session mapping for privacy compliance
+mapping_compliance <- validate_ferpa_compliance(
+  session_mapping,
+  institution_type = "educational"
+)
+
+# Check for any PII in mapping data
+if (!mapping_compliance$compliant) {
+  cat("⚠️  Session mapping contains PII:\n")
+  cat("Detected:", paste(mapping_compliance$pii_detected, collapse = ", "), "\n")
+  
+  # Anonymize instructor names if needed
+  anonymized_mapping <- anonymize_educational_data(
+    session_mapping,
+    method = "mask",
+    preserve_columns = c("recording_id", "course_section", "dept", "course", "section")
+  )
+  cat("✅ Session mapping anonymized\n")
+} else {
+  cat("✅ Session mapping is privacy-safe\n")
+}
+```
+
 ## Next Steps
 
 - **For basic workflows**: See the [Getting Started](getting-started.html) vignette
 - **For analysis**: See the [Plotting and Analysis](plotting.html) vignette
-- **For troubleshooting**: See the [Troubleshooting Guide](troubleshooting.html) vignette 
+- **For FERPA compliance**: See the [FERPA Compliance & Ethical Use](ferpa-ethics.html) vignette 

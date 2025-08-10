@@ -87,4 +87,3 @@ test_that("summarize_transcript_metrics is masked by default", {
   res <- summarize_transcript_metrics(transcript_df = df, add_dead_air = FALSE)
   expect_true(all(grepl("^Student \\d{2}$", res$name)))
 })
-

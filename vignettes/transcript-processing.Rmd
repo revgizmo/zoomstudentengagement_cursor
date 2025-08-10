@@ -209,8 +209,36 @@ The summary metrics include:
 - **perc_wordcount**: Percentage of total words
 - **wpm**: Words per minute
 
+## Privacy and FERPA Compliance
+
+When processing transcripts with student data, ensure FERPA compliance:
+
+```{r privacy-check}
+# Validate processed data for FERPA compliance
+compliance_result <- validate_ferpa_compliance(
+  summary_metrics,
+  institution_type = "educational"
+)
+
+# Check compliance status
+if (!compliance_result$compliant) {
+  cat("⚠️  FERPA Compliance Issues Found:\n")
+  cat("PII detected:", paste(compliance_result$pii_detected, collapse = ", "), "\n")
+  
+  # Anonymize data
+  anonymized_metrics <- anonymize_educational_data(
+    summary_metrics,
+    method = "mask"
+  )
+  cat("✅ Data anonymized for compliance\n")
+} else {
+  cat("✅ Data is FERPA compliant\n")
+}
+```
+
 ## Next Steps
 
 - **For roster management**: See the [Roster Cleaning](roster-cleaning.html) vignette
 - **For visualization**: See the [Plotting and Analysis](plotting.html) vignette
-- **For session mapping**: See the [Session Mapping](session-mapping.html) vignette 
+- **For session mapping**: See the [Session Mapping](session-mapping.html) vignette
+- **For FERPA compliance**: See the [FERPA Compliance & Ethical Use](ferpa-ethics.html) vignette 

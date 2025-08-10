@@ -10,7 +10,7 @@
 #'
 #' @param x An object to make privacy-safe. Currently supports `data.frame` or
 #'   `tibble`. Other object types are returned unchanged.
-#' @param privacy_level Privacy level to apply. One of `c("mask", "none")`.
+#' @param privacy_level Privacy level to apply. One of `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
 #'   Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.
 #' @param id_columns Character vector of column names to treat as identifiers.
 #'   Defaults to common name/identifier columns.
@@ -38,6 +38,12 @@ ensure_privacy <- function(x,
                              "preferred_name", "name", "first_last",
                              "name_raw", "student_id", "email"
                            )) {
+  # Validate privacy level
+  valid_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")
+  if (!privacy_level %in% valid_levels) {
+    stop("Invalid privacy_level. Must be one of: ", paste(valid_levels, collapse = ", "), call. = FALSE)
+  }
+
   # If privacy is explicitly disabled, warn and return unmodified
   if (identical(privacy_level, "none")) {
     warning(
@@ -45,6 +51,30 @@ ensure_privacy <- function(x,
       call. = FALSE
     )
     return(x)
+  }
+
+  # FERPA strict level - most comprehensive masking
+  if (identical(privacy_level, "ferpa_strict")) {
+    id_columns <- c(
+      id_columns,
+      "email", "email_address", "e_mail",
+      "phone", "phone_number", "telephone",
+      "address", "street_address", "home_address",
+      "ssn", "social_security", "social_security_number",
+      "birth_date", "birthday", "date_of_birth",
+      "parent_name", "guardian_name",
+      "instructor_name", "instructor_id"
+    )
+  }
+
+  # FERPA standard level - standard educational compliance
+  if (identical(privacy_level, "ferpa_standard")) {
+    id_columns <- c(
+      id_columns,
+      "email", "email_address", "e_mail",
+      "phone", "phone_number", "telephone",
+      "instructor_name", "instructor_id"
+    )
   }
 
   # Only handle tabular data for MVP; return other objects unchanged
@@ -98,4 +128,3 @@ ensure_privacy <- function(x,
 
   df
 }
-
