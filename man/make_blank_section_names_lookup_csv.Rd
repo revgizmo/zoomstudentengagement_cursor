@@ -2,16 +2,36 @@
 % Please edit documentation in R/make_blank_section_names_lookup_csv.R
 \name{make_blank_section_names_lookup_csv}
 \alias{make_blank_section_names_lookup_csv}
-\title{Make Blank Section Names Lookup Tibble}
+\title{Create Blank Section Names Lookup Template}
 \usage{
 make_blank_section_names_lookup_csv()
 }
 \value{
-An empty tibble for customization of student names by section.
+An empty tibble with the following columns for section name mapping:
+  \describe{
+    \item{course_section}{Character. Course and section identifier (e.g., "101.A")}
+    \item{day}{Character. Day of the week or date}
+    \item{time}{Character. Class time}
+    \item{course}{Character. Course number}
+    \item{section}{Character. Section identifier}
+    \item{preferred_name}{Character. Student's preferred name}
+    \item{formal_name}{Character. Student's formal/legal name}
+    \item{transcript_name}{Character. Name as it appears in Zoom transcripts}
+    \item{student_id}{Character. Student identification number}
+  }
 }
 \description{
-This function creates an empty tibble for customization of student names by section.
+Creates an empty tibble template for customizing student names by section.
+This function generates a properly structured data frame that can be filled in
+to map between different name formats (preferred names, formal names, transcript names)
+for students across different course sections.
 }
 \examples{
-make_blank_section_names_lookup_csv()
+# Create a blank template
+lookup_template <- make_blank_section_names_lookup_csv()
+print(lookup_template)
+
+# The template can then be filled in and saved as a CSV file
+# for use with make_clean_names_df()
+
 }

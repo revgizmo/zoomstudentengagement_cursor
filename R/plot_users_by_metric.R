@@ -1,11 +1,21 @@
 #' Plot Users by Metric
 #'
-#' @param transcripts_summary_df a tibble that summarizes results at the level of the class section and preferred student name.
-#' @param metric Label of the metric to plot. Defaults to 'session_ct'.
-#' @param metrics_lookup_df A tibble including metric labels and metric descriptions.  Defaults to run `make_metrics_lookup_df()`
-#' @param student_col_name Column name from which to get student names. Defaults to 'preferred_name'.
+#' Creates a bar plot showing student engagement metrics by individual students.
+#' This function automatically applies privacy settings to mask student names
+#' and provides customizable visualization of participation data from Zoom transcripts.
 #'
-#' @return A ggplot of the provided metrics by students from the provided tibble
+#' @param transcripts_summary_df A tibble that summarizes results at the level of
+#'   the class section and preferred student name. Must contain the specified metric column.
+#' @param metric Label of the metric to plot. Must be a column name in the data.
+#'   Defaults to 'session_ct' (session count)
+#' @param metrics_lookup_df A tibble including metric labels and metric descriptions.
+#'   Defaults to the result of `make_metrics_lookup_df()`
+#' @param student_col_name Column name from which to get student names.
+#'   Defaults to 'preferred_name'
+#'
+#' @return A ggplot object showing the specified metric by students, with privacy
+#'   settings applied to student names
+#'
 #' @export
 #'
 #' @examples

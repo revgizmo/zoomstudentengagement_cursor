@@ -11,20 +11,24 @@ calculate_content_similarity(
 )
 }
 \arguments{
-\item{transcript1}{First transcript data frame}
+\item{transcript1}{First transcript data frame or tibble containing transcript data}
 
-\item{transcript2}{Second transcript data frame}
+\item{transcript2}{Second transcript data frame or tibble containing transcript data}
 
 \item{names_to_exclude}{Character vector of names to exclude from comparison.
-Defaults to c("dead_air")}
+Defaults to c("dead_air") to ignore silence periods and system-generated entries}
 }
 \value{
-Similarity score between 0 and 1, where 1 indicates identical content
-  and 0 indicates completely different content
+Similarity score between 0 and 1, where:
+  - 1 indicates identical content
+  - 0 indicates completely different content
+  - Values in between represent partial similarity
 }
 \description{
-Calculate similarity between two transcript data frames based on various metrics
-including speaker overlap, duration, word count, and comment count.
+Calculates similarity between two transcript data frames based on multiple metrics
+including speaker overlap, duration, word count, and comment count. This function
+is useful for identifying duplicate or similar transcript files and for quality
+control in transcript processing workflows.
 }
 \examples{
 # Create sample transcript data
@@ -44,6 +48,7 @@ transcript2 <- data.frame(
 
 # Calculate similarity
 similarity <- calculate_content_similarity(transcript1, transcript2)
+print(paste("Similarity score:", round(similarity, 3)))
 
 # Calculate similarity excluding dead air entries
 similarity <- calculate_content_similarity(transcript1, transcript2,
