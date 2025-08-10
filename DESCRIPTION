@@ -13,6 +13,7 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports: 
     data.table,
+    digest,
     dplyr,
     ggplot2,
     hms,

@@ -4,10 +4,13 @@
 \alias{set_privacy_defaults}
 \title{Set Privacy Defaults}
 \usage{
-set_privacy_defaults(privacy_level = c("mask", "none"))
+set_privacy_defaults(
+  privacy_level = c("ferpa_strict", "ferpa_standard", "mask", "none")
+)
 }
 \arguments{
-\item{privacy_level}{One of `c("mask", "none")`. Defaults to `"mask"`.}
+\item{privacy_level}{One of `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
+Defaults to `"mask"`. Use `"ferpa_strict"` for maximum FERPA compliance.}
 }
 \value{
 Invisibly returns the chosen privacy level.
@@ -21,6 +24,12 @@ recommended).
 \examples{
 # Set privacy to mask (default)
 set_privacy_defaults("mask")
+
+# Set FERPA standard compliance
+set_privacy_defaults("ferpa_standard")
+
+# Set maximum FERPA compliance
+set_privacy_defaults("ferpa_strict")
 
 # Temporarily disable masking (will emit a warning)
 set_privacy_defaults("none")
