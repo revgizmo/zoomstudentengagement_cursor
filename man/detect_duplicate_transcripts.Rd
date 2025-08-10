@@ -14,23 +14,39 @@ detect_duplicate_transcripts(
 )
 }
 \arguments{
-\item{transcript_list}{A tibble containing transcript file information}
+\item{transcript_list}{A tibble containing transcript file information with a
+`transcript_file` column containing file names}
 
-\item{data_folder}{Overall data folder for your recordings and data}
+\item{data_folder}{Overall data folder for your recordings and data. Defaults to "data"}
 
-\item{transcripts_folder}{Specific subfolder of the data folder where transcript files are stored}
+\item{transcripts_folder}{Specific subfolder of the data folder where transcript files
+are stored. Defaults to "transcripts"}
 
-\item{similarity_threshold}{Threshold for considering transcripts as duplicates (0-1)}
+\item{similarity_threshold}{Threshold for considering transcripts as duplicates (0-1).
+Higher values require more similarity. Defaults to 0.95}
 
-\item{method}{Method for detecting duplicates}
+\item{method}{Method for detecting duplicates. One of:
+- "hybrid" (default): Combines metadata and content analysis
+- "content": Analyzes actual transcript content
+- "metadata": Compares file metadata only}
 
-\item{names_to_exclude}{Character vector of names to exclude from content comparison}
+\item{names_to_exclude}{Character vector of names to exclude from content comparison.
+Defaults to c("dead_air") to ignore silence periods}
 }
 \value{
-A list containing duplicate detection results
+A list containing duplicate detection results with the following elements:
+  \describe{
+    \item{duplicate_groups}{List of groups containing duplicate file names}
+    \item{similarity_matrix}{Matrix of similarity scores between all file pairs}
+    \item{recommendations}{Character vector of recommendations for handling duplicates}
+    \item{summary}{List with summary statistics: total_files, duplicate_groups, total_duplicates}
+  }
 }
 \description{
-Detect Duplicate Transcripts
+Identifies and analyzes duplicate Zoom transcript files using multiple detection methods.
+This function helps clean up transcript datasets by finding files that contain similar
+or identical content, which can occur when multiple transcript formats are generated
+for the same recording session.
 }
 \examples{
 # Create sample transcript list
@@ -50,5 +66,12 @@ duplicates$duplicate_groups
 
 # View recommendations
 duplicates$recommendations
+
+# Use different detection method
+content_duplicates <- detect_duplicate_transcripts(
+  transcript_list,
+  method = "content",
+  similarity_threshold = 0.9
+)
 
 }

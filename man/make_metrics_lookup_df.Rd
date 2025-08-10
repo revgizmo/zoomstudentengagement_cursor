@@ -2,23 +2,41 @@
 % Please edit documentation in R/make_metrics_lookup_df.R
 \name{make_metrics_lookup_df}
 \alias{make_metrics_lookup_df}
-\title{Make Metrics Lookup DF}
+\title{Create Metrics Lookup Data Frame}
 \usage{
 make_metrics_lookup_df()
 }
 \value{
-A tibble with two columns:
+A tibble with two columns containing metric definitions:
   \describe{
-    \item{metric}{Character. The metric label used in the package.}
-    \item{description}{Character. A human-readable description of the metric.}
+    \item{metric}{Character. The metric label used in the package (e.g., "session_ct", "duration")}
+    \item{description}{Character. A human-readable description of what the metric measures}
   }
+
+The following metrics are included:
+\itemize{
+  \item \code{session_ct}: Number of sessions in which Zoom captured a verbal comment
+  \item \code{n}: Number of separate verbal comments captured by Zoom
+  \item \code{perc_n}: Percent of separate verbal comments captured by Zoom, across all students
+  \item \code{duration}: Total duration in minutes of verbal comments captured by Zoom
+  \item \code{perc_duration}: Percent of total duration of verbal comments captured by Zoom
+  \item \code{wordcount}: Total word count of verbal comments captured by Zoom
+  \item \code{perc_wordcount}: Percent of total word count of verbal comments captured by Zoom
+  \item \code{wpm}: Average words per minute within verbal comments captured by Zoom
+}
 }
 \description{
-Create a tibble describing all metrics used in the analysis.
-}
-\details{
-This function returns a tibble with metric labels and their descriptions, which are used throughout the package for reporting and plotting.
+Creates a tibble describing all engagement metrics used in the analysis.
+This function returns a comprehensive lookup table with metric labels and their
+descriptions, which are used throughout the package for reporting, plotting,
+and documentation purposes.
 }
 \examples{
-make_metrics_lookup_df()
+# Get the metrics lookup table
+metrics_lookup <- make_metrics_lookup_df()
+print(metrics_lookup)
+
+# Use in plotting functions
+plot_users_by_metric(data, metric = "session_ct", metrics_lookup_df = metrics_lookup)
+
 }
