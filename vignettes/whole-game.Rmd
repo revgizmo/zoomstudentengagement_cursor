@@ -336,24 +336,66 @@ cat("   - Identify effective interventions\n")
 cat("   - Ensure all students feel included\n")
 ```
 
-## Step 13: Saving Your Analysis
+## Step 13: FERPA Compliance and Data Validation
+
+Before saving your analysis, ensure FERPA compliance:
+
+```{r ferpa-compliance}
+# Validate your data for FERPA compliance
+compliance_result <- validate_ferpa_compliance(
+  student_summary,
+  institution_type = "educational"
+)
+
+# Check compliance status
+cat("FERPA Compliance Status:", ifelse(compliance_result$compliant, "COMPLIANT", "NON-COMPLIANT"), "\n")
+
+if (!compliance_result$compliant) {
+  cat("\n⚠️  Compliance Issues Found:\n")
+  cat("PII detected in columns:", paste(compliance_result$pii_detected, collapse = ", "), "\n")
+  cat("\nRecommendations:\n")
+  cat(paste("- ", compliance_result$recommendations, collapse = "\n"), "\n")
+  
+  # Anonymize data if needed
+  cat("\n🔒 Anonymizing data for compliance...\n")
+  anonymized_summary <- anonymize_educational_data(
+    student_summary, 
+    method = "mask"
+  )
+} else {
+  cat("✅ Data is FERPA compliant\n")
+  anonymized_summary <- student_summary
+}
+
+# Generate compliance report
+compliance_report <- generate_ferpa_report(
+  student_summary,
+  output_file = "ferpa_compliance_report.json",
+  report_format = "json"
+)
+
+cat("\n📋 FERPA compliance report generated: ferpa_compliance_report.json\n")
+```
+
+## Step 14: Saving Your Analysis
 
 Save your processed data for future reference:
 
 ```{r save-analysis}
-# Save the clean metrics
+# Save the clean metrics (privacy-safe)
 write_csv(clean_metrics, "clean_engagement_metrics.csv")
 
-# Save the student summary
-write_csv(student_summary, "student_participation_summary.csv")
+# Save the student summary (privacy-safe)
+write_csv(anonymized_summary, "student_participation_summary.csv")
 
 # Save the name mappings for future use
 write_csv(name_mapping, "name_mappings.csv")
 
 cat("Analysis files saved:\n")
 cat("- clean_engagement_metrics.csv\n")
-cat("- student_participation_summary.csv\n")
+cat("- student_participation_summary.csv (privacy-safe)\n")
 cat("- name_mappings.csv\n")
+cat("- ferpa_compliance_report.json\n")
 ```
 
 ## Best Practices and Tips
@@ -363,6 +405,13 @@ cat("- name_mappings.csv\n")
 - Maintain a consistent naming convention
 - Back up your original data files
 - Document any manual name mappings
+
+### Privacy and FERPA Compliance
+- **Always validate data for FERPA compliance** before analysis
+- **Use privacy-safe defaults** - the package defaults to masked outputs
+- **Anonymize data** when sharing or storing results
+- **Generate compliance reports** for institutional records
+- **Review institutional policies** before using student data
 
 ### Ethical Considerations
 - Use this data to promote equitable participation, not surveillance
@@ -391,5 +440,7 @@ This analysis provides a foundation for understanding participation patterns. Co
 3. **Student feedback**: Ask students about their participation preferences
 4. **Pedagogical adjustments**: Modify teaching strategies based on insights
 5. **Continuous improvement**: Refine your analysis approach over time
+6. **FERPA compliance**: Regularly validate data and maintain compliance reports
+7. **Privacy review**: Periodically review data handling procedures
 
 Remember: The goal is to create an inclusive learning environment where all students feel comfortable and encouraged to participate in ways that work for them. 

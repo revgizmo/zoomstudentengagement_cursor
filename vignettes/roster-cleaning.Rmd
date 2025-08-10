@@ -279,8 +279,35 @@ if (nrow(remaining_unmatched) == 0) {
 }
 ```
 
+## Privacy Considerations
+
+When working with student rosters and name matching:
+
+```{r privacy-check}
+# Validate roster data for FERPA compliance
+roster_compliance <- validate_ferpa_compliance(
+  roster_df,
+  institution_type = "educational"
+)
+
+# Check if roster contains PII
+if (!roster_compliance$compliant) {
+  cat("⚠️  Roster contains PII that should be protected:\n")
+  cat("Detected:", paste(roster_compliance$pii_detected, collapse = ", "), "\n")
+  
+  # Anonymize roster for analysis
+  anonymized_roster <- anonymize_educational_data(
+    roster_df,
+    method = "mask"
+  )
+  cat("✅ Roster anonymized for privacy\n")
+} else {
+  cat("✅ Roster is privacy-safe\n")
+}
+```
+
 ## Next Steps
 
 - **For analysis**: See the [Plotting and Analysis](plotting.html) vignette
 - **For session mapping**: See the [Session Mapping](session-mapping.html) vignette
-- **For student reports**: See the [Student Reports](student-reports.html) vignette 
+- **For FERPA compliance**: See the [FERPA Compliance & Ethical Use](ferpa-ethics.html) vignette 

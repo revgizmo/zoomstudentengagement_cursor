@@ -60,8 +60,12 @@ summary_metrics <- summarize_transcript_metrics(
   names_exclude = c("dead_air")
 )
 
-# View the results
+# View the results (privacy-safe by default)
 head(summary_metrics)
+
+# Validate for FERPA compliance
+compliance_result <- validate_ferpa_compliance(summary_metrics)
+cat("FERPA Compliance:", ifelse(compliance_result$compliant, "✅ Compliant", "⚠️  Issues found"), "\n")
 ```
 
 ## What the Package Does
@@ -73,17 +77,20 @@ The `zoomstudentengagement` package provides tools for:
 3. **Name Matching and Cleaning**: Match transcript names to student rosters
 4. **Visualization**: Create plots to analyze participation patterns
 5. **Reporting**: Generate individual student reports
+6. **FERPA Compliance**: Validate and ensure compliance with educational privacy laws
+7. **Data Anonymization**: Protect student privacy while preserving data utility
 
 ## Basic Workflow
 
 The typical workflow involves:
 
-1. **Setup**: Configure your analysis parameters
+1. **Setup**: Configure your analysis parameters and privacy settings
 2. **Load Transcripts**: Import and process Zoom transcript files
 3. **Load Roster**: Import student enrollment data
 4. **Clean Names**: Match transcript names to student records
 5. **Analyze**: Calculate metrics and create visualizations
-6. **Report**: Generate insights and reports
+6. **Validate**: Check FERPA compliance and anonymize data
+7. **Report**: Generate insights and reports
 
 ## Next Steps
 
@@ -91,6 +98,7 @@ The typical workflow involves:
 - **For roster management**: See the [Roster Cleaning](roster-cleaning.html) vignette  
 - **For visualization**: See the [Plotting and Analysis](plotting.html) vignette
 - **For advanced workflows**: See the [Session Mapping](session-mapping.html) vignette
+- **For FERPA compliance**: See the [FERPA Compliance & Ethical Use](ferpa-ethics.html) vignette
 
 ## Getting Help
 
