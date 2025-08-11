@@ -112,6 +112,15 @@ The privacy test now validates actual FERPA compliance:
 - ✅ **Export security**: Ensures exported files don't contain real names
 - ✅ **Whole game privacy**: Checks reports for real names
 
+### **Enhanced Workflow Documentation**
+The `whole_game_real_world.Rmd` now includes comprehensive privacy testing:
+- ✅ **Privacy level testing**: Step-by-step validation of all privacy levels
+- ✅ **FERPA compliance validation**: PII detection and validation
+- ✅ **Export security testing**: Ensures no real names in exported files
+- ✅ **Final privacy validation**: Comprehensive scan before saving outputs
+- ✅ **Privacy best practices**: Guidelines for FERPA compliance
+- ✅ **Name matching documentation**: Current limitations and workarounds (Issue #160)
+
 ### **Expected Improvement**
 With the privacy test fixes, the failed tests should now pass:
 - ✅ **privacy_features**: Should now work correctly (variable error fixed)
