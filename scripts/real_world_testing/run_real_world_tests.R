@@ -383,7 +383,7 @@ test_privacy_features <- function() {
     
     # Check that no PII is in the output
     pii_indicators <- c("email", "@", "phone", "address", "ssn", "id")
-    output_text <- paste(capture.output(print(privacy_metrics)), collapse = " ")
+    output_text <- paste(capture.output(print(mask_metrics)), collapse = " ")
     has_pii <- any(sapply(pii_indicators, function(x) grepl(x, output_text, ignore.case = TRUE)))
     
     if (has_pii) {
@@ -395,7 +395,7 @@ test_privacy_features <- function() {
     
     # Test that exported files don't contain real names
     export_file <- file.path(output_dir, "test_privacy_export.csv")
-    write.csv(privacy_metrics, export_file, row.names = FALSE)
+    write.csv(mask_metrics, export_file, row.names = FALSE)
     
     export_content <- readLines(export_file)
     export_has_real_names <- any(sapply(export_content, function(x) grepl("^[A-Z][a-z]+ [A-Z][a-z]+", x)))
