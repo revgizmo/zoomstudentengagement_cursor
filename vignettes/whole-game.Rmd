@@ -355,11 +355,11 @@ if (!compliance_result$compliant) {
   cat("PII detected in columns:", paste(compliance_result$pii_detected, collapse = ", "), "\n")
   cat("\nRecommendations:\n")
   cat(paste("- ", compliance_result$recommendations, collapse = "\n"), "\n")
-  
+
   # Anonymize data if needed
   cat("\n🔒 Anonymizing data for compliance...\n")
   anonymized_summary <- anonymize_educational_data(
-    student_summary, 
+    student_summary,
     method = "mask"
   )
 } else {

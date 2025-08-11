@@ -347,7 +347,7 @@ mapping_compliance <- validate_ferpa_compliance(
 if (!mapping_compliance$compliant) {
   cat("⚠️  Session mapping contains PII:\n")
   cat("Detected:", paste(mapping_compliance$pii_detected, collapse = ", "), "\n")
-  
+
   # Anonymize instructor names if needed
   anonymized_mapping <- anonymize_educational_data(
     session_mapping,
