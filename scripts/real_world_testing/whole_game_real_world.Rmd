@@ -47,6 +47,21 @@ Before starting this workflow:
 
 First, let's explore what data you have available:
 
+## 🔒 **Privacy Testing Setup**
+
+Before we begin the main workflow, let's test the privacy features to ensure they're working correctly. This is crucial for FERPA compliance and ethical use.
+
+### **Testing Privacy Levels**
+
+The package supports four privacy levels that control how names are handled:
+
+1. **`ferpa_strict`**: Maximum privacy - masks all names including instructors
+2. **`ferpa_standard`**: Standard privacy - masks student names, preserves instructor names
+3. **`mask`**: Basic masking - masks student names, preserves instructor names
+4. **`none`**: No masking - shows all names (use with extreme caution)
+
+Let's test each privacy level:
+
 ```{r explore-data}
 # Check what transcript files are available
 transcript_files <- list.files(
@@ -93,6 +108,201 @@ zoom_files <- list.files("data/metadata", pattern = "zoomus_recordings__.*\\.csv
 
 cat("\nRoster files found:", length(roster_files), "\n")
 cat("Zoom recordings files found:", length(zoom_files), "\n")
+```
+
+### **Step 1.1: Privacy Level Testing**
+
+Now let's test each privacy level to ensure they work correctly:
+
+```{r test-privacy-levels}
+# Function to test privacy levels
+test_privacy_level <- function(level, description) {
+  cat(sprintf("\n=== Testing %s (%s) ===\n", level, description))
+  
+      # Set privacy level
+    set_privacy_defaults(level)
+    
+    # Verify privacy level was set
+    current_level <- getOption("zoomstudentengagement.privacy_level", "mask")
+    cat("Privacy level set to:", current_level, "\n")
+    
+    # Load a transcript file if available
+    transcript_files <- list.files(
+      "data/transcripts",
+      pattern = "\\.transcript\\.vtt$",
+      full.names = TRUE,
+      recursive = TRUE
+    )
+    
+    if (length(transcript_files) > 0) {
+      transcript_file <- transcript_files[1]
+      cat("Testing with:", basename(transcript_file), "\n")
+      
+      # Calculate metrics with current privacy level
+      metrics <- summarize_transcript_metrics(
+        transcript_file_path = transcript_file,
+        names_exclude = c("dead_air")
+      )
+    
+    # Check what names we see
+    unique_names <- unique(metrics$name)
+    cat("Unique names found:", length(unique_names), "\n")
+    cat("Sample names:", paste(head(unique_names, 5), collapse = ", "), "\n")
+    
+    # Debug: Show ALL names to see what we're missing
+    cat("All unique names:\n")
+    for (i in seq_along(unique_names)) {
+      cat(sprintf("  %2d: '%s'\n", i, unique_names[i]))
+    }
+    
+    # Check for real names vs masked names
+    real_name_pattern <- "^[A-Z][a-z]+(\\s+[A-Z][a-z]+)*$"
+    masked_pattern <- "^Student\\s+\\d{2}$"
+    
+    real_names <- unique_names[grepl(real_name_pattern, unique_names)]
+    masked_names <- unique_names[grepl(masked_pattern, unique_names)]
+    
+    cat("Real names found:", length(real_names), "\n")
+    cat("Masked names found:", length(masked_names), "\n")
+    
+    # Debug: Show which names match each pattern
+    cat("Names matching real name pattern:\n")
+    for (name in real_names) {
+      cat(sprintf("  '%s'\n", name))
+    }
+    
+    cat("Names matching masked pattern:\n")
+    for (name in masked_names) {
+      cat(sprintf("  '%s'\n", name))
+    }
+    
+    # Show names that don't match either pattern
+    unmatched_names <- unique_names[!grepl(real_name_pattern, unique_names) & !grepl(masked_pattern, unique_names)]
+    if (length(unmatched_names) > 0) {
+      cat("Names that don't match either pattern:\n")
+      for (name in unmatched_names) {
+        cat(sprintf("  '%s'\n", name))
+      }
+    }
+    
+    # Additional check: Test privacy function directly
+    cat("\n--- Direct Privacy Function Test ---\n")
+    # Create a test dataframe with real names
+    test_df <- data.frame(
+      name = c("John Smith", "Jane Doe", "Bob Wilson"),
+      value = c(1, 2, 3),
+      stringsAsFactors = FALSE
+    )
+    
+    # Test privacy function directly
+    masked_df <- ensure_privacy(test_df, privacy_level = level)
+    direct_names <- unique(masked_df$name)
+    cat("Direct privacy test - Sample names:", paste(direct_names, collapse = ", "), "\n")
+    
+    direct_real <- direct_names[grepl(real_name_pattern, direct_names)]
+    direct_masked <- direct_names[grepl(masked_pattern, direct_names)]
+    cat("Direct test - Real names:", length(direct_real), "Masked names:", length(direct_masked), "\n")
+    
+    # Validate expected behavior
+    if (level == "ferpa_strict" || level == "ferpa_standard") {
+      if (length(real_names) > 0) {
+        cat("⚠️  WARNING: Real names found in", level, "mode\n")
+      } else {
+        cat("✅ Privacy level", level, "working correctly\n")
+      }
+    } else if (level == "mask") {
+      if (length(masked_names) > 0) {
+        cat("✅ Privacy level", level, "working correctly\n")
+      } else {
+        cat("⚠️  WARNING: No masked names found in", level, "mode\n")
+      }
+    } else if (level == "none") {
+      if (length(real_names) > 0) {
+        cat("✅ Privacy level", level, "working correctly (showing real names)\n")
+      } else {
+        cat("⚠️  WARNING: No real names found in", level, "mode\n")
+      }
+    }
+    
+    return(metrics)
+  } else {
+    cat("⚠️  No transcript files available for testing\n")
+    return(NULL)
+  }
+}
+
+# Test all privacy levels
+cat("🔒 Testing Privacy Levels\n")
+cat("========================\n")
+
+ferpa_strict_metrics <- test_privacy_level("ferpa_strict", "Maximum privacy - masks all names")
+ferpa_standard_metrics <- test_privacy_level("ferpa_standard", "Standard privacy - masks students, preserves instructors")
+mask_metrics <- test_privacy_level("mask", "Basic masking - masks students, preserves instructors")
+none_metrics <- test_privacy_level("none", "No masking - shows all names (use with caution)")
+
+# Reset to default privacy level
+set_privacy_defaults("mask")
+cat("\n✅ Privacy testing completed. Reset to default 'mask' level.\n")
+```
+
+### **Step 1.2: FERPA Compliance Validation**
+
+Let's validate that our outputs are FERPA compliant:
+
+```{r ferpa-validation}
+# Function to check for PII in outputs
+check_ferpa_compliance <- function(data, description) {
+  cat(sprintf("\n=== FERPA Compliance Check: %s ===\n", description))
+  
+  # Convert data to text for scanning
+  data_text <- paste(capture.output(print(data)), collapse = " ")
+  
+  # Check for PII indicators
+  pii_indicators <- c("email", "@", "phone", "address", "ssn", "id", "student_id")
+  pii_found <- sapply(pii_indicators, function(x) grepl(x, data_text, ignore.case = TRUE))
+  
+  if (any(pii_found)) {
+    cat("🚨 FERPA VIOLATION: PII found in output\n")
+    cat("PII indicators found:", paste(names(pii_found[pii_found]), collapse = ", "), "\n")
+    return(FALSE)
+  } else {
+    cat("✅ FERPA compliant: No PII detected\n")
+    return(TRUE)
+  }
+}
+
+# Check FERPA compliance for each privacy level
+if (!is.null(ferpa_strict_metrics)) {
+  check_ferpa_compliance(ferpa_strict_metrics, "ferpa_strict level")
+}
+
+if (!is.null(ferpa_standard_metrics)) {
+  check_ferpa_compliance(ferpa_standard_metrics, "ferpa_standard level")
+}
+
+if (!is.null(mask_metrics)) {
+  check_ferpa_compliance(mask_metrics, "mask level")
+}
+
+# Test export security
+cat("\n=== Testing Export Security ===\n")
+if (!is.null(mask_metrics)) {
+  # Test that exported files don't contain real names
+  export_file <- "test_privacy_export.csv"
+  write.csv(mask_metrics, export_file, row.names = FALSE)
+  
+  export_content <- readLines(export_file)
+  export_has_real_names <- any(sapply(export_content, function(x) grepl("^[A-Z][a-z]+ [A-Z][a-z]+", x)))
+  
+  if (export_has_real_names) {
+    cat("🚨 SECURITY ISSUE: Real names found in exported file\n")
+  } else {
+    cat("✅ Export security: No real names in exported file\n")
+  }
+  
+  # Clean up test file
+  unlink(export_file)
+}
 ```
 
 ## Step 2: Loading Your Student Roster
@@ -232,6 +442,17 @@ if (length(transcript_files) > 0) {
 ## Step 6: Matching Student Names
 
 This is often the most challenging part - matching Zoom names to your roster:
+
+### **⚠️ Important Note: Name Matching Limitation**
+
+**Current Issue**: The privacy-first framework masks names immediately upon loading, which can make name matching challenging. This is a known limitation being addressed in Issue #160.
+
+**Workaround**: For now, you may need to:
+1. Use the `none` privacy level temporarily for matching
+2. Create manual name mappings
+3. Use the privacy testing above to validate your approach
+
+**Future Solution**: A consistent hashing approach is being developed to enable matching while maintaining privacy.
 
 ```{r name-matching}
 if (exists("metrics") && nrow(metrics) > 0 && exists("roster")) {
@@ -498,7 +719,55 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
 }
 ```
 
-## Step 13: Saving Your Analysis
+## Step 13: Final Privacy Validation
+
+Before saving your analysis, let's do a final privacy check to ensure no sensitive data is exposed:
+
+```{r final-privacy-check}
+# Function to scan for real names in final outputs
+scan_for_real_names <- function(data, description) {
+  cat(sprintf("\n=== Final Privacy Scan: %s ===\n", description))
+  
+  # Convert data to text
+  data_text <- paste(capture.output(print(data)), collapse = " ")
+  
+      # Look for real name patterns
+    real_name_pattern <- "\\b[A-Z][a-z]+(\\s+[A-Z][a-z]+)*\\b"
+  real_names <- unlist(regmatches(data_text, gregexpr(real_name_pattern, data_text)))
+  
+  # Filter out common words that might match
+  common_words <- c(
+    "Test Report", "Real World", "Test Date", "Test Results", "Test Summary",
+    "Package Version", "Total Tests", "Success Rate", "Detailed Results",
+    "Status Started", "Status Passed", "Status Failed", "Timestamp Details",
+    "Error Handling", "Privacy Features", "Recommendations Review"
+  )
+  real_names <- real_names[!real_names %in% common_words]
+  
+  if (length(real_names) > 0) {
+    cat("🚨 PRIVACY ISSUE: Real names found in final output\n")
+    cat("Names found:", paste(unique(real_names), collapse = ", "), "\n")
+    cat("This violates FERPA compliance requirements.\n")
+    return(FALSE)
+  } else {
+    cat("✅ Privacy maintained: No real names in final output\n")
+    return(TRUE)
+  }
+}
+
+# Check final outputs for privacy
+if (exists("clean_metrics")) {
+  scan_for_real_names(clean_metrics, "Clean Metrics")
+}
+
+if (exists("student_summary")) {
+  scan_for_real_names(student_summary, "Student Summary")
+}
+
+cat("\n✅ Final privacy validation completed.\n")
+```
+
+## Step 14: Saving Your Analysis
 
 Save your processed data for future reference:
 
@@ -530,6 +799,17 @@ cat("\nAnalysis files saved to outputs/ directory\n")
 ```
 
 ## Best Practices and Tips
+
+### Privacy and FERPA Compliance
+- **Always test privacy levels** before working with real data
+- **Use appropriate privacy levels** for your use case:
+  - `ferpa_strict` for maximum privacy (recommended for research)
+  - `ferpa_standard` for standard educational use
+  - `mask` for basic privacy protection
+  - `none` only for temporary matching (never for final outputs)
+- **Validate privacy compliance** at each step
+- **Never commit or share outputs** containing real names
+- **Document your privacy approach** for institutional review
 
 ### Data Organization
 - Keep your transcript files organized by date/session

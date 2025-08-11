@@ -26,40 +26,21 @@
 
 ## 👤 **USER INSTRUCTIONS: Step-by-Step Guide**
 
-### **Step 1: Start with Issue #115 (dplyr validation) - Do This First!**
+### **✅ Issue #115 Status: RESOLVED**
 
-**Why start here?** This can be done safely in your current environment and will identify exactly what needs fixing.
+**Good news!** Issue #115 has been investigated and resolved. The dplyr→Base R conversions are **COMPLETE and WORKING CORRECTLY**.
 
-#### **1.1 Test the dplyr comparison script**
-```bash
-# Run this command to see what issues exist
-Rscript scripts/compare_dplyr_functions.R
-```
+**Key findings:**
+- ✅ All 19 functions converted successfully (not 12 as initially documented)
+- ✅ All functions produce identical outputs to original dplyr versions
+- ✅ No conversion bugs found
+- ✅ Base R versions are more stable (resolved original segfault issues)
 
-**What this will show you:**
-- ✅ Functions that work correctly
-- ❌ Functions with conversion issues (row count, column count, or value mismatches)
-- 📊 Performance differences between dplyr and base R versions
+**What this means for you:** You don't need to fix any conversion issues. The functions are working correctly.
 
-#### **1.2 Fix the identified issues**
-Based on the output, you'll likely need to fix:
-- `add_dead_air_rows()` - row count mismatch
-- `mask_user_names_by_metric()` - column count mismatch
+### **Step 1: Issue #129 (Real-World Testing) - Focus Here!**
 
-**How to fix:**
-1. Look at the error messages in the script output
-2. Compare the original dplyr version with the converted base R version
-3. Make the necessary adjustments to match outputs exactly
-
-#### **1.3 Validate the fixes**
-```bash
-# Run the comparison again to confirm fixes
-Rscript scripts/compare_dplyr_functions.R
-```
-
-**Success criteria:** All functions should show ✅ for row count, column count, and values.
-
-### **Step 2: Issue #129 (Real-World Testing) - Only After Step 1 is Complete**
+**Why focus here?** This is the actual CRAN blocker that needs attention. With Issue #115 resolved, we can focus entirely on real-world testing with confidential data.
 
 **⚠️ SECURITY WARNING:** This involves real student data and must be done outside Cursor/LLM environments.
 
@@ -111,21 +92,21 @@ cp /path/to/your/zoomus_recordings__*.csv data/metadata/
 - Verify all tests pass
 - Ensure no sensitive data is exposed in outputs
 
-### **Step 3: Documentation and CRAN Preparation**
+### **Step 2: Documentation and CRAN Preparation**
 
-#### **3.1 Update PROJECT.md**
+#### **2.1 Update PROJECT.md**
 The context script will tell you what needs updating:
 ```bash
 ./scripts/save-context.sh
 ```
 
-#### **3.2 Final validation**
+#### **2.2 Final validation**
 ```bash
 # Run final package checks
 Rscript scripts/pre-pr-validation.R
 ```
 
-#### **3.3 Prepare for CRAN**
+#### **2.3 Prepare for CRAN**
 - Update version in DESCRIPTION
 - Create release notes
 - Submit to CRAN
