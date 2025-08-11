@@ -139,13 +139,13 @@ test_name_matching <- function() {
   
   tryCatch({
     # Load roster data
-    roster_file <- file.path(data_dir, "metadata", "roster.csv")
+    roster_file_path <- file.path(data_dir, "metadata", "roster.csv")
     
-    if (!file.exists(roster_file)) {
-      stop("Roster file not found")
+    if (!file.exists(roster_file_path)) {
+      stop("Roster file not found: ", roster_file_path)
     }
     
-    roster <- load_roster(roster_file)
+    roster <- load_roster(data_folder = file.path(data_dir, "metadata"), roster_file = "roster.csv")
     
     # Load transcript for name matching
     transcript_file <- find_transcript_file()
@@ -181,10 +181,10 @@ test_visualization <- function() {
   tryCatch({
     # Load test data
     transcript_file <- find_transcript_file()
-    roster_file <- file.path(data_dir, "metadata", "roster.csv")
+    roster_file_path <- file.path(data_dir, "metadata", "roster.csv")
     
     transcript_data <- load_zoom_transcript(transcript_file)
-    roster <- load_roster(roster_file)
+    roster <- load_roster(data_folder = file.path(data_dir, "metadata"), roster_file = "roster.csv")
     
     # Calculate metrics
     metrics <- summarize_transcript_metrics(
@@ -296,10 +296,10 @@ test_privacy_features <- function() {
   tryCatch({
     # Load test data
     transcript_file <- find_transcript_file()
-    roster_file <- file.path(data_dir, "metadata", "roster.csv")
+    roster_file_path <- file.path(data_dir, "metadata", "roster.csv")
     
     transcript_data <- load_zoom_transcript(transcript_file)
-    roster <- load_roster(roster_file)
+    roster <- load_roster(data_folder = file.path(data_dir, "metadata"), roster_file = "roster.csv")
     
     # Test name masking
     metrics <- summarize_transcript_metrics(
