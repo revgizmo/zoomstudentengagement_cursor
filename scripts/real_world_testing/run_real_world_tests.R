@@ -328,7 +328,7 @@ test_privacy_features <- function() {
     
     # Check if instructor names are masked in strict mode
     strict_names <- strict_metrics$name
-    has_instructor_masking <- any(grepl("^Student_\\d+$", strict_names))
+    has_instructor_masking <- any(grepl("^Student\\s+\\d{2}$", strict_names))
     
     # Test ferpa_standard level (should mask instructor names)
     cat("  Testing ferpa_standard level...\n")

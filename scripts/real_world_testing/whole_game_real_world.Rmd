@@ -147,7 +147,7 @@ test_privacy_level <- function(level, description) {
     
     # Check for real names vs masked names
     real_name_pattern <- "^[A-Z][a-z]+ [A-Z][a-z]+$"
-    masked_pattern <- "^Student_\\d+$"
+    masked_pattern <- "^Student\\s+\\d{2}$"
     
     real_names <- unique_names[grepl(real_name_pattern, unique_names)]
     masked_names <- unique_names[grepl(masked_pattern, unique_names)]
