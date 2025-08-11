@@ -301,31 +301,116 @@ test_privacy_features <- function() {
     transcript_data <- load_zoom_transcript(transcript_file)
     roster <- load_roster(data_folder = file.path(data_dir, "metadata"), roster_file = "roster.csv")
     
-    # Test name masking
-    metrics <- summarize_transcript_metrics(
+    # Test 1: Default privacy settings
+    cat("Testing default privacy settings...\n")
+    default_metrics <- summarize_transcript_metrics(
       transcript_file_path = transcript_file,
       names_exclude = c("dead_air")
     )
     
-    # Test that privacy features are available
-    # For now, just test that we can work with the data without exposing sensitive information
-    expect_true(nrow(metrics) > 0, "Metrics should not be empty")
-    expect_true("name" %in% names(metrics), "Should have name column")
+    # Check if default behavior exposes real names
+    has_real_names <- any(grepl("^[A-Z][a-z]+ [A-Z][a-z]+$", default_metrics$name))
+    if (has_real_names) {
+      cat("⚠️  WARNING: Default output contains real names\n")
+    }
     
-    # Create a privacy-conscious version (remove names for testing)
-    privacy_metrics <- metrics
-    privacy_metrics$name <- paste0("Student_", seq_len(nrow(privacy_metrics)))
+    # Test 2: Privacy-enabled processing
+    cat("Testing privacy-enabled processing...\n")
     
-    # Remove list columns for CSV export
-    privacy_metrics$comments <- NULL
+    # Set privacy to maximum
+    set_privacy_defaults("maximum")
     
-    # Save privacy-conscious version
-    write.csv(privacy_metrics, file.path(output_dir, "test_masked_plot.csv"), row.names = FALSE)
+    privacy_metrics <- summarize_transcript_metrics(
+      transcript_file_path = transcript_file,
+      names_exclude = c("dead_air")
+    )
     
-    log_test_result("privacy_features", "PASSED", "Privacy features work correctly")
+    # Verify names are masked
+    masked_names <- privacy_metrics$name
+    has_masked_names <- all(grepl("^Student_\\d+$", masked_names))
+    
+    if (!has_masked_names) {
+      stop("Privacy masking failed - names not properly anonymized")
+    }
+    
+    # Test 3: FERPA compliance check
+    cat("Testing FERPA compliance...\n")
+    
+    # Check that no PII is in the output
+    pii_indicators <- c("email", "@", "phone", "address", "ssn", "id")
+    output_text <- paste(capture.output(print(privacy_metrics)), collapse = " ")
+    has_pii <- any(sapply(pii_indicators, function(x) grepl(x, output_text, ignore.case = TRUE)))
+    
+    if (has_pii) {
+      stop("FERPA compliance failed - PII detected in output")
+    }
+    
+    # Test 4: Export security
+    cat("Testing export security...\n")
+    
+    # Test that exported files don't contain real names
+    export_file <- file.path(output_dir, "test_privacy_export.csv")
+    write.csv(privacy_metrics, export_file, row.names = FALSE)
+    
+    export_content <- readLines(export_file)
+    export_has_real_names <- any(sapply(export_content, function(x) grepl("^[A-Z][a-z]+ [A-Z][a-z]+", x)))
+    
+    if (export_has_real_names) {
+      stop("Export security failed - real names in exported file")
+    }
+    
+    # Reset privacy settings
+    set_privacy_defaults("standard")
+    
+    log_test_result("privacy_features", "PASSED", 
+                   sprintf("Privacy features work correctly. Names masked: %s, FERPA compliant: %s", 
+                          has_masked_names, !has_pii))
     
   }, error = function(e) {
     log_test_result("privacy_features", "FAILED", error = e)
+  })
+}
+
+# Function to test whole game privacy
+test_whole_game_privacy <- function() {
+  cat("\n=== Testing Whole Game Privacy ===\n")
+  
+  tryCatch({
+    # Check if whole game report exists
+    report_file <- file.path(output_dir, "test_report.md")
+    if (!file.exists(report_file)) {
+      cat("No report file found to check\n")
+      return()
+    }
+    
+    # Read the report content
+    report_content <- readLines(report_file)
+    report_text <- paste(report_content, collapse = " ")
+    
+    # Check for real names in the report
+    real_name_pattern <- "\\b[A-Z][a-z]+ [A-Z][a-z]+\\b"
+    real_names <- unlist(regmatches(report_text, gregexpr(real_name_pattern, report_text)))
+    
+    # Filter out common words that might match the pattern
+    common_words <- c("Test Report", "Real World", "Test Date", "Test Results", "Test Summary")
+    real_names <- real_names[!real_names %in% common_words]
+    
+    if (length(real_names) > 0) {
+      cat("🚨 PRIVACY ISSUE: Real names found in report:\n")
+      cat(paste("  -", unique(real_names), collapse = "\n"), "\n")
+      cat("This violates FERPA compliance requirements.\n")
+      
+      # Log as a privacy failure
+      log_test_result("whole_game_privacy", "FAILED", 
+                     sprintf("Real names found in report: %s", paste(unique(real_names), collapse = ", ")))
+    } else {
+      cat("✅ No real names found in report - privacy maintained\n")
+      log_test_result("whole_game_privacy", "PASSED", "No real names in report")
+    }
+    
+  }, error = function(e) {
+    cat("Error checking whole game privacy:", e$message, "\n")
+    log_test_result("whole_game_privacy", "FAILED", error = e)
   })
 }
 
@@ -346,6 +431,9 @@ run_all_tests <- function() {
     test_error_handling,
     test_privacy_features
   )
+  
+  # Additional privacy check for whole game report
+  test_whole_game_privacy()
   
   for (test_func in test_functions) {
     test_func()
