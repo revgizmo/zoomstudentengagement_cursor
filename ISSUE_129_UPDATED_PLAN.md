@@ -103,7 +103,8 @@ cd zoom_real_world_testing/
 ### **Enhanced Privacy Testing**
 The privacy test now validates actual FERPA compliance:
 - ✅ **Default privacy check**: Warns if real names are exposed by default
-- ✅ **Privacy masking**: Verifies names are properly anonymized
+- ✅ **Privacy level testing**: Tests all 4 privacy levels (ferpa_strict, ferpa_standard, mask, none)
+- ✅ **Instructor masking**: Validates instructor name masking behavior for each level
 - ✅ **FERPA compliance**: Checks for PII in outputs
 - ✅ **Export security**: Ensures exported files don't contain real names
 - ✅ **Whole game privacy**: Checks reports for real names
@@ -113,5 +114,7 @@ The enhanced tests will now properly validate:
 - **Functional correctness**: Does it work? ✅
 - **Privacy protection**: Does it protect student data? 🔍
 - **FERPA compliance**: Is it legally compliant? 🔍
+- **Privacy levels**: Do all 4 privacy levels work correctly? 🔍
+- **Instructor masking**: Is instructor name masking behavior correct? 🔍
 
 **Key Insight**: With Issue #115 resolved, we can focus entirely on real-world testing with confidential data, which is the actual CRAN blocker that needs attention.
