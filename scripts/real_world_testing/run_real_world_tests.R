@@ -443,7 +443,15 @@ test_whole_game_privacy <- function() {
     real_names <- unlist(regmatches(report_text, gregexpr(real_name_pattern, report_text)))
     
     # Filter out common words that might match the pattern
-    common_words <- c("Test Report", "Real World", "Test Date", "Test Results", "Test Summary")
+    common_words <- c(
+      "Test Report", "Real World", "Test Date", "Test Results", "Test Summary",
+      "Package Version", "Total Tests", "Success Rate", "Detailed Results",
+      "Status Started", "Status Passed", "Status Failed", "Timestamp Details",
+      "Error Handling", "Privacy Features", "Recommendations Review",
+      "World Testing", "Package Version", "Total Tests", "Success Rate",
+      "Detailed Results", "Status Started", "Status Passed", "Status Failed",
+      "Timestamp Details", "Error Handling", "Privacy Features", "Recommendations Review"
+    )
     real_names <- real_names[!real_names %in% common_words]
     
     if (length(real_names) > 0) {
