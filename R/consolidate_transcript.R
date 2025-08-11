@@ -42,12 +42,6 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
     df$start <- hms::as_hms(df$start)
     df$end <- hms::as_hms(df$end)
 
-    # Check if transcript_file column exists and prepare grouping
-    group_vars <- c("comment_num")
-    if ("transcript_file" %in% names(df)) {
-      group_vars <- c("transcript_file", "comment_num")
-    }
-
     # Use base R operations to avoid segmentation faults with dplyr + hms
     # Sort by start time for lag operations
     df <- df[order(df$start), ]
@@ -63,11 +57,8 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
     df$comment_num <- cumsum(df$name_flag | df$time_flag)
 
     # Group and summarize using base R - simplified approach
-    # Create a unique identifier for each group
-    df$group_id <- apply(df[, group_vars], 1, paste, collapse = "|")
-
-    # Use split and lapply for aggregation
-    split_data <- split(df, df$group_id)
+    # Use split and lapply for aggregation based on comment_num
+    split_data <- split(df, df$comment_num)
 
     result_list <- lapply(split_data, function(group_df) {
       # Create base result with required columns

@@ -224,7 +224,7 @@ compliance_result <- validate_ferpa_compliance(
 if (!compliance_result$compliant) {
   cat("⚠️  FERPA Compliance Issues Found:\n")
   cat("PII detected:", paste(compliance_result$pii_detected, collapse = ", "), "\n")
-  
+
   # Anonymize data
   anonymized_metrics <- anonymize_educational_data(
     summary_metrics,

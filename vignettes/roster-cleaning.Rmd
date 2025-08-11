@@ -294,7 +294,7 @@ roster_compliance <- validate_ferpa_compliance(
 if (!roster_compliance$compliant) {
   cat("⚠️  Roster contains PII that should be protected:\n")
   cat("Detected:", paste(roster_compliance$pii_detected, collapse = ", "), "\n")
-  
+
   # Anonymize roster for analysis
   anonymized_roster <- anonymize_educational_data(
     roster_df,
