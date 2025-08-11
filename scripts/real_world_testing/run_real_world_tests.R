@@ -398,7 +398,7 @@ test_privacy_features <- function() {
     write.csv(mask_metrics, export_file, row.names = FALSE)
     
     export_content <- readLines(export_file)
-    export_has_real_names <- any(sapply(export_content, function(x) grepl("^[A-Z][a-z]+ [A-Z][a-z]+", x)))
+    export_has_real_names <- any(sapply(export_content, function(x) grepl("^[A-Z][a-z]+(\\s+[A-Z][a-z]+)+", x)))
     
     if (export_has_real_names) {
       stop("Export security failed - real names in exported file")
@@ -439,7 +439,7 @@ test_whole_game_privacy <- function() {
     report_text <- paste(report_content, collapse = " ")
     
     # Check for real names in the report
-    real_name_pattern <- "\\b[A-Z][a-z]+ [A-Z][a-z]+\\b"
+    real_name_pattern <- "\\b[A-Z][a-z]+(\\s+[A-Z][a-z]+)+\\b"
     real_names <- unlist(regmatches(report_text, gregexpr(real_name_pattern, report_text)))
     
     # Filter out common words that might match the pattern
