@@ -24,15 +24,115 @@
 
 ## 📋 **Implementation Checklist**
 
-### **Phase 1: Environment Setup (Day 1)**
-- [ ] **Create secure environment** using existing infrastructure
-  ```bash
-  cp -r scripts/real_world_testing/ ~/secure_testing/
-  cd ~/secure_testing/
-  ./setup.sh
-  ```
-- [ ] **Validate environment** using existing checks
-- [ ] **Install package** in secure environment
+## 👤 **USER INSTRUCTIONS: Step-by-Step Guide**
+
+### **Step 1: Start with Issue #115 (dplyr validation) - Do This First!**
+
+**Why start here?** This can be done safely in your current environment and will identify exactly what needs fixing.
+
+#### **1.1 Test the dplyr comparison script**
+```bash
+# Run this command to see what issues exist
+Rscript scripts/compare_dplyr_functions.R
+```
+
+**What this will show you:**
+- ✅ Functions that work correctly
+- ❌ Functions with conversion issues (row count, column count, or value mismatches)
+- 📊 Performance differences between dplyr and base R versions
+
+#### **1.2 Fix the identified issues**
+Based on the output, you'll likely need to fix:
+- `add_dead_air_rows()` - row count mismatch
+- `mask_user_names_by_metric()` - column count mismatch
+
+**How to fix:**
+1. Look at the error messages in the script output
+2. Compare the original dplyr version with the converted base R version
+3. Make the necessary adjustments to match outputs exactly
+
+#### **1.3 Validate the fixes**
+```bash
+# Run the comparison again to confirm fixes
+Rscript scripts/compare_dplyr_functions.R
+```
+
+**Success criteria:** All functions should show ✅ for row count, column count, and values.
+
+### **Step 2: Issue #129 (Real-World Testing) - Only After Step 1 is Complete**
+
+**⚠️ SECURITY WARNING:** This involves real student data and must be done outside Cursor/LLM environments.
+
+#### **2.1 Create secure testing environment**
+```bash
+# Copy the testing infrastructure to a secure location
+cp -r scripts/real_world_testing/ ~/secure_testing/
+
+# Navigate to the secure environment
+cd ~/secure_testing/
+
+# Run the setup script (this validates everything automatically)
+./setup.sh
+```
+
+**What setup.sh does automatically:**
+- ✅ Checks if you're in a secure environment (warns if in Cursor/LLM)
+- ✅ Verifies R installation and version
+- ✅ Checks/installs required packages (devtools, testthat, dplyr, ggplot2, lubridate)
+- ✅ Guides you through package installation if needed
+
+#### **2.2 Add your real data**
+```bash
+# Add your Zoom transcript files
+cp /path/to/your/transcripts/*.vtt data/transcripts/
+
+# Add your roster and session metadata
+cp /path/to/your/roster.csv data/metadata/
+cp /path/to/your/zoomus_recordings__*.csv data/metadata/
+```
+
+#### **2.3 Run the tests**
+```bash
+# Option A: Automated testing (recommended)
+./run_tests.sh
+
+# Option B: Manual workflow (if you want step-by-step control)
+./run_manual_workflow.sh
+```
+
+**What the tests validate:**
+- ✅ Core functionality with real data
+- ✅ Performance with large files
+- ✅ Privacy features work correctly
+- ✅ Error handling with malformed data
+
+#### **2.4 Review results**
+- Check the generated reports in `reports/` directory
+- Verify all tests pass
+- Ensure no sensitive data is exposed in outputs
+
+### **Step 3: Documentation and CRAN Preparation**
+
+#### **3.1 Update PROJECT.md**
+The context script will tell you what needs updating:
+```bash
+./scripts/save-context.sh
+```
+
+#### **3.2 Final validation**
+```bash
+# Run final package checks
+Rscript scripts/pre-pr-validation.R
+```
+
+#### **3.3 Prepare for CRAN**
+- Update version in DESCRIPTION
+- Create release notes
+- Submit to CRAN
+
+---
+
+## 📋 **Detailed Implementation Checklist**
 
 ### **Phase 2: Issue #115 - dplyr Validation (Days 2-5)**
 
