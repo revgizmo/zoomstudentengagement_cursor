@@ -156,7 +156,7 @@ test_privacy_level <- function(level, description) {
     }
     
     # Check for real names vs masked names
-    real_name_pattern <- "^[A-Z][a-z]+(\\s+[A-Z][a-z]+)+$"
+    real_name_pattern <- "^[A-Z][a-z]+(\\s+[A-Z][a-z]+)*$"
     masked_pattern <- "^Student\\s+\\d{2}$"
     
     real_names <- unique_names[grepl(real_name_pattern, unique_names)]
@@ -303,7 +303,6 @@ if (!is.null(mask_metrics)) {
   # Clean up test file
   unlink(export_file)
 }
-```
 ```
 
 ## Step 2: Loading Your Student Roster
@@ -733,7 +732,7 @@ scan_for_real_names <- function(data, description) {
   data_text <- paste(capture.output(print(data)), collapse = " ")
   
       # Look for real name patterns
-    real_name_pattern <- "\\b[A-Z][a-z]+(\\s+[A-Z][a-z]+)+\\b"
+    real_name_pattern <- "\\b[A-Z][a-z]+(\\s+[A-Z][a-z]+)*\\b"
   real_names <- unlist(regmatches(data_text, gregexpr(real_name_pattern, data_text)))
   
   # Filter out common words that might match
