@@ -149,6 +149,12 @@ test_privacy_level <- function(level, description) {
     cat("Unique names found:", length(unique_names), "\n")
     cat("Sample names:", paste(head(unique_names, 5), collapse = ", "), "\n")
     
+    # Debug: Show ALL names to see what we're missing
+    cat("All unique names:\n")
+    for (i in seq_along(unique_names)) {
+      cat(sprintf("  %2d: '%s'\n", i, unique_names[i]))
+    }
+    
     # Check for real names vs masked names
     real_name_pattern <- "^[A-Z][a-z]+ [A-Z][a-z]+$"
     masked_pattern <- "^Student\\s+\\d{2}$"
@@ -158,6 +164,26 @@ test_privacy_level <- function(level, description) {
     
     cat("Real names found:", length(real_names), "\n")
     cat("Masked names found:", length(masked_names), "\n")
+    
+    # Debug: Show which names match each pattern
+    cat("Names matching real name pattern:\n")
+    for (name in real_names) {
+      cat(sprintf("  '%s'\n", name))
+    }
+    
+    cat("Names matching masked pattern:\n")
+    for (name in masked_names) {
+      cat(sprintf("  '%s'\n", name))
+    }
+    
+    # Show names that don't match either pattern
+    unmatched_names <- unique_names[!grepl(real_name_pattern, unique_names) & !grepl(masked_pattern, unique_names)]
+    if (length(unmatched_names) > 0) {
+      cat("Names that don't match either pattern:\n")
+      for (name in unmatched_names) {
+        cat(sprintf("  '%s'\n", name))
+      }
+    }
     
     # Additional check: Test privacy function directly
     cat("\n--- Direct Privacy Function Test ---\n")
