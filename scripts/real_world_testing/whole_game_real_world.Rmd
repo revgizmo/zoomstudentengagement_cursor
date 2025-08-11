@@ -119,26 +119,30 @@ Now let's test each privacy level to ensure they work correctly:
 test_privacy_level <- function(level, description) {
   cat(sprintf("\n=== Testing %s (%s) ===\n", level, description))
   
-  # Set privacy level
-  set_privacy_defaults(level)
-  
-  # Load a transcript file if available
-  transcript_files <- list.files(
-    "data/transcripts",
-    pattern = "\\.transcript\\.vtt$",
-    full.names = TRUE,
-    recursive = TRUE
-  )
-  
-  if (length(transcript_files) > 0) {
-    transcript_file <- transcript_files[1]
-    cat("Testing with:", basename(transcript_file), "\n")
+      # Set privacy level
+    set_privacy_defaults(level)
     
-    # Calculate metrics with current privacy level
-    metrics <- summarize_transcript_metrics(
-      transcript_file_path = transcript_file,
-      names_exclude = c("dead_air")
+    # Verify privacy level was set
+    current_level <- getOption("zoomstudentengagement.privacy_level", "mask")
+    cat("Privacy level set to:", current_level, "\n")
+    
+    # Load a transcript file if available
+    transcript_files <- list.files(
+      "data/transcripts",
+      pattern = "\\.transcript\\.vtt$",
+      full.names = TRUE,
+      recursive = TRUE
     )
+    
+    if (length(transcript_files) > 0) {
+      transcript_file <- transcript_files[1]
+      cat("Testing with:", basename(transcript_file), "\n")
+      
+      # Calculate metrics with current privacy level
+      metrics <- summarize_transcript_metrics(
+        transcript_file_path = transcript_file,
+        names_exclude = c("dead_air")
+      )
     
     # Check what names we see
     unique_names <- unique(metrics$name)
@@ -154,6 +158,24 @@ test_privacy_level <- function(level, description) {
     
     cat("Real names found:", length(real_names), "\n")
     cat("Masked names found:", length(masked_names), "\n")
+    
+    # Additional check: Test privacy function directly
+    cat("\n--- Direct Privacy Function Test ---\n")
+    # Create a test dataframe with real names
+    test_df <- data.frame(
+      name = c("John Smith", "Jane Doe", "Bob Wilson"),
+      value = c(1, 2, 3),
+      stringsAsFactors = FALSE
+    )
+    
+    # Test privacy function directly
+    masked_df <- ensure_privacy(test_df, privacy_level = level)
+    direct_names <- unique(masked_df$name)
+    cat("Direct privacy test - Sample names:", paste(direct_names, collapse = ", "), "\n")
+    
+    direct_real <- direct_names[grepl(real_name_pattern, direct_names)]
+    direct_masked <- direct_names[grepl(masked_pattern, direct_names)]
+    cat("Direct test - Real names:", length(direct_real), "Masked names:", length(direct_masked), "\n")
     
     # Validate expected behavior
     if (level == "ferpa_strict" || level == "ferpa_standard") {
