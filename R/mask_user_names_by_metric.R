@@ -72,7 +72,8 @@ mask_user_names_by_metric <-
       # Create student names using base R
       student_names <- character(length(row_numbers))
       for (i in seq_along(row_numbers)) {
-        if (df$preferred_name[i] == target_student && target_student != "") {
+        name_i <- df$preferred_name[i]
+        if (!is.na(name_i) && nzchar(target_student) && identical(name_i, target_student)) {
           student_names[i] <- paste0("**", target_student, "**")
         } else {
           student_names[i] <- paste("Student", stringr::str_pad(row_numbers[i], width = 2, pad = "0"), sep = " ")

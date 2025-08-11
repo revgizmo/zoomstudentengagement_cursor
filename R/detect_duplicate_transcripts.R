@@ -183,7 +183,7 @@ detect_duplicate_transcripts <- function(
 
     # Compare content
     for (i in seq_along(existing_names)) {
-      for (j in i:seq_along(existing_names)) {
+      for (j in i:length(existing_names)) {
         if (i == j) {
           similarity_matrix[i, j] <- 1.0
         } else {
