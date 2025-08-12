@@ -125,11 +125,11 @@ The package provides several engagement metrics:
 
 - **session_ct**: Number of sessions attended
 - **n**: Number of comments made
-- **perc_n**: Percentage of total comments
+- **n_perc**: Percentage of total comments
 - **duration**: Total speaking time (seconds)
-- **perc_duration**: Percentage of total speaking time
+- **duration_perc**: Percentage of total speaking time
 - **wordcount**: Total words spoken
-- **perc_wordcount**: Percentage of total words
+- **wordcount_perc**: Percentage of total words
 - **wpm**: Words per minute
 
 ### Percentage Metrics
@@ -138,13 +138,13 @@ Visualize relative participation:
 
 ```{r percentage-metrics}
 # Plot percentage of comments
-plot_users(transcripts_summary_df, metric = "perc_n", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "n_perc", facet_by = "section", mask_by = "name")
 
 # Plot percentage of speaking time
-plot_users(transcripts_summary_df, metric = "perc_duration", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "duration_perc", facet_by = "section", mask_by = "name")
 
 # Plot percentage of words
-plot_users(transcripts_summary_df, metric = "perc_wordcount", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "wordcount_perc", facet_by = "section", mask_by = "name")
 ```
 
 ## Students-Only Analysis
@@ -267,9 +267,9 @@ ggplot(transcripts_summary_df, aes(x = duration, y = wordcount)) +
 ### Choosing the Right Metric
 
 - **For attendance**: Use `session_ct`
-- **For participation frequency**: Use `n` or `perc_n`
-- **For speaking time**: Use `duration` or `perc_duration`
-- **For content contribution**: Use `wordcount` or `perc_wordcount`
+- **For participation frequency**: Use `n` or `n_perc`
+- **For speaking time**: Use `duration` or `duration_perc`
+- **For content contribution**: Use `wordcount` or `wordcount_perc`
 - **For speaking pace**: Use `wpm`
 
 ### Privacy Considerations
