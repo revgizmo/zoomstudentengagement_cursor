@@ -604,7 +604,7 @@ test_multi_session_analysis <- function() {
     }
     
     # Count participants with multiple name variations
-    multiple_variations <- sum(sapply(name_variations, function(x) length(x) > 1))
+    multiple_variations <- sum(vapply(name_variations, function(x) length(x) > 1, logical(1)))
     
     cat("  Participants with name variations:", multiple_variations, "\n")
     
