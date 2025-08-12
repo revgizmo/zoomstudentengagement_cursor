@@ -3,6 +3,9 @@ title: "Whole Game: Real-World Workflow for Instructors"
 author: "zoomstudentengagement package"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_document
+params:
+  instructor_name: "Conor Healy"
+  instructor_title: "Professor"
 ---
 
 ```{r setup, include = FALSE}
@@ -29,6 +32,41 @@ library(jsonlite)
 # Whole Game: Real-World Workflow for Instructors
 
 This document demonstrates the complete workflow for analyzing student engagement in Zoom sessions using your actual data. It's designed to work with the real-world testing environment.
+
+## Required Inputs
+
+Before running this workflow, ensure you have the following:
+
+### 1. Instructor Information (YAML Parameters)
+- **instructor_name**: Full name of the instructor (e.g., "Conor Healy")
+- **instructor_title**: Title of the instructor (e.g., "Professor", "Dr.")
+
+### 2. Student Roster (`data/metadata/roster.csv`)
+- CSV file with enrolled student information
+- Columns: `preferred_name`, `formal_name`, `student_id`
+- **Note**: Instructors should NOT be in the roster
+
+### 3. Zoom Transcript Files (`data/transcripts/`)
+- `.transcript.vtt` files from Zoom recordings
+- Only transcript files are processed (not `.cc.vtt` or `.txt` files)
+
+### 4. Name Lookup Configuration (`data/metadata/section_names_lookup.csv`)
+- **Auto-created** from instructor parameters
+- Maps Zoom transcript names to preferred names
+- Identifies instructors vs. students via `participant_type` column
+
+## How to Run
+
+```bash
+# From the scripts/real_world_testing directory:
+Rscript -e "rmarkdown::render('whole_game_real_world.Rmd', 
+  params = list(instructor_name = 'Conor Healy', instructor_title = 'Professor'))"
+```
+
+Or edit the YAML parameters at the top of this file and run:
+```bash
+Rscript -e "rmarkdown::render('whole_game_real_world.Rmd')"
+```
 
 ## Prerequisites
 
@@ -310,11 +348,19 @@ if (!is.null(mask_metrics)) {
 **Important**: Before running the main workflow, it's recommended to configure instructor names in the `section_names_lookup.csv` file. This prevents expected exceptions and makes the process smoother.
 
 ```{r configure-instructors}
+# Get instructor information from YAML parameters
+instructor_name <- params$instructor_name
+instructor_title <- params$instructor_title
+
+cat("=== Instructor Configuration ===\n")
+cat("Instructor Name:", instructor_name, "\n")
+cat("Instructor Title:", instructor_title, "\n")
+
 # Check if section_names_lookup.csv exists
 lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
 
 if (file.exists(lookup_file)) {
-  cat("=== Existing Name Lookup Configuration ===\n")
+  cat("\n=== Existing Name Lookup Configuration ===\n")
   existing_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
   cat("Found existing lookup file with", nrow(existing_lookup), "entries\n")
   
@@ -324,42 +370,90 @@ if (file.exists(lookup_file)) {
     if (nrow(instructor_entries) > 0) {
       cat("✅ Instructors already configured:\n")
       print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+      
+      # Check if current instructor is already configured
+      current_instructor_configured <- any(instructor_entries$preferred_name == instructor_name)
+      if (!current_instructor_configured) {
+        cat("⚠️  Current instructor not found in existing configuration.\n")
+        cat("Adding current instructor to configuration...\n")
+        
+        # Add current instructor to existing configuration
+        new_instructor_entries <- create_instructor_entries(instructor_name, instructor_title)
+        updated_lookup <- rbind(existing_lookup, new_instructor_entries)
+        write.csv(updated_lookup, lookup_file, row.names = FALSE)
+        cat("✅ Updated instructor configuration.\n")
+      }
     } else {
       cat("⚠️  No instructors configured in lookup file\n")
+      cat("Adding current instructor to configuration...\n")
+      
+      # Create instructor entries and save
+      instructor_lookup <- create_instructor_entries(instructor_name, instructor_title)
+      write.csv(instructor_lookup, lookup_file, row.names = FALSE)
+      cat("✅ Instructor configuration created.\n")
     }
+  } else {
+    cat("⚠️  Lookup file missing participant_type column.\n")
+    cat("Creating new lookup file with instructor configuration...\n")
+    
+    # Create new lookup file with instructor entries
+    instructor_lookup <- create_instructor_entries(instructor_name, instructor_title)
+    write.csv(instructor_lookup, lookup_file, row.names = FALSE)
+    cat("✅ Instructor configuration created.\n")
   }
 } else {
-  cat("=== Creating Instructor Configuration ===\n")
+  cat("\n=== Creating Instructor Configuration ===\n")
   cat("No section_names_lookup.csv found. Creating one with instructor configuration.\n")
   
-  # Create a basic lookup file with instructor configuration
-  instructor_lookup <- data.frame(
-    transcript_name = c("Conor Healy", "Prof. Healy", "Dr. Healy", "Professor Healy"),
-    preferred_name = c("Conor Healy", "Conor Healy", "Conor Healy", "Conor Healy"),
-    formal_name = c("Conor Healy", "Conor Healy", "Conor Healy", "Conor Healy"),
-    participant_type = c("instructor", "instructor", "instructor", "instructor"),
-    student_id = c("INSTRUCTOR", "INSTRUCTOR", "INSTRUCTOR", "INSTRUCTOR"),
-    notes = c("Primary instructor name", "Title variation", "Title variation", "Title variation"),
-    stringsAsFactors = FALSE
-  )
-  
-  # Save the instructor configuration
+  # Create instructor entries and save
+  instructor_lookup <- create_instructor_entries(instructor_name, instructor_title)
   write.csv(instructor_lookup, lookup_file, row.names = FALSE)
   cat("✅ Instructor configuration created:", lookup_file, "\n")
   cat("This file maps Zoom transcript names to your instructor's preferred name.\n")
   cat("Edit this file to add more instructor name variations or other participants.\n")
 }
 
+# Function to create instructor entries
+create_instructor_entries <- function(name, title) {
+  # Create common variations of the instructor name
+  variations <- c(
+    name,  # Full name
+    paste(title, gsub("^.*\\s+", "", name)),  # Title + Last name
+    paste("Dr.", gsub("^.*\\s+", "", name)),  # Dr. + Last name
+    paste("Professor", gsub("^.*\\s+", "", name))  # Professor + Last name
+  )
+  
+  # Remove duplicates
+  variations <- unique(variations)
+  
+  data.frame(
+    transcript_name = variations,
+    preferred_name = rep(name, length(variations)),
+    formal_name = rep(name, length(variations)),
+    participant_type = rep("instructor", length(variations)),
+    student_id = rep("INSTRUCTOR", length(variations)),
+    notes = c("Primary instructor name", rep("Title variation", length(variations) - 1)),
+    stringsAsFactors = FALSE
+  )
+}
+
 cat("\n=== Instructor Configuration Instructions ===\n")
-cat("The section_names_lookup.csv file should contain:\n")
+cat("The section_names_lookup.csv file contains:\n")
 cat("- transcript_name: Names as they appear in Zoom transcripts\n")
 cat("- preferred_name: How you want them displayed in reports\n")
 cat("- participant_type: 'instructor' for instructors, 'enrolled_student' for students\n")
 cat("- student_id: Student ID or 'INSTRUCTOR' for instructors\n")
 cat("- notes: Any additional information\n")
-cat("\nCommon instructor name variations to add:\n")
-cat("- 'Conor Healy', 'Prof. Healy', 'Dr. Healy', 'Professor Healy'\n")
-cat("- 'Instructor', 'Host', 'Moderator' (if Zoom shows generic names)\n")
+cat("\nCurrent instructor variations configured:\n")
+if (exists("instructor_lookup")) {
+  print(instructor_lookup[, c("transcript_name", "preferred_name", "participant_type")])
+} else if (file.exists(lookup_file)) {
+  current_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
+  instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
+  if (nrow(instructor_entries) > 0) {
+    print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+  }
+}
 ```
 
 ## Step 3: Loading Your Student Roster
@@ -852,12 +946,12 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
   
   # Save plots
   if (exists("p1")) {
-    ggsave("participation_by_utterances.png", p1, width = 10, height = 8)
-    cat("Plot saved: participation_by_utterances.png\n")
+    ggsave("reports/participation_by_utterances.png", p1, width = 10, height = 8)
+    cat("Plot saved: reports/participation_by_utterances.png\n")
   }
   if (exists("p2")) {
-    ggsave("participation_by_duration.png", p2, width = 10, height = 8)
-    cat("Plot saved: participation_by_duration.png\n")
+    ggsave("reports/participation_by_duration.png", p2, width = 10, height = 8)
+    cat("Plot saved: reports/participation_by_duration.png\n")
   }
 } else {
   cat("⚠️  Cannot create visualizations - missing student summary data\n")
@@ -1017,9 +1111,12 @@ cat("\n✅ Final privacy validation completed.\n")
 Save your processed data for future reference:
 
 ```{r save-analysis}
-# Create output directory
+# Create output directories
 if (!dir.exists("outputs")) {
   dir.create("outputs")
+}
+if (!dir.exists("reports")) {
+  dir.create("reports")
 }
 
 # Save the clean metrics
@@ -1041,6 +1138,7 @@ if (exists("custom_mappings")) {
 }
 
 cat("\nAnalysis files saved to outputs/ directory\n")
+cat("Reports and visualizations saved to reports/ directory\n")
 ```
 
 ## Best Practices and Tips
