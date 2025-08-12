@@ -8,6 +8,13 @@
 
 # Load required libraries
 suppressPackageStartupMessages({
+  # Try to load the development version of the package, fall back to installed version
+  tryCatch({
+    devtools::load_all()
+  }, error = function(e) {
+    # If devtools::load_all fails, just load the installed package
+    cat("ℹ Loading installed package version (development version not available)\n")
+  })
   library(zoomstudentengagement)
   library(dplyr)
   library(readr)
