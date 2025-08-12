@@ -25,6 +25,23 @@ A comprehensive ethical analysis conducted on 2025-08-04 revealed **CATASTROPHIC
 
 **Bottom Line**: DO NOT SUBMIT TO CRAN YET - Package has critical privacy, ethical, and performance risks that must be addressed before submission.
 
+### 🎯 **Current Critical Priority: Issue #160 - Name Matching with Privacy**
+**Status**: PLANNING - Ready for Implementation  
+**Priority**: CRITICAL - CRAN Submission Blocker
+
+**Problem**: Name matching process breaks when privacy masking is applied early in the pipeline. Real names are needed for matching against student rosters, but privacy requirements demand that names be masked in all outputs.
+
+**Solution**: Implement **Two-Stage Processing with Consistent Hashing** framework:
+- ✅ **Privacy-First Defaults**: "stop" behavior for unmatched names (maximum protection)
+- ✅ **Consistent Hashing**: SHA256-based name matching without exposing real names
+- ✅ **Two-Pass Processing**: Privacy-safe processing with user intervention when needed
+- ✅ **User-Driven Matching**: Clear guidance for updating `section_names_lookup.csv`
+- ✅ **Memory Safety**: Explicit cleanup of sensitive data
+- ✅ **Output Validation**: Privacy compliance checking at final boundaries
+
+**Implementation Timeline**: 6-10 days  
+**Documentation**: `ISSUE_160_NAME_MATCHING_PLAN.md` (comprehensive plan ready)
+
 ### What's Working ✅
 - **Core Functionality**: All 42 exported functions implemented and functional
 - **Package Structure**: Standard R package layout with proper DESCRIPTION, NAMESPACE
