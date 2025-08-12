@@ -779,19 +779,19 @@ if (!dir.exists("outputs")) {
 
 # Save the clean metrics
 if (exists("clean_metrics")) {
-  write_engagement_metrics(clean_metrics, "outputs/clean_engagement_metrics.csv", comments_format = "text")
+  write_metrics(clean_metrics, what = "engagement", path = "outputs/clean_engagement_metrics.csv", comments_format = "text")
   cat("Saved: outputs/clean_engagement_metrics.csv\n")
 }
 
 # Save the student summary
 if (exists("student_summary")) {
-  write_engagement_metrics(student_summary, "outputs/student_participation_summary.csv")
+  write_metrics(student_summary, what = "engagement", path = "outputs/student_participation_summary.csv")
   cat("Saved: outputs/student_participation_summary.csv\n")
 }
 
 # Save the name mappings
 if (exists("custom_mappings")) {
-  write_engagement_metrics(custom_mappings, "outputs/name_mappings.csv")
+  write_metrics(custom_mappings, what = "engagement", path = "outputs/name_mappings.csv")
   cat("Saved: outputs/name_mappings.csv\n")
 }
 

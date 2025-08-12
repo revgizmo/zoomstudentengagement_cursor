@@ -10,6 +10,10 @@ on:
 jobs:
   bench:
     runs-on: ubuntu-latest
+    env:
+      BUDGET_1: '10'
+      BUDGET_50: '120'
+      BUDGET_500: '1200'
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2

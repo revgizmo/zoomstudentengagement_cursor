@@ -14,6 +14,10 @@ if (sample == "") {
 }
 
 sizes <- c(1, 50, 500)
+# Budgets in seconds (env override)
+budget_1 <- as.numeric(Sys.getenv("BUDGET_1", "10"))
+budget_50 <- as.numeric(Sys.getenv("BUDGET_50", "120"))
+budget_500 <- as.numeric(Sys.getenv("BUDGET_500", "1200"))
 results <- list()
 
 for (n in sizes) {
@@ -33,4 +37,17 @@ for (n in sizes) {
 }
 
 cat("\nSummary:\n")
-print(do.call(rbind, lapply(results, function(x) unlist(x))))
+summary_tbl <- do.call(rbind, lapply(results, function(x) unlist(x)))
+print(summary_tbl)
+
+# Enforce simple budgets
+violations <- c()
+if (results[["1"]][["seconds"]] > budget_1) violations <- c(violations, sprintf("1-file budget exceeded: %.2fs > %.2fs", results[["1"]][["seconds"]], budget_1))
+if (results[["50"]][["seconds"]] > budget_50) violations <- c(violations, sprintf("50-file budget exceeded: %.2fs > %.2fs", results[["50"]][["seconds"]], budget_50))
+if (results[["500"]][["seconds"]] > budget_500) violations <- c(violations, sprintf("500-file budget exceeded: %.2fs > %.2fs", results[["500"]][["seconds"]], budget_500))
+
+if (length(violations) > 0) {
+  cat("\nPerformance budget violations:\n")
+  for (v in violations) cat("- ", v, "\n", sep = "")
+  quit(status = 1)
+}
