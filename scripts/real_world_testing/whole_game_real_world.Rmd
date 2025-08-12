@@ -698,7 +698,8 @@ if (exists("transcript_data") && exists("roster")) {
         transcript_file_path = transcript_file,
         roster_data = roster,
         privacy_level = "ferpa_standard",
-        unmatched_names_action = "warn"  # This will warn and guide through matching
+        unmatched_names_action = "warn",  # This will warn and guide through matching
+        data_folder = "data/metadata"  # Use the same directory as instructor configuration
       )
       
       cat("✅ Name matching workflow completed successfully!\n")
@@ -744,6 +745,32 @@ if (exists("transcript_data") && exists("roster")) {
       cat("3. Re-run the workflow with the updated mappings\n")
     })
     
+    # Ensure instructor is always in the lookup file
+    if (file.exists(lookup_file)) {
+      cat("\n=== Ensuring Instructor Configuration ===\n")
+      current_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
+      
+      # Check if instructor is already configured
+      if ("participant_type" %in% names(current_lookup)) {
+        instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
+        if (nrow(instructor_entries) == 0) {
+          cat("Adding instructor configuration to lookup file...\n")
+          instructor_entry <- create_instructor_entries(instructor_name)
+          updated_lookup <- rbind(current_lookup, instructor_entry)
+          write.csv(updated_lookup, lookup_file, row.names = FALSE)
+          cat("✅ Instructor configuration added to lookup file.\n")
+        } else {
+          cat("✅ Instructor already configured in lookup file.\n")
+        }
+      } else {
+        cat("⚠️  Lookup file missing participant_type column. Adding instructor configuration...\n")
+        instructor_entry <- create_instructor_entries(instructor_name)
+        updated_lookup <- rbind(current_lookup, instructor_entry)
+        write.csv(updated_lookup, lookup_file, row.names = FALSE)
+        cat("✅ Instructor configuration added to lookup file.\n")
+      }
+    }
+    
   } else {
     cat("⚠️  No transcript files found for name matching\n")
   }
@@ -754,36 +781,16 @@ if (exists("transcript_data") && exists("roster")) {
 
 ### **Step 6.3: Manual Name Matching (if needed)**
 
-If the automated workflow doesn't match all names, you can use the manual approach:
+**Note**: Manual name matching is handled automatically by the privacy-aware workflow in Step 6.2. If unmatched names are found, the workflow will create a `section_names_lookup.csv` file in the `data/` directory with instructions for manual mapping.
 
-```{r manual-name-matching}
-# If we need manual name matching, use the prompt_name_matching function
-if (exists("transcript_data") && (!exists("clean_metrics") || nrow(clean_metrics) == 0)) {
-  cat("\n=== Manual Name Matching Setup ===\n")
-  
-  # Extract names from transcript
-  transcript_names <- unique(transcript_data$name)
-  
-  # Use prompt_name_matching to create a lookup template
-  tryCatch({
-    cat("Creating name matching template...\n")
-    
-    lookup_file <- prompt_name_matching(
-      unmatched_names = transcript_names,
-      privacy_level = "ferpa_standard",
-      data_folder = "data",
-      include_instructions = TRUE
-    )
-    
-    cat("✅ Name matching template created:", lookup_file, "\n")
-    cat("Please edit this file to add your name mappings, then reload it.\n")
-    cat("Instructions are included in the template file.\n")
-    
-  }, error = function(e) {
-    cat("❌ Error creating name matching template:", e$message, "\n")
-  })
-}
-```
+If you need to manually create or update name mappings, you can:
+
+1. **Edit the existing file**: `data/section_names_lookup.csv` (created by the workflow)
+2. **Add instructor variations**: If the instructor appears with different names in transcripts
+3. **Map student names**: Link transcript names to roster names
+4. **Set participant types**: Use 'instructor', 'enrolled_student', or 'guest'
+
+The workflow will automatically detect and use your manual mappings on the next run.
 
 ### **Step 6.4: Loading Custom Name Mappings**
 
