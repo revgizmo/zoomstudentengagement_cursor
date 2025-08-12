@@ -1,0 +1,34 @@
+template:
+  bootstrap: 5
+
+destination: docs
+
+navbar:
+  structure:
+    left: [reference, articles]
+    right: [search]
+
+reference:
+- title: Loaders
+  contents:
+  - starts_with("load_")
+- title: Transformations
+  contents:
+  - starts_with("make_")
+  - starts_with("summarize_")
+- title: Writers
+  contents:
+  - starts_with("write_")
+- title: Plotting
+  contents:
+  - starts_with("plot_")
+- title: Privacy and Compliance
+  contents:
+  - contains("privacy")
+  - contains("ferpa")
+- title: Pipelines and Utilities
+  contents:
+  - starts_with("process_")
+  - starts_with("create_")
+  - starts_with("validate_")
+  - starts_with("ensure_")
