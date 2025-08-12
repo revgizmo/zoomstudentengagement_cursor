@@ -75,7 +75,7 @@ set_privacy_defaults <- function(privacy_level = c("ferpa_strict", "ferpa_standa
     zoomstudentengagement.privacy_level = privacy_level,
     zoomstudentengagement.unmatched_names_action = unmatched_names_action
   )
-  
+
   # Return configuration invisibly
   invisible(list(
     privacy_level = privacy_level,

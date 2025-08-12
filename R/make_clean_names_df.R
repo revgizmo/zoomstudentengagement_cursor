@@ -160,7 +160,7 @@ make_clean_names_df <- function(data_folder = "data",
     # If lookup table is empty, just add formal_name column
     result$formal_name <- result$transcript_name
   }
-  
+
   # Apply privacy-aware name matching if privacy is enabled
   privacy_level <- getOption("zoomstudentengagement.privacy_level", "mask")
   if (!identical(privacy_level, "none")) {
@@ -244,30 +244,29 @@ make_clean_names_df <- function(data_folder = "data",
 #' @return Data frame with enhanced name matching
 #' @keywords internal
 apply_privacy_aware_matching <- function(result, section_names_lookup, privacy_level) {
-  
   # Extract transcript names for hashing
   transcript_names <- unique(result$transcript_name[!is.na(result$transcript_name)])
-  
+
   # Generate consistent hashes for cross-session matching
   name_hashes <- hash_name_consistently(transcript_names)
-  
+
   # Create hash mapping
   hash_mapping <- data.frame(
     transcript_name = transcript_names,
     name_hash = name_hashes,
     stringsAsFactors = FALSE
   )
-  
+
   # Merge hash mapping with result
   result <- merge(result, hash_mapping, by = "transcript_name", all.x = TRUE)
-  
+
   # Apply enhanced matching logic using hashes
   for (i in seq_len(nrow(result))) {
     if (!is.na(result$name_hash[i])) {
       # Look for matching hashes in existing mappings (if name_hash column exists)
       if ("name_hash" %in% names(section_names_lookup)) {
         matching_hash <- which(section_names_lookup$name_hash == result$name_hash[i])
-        
+
         if (length(matching_hash) > 0) {
           # Use existing mapping
           mapping <- section_names_lookup[matching_hash[1], ]
@@ -279,10 +278,10 @@ apply_privacy_aware_matching <- function(result, section_names_lookup, privacy_l
       }
     }
   }
-  
+
   # Remove hash column from final result
   result$name_hash <- NULL
-  
+
   # Return enhanced result
   result
 }

@@ -34,10 +34,10 @@ ensure_privacy <- function(x,
                              "zoomstudentengagement.privacy_level",
                              "mask"
                            ),
-                             id_columns = c(
-    "preferred_name", "name", "first_last",
-    "name_raw", "student_id", "email", "transcript_name", "formal_name"
-  )) {
+                           id_columns = c(
+                             "preferred_name", "name", "first_last",
+                             "name_raw", "student_id", "email", "transcript_name", "formal_name"
+                           )) {
   # Validate privacy level
   valid_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")
   if (!privacy_level %in% valid_levels) {

@@ -6,7 +6,7 @@
 #'
 #' @param transcript_file_path Path to transcript file to process
 #' @param roster_data Data frame containing roster information
-#' @param privacy_level Privacy level for processing. One of 
+#' @param privacy_level Privacy level for processing. One of
 #'   `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
 #'   Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.
 #' @param unmatched_names_action Action to take when unmatched names are found.
@@ -18,6 +18,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Default behavior (maximum privacy)
 #' result <- safe_name_matching_workflow(
 #'   transcript_file_path = "transcript.vtt",
@@ -30,6 +31,7 @@
 #'   roster_data = roster_df,
 #'   unmatched_names_action = "warn"
 #' )
+#' }
 safe_name_matching_workflow <- function(transcript_file_path,
                                         roster_data,
                                         privacy_level = getOption(
@@ -42,72 +44,78 @@ safe_name_matching_workflow <- function(transcript_file_path,
                                         ),
                                         data_folder = "data",
                                         section_names_lookup_file = "section_names_lookup.csv") {
-  
   # Validate inputs
   if (!is.character(transcript_file_path) || length(transcript_file_path) != 1) {
     stop("transcript_file_path must be a single character string", call. = FALSE)
   }
-  
+
   if (!file.exists(transcript_file_path)) {
     stop("Transcript file not found: ", transcript_file_path, call. = FALSE)
   }
-  
+
   if (!is.data.frame(roster_data)) {
     stop("roster_data must be a data frame", call. = FALSE)
   }
-  
+
   valid_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")
   if (!privacy_level %in% valid_levels) {
-    stop("Invalid privacy_level. Must be one of: ", 
-         paste(valid_levels, collapse = ", "), call. = FALSE)
+    stop("Invalid privacy_level. Must be one of: ",
+      paste(valid_levels, collapse = ", "),
+      call. = FALSE
+    )
   }
-  
+
   valid_actions <- c("stop", "warn")
   if (!unmatched_names_action %in% valid_actions) {
-    stop("Invalid unmatched_names_action. Must be one of: ", 
-         paste(valid_actions, collapse = ", "), call. = FALSE)
+    stop("Invalid unmatched_names_action. Must be one of: ",
+      paste(valid_actions, collapse = ", "),
+      call. = FALSE
+    )
   }
-  
+
   if (!is.character(data_folder) || length(data_folder) != 1) {
     stop("data_folder must be a single character string", call. = FALSE)
   }
-  
+
   if (!is.character(section_names_lookup_file) || length(section_names_lookup_file) != 1) {
     stop("section_names_lookup_file must be a single character string", call. = FALSE)
   }
-  
+
   # Stage 1: Load and process with real names in memory
   message("Stage 1: Loading transcript and performing name matching...")
-  
+
   # Load transcript (real names in memory only)
   transcript_data <- load_zoom_transcript(transcript_file_path)
-  
+
   # Load existing name mappings
-  name_mappings <- tryCatch({
-    load_section_names_lookup(
-      data_folder = data_folder,
-      names_lookup_file = section_names_lookup_file
-    )
-  }, error = function(e) {
-    # If no mappings exist, create empty data frame
-    data.frame(
-      transcript_name = character(0),
-      preferred_name = character(0),
-      formal_name = character(0),
-      participant_type = character(0),
-      student_id = character(0),
-      stringsAsFactors = FALSE
-    )
-  })
-  
+  name_mappings <- tryCatch(
+    {
+      load_section_names_lookup(
+        data_folder = data_folder,
+        names_lookup_file = section_names_lookup_file
+      )
+    },
+    error = function(e) {
+      # If no mappings exist, create empty data frame
+      data.frame(
+        transcript_name = character(0),
+        preferred_name = character(0),
+        formal_name = character(0),
+        participant_type = character(0),
+        student_id = character(0),
+        stringsAsFactors = FALSE
+      )
+    }
+  )
+
   # Detect unmatched names
   unmatched_names <- detect_unmatched_names(
     transcript_data = transcript_data,
     roster_data = roster_data,
     name_mappings = name_mappings,
-    privacy_level = "none"  # Need real names for detection
+    privacy_level = "none" # Need real names for detection
   )
-  
+
   # Handle unmatched names according to configuration
   if (length(unmatched_names) > 0) {
     handle_unmatched_names(
@@ -118,10 +126,10 @@ safe_name_matching_workflow <- function(transcript_file_path,
       section_names_lookup_file = section_names_lookup_file
     )
   }
-  
+
   # Stage 2: Apply privacy masking to outputs
   message("Stage 2: Applying privacy masking to outputs...")
-  
+
   # Process transcript with privacy-aware matching
   processed_data <- process_transcript_with_privacy(
     transcript_data = transcript_data,
@@ -129,7 +137,7 @@ safe_name_matching_workflow <- function(transcript_file_path,
     name_mappings = name_mappings,
     privacy_level = privacy_level
   )
-  
+
   # Validate privacy compliance
   validate_privacy_compliance(
     data = processed_data,
@@ -139,12 +147,12 @@ safe_name_matching_workflow <- function(transcript_file_path,
       extract_roster_names(roster_data)
     )
   )
-  
+
   # Explicitly clear real names from memory
   rm(transcript_data, name_mappings, unmatched_names)
-  
+
   message("Name matching workflow completed successfully.")
-  
+
   # Return processed data
   processed_data
 }
@@ -166,7 +174,6 @@ handle_unmatched_names <- function(unmatched_names,
                                    privacy_level,
                                    data_folder,
                                    section_names_lookup_file) {
-  
   if (identical(unmatched_names_action, "stop")) {
     # Stop with error for maximum privacy protection
     stop(
@@ -183,7 +190,7 @@ handle_unmatched_names <- function(unmatched_names,
       "Some names need matching. Privacy temporarily disabled for matching process.",
       call. = FALSE
     )
-    
+
     # Prompt user for name matching
     prompt_name_matching(
       unmatched_names = unmatched_names,
@@ -191,7 +198,7 @@ handle_unmatched_names <- function(unmatched_names,
       data_folder = data_folder,
       section_names_lookup_file = section_names_lookup_file
     )
-    
+
     # Stop processing to allow user to update mappings
     stop(
       "Please update the name mappings file and re-run the analysis.",
@@ -216,10 +223,17 @@ handle_unmatched_names <- function(unmatched_names,
 #'
 #' @examples
 #' # Process transcript with privacy
+#' transcript_data <- tibble::tibble(
+#'   transcript_name = c("Dr. Smith", "John Doe"),
+#'   message = c("Hello class", "Good morning")
+#' )
+#' roster_data <- tibble::tibble(
+#'   first_name = c("John"),
+#'   last_name = c("Doe")
+#' )
 #' processed <- process_transcript_with_privacy(
-#'   transcript_data = transcript_df,
-#'   roster_data = roster_df,
-#'   name_mappings = mappings_df
+#'   transcript_data = transcript_data,
+#'   roster_data = roster_data
 #' )
 process_transcript_with_privacy <- function(transcript_data,
                                             roster_data,
@@ -228,7 +242,6 @@ process_transcript_with_privacy <- function(transcript_data,
                                               "zoomstudentengagement.privacy_level",
                                               "mask"
                                             )) {
-  
   # Validate inputs
   if (!is.data.frame(transcript_data)) {
     stop("transcript_data must be a data frame", call. = FALSE)
@@ -236,26 +249,28 @@ process_transcript_with_privacy <- function(transcript_data,
   if (!is.data.frame(roster_data)) {
     stop("roster_data must be a data frame", call. = FALSE)
   }
-  
+
   valid_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")
   if (!privacy_level %in% valid_levels) {
-    stop("Invalid privacy_level. Must be one of: ", 
-         paste(valid_levels, collapse = ", "), call. = FALSE)
+    stop("Invalid privacy_level. Must be one of: ",
+      paste(valid_levels, collapse = ", "),
+      call. = FALSE
+    )
   }
-  
+
   # Stage 1: Perform name matching with real names in memory
   matched_data <- match_names_with_privacy(
     transcript_data = transcript_data,
     roster_data = roster_data,
     name_mappings = name_mappings,
-    privacy_level = "none"  # Need real names for matching
+    privacy_level = "none" # Need real names for matching
   )
-  
+
   # Stage 2: Apply privacy masking to outputs
   if (!identical(privacy_level, "none")) {
     matched_data <- ensure_privacy(matched_data, privacy_level = privacy_level)
   }
-  
+
   # Return processed data
   matched_data
 }
@@ -275,10 +290,17 @@ process_transcript_with_privacy <- function(transcript_data,
 #'
 #' @examples
 #' # Match names with privacy
+#' transcript_data <- tibble::tibble(
+#'   transcript_name = c("Dr. Smith", "John Doe"),
+#'   message = c("Hello class", "Good morning")
+#' )
+#' roster_data <- tibble::tibble(
+#'   first_name = c("John"),
+#'   last_name = c("Doe")
+#' )
 #' matched <- match_names_with_privacy(
-#'   transcript_data = transcript_df,
-#'   roster_data = roster_df,
-#'   name_mappings = mappings_df
+#'   transcript_data = transcript_data,
+#'   roster_data = roster_data
 #' )
 match_names_with_privacy <- function(transcript_data,
                                      roster_data,
@@ -287,7 +309,6 @@ match_names_with_privacy <- function(transcript_data,
                                        "zoomstudentengagement.privacy_level",
                                        "mask"
                                      )) {
-  
   # Validate inputs
   if (!is.data.frame(transcript_data)) {
     stop("transcript_data must be a data frame", call. = FALSE)
@@ -295,36 +316,38 @@ match_names_with_privacy <- function(transcript_data,
   if (!is.data.frame(roster_data)) {
     stop("roster_data must be a data frame", call. = FALSE)
   }
-  
+
   valid_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")
   if (!privacy_level %in% valid_levels) {
-    stop("Invalid privacy_level. Must be one of: ", 
-         paste(valid_levels, collapse = ", "), call. = FALSE)
+    stop("Invalid privacy_level. Must be one of: ",
+      paste(valid_levels, collapse = ", "),
+      call. = FALSE
+    )
   }
-  
+
   # Extract names for matching
   transcript_names <- extract_transcript_names(transcript_data)
   roster_names <- extract_roster_names(roster_data)
-  
+
   # Create name mapping lookup
   name_lookup <- create_name_lookup(
     transcript_names = transcript_names,
     roster_names = roster_names,
     name_mappings = name_mappings
   )
-  
+
   # Apply name matching to transcript data
   matched_data <- apply_name_matching(
     transcript_data = transcript_data,
     name_lookup = name_lookup,
     roster_data = roster_data
   )
-  
+
   # Apply privacy masking if needed
   if (!identical(privacy_level, "none")) {
     matched_data <- ensure_privacy(matched_data, privacy_level = privacy_level)
   }
-  
+
   # Return matched data
   matched_data
 }
@@ -340,7 +363,6 @@ match_names_with_privacy <- function(transcript_data,
 #' @return Data frame with name lookup information
 #' @keywords internal
 create_name_lookup <- function(transcript_names, roster_names, name_mappings) {
-  
   # Start with transcript names
   lookup <- data.frame(
     transcript_name = transcript_names,
@@ -350,12 +372,12 @@ create_name_lookup <- function(transcript_names, roster_names, name_mappings) {
     student_id = NA_character_,
     stringsAsFactors = FALSE
   )
-  
+
   # Apply existing mappings
   if (!is.null(name_mappings) && nrow(name_mappings) > 0) {
     for (i in seq_len(nrow(lookup))) {
       transcript_name <- lookup$transcript_name[i]
-      
+
       # Find matching mapping
       mapping_idx <- which(name_mappings$transcript_name == transcript_name)
       if (length(mapping_idx) > 0) {
@@ -367,12 +389,12 @@ create_name_lookup <- function(transcript_names, roster_names, name_mappings) {
       }
     }
   }
-  
+
   # Apply roster matching for unmatched names
   for (i in seq_len(nrow(lookup))) {
     if (is.na(lookup$preferred_name[i])) {
       transcript_name <- lookup$transcript_name[i]
-      
+
       # Try to match with roster names
       roster_match <- find_roster_match(transcript_name, roster_names)
       if (!is.null(roster_match)) {
@@ -383,12 +405,12 @@ create_name_lookup <- function(transcript_names, roster_names, name_mappings) {
       }
     }
   }
-  
+
   # Fill in missing values
   lookup$preferred_name[is.na(lookup$preferred_name)] <- lookup$transcript_name[is.na(lookup$preferred_name)]
   lookup$formal_name[is.na(lookup$formal_name)] <- lookup$transcript_name[is.na(lookup$formal_name)]
   lookup$participant_type[is.na(lookup$participant_type)] <- "unknown"
-  
+
   lookup
 }
 
@@ -402,14 +424,13 @@ create_name_lookup <- function(transcript_names, roster_names, name_mappings) {
 #' @return List with match information or NULL if no match
 #' @keywords internal
 find_roster_match <- function(transcript_name, roster_names) {
-  
   # Normalize names for comparison
   normalized_transcript <- normalize_name_for_matching(transcript_name)
   normalized_roster <- normalize_name_for_matching(roster_names)
-  
+
   # Find exact matches
   matches <- which(normalized_roster == normalized_transcript)
-  
+
   if (length(matches) > 0) {
     # Return first match
     return(list(
@@ -418,7 +439,7 @@ find_roster_match <- function(transcript_name, roster_names) {
       student_id = NA_character_
     ))
   }
-  
+
   # No match found
   NULL
 }
@@ -434,32 +455,31 @@ find_roster_match <- function(transcript_name, roster_names) {
 #' @return Data frame with matched names
 #' @keywords internal
 apply_name_matching <- function(transcript_data, name_lookup, roster_data) {
-  
   # Create a copy of transcript data
   result <- transcript_data
-  
+
   # Add name columns if they don't exist
   if (!"transcript_name" %in% names(result)) {
     # Look for existing name column
     name_cols <- c("name", "speaker_name", "participant_name")
     found_cols <- intersect(name_cols, names(result))
-    
+
     if (length(found_cols) > 0) {
       result$transcript_name <- result[[found_cols[1]]]
     } else {
       stop("No name column found in transcript data", call. = FALSE)
     }
   }
-  
+
   # Apply name matching
   for (i in seq_len(nrow(result))) {
     transcript_name <- result$transcript_name[i]
-    
+
     # Find matching lookup entry
     lookup_idx <- which(name_lookup$transcript_name == transcript_name)
     if (length(lookup_idx) > 0) {
       lookup <- name_lookup[lookup_idx[1], ]
-      
+
       # Add matched name columns
       result$preferred_name[i] <- lookup$preferred_name
       result$formal_name[i] <- lookup$formal_name
@@ -467,7 +487,7 @@ apply_name_matching <- function(transcript_data, name_lookup, roster_data) {
       result$student_id[i] <- lookup$student_id
     }
   }
-  
+
   # Ensure all required columns exist
   if (!"preferred_name" %in% names(result)) {
     result$preferred_name <- result$transcript_name
@@ -481,7 +501,7 @@ apply_name_matching <- function(transcript_data, name_lookup, roster_data) {
   if (!"student_id" %in% names(result)) {
     result$student_id <- NA_character_
   }
-  
+
   # Return result
   result
 }

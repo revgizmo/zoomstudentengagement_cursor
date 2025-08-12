@@ -5,7 +5,7 @@
 #' violations and stops processing if real names are found.
 #'
 #' @param data Data object to validate (data.frame, tibble, or list)
-#' @param privacy_level Privacy level to validate against. One of 
+#' @param privacy_level Privacy level to validate against. One of
 #'   `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
 #'   Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.
 #' @param real_names Character vector of real names to check against.
@@ -34,43 +34,44 @@ validate_privacy_compliance <- function(data,
                                         ),
                                         real_names = NULL,
                                         stop_on_violation = TRUE) {
-  
   # Validate inputs
   valid_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")
   if (!privacy_level %in% valid_levels) {
-    stop("Invalid privacy_level. Must be one of: ", 
-         paste(valid_levels, collapse = ", "), call. = FALSE)
+    stop("Invalid privacy_level. Must be one of: ",
+      paste(valid_levels, collapse = ", "),
+      call. = FALSE
+    )
   }
-  
+
   if (!is.logical(stop_on_violation) || length(stop_on_violation) != 1) {
     stop("stop_on_violation must be a single logical value", call. = FALSE)
   }
-  
+
   # If privacy is disabled, always return TRUE
   if (identical(privacy_level, "none")) {
     return(TRUE)
   }
-  
+
   # If no data provided, return TRUE
   if (is.null(data)) {
     return(TRUE)
   }
-  
+
   # Extract all character values from the data
   character_values <- extract_character_values(data)
-  
+
   # If no character values found, return TRUE
   if (length(character_values) == 0) {
     return(TRUE)
   }
-  
+
   # Check for privacy violations
   violations <- detect_privacy_violations(
-    character_values, 
-    real_names, 
+    character_values,
+    real_names,
     privacy_level
   )
-  
+
   # If violations found, handle according to stop_on_violation
   if (length(violations) > 0) {
     violation_msg <- paste(
@@ -80,14 +81,14 @@ validate_privacy_compliance <- function(data,
       "\nThis indicates a bug in the privacy implementation.",
       "Please report this issue immediately."
     )
-    
+
     if (stop_on_violation) {
       stop(violation_msg, call. = FALSE)
     } else {
       warning(violation_msg, call. = FALSE)
     }
   }
-  
+
   # Return TRUE if no violations
   TRUE
 }
@@ -102,7 +103,6 @@ validate_privacy_compliance <- function(data,
 #' @return Character vector of all character values found
 #' @keywords internal
 extract_character_values <- function(data) {
-  
   # Handle different data types
   if (is.data.frame(data)) {
     # Extract character columns
@@ -119,7 +119,7 @@ extract_character_values <- function(data) {
     # Direct character vector
     return(data[!is.na(data) & nchar(trimws(data)) > 0])
   }
-  
+
   # Return empty character vector for unsupported types
   character(0)
 }
@@ -136,22 +136,21 @@ extract_character_values <- function(data) {
 #' @return Character vector of detected violations
 #' @keywords internal
 detect_privacy_violations <- function(character_values, real_names, privacy_level) {
-  
   violations <- character(0)
-  
+
   # If specific real names provided, check for exact matches
   if (!is.null(real_names) && length(real_names) > 0) {
     # Normalize both sets for comparison
     normalized_values <- normalize_name_for_matching(character_values)
     normalized_names <- normalize_name_for_matching(real_names)
-    
+
     # Find exact matches
     matches <- normalized_values %in% normalized_names
     if (any(matches)) {
       violations <- c(violations, character_values[matches])
     }
   }
-  
+
   # Check for common name patterns that might indicate privacy violations
   # This is a conservative approach - only flag obvious violations
   name_patterns <- c(
@@ -162,7 +161,7 @@ detect_privacy_violations <- function(character_values, real_names, privacy_leve
     # Names with middle initials
     "^[A-Z][a-z]+\\s+[A-Z]\\.\\s+[A-Z][a-z]+$"
   )
-  
+
   for (pattern in name_patterns) {
     matches <- grepl(pattern, character_values, perl = TRUE)
     if (any(matches)) {
@@ -175,7 +174,7 @@ detect_privacy_violations <- function(character_values, real_names, privacy_leve
       }
     }
   }
-  
+
   # Remove duplicates and return
   unique(violations)
 }
