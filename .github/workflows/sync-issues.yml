@@ -1,0 +1,27 @@
+name: Sync issues from plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      plan_path:
+        description: Path to plan markdown file
+        required: true
+        default: ISSUES/docs_overhaul_plan.md
+      milestone:
+        description: Milestone title (optional; overrides plan front matter)
+        required: false
+      tracking_title:
+        description: Tracking issue title (optional; overrides plan front matter)
+        required: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run issue creation
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/create_issues_from_plan.sh
+          scripts/create_issues_from_plan.sh "${{ github.event.inputs.plan_path }}" "${{ github.event.inputs.milestone }}" "${{ github.event.inputs.tracking_title }}"
