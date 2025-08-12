@@ -88,21 +88,30 @@ load_transcript_files_list <-
         df$recording_start <- as.POSIXct(df$recording_start, tz = "UTC")
         df$start_time_local <- lubridate::with_tz(df$recording_start, tzone = start_time_local_tzone)
 
-        # Pivot to wide format using base R
-        result <- data.frame(
-          date_extract = unique(df$date_extract),
-          recording_start = unique(df$recording_start),
-          start_time_local = unique(df$start_time_local),
-          stringsAsFactors = FALSE
-        )
+        # Pivot to wide format per recording using base R
+        groups_df <- unique(df[, c("date_extract", "recording_start", "start_time_local"), drop = FALSE])
+        # Ensure groups are ordered by time
+        groups_df <- groups_df[order(groups_df$start_time_local), , drop = FALSE]
+        # Initialize result with groups
+        result <- groups_df
 
-        # Add file type columns
-        for (file_type in unique(df$file_type)) {
-          type_files <- df[df$file_type == file_type, "file_name"]
-          if (length(type_files) > 0) {
-            result[[file_type]] <- type_files[1] # Take first file of each type
-          } else {
-            result[[file_type]] <- NA_character_
+        # Add file type columns per group
+        file_types <- unique(df$file_type)
+        for (file_type in file_types) {
+          result[[file_type]] <- NA_character_
+        }
+
+        # Fill in file names per group and type
+        if (nrow(result) > 0) {
+          for (k in seq_len(nrow(result))) {
+            row_date <- result$date_extract[k]
+            row_start <- result$recording_start[k]
+            for (file_type in file_types) {
+              type_files <- df[df$file_type == file_type & df$date_extract == row_date & df$recording_start == row_start, "file_name", drop = TRUE]
+              if (length(type_files) > 0) {
+                result[[file_type]][k] <- type_files[1]
+              }
+            }
           }
         }
 
