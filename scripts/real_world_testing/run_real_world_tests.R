@@ -438,21 +438,28 @@ test_whole_game_privacy <- function() {
     report_content <- readLines(report_file)
     report_text <- paste(report_content, collapse = " ")
     
-    # Check for real names in the report
-    real_name_pattern <- "\\b[A-Z][a-z]+(\\s+[A-Z][a-z]+)+\\b"
-    real_names <- unlist(regmatches(report_text, gregexpr(real_name_pattern, report_text)))
+    # Use the package's validate_privacy_compliance function for proper privacy checking
+    # Convert report text to a data frame for validation
+    report_df <- data.frame(content = report_text, stringsAsFactors = FALSE)
     
-    # Filter out common words that might match the pattern
-    common_words <- c(
-      "Test Report", "Real World", "Test Date", "Test Results", "Test Summary",
-      "Package Version", "Total Tests", "Success Rate", "Detailed Results",
-      "Status Started", "Status Passed", "Status Failed", "Timestamp Details",
-      "Error Handling", "Privacy Features", "Recommendations Review",
-      "World Testing", "Package Version", "Total Tests", "Success Rate",
-      "Detailed Results", "Status Started", "Status Passed", "Status Failed",
-      "Timestamp Details", "Error Handling", "Privacy Features", "Recommendations Review"
-    )
-    real_names <- real_names[!real_names %in% common_words]
+    # Check for privacy violations using the package's validation function
+    tryCatch({
+      validate_privacy_compliance(report_df, privacy_level = "ferpa_strict")
+      real_names <- character(0)  # No violations found
+    }, error = function(e) {
+      # Extract the real names from the error message
+      error_msg <- e$message
+      if (grepl("Real names found in output data:", error_msg)) {
+        # Extract the names from the error message
+        names_start <- regexpr("Real names found in output data:", error_msg) + nchar("Real names found in output data:")
+        names_text <- substr(error_msg, names_start, nchar(error_msg))
+        # Clean up the names (remove extra text)
+        names_text <- gsub("This indicates a bug.*", "", names_text)
+        real_names <<- strsplit(trimws(names_text), ", ")[[1]]
+      } else {
+        real_names <<- character(0)
+      }
+    })
     
     if (length(real_names) > 0) {
       cat("🚨 PRIVACY ISSUE: Real names found in report:\n")
