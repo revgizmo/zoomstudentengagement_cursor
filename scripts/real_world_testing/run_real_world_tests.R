@@ -8,14 +8,24 @@
 
 # Load required libraries
 suppressPackageStartupMessages({
-  # Try to load the development version of the package, fall back to installed version
+  # Try to load the development version first, fall back to installed version
+  # This allows testing both from package root (development) and external environments (installed)
   tryCatch({
-    devtools::load_all()
+    if (file.exists("DESCRIPTION")) {
+      # We're in the package root - load development version
+      devtools::load_all()
+      cat("ℹ Loaded development version of package\n")
+    } else {
+      # We're in an external environment - load installed version
+      library(zoomstudentengagement)
+      cat("ℹ Loaded installed version of package\n")
+    }
   }, error = function(e) {
-    # If devtools::load_all fails, just load the installed package
-    cat("ℹ Loading installed package version (development version not available)\n")
+    # Fallback to installed version if anything fails
+    library(zoomstudentengagement)
+    cat("ℹ Loaded installed version of package (fallback)\n")
   })
-  library(zoomstudentengagement)
+  
   library(dplyr)
   library(readr)
   library(testthat)

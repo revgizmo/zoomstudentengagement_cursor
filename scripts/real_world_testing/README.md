@@ -18,6 +18,13 @@ cd my_testing_project
 ./setup.sh
 ```
 
+### 2. Alternative: Test from Package Root
+```bash
+# If you want to test the development version from the package root
+cd /path/to/zoomstudentengagement
+./scripts/real_world_testing/run_tests.sh
+```
+
 ### 2. Add Your Data
 ```bash
 # Add your Zoom transcript files
@@ -76,6 +83,20 @@ my_testing_project/                   # Standalone project root
 ```
 
 ## 🔧 Setup Process
+
+### Testing Environments
+
+This infrastructure supports two testing approaches:
+
+1. **Development Testing** (from package root): Tests the latest development version
+   - Run from `/path/to/zoomstudentengagement`
+   - Uses `devtools::load_all()` to load development code
+   - Best for testing new features and fixes
+
+2. **Production Testing** (standalone environment): Tests the installed package version
+   - Run from external directory (e.g., `/Users/piper/git/zse_secure_testing`)
+   - Uses `library(zoomstudentengagement)` to load installed package
+   - Best for validating production behavior with real data
 
 ### Manual Workflow vs Automated Testing
 
