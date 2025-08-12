@@ -57,6 +57,10 @@ load_transcript_files_list <-
 
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
+    if (!file.exists(transcripts_folder_path)) {
+      abort_zse(paste0("Transcripts folder not found at `", transcripts_folder_path, "`"), class = "zse_input_error")
+    }
+
     if (file.exists(transcripts_folder_path)) {
       transcript_files <- list.files(
         transcripts_folder_path,
@@ -115,9 +119,9 @@ load_transcript_files_list <-
           }
         }
 
-        return(result)
+        return(tibble::as_tibble(result))
       } else {
-        return(data.frame())
+        return(tibble::as_tibble(data.frame()))
       }
     }
   }

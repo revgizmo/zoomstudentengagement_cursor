@@ -35,14 +35,16 @@ load_cancelled_classes <-
       )
     } else {
       # File doesn't exist, handle the situation accordingly
-      print(paste("File does not exist:", cancelled_classes_file_path))
+      warning(paste("File does not exist:", cancelled_classes_file_path))
       data <- zoomstudentengagement::make_blank_cancelled_classes_df()
 
       if (write_blank_cancelled_classes && !file.exists(cancelled_classes_file_path)) {
         data %>%
           readr::write_csv(paste0(data_folder, "/", cancelled_classes_file))
+      } else if (!write_blank_cancelled_classes) {
+        # keep returning blank template to preserve legacy behavior
       }
     }
 
-    data
+    tibble::as_tibble(data)
   }
