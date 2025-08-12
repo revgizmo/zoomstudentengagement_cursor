@@ -95,26 +95,26 @@ head(transcripts_summary_df)
 
 ### Plotting by Metric
 
-The `plot_users_by_metric()` function creates visualizations for different engagement metrics:
+Use the unified `plot_users()` function to create visualizations for different engagement metrics:
 
 ```{r basic-plots}
 # Plot session count
-plot_users_by_metric(transcripts_summary_df, metric = "session_ct")
+plot_users(transcripts_summary_df, metric = "session_ct", facet_by = "section", mask_by = "name")
 ```
 
 ```{r comment-count}
 # Plot comment count
-plot_users_by_metric(transcripts_summary_df, metric = "n")
+plot_users(transcripts_summary_df, metric = "n", facet_by = "section", mask_by = "name")
 ```
 
 ```{r duration}
 # Plot speaking duration
-plot_users_by_metric(transcripts_summary_df, metric = "duration")
+plot_users(transcripts_summary_df, metric = "duration", facet_by = "section", mask_by = "name")
 ```
 
 ```{r wordcount}
 # Plot word count
-plot_users_by_metric(transcripts_summary_df, metric = "wordcount")
+plot_users(transcripts_summary_df, metric = "wordcount", facet_by = "section", mask_by = "name")
 ```
 
 ## Understanding the Metrics
@@ -138,13 +138,13 @@ Visualize relative participation:
 
 ```{r percentage-metrics}
 # Plot percentage of comments
-plot_users_by_metric(transcripts_summary_df, metric = "perc_n")
+plot_users(transcripts_summary_df, metric = "perc_n", facet_by = "section", mask_by = "name")
 
 # Plot percentage of speaking time
-plot_users_by_metric(transcripts_summary_df, metric = "perc_duration")
+plot_users(transcripts_summary_df, metric = "perc_duration", facet_by = "section", mask_by = "name")
 
 # Plot percentage of words
-plot_users_by_metric(transcripts_summary_df, metric = "perc_wordcount")
+plot_users(transcripts_summary_df, metric = "perc_wordcount", facet_by = "section", mask_by = "name")
 ```
 
 ## Students-Only Analysis
@@ -160,23 +160,27 @@ students_only_summary <- make_students_only_transcripts_summary_df(
 )
 
 # Plot students-only metrics
-plot_users_by_metric(students_only_summary, metric = "session_ct")
+plot_users(students_only_summary, metric = "session_ct", facet_by = "section", mask_by = "name")
 ```
 
 ### Masked Names for Privacy
 
-Use masked names for privacy-conscious analysis:
+Use rank-based masked labels for privacy-conscious analysis:
 
 ```{r masked-plots}
-# Plot with masked names
-plot_users_masked_section_by_metric(
-  df = students_only_summary,
-  metric = "n"
+# Plot with rank-masked names
+plot_users(
+  data = students_only_summary,
+  metric = "n",
+  facet_by = "section",
+  mask_by = "rank"
 )
 
-plot_users_masked_section_by_metric(
-  df = students_only_summary,
-  metric = "duration"
+plot_users(
+  data = students_only_summary,
+  metric = "duration",
+  facet_by = "section",
+  mask_by = "rank"
 )
 ```
 
@@ -192,7 +196,7 @@ section_data <- transcripts_summary_df %>%
   filter(section == 1) # Use the actual section number from our sample data
 
 # Plot filtered data
-plot_users_by_metric(section_data, metric = "wpm")
+plot_users(section_data, metric = "wpm", facet_by = "section", mask_by = "name")
 ```
 
 ### Comparative Analysis
@@ -202,10 +206,10 @@ Compare different metrics:
 ```{r comparative}
 # Create comparison plots
 par(mfrow = c(2, 2))
-plot_users_by_metric(transcripts_summary_df, metric = "n")
-plot_users_by_metric(transcripts_summary_df, metric = "duration")
-plot_users_by_metric(transcripts_summary_df, metric = "wordcount")
-plot_users_by_metric(transcripts_summary_df, metric = "wpm")
+plot_users(transcripts_summary_df, metric = "n", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "duration", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "wordcount", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "wpm", facet_by = "section", mask_by = "name")
 ```
 
 ## Interpreting the Results
@@ -227,26 +231,6 @@ participation_summary <- transcripts_summary_df %>%
   )
 
 participation_summary
-```
-
-### Engagement Patterns
-
-Identify different types of engagement:
-
-```{r patterns}
-# Categorize students by engagement type
-engagement_categories <- transcripts_summary_df %>%
-  mutate(
-    engagement_type = case_when(
-      n == 0 ~ "No participation",
-      n <= 2 ~ "Low participation",
-      n <= 5 ~ "Moderate participation",
-      TRUE ~ "High participation"
-    )
-  ) %>%
-  count(engagement_type)
-
-engagement_categories
 ```
 
 ## Custom Visualizations
