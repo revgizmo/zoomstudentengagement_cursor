@@ -5,7 +5,6 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_document
 params:
   instructor_name: "Conor Healy"
-  instructor_title: "Professor"
 ---
 
 ```{r setup, include = FALSE}
@@ -38,8 +37,7 @@ This document demonstrates the complete workflow for analyzing student engagemen
 Before running this workflow, ensure you have the following:
 
 ### 1. Instructor Information (YAML Parameters)
-- **instructor_name**: Full name of the instructor (e.g., "Conor Healy")
-- **instructor_title**: Title of the instructor (e.g., "Professor", "Dr.")
+- **instructor_name**: Name of the instructor as it appears in Zoom transcripts (e.g., "Conor Healy", "Dr. Healy", "Professor Healy", "Instructor")
 
 ### 2. Student Roster (`data/metadata/roster.csv`)
 - CSV file with enrolled student information
@@ -60,7 +58,7 @@ Before running this workflow, ensure you have the following:
 ```bash
 # From the scripts/real_world_testing directory:
 Rscript -e "rmarkdown::render('whole_game_real_world.Rmd', 
-  params = list(instructor_name = 'Conor Healy', instructor_title = 'Professor'))"
+  params = list(instructor_name = 'Conor Healy'))"
 ```
 
 Or edit the YAML parameters at the top of this file and run:
@@ -348,13 +346,26 @@ if (!is.null(mask_metrics)) {
 **Important**: Before running the main workflow, it's recommended to configure instructor names in the `section_names_lookup.csv` file. This prevents expected exceptions and makes the process smoother.
 
 ```{r configure-instructors}
+# Function to create instructor entries
+create_instructor_entries <- function(name) {
+  # Only use the exact instructor name provided
+  # Users can add variations manually after seeing what appears in transcripts
+  data.frame(
+    transcript_name = name,
+    preferred_name = name,
+    formal_name = name,
+    participant_type = "instructor",
+    student_id = "INSTRUCTOR",
+    notes = "Primary instructor name - add variations manually if needed",
+    stringsAsFactors = FALSE
+  )
+}
+
 # Get instructor information from YAML parameters
 instructor_name <- params$instructor_name
-instructor_title <- params$instructor_title
 
 cat("=== Instructor Configuration ===\n")
 cat("Instructor Name:", instructor_name, "\n")
-cat("Instructor Title:", instructor_title, "\n")
 
 # Check if section_names_lookup.csv exists
 lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
@@ -378,7 +389,7 @@ if (file.exists(lookup_file)) {
         cat("Adding current instructor to configuration...\n")
         
         # Add current instructor to existing configuration
-        new_instructor_entries <- create_instructor_entries(instructor_name, instructor_title)
+        new_instructor_entries <- create_instructor_entries(instructor_name)
         updated_lookup <- rbind(existing_lookup, new_instructor_entries)
         write.csv(updated_lookup, lookup_file, row.names = FALSE)
         cat("✅ Updated instructor configuration.\n")
@@ -388,7 +399,7 @@ if (file.exists(lookup_file)) {
       cat("Adding current instructor to configuration...\n")
       
       # Create instructor entries and save
-      instructor_lookup <- create_instructor_entries(instructor_name, instructor_title)
+      instructor_lookup <- create_instructor_entries(instructor_name)
       write.csv(instructor_lookup, lookup_file, row.names = FALSE)
       cat("✅ Instructor configuration created.\n")
     }
@@ -397,7 +408,7 @@ if (file.exists(lookup_file)) {
     cat("Creating new lookup file with instructor configuration...\n")
     
     # Create new lookup file with instructor entries
-    instructor_lookup <- create_instructor_entries(instructor_name, instructor_title)
+    instructor_lookup <- create_instructor_entries(instructor_name)
     write.csv(instructor_lookup, lookup_file, row.names = FALSE)
     cat("✅ Instructor configuration created.\n")
   }
@@ -406,35 +417,11 @@ if (file.exists(lookup_file)) {
   cat("No section_names_lookup.csv found. Creating one with instructor configuration.\n")
   
   # Create instructor entries and save
-  instructor_lookup <- create_instructor_entries(instructor_name, instructor_title)
+  instructor_lookup <- create_instructor_entries(instructor_name)
   write.csv(instructor_lookup, lookup_file, row.names = FALSE)
   cat("✅ Instructor configuration created:", lookup_file, "\n")
   cat("This file maps Zoom transcript names to your instructor's preferred name.\n")
   cat("Edit this file to add more instructor name variations or other participants.\n")
-}
-
-# Function to create instructor entries
-create_instructor_entries <- function(name, title) {
-  # Create common variations of the instructor name
-  variations <- c(
-    name,  # Full name
-    paste(title, gsub("^.*\\s+", "", name)),  # Title + Last name
-    paste("Dr.", gsub("^.*\\s+", "", name)),  # Dr. + Last name
-    paste("Professor", gsub("^.*\\s+", "", name))  # Professor + Last name
-  )
-  
-  # Remove duplicates
-  variations <- unique(variations)
-  
-  data.frame(
-    transcript_name = variations,
-    preferred_name = rep(name, length(variations)),
-    formal_name = rep(name, length(variations)),
-    participant_type = rep("instructor", length(variations)),
-    student_id = rep("INSTRUCTOR", length(variations)),
-    notes = c("Primary instructor name", rep("Title variation", length(variations) - 1)),
-    stringsAsFactors = FALSE
-  )
 }
 
 cat("\n=== Instructor Configuration Instructions ===\n")
@@ -444,7 +431,7 @@ cat("- preferred_name: How you want them displayed in reports\n")
 cat("- participant_type: 'instructor' for instructors, 'enrolled_student' for students\n")
 cat("- student_id: Student ID or 'INSTRUCTOR' for instructors\n")
 cat("- notes: Any additional information\n")
-cat("\nCurrent instructor variations configured:\n")
+cat("\nCurrent instructor configuration:\n")
 if (exists("instructor_lookup")) {
   print(instructor_lookup[, c("transcript_name", "preferred_name", "participant_type")])
 } else if (file.exists(lookup_file)) {
@@ -454,6 +441,18 @@ if (exists("instructor_lookup")) {
     print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
   }
 }
+
+cat("\n=== Adding Instructor Name Variations ===\n")
+cat("After processing transcripts, you may need to add variations of the instructor name.\n")
+cat("Common reasons to add variations:\n")
+cat("- Zoom shows 'Dr. Healy' instead of 'Conor Healy'\n")
+cat("- Zoom shows 'Instructor' or 'Host' for the instructor\n")
+cat("- Different sessions show different name formats\n")
+cat("\nTo add variations, edit data/metadata/section_names_lookup.csv and add new rows with:\n")
+cat("- transcript_name: The name as it appears in Zoom\n")
+cat("- preferred_name: The instructor's preferred name\n")
+cat("- participant_type: 'instructor'\n")
+```
 ```
 
 ## Step 3: Loading Your Student Roster
