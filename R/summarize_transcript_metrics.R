@@ -183,6 +183,13 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
 
     # Convert to tibble to maintain expected return type
     result <- tibble::as_tibble(result)
+
+    # Attach provenance attributes
+    attr(result, "schema_version") <- "1.0"
+    attr(result, "source_files") <- if (!is.null(transcript_file_path) && nzchar(transcript_file_path)) basename(transcript_file_path) else NA_character_
+    attr(result, "processing_timestamp") <- as.character(Sys.time())
+    attr(result, "privacy_level") <- getOption("zoomstudentengagement.privacy_level", "mask")
+
     # Apply privacy before returning
     return(zoomstudentengagement::ensure_privacy(result))
   }
