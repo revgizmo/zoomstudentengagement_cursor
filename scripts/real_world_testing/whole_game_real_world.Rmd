@@ -322,6 +322,33 @@ if (file.exists(roster_path)) {
     head(roster)
     cat("\nRoster dimensions:", nrow(roster), "students\n")
     cat("Roster columns:", paste(names(roster), collapse = ", "), "\n")
+    
+    # Check for instructor identification
+    if ("participant_type" %in% names(roster)) {
+      cat("\n=== Instructor Identification in Roster ===\n")
+      instructor_count <- sum(roster$participant_type == "instructor", na.rm = TRUE)
+      student_count <- sum(roster$participant_type == "enrolled_student", na.rm = TRUE)
+      unknown_count <- sum(is.na(roster$participant_type) | roster$participant_type == "unknown", na.rm = TRUE)
+      
+      cat("Instructors:", instructor_count, "\n")
+      cat("Enrolled students:", student_count, "\n")
+      cat("Unknown/Unspecified:", unknown_count, "\n")
+      
+      if (instructor_count > 0) {
+        instructors <- roster$preferred_name[roster$participant_type == "instructor"]
+        cat("Instructor names:", paste(instructors, collapse = ", "), "\n")
+      } else {
+        cat("⚠️  No instructors identified in roster. You may need to add participant_type column.\n")
+        cat("Expected format: participant_type should be 'instructor', 'enrolled_student', or 'unknown'\n")
+      }
+    } else {
+      cat("\n⚠️  No participant_type column found in roster.\n")
+      cat("To enable instructor identification, add a participant_type column with values:\n")
+      cat("- 'instructor' for instructors (e.g., Conor Healy)\n")
+      cat("- 'enrolled_student' for students\n")
+      cat("- 'unknown' for unidentified participants\n")
+    }
+    
   }, error = function(e) {
     cat("⚠️  Error loading roster:", e$message, "\n")
     cat("Please check that your roster.csv file is properly formatted\n")
@@ -329,6 +356,23 @@ if (file.exists(roster_path)) {
 } else {
   cat("⚠️  Roster file not found at:", roster_path, "\n")
   cat("Please add your roster.csv file to data/metadata/\n")
+  
+  # Create a sample roster template with instructor identification
+  cat("\n=== Creating Sample Roster Template ===\n")
+  sample_roster <- data.frame(
+    preferred_name = c("Conor Healy", "Student One", "Student Two", "Student Three"),
+    formal_name = c("Conor Healy", "Student One", "Student Two", "Student Three"),
+    student_id = c("INSTRUCTOR", "STU001", "STU002", "STU003"),
+    participant_type = c("instructor", "enrolled_student", "enrolled_student", "enrolled_student"),
+    stringsAsFactors = FALSE
+  )
+  
+  # Save sample roster
+  sample_roster_path <- file.path("data/metadata", "sample_roster_with_instructors.csv")
+  write.csv(sample_roster, sample_roster_path, row.names = FALSE)
+  cat("Sample roster template created:", sample_roster_path, "\n")
+  cat("Edit this file to match your actual student roster and instructor names.\n")
+  cat("Make sure to set participant_type to 'instructor' for instructors.\n")
 }
 ```
 
@@ -439,137 +483,257 @@ if (length(transcript_files) > 0) {
 }
 ```
 
-## Step 6: Matching Student Names
+## Step 6: Instructor Identification and Name Matching
 
-This is often the most challenging part - matching Zoom names to your roster:
+This is a critical step that combines instructor identification with privacy-aware name matching. The package now includes sophisticated name matching capabilities that maintain privacy while helping you match Zoom names to your roster.
 
-### **⚠️ Important Note: Name Matching Limitation**
+### **Step 6.1: Instructor Identification**
 
-**Current Issue**: The privacy-first framework masks names immediately upon loading, which can make name matching challenging. This is a known limitation being addressed in Issue #160.
+First, let's identify the instructor(s) in your sessions:
 
-**Workaround**: For now, you may need to:
-1. Use the `none` privacy level temporarily for matching
-2. Create manual name mappings
-3. Use the privacy testing above to validate your approach
-
-**Future Solution**: A consistent hashing approach is being developed to enable matching while maintaining privacy.
-
-```{r name-matching}
-if (exists("metrics") && nrow(metrics) > 0 && exists("roster")) {
-  # Get names from transcripts
-  transcript_names <- unique(metrics$name)
-  cat("Names in transcripts:\n")
-  print(transcript_names)
+```{r instructor-identification}
+# Function to identify instructors from transcript data
+identify_instructors <- function(transcript_data, roster_data = NULL) {
+  cat("=== Instructor Identification ===\n")
   
-  # Get names from roster
-  roster_names <- unique(roster$preferred_name)
-  cat("\nNames in roster:\n")
-  print(roster_names)
+  # Get unique speakers from transcript
+  speakers <- unique(transcript_data$name)
+  cat("Speakers in transcript:", paste(speakers, collapse = ", "), "\n")
   
-  # Find exact matches
-  exact_matches <- intersect(transcript_names, roster_names)
-  cat("\nExact matches found:", length(exact_matches), "\n")
-  print(exact_matches)
-  
-  # Find unmatched names
-  unmatched_transcript <- setdiff(transcript_names, roster_names)
-  unmatched_roster <- setdiff(roster_names, transcript_names)
-  
-  cat("\nNames in transcripts but not in roster:\n")
-  print(unmatched_transcript)
-  
-  cat("\nNames in roster but not in transcripts:\n")
-  print(unmatched_roster)
-} else {
-  cat("⚠️  Cannot perform name matching - missing metrics or roster data\n")
-}
-```
-
-## Step 7: Creating Name Mappings
-
-For names that don't match exactly, you'll need to create mappings:
-
-```{r create-mappings}
-if (exists("metrics") && nrow(metrics) > 0) {
-  # Create a template for name mappings
-  transcript_names <- unique(metrics$name)
-  
-  # Create initial mapping (exact matches)
-  name_mapping <- data.frame(
-    name_to_clean = transcript_names,
-    clean_name = transcript_names,  # Start with exact matches
-    notes = "",
-    stringsAsFactors = FALSE
-  )
-  
-  # If roster exists, update with exact matches
-  if (exists("roster")) {
-    roster_names <- unique(roster$preferred_name)
-    exact_matches <- intersect(transcript_names, roster_names)
+  # If we have roster data, look for instructor indicators
+  if (!is.null(roster_data) && "participant_type" %in% names(roster_data)) {
+    instructors_in_roster <- roster_data$preferred_name[roster_data$participant_type == "instructor"]
+    cat("Instructors in roster:", paste(instructors_in_roster, collapse = ", "), "\n")
     
-    name_mapping$clean_name[match(exact_matches, name_mapping$name_to_clean)] <- exact_matches
-    name_mapping$notes[match(exact_matches, name_mapping$name_to_clean)] <- "Exact match"
+    # Find matches between transcript speakers and roster instructors
+    instructor_matches <- intersect(speakers, instructors_in_roster)
+    if (length(instructor_matches) > 0) {
+      cat("✅ Identified instructors:", paste(instructor_matches, collapse = ", "), "\n")
+      return(instructor_matches)
+    }
   }
   
-  # Show mapping template
-  cat("Name mapping template (edit manually as needed):\n")
-  print(name_mapping)
+  # If no roster match, look for common instructor patterns
+  instructor_patterns <- c(
+    "professor", "prof", "dr", "doctor", "instructor", "teacher", "faculty",
+    "conor", "healy", "conor healy"  # Specific to your case
+  )
   
-  # Save mapping template
-  write.csv(name_mapping, "name_mappings_template.csv", row.names = FALSE)
-  cat("\nName mapping template saved to: name_mappings_template.csv\n")
-  cat("Edit this file manually to add your name mappings, then reload it.\n")
+  potential_instructors <- character(0)
+  for (speaker in speakers) {
+    speaker_lower <- tolower(speaker)
+    for (pattern in instructor_patterns) {
+      if (grepl(pattern, speaker_lower)) {
+        potential_instructors <- c(potential_instructors, speaker)
+        break
+      }
+    }
+  }
+  
+  if (length(potential_instructors) > 0) {
+    cat("🔍 Potential instructors (based on patterns):", paste(potential_instructors, collapse = ", "), "\n")
+    cat("Please verify these are correct instructors.\n")
+    return(potential_instructors)
+  } else {
+    cat("⚠️  No instructors automatically identified.\n")
+    cat("You may need to manually specify instructors in the name matching process.\n")
+    return(character(0))
+  }
+}
+
+# Identify instructors if we have transcript and roster data
+if (exists("transcript_data") && exists("roster")) {
+  instructors <- identify_instructors(transcript_data, roster)
+} else if (exists("transcript_data")) {
+  instructors <- identify_instructors(transcript_data)
 } else {
-  cat("⚠️  Cannot create name mappings - missing metrics data\n")
+  cat("⚠️  Cannot identify instructors - missing transcript data\n")
+  instructors <- character(0)
 }
 ```
 
-## Step 8: Loading Custom Name Mappings
+### **Step 6.2: Privacy-Aware Name Matching Workflow**
+
+Now let's use the new privacy-aware name matching workflow. This is the recommended approach that maintains privacy while helping you match names:
+
+```{r privacy-aware-name-matching}
+# Use the safe name matching workflow for privacy-aware matching
+if (exists("transcript_data") && exists("roster")) {
+  cat("\n=== Privacy-Aware Name Matching ===\n")
+  
+  # Get the first transcript file for processing
+  transcript_files <- list.files(
+    "data/transcripts",
+    pattern = "\\.transcript\\.vtt$",
+    full.names = TRUE,
+    recursive = TRUE
+  )
+  
+  if (length(transcript_files) > 0) {
+    transcript_file <- transcript_files[1]
+    cat("Processing transcript:", basename(transcript_file), "\n")
+    
+    # Set up privacy defaults for name matching
+    set_privacy_defaults(
+      privacy_level = "ferpa_standard",  # Standard privacy for matching
+      unmatched_names_action = "warn"    # Warn about unmatched names
+    )
+    
+    # Run the safe name matching workflow
+    tryCatch({
+      cat("Running privacy-aware name matching workflow...\n")
+      
+      # First, try with default settings (stops on unmatched names)
+      result <- safe_name_matching_workflow(
+        transcript_file_path = transcript_file,
+        roster_data = roster,
+        privacy_level = "ferpa_standard",
+        unmatched_names_action = "warn"  # This will warn and guide through matching
+      )
+      
+      cat("✅ Name matching workflow completed successfully!\n")
+      
+      # Show matching results
+      if (!is.null(result) && nrow(result) > 0) {
+        cat("\nName Matching Results:\n")
+        cat("Total participants:", nrow(result), "\n")
+        
+        # Count by participant type
+        if ("participant_type" %in% names(result)) {
+          type_counts <- table(result$participant_type)
+          cat("Participant types:\n")
+          for (type in names(type_counts)) {
+            cat("  ", type, ":", type_counts[type], "\n")
+          }
+        }
+        
+        # Show matched vs unmatched
+        if ("is_matched" %in% names(result)) {
+          matched_count <- sum(result$is_matched, na.rm = TRUE)
+          unmatched_count <- sum(!result$is_matched, na.rm = TRUE)
+          cat("Matched names:", matched_count, "\n")
+          cat("Unmatched names:", unmatched_count, "\n")
+        }
+        
+        # Store the result for later use
+        clean_metrics <- result
+        
+      } else {
+        cat("⚠️  No results returned from name matching workflow\n")
+      }
+      
+    }, error = function(e) {
+      cat("❌ Error in name matching workflow:", e$message, "\n")
+      cat("This may indicate unmatched names that need manual resolution.\n")
+      
+      # Try to provide guidance for manual matching
+      cat("\n=== Manual Name Matching Guidance ===\n")
+      cat("If you have unmatched names, you can:\n")
+      cat("1. Use prompt_name_matching() to create a lookup template\n")
+      cat("2. Edit the template manually with correct name mappings\n")
+      cat("3. Re-run the workflow with the updated mappings\n")
+    })
+    
+  } else {
+    cat("⚠️  No transcript files found for name matching\n")
+  }
+} else {
+  cat("⚠️  Cannot perform name matching - missing transcript data or roster\n")
+}
+```
+
+### **Step 6.3: Manual Name Matching (if needed)**
+
+If the automated workflow doesn't match all names, you can use the manual approach:
+
+```{r manual-name-matching}
+# If we need manual name matching, use the prompt_name_matching function
+if (exists("transcript_data") && (!exists("clean_metrics") || nrow(clean_metrics) == 0)) {
+  cat("\n=== Manual Name Matching Setup ===\n")
+  
+  # Extract names from transcript
+  transcript_names <- unique(transcript_data$name)
+  
+  # Use prompt_name_matching to create a lookup template
+  tryCatch({
+    cat("Creating name matching template...\n")
+    
+    lookup_file <- prompt_name_matching(
+      unmatched_names = transcript_names,
+      privacy_level = "ferpa_standard",
+      data_folder = "data",
+      include_instructions = TRUE
+    )
+    
+    cat("✅ Name matching template created:", lookup_file, "\n")
+    cat("Please edit this file to add your name mappings, then reload it.\n")
+    cat("Instructions are included in the template file.\n")
+    
+  }, error = function(e) {
+    cat("❌ Error creating name matching template:", e$message, "\n")
+  })
+}
+```
+
+### **Step 6.4: Loading Custom Name Mappings**
 
 If you've created custom name mappings, load them here:
 
-```{r load-mappings}
-# Check if custom mappings exist
-mapping_file <- "name_mappings_template.csv"
+```{r load-custom-mappings}
+# Check for custom name mappings
+mapping_files <- list.files(
+  "data/metadata",
+  pattern = ".*names.*lookup.*csv$",
+  full.names = TRUE
+)
 
-if (file.exists(mapping_file)) {
-  custom_mappings <- read.csv(mapping_file, stringsAsFactors = FALSE)
-  cat("Loaded custom name mappings:\n")
-  print(custom_mappings)
+if (length(mapping_files) > 0) {
+  cat("\n=== Loading Custom Name Mappings ===\n")
   
-  # Apply mappings to metrics
-  if (exists("metrics") && nrow(metrics) > 0) {
-    clean_metrics <- metrics %>%
-      left_join(custom_mappings, by = c("name" = "name_to_clean")) %>%
-      mutate(
-        student_name = coalesce(clean_name, name),
-        is_matched = !is.na(clean_name) & clean_name != name
-      )
+  # Use the most recent mapping file
+  mapping_file <- mapping_files[length(mapping_files)]
+  cat("Loading mappings from:", basename(mapping_file), "\n")
+  
+  tryCatch({
+    custom_mappings <- read.csv(mapping_file, stringsAsFactors = FALSE)
     
-    # Summary of matching success
-    matching_summary <- clean_metrics %>%
-      group_by(is_matched) %>%
-      summarise(
-        count = n(),
-        percentage = n() / nrow(clean_metrics) * 100
-      )
+    cat("Loaded", nrow(custom_mappings), "name mappings\n")
     
-    cat("\nName matching summary:\n")
-    print(matching_summary)
-  }
+    # Show a preview of the mappings
+    if (nrow(custom_mappings) > 0) {
+      cat("Mapping preview:\n")
+      print(head(custom_mappings))
+    }
+    
+    # Apply mappings to transcript data if available
+    if (exists("transcript_data")) {
+      clean_transcript <- transcript_data %>%
+        left_join(custom_mappings, by = c("name" = "transcript_name")) %>%
+        mutate(
+          clean_name = coalesce(preferred_name, name),
+          is_matched = !is.na(preferred_name) & preferred_name != name
+        )
+      
+      # Summary of matching success
+      if ("is_matched" %in% names(clean_transcript)) {
+        matched_count <- sum(clean_transcript$is_matched, na.rm = TRUE)
+        total_count <- nrow(clean_transcript)
+        cat("Applied mappings:", matched_count, "of", total_count, "utterances matched\n")
+      }
+      
+      # Store for later use
+      clean_metrics <- clean_transcript
+    }
+    
+  }, error = function(e) {
+    cat("❌ Error loading custom mappings:", e$message, "\n")
+  })
 } else {
-  cat("No custom name mappings found. Using original names.\n")
-  if (exists("metrics")) {
-    clean_metrics <- metrics %>%
-      mutate(
-        student_name = name,
-        is_matched = FALSE
-      )
-  }
+  cat("No custom name mapping files found.\n")
 }
 ```
 
-## Step 9: Analyzing Participation Patterns
+## Step 7: Analyzing Participation Patterns
 
 Now let's analyze participation patterns to understand engagement:
 
@@ -606,7 +770,7 @@ if (exists("clean_metrics") && nrow(clean_metrics) > 0) {
 }
 ```
 
-## Step 10: Visualizing Participation
+## Step 8: Visualizing Participation
 
 Create visualizations to understand participation patterns:
 
@@ -650,7 +814,7 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
 }
 ```
 
-## Step 11: Identifying Participation Gaps
+## Step 9: Identifying Participation Gaps
 
 Look for students who might need encouragement to participate:
 
@@ -690,7 +854,7 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
 }
 ```
 
-## Step 12: Creating Actionable Insights
+## Step 10: Creating Actionable Insights
 
 Generate insights that can help improve equitable participation:
 
@@ -719,7 +883,7 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
 }
 ```
 
-## Step 13: Final Privacy Validation
+## Step 11: Final Privacy Validation
 
 Before saving your analysis, let's do a final privacy check to ensure no sensitive data is exposed:
 
@@ -767,7 +931,7 @@ if (exists("student_summary")) {
 cat("\n✅ Final privacy validation completed.\n")
 ```
 
-## Step 14: Saving Your Analysis
+## Step 12: Saving Your Analysis
 
 Save your processed data for future reference:
 
