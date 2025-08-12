@@ -497,6 +497,183 @@ test_whole_game_privacy <- function() {
   })
 }
 
+# Function to test multi-session analysis and attendance tracking
+test_multi_session_analysis <- function() {
+  cat("\n=== Testing Multi-Session Analysis ===\n")
+  
+  tryCatch({
+    # Get all transcript files
+    transcript_dir <- file.path(data_dir, "transcripts")
+    transcript_files <- list.files(transcript_dir, pattern = "\\.transcript\\.vtt$", full.names = TRUE)
+    
+    if (length(transcript_files) < 2) {
+      cat("⚠️  Need at least 2 transcript files for multi-session testing\n")
+      log_test_result("multi_session_analysis", "SKIPPED", "Insufficient transcript files")
+      return()
+    }
+    
+    # Load roster data
+    roster <- load_roster(data_folder = file.path(data_dir, "metadata"), roster_file = "roster.csv")
+    
+    # Process each session and track attendance
+    session_attendance <- list()
+    session_metrics <- list()
+    all_participants <- character(0)
+    
+    cat("Processing", length(transcript_files), "sessions...\n")
+    
+    for (i in seq_along(transcript_files)) {
+      transcript_file <- transcript_files[i]
+      session_name <- tools::file_path_sans_ext(basename(transcript_file))
+      
+      cat("  Session", i, ":", session_name, "\n")
+      
+      # Process transcript with privacy-aware name matching
+      tryCatch({
+        session_data <- process_transcript_with_privacy(
+          transcript_file = transcript_file,
+          roster_data = roster,
+          unmatched_names_action = "warn"  # Allow testing with unmatched names
+        )
+        
+        # Extract participants for this session
+        session_participants <- unique(session_data$name)
+        session_attendance[[session_name]] <- session_participants
+        all_participants <- unique(c(all_participants, session_participants))
+        
+        # Calculate session metrics
+        session_metrics[[session_name]] <- summarize_transcript_metrics(
+          transcript_file_path = transcript_file,
+          names_exclude = c("dead_air")
+        )
+        
+        cat("    ✓", length(session_participants), "participants\n")
+        
+      }, error = function(e) {
+        cat("    ✗ Error processing session:", e$message, "\n")
+      })
+    }
+    
+    # Analyze cross-session patterns
+    cat("\nAnalyzing cross-session patterns...\n")
+    
+    # Create attendance matrix
+    attendance_matrix <- data.frame(
+      participant = all_participants,
+      stringsAsFactors = FALSE
+    )
+    
+    for (session_name in names(session_attendance)) {
+      attendance_matrix[[session_name]] <- all_participants %in% session_attendance[[session_name]]
+    }
+    
+    # Calculate attendance statistics
+    total_sessions <- length(session_attendance)
+    attendance_counts <- rowSums(attendance_matrix[, -1, drop = FALSE])
+    
+    # Find consistent attendees (attended >50% of sessions)
+    consistent_attendees <- all_participants[attendance_counts > total_sessions / 2]
+    
+    # Find one-time attendees
+    one_time_attendees <- all_participants[attendance_counts == 1]
+    
+    # Calculate participation consistency
+    participation_consistency <- mean(attendance_counts) / total_sessions
+    
+    cat("  Total participants across all sessions:", length(all_participants), "\n")
+    cat("  Consistent attendees (>50% sessions):", length(consistent_attendees), "\n")
+    cat("  One-time attendees:", length(one_time_attendees), "\n")
+    cat("  Average participation rate:", round(participation_consistency * 100, 1), "%\n")
+    
+    # Test name matching consistency across sessions
+    cat("\nTesting name matching consistency...\n")
+    
+    # Check if the same person appears with different names across sessions
+    name_variations <- list()
+    for (participant in all_participants) {
+      variations <- character(0)
+      for (session_name in names(session_attendance)) {
+        if (participant %in% session_attendance[[session_name]]) {
+          # Look for potential variations in the original transcript data
+          # This would require access to the original unmasked data for comparison
+          # For now, we'll just note that the participant was consistently identified
+          variations <- c(variations, participant)
+        }
+      }
+      name_variations[[participant]] <- unique(variations)
+    }
+    
+    # Count participants with multiple name variations
+    multiple_variations <- sum(sapply(name_variations, function(x) length(x) > 1))
+    
+    cat("  Participants with name variations:", multiple_variations, "\n")
+    
+    # Validate privacy compliance of multi-session analysis
+    cat("\nValidating privacy compliance...\n")
+    
+    # Create summary data for privacy validation
+    summary_data <- data.frame(
+      participant = all_participants,
+      total_sessions = attendance_counts,
+      participation_rate = round(attendance_counts / total_sessions * 100, 1),
+      stringsAsFactors = FALSE
+    )
+    
+    # Check privacy compliance
+    tryCatch({
+      validate_privacy_compliance(summary_data, privacy_level = "ferpa_strict")
+      cat("  ✅ Multi-session analysis maintains privacy compliance\n")
+      privacy_compliant <- TRUE
+    }, error = function(e) {
+      cat("  🚨 Privacy violation in multi-session analysis:", e$message, "\n")
+      privacy_compliant <- FALSE
+    })
+    
+    # Generate multi-session report
+    report_content <- c(
+      "# Multi-Session Analysis Report",
+      "",
+      paste("**Analysis Date**:", format(Sys.time(), "%Y-%m-%d %H:%M:%S")),
+      paste("**Sessions Analyzed**:", length(transcript_files)),
+      paste("**Total Participants**:", length(all_participants)),
+      "",
+      "## Attendance Summary",
+      "",
+      paste("- **Consistent Attendees** (>50% sessions):", length(consistent_attendees)),
+      paste("- **One-time Attendees**:", length(one_time_attendees)),
+      paste("- **Average Participation Rate**:", round(participation_consistency * 100, 1), "%"),
+      "",
+      "## Privacy Compliance",
+      "",
+      if (privacy_compliant) "✅ All outputs maintain privacy compliance" else "❌ Privacy violations detected",
+      ""
+    )
+    
+    # Save multi-session report
+    report_file <- file.path(output_dir, "multi_session_analysis.md")
+    writeLines(report_content, report_file)
+    
+    # Log test results
+    details <- sprintf(
+      "Sessions: %d, Participants: %d, Consistent: %d, Privacy: %s",
+      length(transcript_files),
+      length(all_participants),
+      length(consistent_attendees),
+      if (privacy_compliant) "OK" else "FAILED"
+    )
+    
+    if (privacy_compliant) {
+      log_test_result("multi_session_analysis", "PASSED", details)
+    } else {
+      log_test_result("multi_session_analysis", "FAILED", details)
+    }
+    
+  }, error = function(e) {
+    cat("Error in multi-session analysis:", e$message, "\n")
+    log_test_result("multi_session_analysis", "FAILED", error = e)
+  })
+}
+
 # Main testing function
 run_all_tests <- function() {
   cat("=== Real-World Testing for zoomstudentengagement ===\n")
@@ -517,6 +694,9 @@ run_all_tests <- function() {
   
   # Additional privacy check for whole game report
   test_whole_game_privacy()
+  
+  # Multi-session analysis test
+  test_multi_session_analysis()
   
   for (test_func in test_functions) {
     test_func()

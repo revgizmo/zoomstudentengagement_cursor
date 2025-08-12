@@ -227,3 +227,6 @@ A **privacy-first name matching system** that:
 **Branch**: `feature/issue-160-name-matching-privacy`
 
 **Remember**: Privacy is the top priority. When in doubt, choose the more privacy-protective option.
+
+
+
