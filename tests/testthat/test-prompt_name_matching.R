@@ -4,7 +4,17 @@ test_that("prompt_name_matching works correctly", {
   
   # Mock the make_blank_section_names_lookup_csv function
   with_mocked_bindings(
-    make_blank_section_names_lookup_csv = function(...) TRUE,
+    make_blank_section_names_lookup_csv = function(...) tibble::tibble(
+      course_section = character(),
+      day = character(),
+      time = character(),
+      course = character(),
+      section = character(),
+      preferred_name = character(),
+      formal_name = character(),
+      transcript_name = character(),
+      student_id = character()
+    ),
     {
       expect_output(
         prompt_name_matching(unmatched),
@@ -21,7 +31,17 @@ test_that("prompt_name_matching works correctly", {
   
   # Test with custom settings
   with_mocked_bindings(
-    make_blank_section_names_lookup_csv = function(...) TRUE,
+    make_blank_section_names_lookup_csv = function(...) tibble::tibble(
+      course_section = character(),
+      day = character(),
+      time = character(),
+      course = character(),
+      section = character(),
+      preferred_name = character(),
+      formal_name = character(),
+      transcript_name = character(),
+      student_id = character()
+    ),
     {
       expect_output(
         prompt_name_matching(

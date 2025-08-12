@@ -5,51 +5,45 @@ test_that("safe_name_matching_workflow validates inputs correctly", {
     "transcript_file_path must be a single character string"
   )
   
-  # Test non-existent file (skip this test as it requires proper error handling)
-  # expect_error(
-  #   safe_name_matching_workflow("nonexistent.vtt", tibble::tibble()),
-  #   "Transcript file not found"
-  # )
+  # Test non-existent file
+  expect_error(
+    safe_name_matching_workflow("nonexistent.vtt", tibble::tibble()),
+    "Transcript file not found"
+  )
   
-  # Test with existing file (skip this test for now as it requires proper transcript format)
-  # temp_file <- tempfile(fileext = ".vtt")
-  # writeLines("WEBVTT", temp_file)
-  # on.exit(unlink(temp_file))
-  # 
-  # expect_error(
-  #   safe_name_matching_workflow(temp_file, tibble::tibble()),
-  #   "load_zoom_transcript"
-  # )
+  # Test invalid roster_data (test with a temporary file)
+  temp_file <- tempfile(fileext = ".vtt")
+  writeLines("WEBVTT", temp_file)
+  on.exit(unlink(temp_file))
   
-  # Test invalid roster_data (skip this test as it requires file existence)
-  # expect_error(
-  #   safe_name_matching_workflow("test.vtt", "invalid"),
-  #   "roster_data must be a data frame"
-  # )
+  expect_error(
+    safe_name_matching_workflow(temp_file, "invalid"),
+    "roster_data must be a data frame"
+  )
   
-  # Test invalid privacy_level (skip this test as it requires file existence)
-  # expect_error(
-  #   safe_name_matching_workflow("test.vtt", tibble::tibble(), privacy_level = "invalid"),
-  #   "Invalid privacy_level"
-  # )
+  # Test invalid privacy_level
+  expect_error(
+    safe_name_matching_workflow(temp_file, tibble::tibble(), privacy_level = "invalid"),
+    "Invalid privacy_level"
+  )
   
-  # Test invalid unmatched_names_action (skip this test as it requires file existence)
-  # expect_error(
-  #   safe_name_matching_workflow("test.vtt", tibble::tibble(), unmatched_names_action = "invalid"),
-  #   "Invalid unmatched_names_action"
-  # )
+  # Test invalid unmatched_names_action
+  expect_error(
+    safe_name_matching_workflow(temp_file, tibble::tibble(), unmatched_names_action = "invalid"),
+    "Invalid unmatched_names_action"
+  )
   
-  # Test invalid data_folder (skip this test as it requires file existence)
-  # expect_error(
-  #   safe_name_matching_workflow("test.vtt", tibble::tibble(), data_folder = 123),
-  #   "data_folder must be a single character string"
-  # )
+  # Test invalid data_folder
+  expect_error(
+    safe_name_matching_workflow(temp_file, tibble::tibble(), data_folder = 123),
+    "data_folder must be a single character string"
+  )
   
-  # Test invalid section_names_lookup_file (skip this test as it requires file existence)
-  # expect_error(
-  #   safe_name_matching_workflow("test.vtt", tibble::tibble(), section_names_lookup_file = 123),
-  #   "section_names_lookup_file must be a single character string"
-  # )
+  # Test invalid section_names_lookup_file
+  expect_error(
+    safe_name_matching_workflow(temp_file, tibble::tibble(), section_names_lookup_file = 123),
+    "section_names_lookup_file must be a single character string"
+  )
 })
 
 test_that("process_transcript_with_privacy works correctly", {

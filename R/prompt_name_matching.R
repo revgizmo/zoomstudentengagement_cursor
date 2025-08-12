@@ -85,10 +85,10 @@ prompt_name_matching <- function(unmatched_names,
   lookup_file_path <- file.path(data_folder, section_names_lookup_file)
   
   # Use existing function to create blank template
-  make_blank_section_names_lookup_csv(
-    data_folder = data_folder,
-    section_names_lookup_file = section_names_lookup_file
-  )
+  lookup_template <- make_blank_section_names_lookup_csv()
+  
+  # Save the template to the specified file
+  readr::write_csv(lookup_template, lookup_file_path)
   
   message("\nCreated lookup file: ", lookup_file_path)
   message("Please edit this file to map the unmatched names, then re-run your analysis.")
