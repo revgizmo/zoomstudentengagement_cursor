@@ -1,0 +1,82 @@
+[
+  {
+    "title": "Fix README repo and issues links to canonical repository",
+    "labels": ["docs", "readme"],
+    "body": "Why\n- Ensure users land on the right repository and issue tracker.\n\nWhat\n- Update README Links section to point to `revgizmo/zoomstudentengagement` for both repo and issues.\n- Verify DESCRIPTION URL/BugReports already match.\n\nAcceptance\n- README links resolve to the canonical repo and its issues page." 
+  },
+  {
+    "title": "Add badges to README (R CMD check, pkgdown, license, lifecycle)",
+    "labels": ["docs", "readme", "pkgdown"],
+    "body": "Why\n- Provide trust signals and quick status visibility.\n\nWhat\n- Add badges for R-CMD-check, pkgdown site, MIT license, lifecycle (experimental).\n\nAcceptance\n- Badges render at top of README; links resolve; pkgdown badge points to GitHub Pages site." 
+  },
+  {
+    "title": "Improve Install section: devtools and pak; add CRAN note",
+    "labels": ["docs", "readme"],
+    "body": "Why\n- Offer faster install paths and set expectations for CRAN.\n\nWhat\n- Show `devtools::install_github()` and `pak::pak()` alternatives.\n- Add placeholder for CRAN install once available.\n\nAcceptance\n- Users can copy/paste either option successfully; section renders in README and on pkgdown." 
+  },
+  {
+    "title": "Add 60-second end-to-end quickstart snippet to README",
+    "labels": ["docs", "readme"],
+    "body": "Why\n- Reduce time-to-first-plot for new users.\n\nWhat\n- Minimal example: one transcript metrics, batch summarize directory, and a privacy-safe plot using `inst/extdata`.\n\nAcceptance\n- Snippet runs as-is using bundled data; verified after `devtools::build_readme()`." 
+  },
+  {
+    "title": "Document supported file types and limitations in README",
+    "labels": ["docs", "readme"],
+    "body": "Why\n- Set clear expectations for `.transcript.vtt` vs `.cc.vtt` and chat files.\n\nWhat\n- Add a small support matrix table with notes.\n- Mention planned support or guidance for unsupported types.\n\nAcceptance\n- Table renders and clarifies `.transcript.vtt` is supported; others not yet." 
+  },
+  {
+    "title": "Add roster requirements to README and link to load_roster()",
+    "labels": ["docs", "readme"],
+    "body": "Why\n- Reduce confusion around required columns and formats.\n\nWhat\n- List required columns for roster ingestion.\n- Link to `?load_roster` and relevant vignette.\n\nAcceptance\n- README specifies required fields; example roster in `inst/extdata` referenced." 
+  },
+  {
+    "title": "Create Troubleshooting & FAQ vignette",
+    "labels": ["docs", "vignettes", "faq"],
+    "body": "Why\n- Deflect common setup and data issues with concise answers.\n\nWhat\n- New vignette covering: unsupported file types, file-not-found, roster schema mismatches, name matching workflow, time zones, masked names in plots.\n\nAcceptance\n- Vignette builds; linked from README and pkgdown navbar." 
+  },
+  {
+    "title": "Organize pkgdown reference groups and navbar",
+    "labels": ["docs", "pkgdown"],
+    "body": "Why\n- Improve discoverability of core vs advanced functions.\n\nWhat\n- Add `_pkgdown.yml` with reference groups: Core processing, Data management, Analysis & plotting, Privacy & FERPA, Writing/exports, Advanced utilities.\n- Ensure navbar shows Get started, Reference, Articles, FAQ.\n\nAcceptance\n- Pkgdown builds with grouped reference and correct navbar." 
+  },
+  {
+    "title": "Document input validation and error behavior for key functions",
+    "labels": ["docs", "reference"],
+    "body": "Why\n- Users benefit from predictable errors and clear messages.\n\nWhat\n- In roxygen for exported functions (e.g., `summarize_transcript_metrics`, `process_zoom_transcript`), explicitly document error/warning cases and supported extensions.\n- Ensure functions emit descriptive errors when neither file nor `transcript_df` is provided, or when file type unsupported.\n\nAcceptance\n- Help pages show validation behavior; examples demonstrate errors with `expect_error` in tests (if applicable)." 
+  },
+  {
+    "title": "Clarify privacy defaults in README and link FERPA vignette",
+    "labels": ["docs", "privacy", "readme"],
+    "body": "Why\n- Make privacy behavior explicit and safe.\n\nWhat\n- Short README section on default masking, available modes, and the global option `zoomstudentengagement.privacy_level`.\n- Link to FERPA & Ethics vignette.\n\nAcceptance\n- Section renders; example toggling shows a warning for `none`." 
+  },
+  {
+    "title": "Add README to inst/extdata describing sample files",
+    "labels": ["docs"],
+    "body": "Why\n- Help users understand the purpose and structure of included data.\n\nWhat\n- `inst/extdata/README.md` describing each sample file and how it’s used.\n\nAcceptance\n- File present; linked from README’s sample data section." 
+  },
+  {
+    "title": "Add Performance tips article (vignette)",
+    "labels": ["docs", "vignettes", "performance"],
+    "body": "Why\n- Set expectations and provide guidance for large archives.\n\nWhat\n- New vignette: batching strategies, memory notes, using summary functions efficiently.\n\nAcceptance\n- Vignette builds; linked from pkgdown." 
+  },
+  {
+    "title": "Add NEWS.md and wire it into pkgdown site",
+    "labels": ["docs", "pkgdown"],
+    "body": "Why\n- Communicate user-visible changes and breaking changes.\n\nWhat\n- Create `NEWS.md` and add to pkgdown config so it appears in the site.\n\nAcceptance\n- NEWS renders on pkgdown; future releases update the changelog." 
+  },
+  {
+    "title": "Add coverage workflow/badge (optional)",
+    "labels": ["docs", "coverage", "ci"],
+    "body": "Why\n- Increase trust via visibility into test coverage.\n\nWhat\n- Add a GitHub Actions workflow to run `covr::codecov()` or equivalent.\n- Add coverage badge to README.\n\nAcceptance\n- Workflow runs; badge displays coverage; consider Codecov integration if preferred." 
+  },
+  {
+    "title": "Specify minimum R version in DESCRIPTION",
+    "labels": ["docs"],
+    "body": "Why\n- Set clear expectations on supported environments.\n\nWhat\n- Add `Depends: R (>= 4.x.y)` to DESCRIPTION (choose appropriate minimum).\n\nAcceptance\n- DESCRIPTION includes minimum R version; pkg checks pass." 
+  },
+  {
+    "title": "Link `inst/new_analysis_template.Rmd` from README",
+    "labels": ["docs", "readme"],
+    "body": "Why\n- Provide a guided, ready-to-knit workflow for new users.\n\nWhat\n- Mention and link the included analysis template in README and pkgdown home.\n\nAcceptance\n- Link present and working; template accessible via `system.file()`." 
+  }
+]
