@@ -22,4 +22,13 @@ jobs:
           needs: check
       - uses: r-lib/actions/check-r-package@v2
         with:
-          upload-snapshots: true 
+          upload-snapshots: true
+  guard_no_auto_merge:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: [check]
+    steps:
+      - name: Prevent auto-merge on PRs (intentional fail)
+        run: |
+          echo "Failing guard to prevent auto-merge during refactor"
+          exit 1 
