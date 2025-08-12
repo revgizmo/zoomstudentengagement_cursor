@@ -305,7 +305,64 @@ if (!is.null(mask_metrics)) {
 }
 ```
 
-## Step 2: Loading Your Student Roster
+## Step 2: Configuring Instructor Names (Recommended First Step)
+
+**Important**: Before running the main workflow, it's recommended to configure instructor names in the `section_names_lookup.csv` file. This prevents expected exceptions and makes the process smoother.
+
+```{r configure-instructors}
+# Check if section_names_lookup.csv exists
+lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
+
+if (file.exists(lookup_file)) {
+  cat("=== Existing Name Lookup Configuration ===\n")
+  existing_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
+  cat("Found existing lookup file with", nrow(existing_lookup), "entries\n")
+  
+  # Check for instructor entries
+  if ("participant_type" %in% names(existing_lookup)) {
+    instructor_entries <- existing_lookup[existing_lookup$participant_type == "instructor", ]
+    if (nrow(instructor_entries) > 0) {
+      cat("✅ Instructors already configured:\n")
+      print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+    } else {
+      cat("⚠️  No instructors configured in lookup file\n")
+    }
+  }
+} else {
+  cat("=== Creating Instructor Configuration ===\n")
+  cat("No section_names_lookup.csv found. Creating one with instructor configuration.\n")
+  
+  # Create a basic lookup file with instructor configuration
+  instructor_lookup <- data.frame(
+    transcript_name = c("Conor Healy", "Prof. Healy", "Dr. Healy", "Professor Healy"),
+    preferred_name = c("Conor Healy", "Conor Healy", "Conor Healy", "Conor Healy"),
+    formal_name = c("Conor Healy", "Conor Healy", "Conor Healy", "Conor Healy"),
+    participant_type = c("instructor", "instructor", "instructor", "instructor"),
+    student_id = c("INSTRUCTOR", "INSTRUCTOR", "INSTRUCTOR", "INSTRUCTOR"),
+    notes = c("Primary instructor name", "Title variation", "Title variation", "Title variation"),
+    stringsAsFactors = FALSE
+  )
+  
+  # Save the instructor configuration
+  write.csv(instructor_lookup, lookup_file, row.names = FALSE)
+  cat("✅ Instructor configuration created:", lookup_file, "\n")
+  cat("This file maps Zoom transcript names to your instructor's preferred name.\n")
+  cat("Edit this file to add more instructor name variations or other participants.\n")
+}
+
+cat("\n=== Instructor Configuration Instructions ===\n")
+cat("The section_names_lookup.csv file should contain:\n")
+cat("- transcript_name: Names as they appear in Zoom transcripts\n")
+cat("- preferred_name: How you want them displayed in reports\n")
+cat("- participant_type: 'instructor' for instructors, 'enrolled_student' for students\n")
+cat("- student_id: Student ID or 'INSTRUCTOR' for instructors\n")
+cat("- notes: Any additional information\n")
+cat("\nCommon instructor name variations to add:\n")
+cat("- 'Conor Healy', 'Prof. Healy', 'Dr. Healy', 'Professor Healy'\n")
+cat("- 'Instructor', 'Host', 'Moderator' (if Zoom shows generic names)\n")
+```
+
+## Step 3: Loading Your Student Roster
 
 Start by loading your student roster:
 
@@ -323,31 +380,10 @@ if (file.exists(roster_path)) {
     cat("\nRoster dimensions:", nrow(roster), "students\n")
     cat("Roster columns:", paste(names(roster), collapse = ", "), "\n")
     
-    # Check for instructor identification
-    if ("participant_type" %in% names(roster)) {
-      cat("\n=== Instructor Identification in Roster ===\n")
-      instructor_count <- sum(roster$participant_type == "instructor", na.rm = TRUE)
-      student_count <- sum(roster$participant_type == "enrolled_student", na.rm = TRUE)
-      unknown_count <- sum(is.na(roster$participant_type) | roster$participant_type == "unknown", na.rm = TRUE)
-      
-      cat("Instructors:", instructor_count, "\n")
-      cat("Enrolled students:", student_count, "\n")
-      cat("Unknown/Unspecified:", unknown_count, "\n")
-      
-      if (instructor_count > 0) {
-        instructors <- roster$preferred_name[roster$participant_type == "instructor"]
-        cat("Instructor names:", paste(instructors, collapse = ", "), "\n")
-      } else {
-        cat("⚠️  No instructors identified in roster. You may need to add participant_type column.\n")
-        cat("Expected format: participant_type should be 'instructor', 'enrolled_student', or 'unknown'\n")
-      }
-    } else {
-      cat("\n⚠️  No participant_type column found in roster.\n")
-      cat("To enable instructor identification, add a participant_type column with values:\n")
-      cat("- 'instructor' for instructors (e.g., Conor Healy)\n")
-      cat("- 'enrolled_student' for students\n")
-      cat("- 'unknown' for unidentified participants\n")
-    }
+    # Note about instructor configuration
+    cat("\n=== Note: Instructor Configuration ===\n")
+    cat("Instructors should be configured in section_names_lookup.csv (Step 2),\n")
+    cat("not in the roster.csv file. The roster is for enrolled students only.\n")
     
   }, error = function(e) {
     cat("⚠️  Error loading roster:", e$message, "\n")
@@ -357,22 +393,21 @@ if (file.exists(roster_path)) {
   cat("⚠️  Roster file not found at:", roster_path, "\n")
   cat("Please add your roster.csv file to data/metadata/\n")
   
-  # Create a sample roster template with instructor identification
+  # Create a sample roster template (students only)
   cat("\n=== Creating Sample Roster Template ===\n")
   sample_roster <- data.frame(
-    preferred_name = c("Conor Healy", "Student One", "Student Two", "Student Three"),
-    formal_name = c("Conor Healy", "Student One", "Student Two", "Student Three"),
-    student_id = c("INSTRUCTOR", "STU001", "STU002", "STU003"),
-    participant_type = c("instructor", "enrolled_student", "enrolled_student", "enrolled_student"),
+    preferred_name = c("Student One", "Student Two", "Student Three"),
+    formal_name = c("Student One", "Student Two", "Student Three"),
+    student_id = c("STU001", "STU002", "STU003"),
     stringsAsFactors = FALSE
   )
   
   # Save sample roster
-  sample_roster_path <- file.path("data/metadata", "sample_roster_with_instructors.csv")
+  sample_roster_path <- file.path("data/metadata", "sample_roster.csv")
   write.csv(sample_roster, sample_roster_path, row.names = FALSE)
   cat("Sample roster template created:", sample_roster_path, "\n")
-  cat("Edit this file to match your actual student roster and instructor names.\n")
-  cat("Make sure to set participant_type to 'instructor' for instructors.\n")
+  cat("Edit this file to match your actual student roster.\n")
+  cat("Note: Instructors should be configured in section_names_lookup.csv (Step 2).\n")
 }
 ```
 
@@ -487,68 +522,50 @@ if (length(transcript_files) > 0) {
 
 This is a critical step that combines instructor identification with privacy-aware name matching. The package now includes sophisticated name matching capabilities that maintain privacy while helping you match Zoom names to your roster.
 
-### **Step 6.1: Instructor Identification**
+### **Step 6.1: Instructor Configuration Check**
 
-First, let's identify the instructor(s) in your sessions:
+Let's verify that instructors are properly configured in the lookup file:
 
-```{r instructor-identification}
-# Function to identify instructors from transcript data
-identify_instructors <- function(transcript_data, roster_data = NULL) {
-  cat("=== Instructor Identification ===\n")
+```{r instructor-configuration-check}
+# Check instructor configuration in section_names_lookup.csv
+lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
+
+if (file.exists(lookup_file)) {
+  cat("=== Instructor Configuration Check ===\n")
+  lookup_data <- read.csv(lookup_file, stringsAsFactors = FALSE)
   
-  # Get unique speakers from transcript
-  speakers <- unique(transcript_data$name)
-  cat("Speakers in transcript:", paste(speakers, collapse = ", "), "\n")
-  
-  # If we have roster data, look for instructor indicators
-  if (!is.null(roster_data) && "participant_type" %in% names(roster_data)) {
-    instructors_in_roster <- roster_data$preferred_name[roster_data$participant_type == "instructor"]
-    cat("Instructors in roster:", paste(instructors_in_roster, collapse = ", "), "\n")
+  if ("participant_type" %in% names(lookup_data)) {
+    instructor_entries <- lookup_data[lookup_data$participant_type == "instructor", ]
     
-    # Find matches between transcript speakers and roster instructors
-    instructor_matches <- intersect(speakers, instructors_in_roster)
-    if (length(instructor_matches) > 0) {
-      cat("✅ Identified instructors:", paste(instructor_matches, collapse = ", "), "\n")
-      return(instructor_matches)
-    }
-  }
-  
-  # If no roster match, look for common instructor patterns
-  instructor_patterns <- c(
-    "professor", "prof", "dr", "doctor", "instructor", "teacher", "faculty",
-    "conor", "healy", "conor healy"  # Specific to your case
-  )
-  
-  potential_instructors <- character(0)
-  for (speaker in speakers) {
-    speaker_lower <- tolower(speaker)
-    for (pattern in instructor_patterns) {
-      if (grepl(pattern, speaker_lower)) {
-        potential_instructors <- c(potential_instructors, speaker)
-        break
+    if (nrow(instructor_entries) > 0) {
+      cat("✅ Instructors configured in lookup file:\n")
+      print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+      
+      # Check if any of these names appear in the transcript
+      if (exists("transcript_data")) {
+        transcript_speakers <- unique(transcript_data$name)
+        configured_instructor_names <- instructor_entries$transcript_name
+        
+        matching_instructors <- intersect(transcript_speakers, configured_instructor_names)
+        if (length(matching_instructors) > 0) {
+          cat("✅ Found configured instructors in transcript:", paste(matching_instructors, collapse = ", "), "\n")
+        } else {
+          cat("⚠️  Configured instructors not found in transcript.\n")
+          cat("Transcript speakers:", paste(transcript_speakers, collapse = ", "), "\n")
+          cat("Consider adding more name variations to section_names_lookup.csv\n")
+        }
       }
+    } else {
+      cat("⚠️  No instructors configured in lookup file.\n")
+      cat("Please add instructor entries to section_names_lookup.csv before proceeding.\n")
     }
-  }
-  
-  if (length(potential_instructors) > 0) {
-    cat("🔍 Potential instructors (based on patterns):", paste(potential_instructors, collapse = ", "), "\n")
-    cat("Please verify these are correct instructors.\n")
-    return(potential_instructors)
   } else {
-    cat("⚠️  No instructors automatically identified.\n")
-    cat("You may need to manually specify instructors in the name matching process.\n")
-    return(character(0))
+    cat("⚠️  Lookup file missing participant_type column.\n")
+    cat("Please ensure section_names_lookup.csv has a participant_type column.\n")
   }
-}
-
-# Identify instructors if we have transcript and roster data
-if (exists("transcript_data") && exists("roster")) {
-  instructors <- identify_instructors(transcript_data, roster)
-} else if (exists("transcript_data")) {
-  instructors <- identify_instructors(transcript_data)
 } else {
-  cat("⚠️  Cannot identify instructors - missing transcript data\n")
-  instructors <- character(0)
+  cat("⚠️  No section_names_lookup.csv found.\n")
+  cat("Please run Step 2 to configure instructor names first.\n")
 }
 ```
 
@@ -740,30 +757,54 @@ Now let's analyze participation patterns to understand engagement:
 ```{r analyze-patterns}
 if (exists("clean_metrics") && nrow(clean_metrics) > 0) {
   # Create a summary by student
-  student_summary <- clean_metrics %>%
-    group_by(student_name) %>%
-    summarise(
-      total_utterances = sum(n, na.rm = TRUE),
-      total_duration = sum(duration, na.rm = TRUE),
-      total_words = sum(wordcount, na.rm = TRUE),
-      avg_words_per_minute = mean(wpm, na.rm = TRUE),
-      participation_rate = total_utterances / nrow(clean_metrics) * 100
-    ) %>%
-    arrange(desc(total_utterances))
+  # Use the appropriate name column based on what's available
+  name_col <- if ("preferred_name" %in% names(clean_metrics)) "preferred_name" else "name"
+  
+  # Check what columns are available
+  available_cols <- names(clean_metrics)
+  cat("Available columns in clean_metrics:", paste(available_cols, collapse = ", "), "\n")
+  
+  # Create a simple summary based on what's available
+  if ("duration" %in% available_cols) {
+    student_summary <- clean_metrics %>%
+      group_by(!!sym(name_col)) %>%
+      summarise(
+        total_duration = sum(duration, na.rm = TRUE),
+        utterance_count = n(),
+        participation_rate = n() / nrow(clean_metrics) * 100
+      ) %>%
+      arrange(desc(total_duration))
+  } else {
+    # Fallback to just counting utterances
+    student_summary <- clean_metrics %>%
+      group_by(!!sym(name_col)) %>%
+      summarise(
+        utterance_count = n(),
+        participation_rate = n() / nrow(clean_metrics) * 100
+      ) %>%
+      arrange(desc(utterance_count))
+  }
   
   # View the summary
   head(student_summary, 10)
   
   # Basic statistics
   cat("\nParticipation Statistics:\n")
-  participation_stats <- student_summary %>%
-    summarise(
-      mean_utterances = mean(total_utterances, na.rm = TRUE),
-      median_utterances = median(total_utterances, na.rm = TRUE),
-      sd_utterances = sd(total_utterances, na.rm = TRUE),
-      min_utterances = min(total_utterances, na.rm = TRUE),
-      max_utterances = max(total_utterances, na.rm = TRUE)
-    )
+  if ("total_duration" %in% names(student_summary)) {
+    participation_stats <- student_summary %>%
+      summarise(
+        mean_duration = mean(total_duration, na.rm = TRUE),
+        median_duration = median(total_duration, na.rm = TRUE),
+        mean_utterances = mean(utterance_count, na.rm = TRUE),
+        median_utterances = median(utterance_count, na.rm = TRUE)
+      )
+  } else {
+    participation_stats <- student_summary %>%
+      summarise(
+        mean_utterances = mean(utterance_count, na.rm = TRUE),
+        median_utterances = median(utterance_count, na.rm = TRUE)
+      )
+  }
   print(participation_stats)
 } else {
   cat("⚠️  Cannot analyze participation patterns - missing clean metrics data\n")
@@ -776,39 +817,48 @@ Create visualizations to understand participation patterns:
 
 ```{r visualize-participation}
 if (exists("student_summary") && nrow(student_summary) > 0) {
-  # Plot participation by utterance count
-  p1 <- ggplot(student_summary, aes(x = reorder(student_name, total_utterances), y = total_utterances)) +
-    geom_bar(stat = "identity", fill = "steelblue") +
-    coord_flip() +
-    labs(
-      title = "Student Participation by Utterance Count",
-      x = "Student Name",
-      y = "Number of Utterances"
-    ) +
-    theme_minimal()
+  # Get the name column used in the summary
+  name_col <- if ("preferred_name" %in% names(student_summary)) "preferred_name" else "name"
   
-  print(p1)
+  # Plot participation by utterance count
+  if ("utterance_count" %in% names(student_summary)) {
+    p1 <- ggplot(student_summary, aes(x = reorder(!!sym(name_col), utterance_count), y = utterance_count)) +
+      geom_bar(stat = "identity", fill = "steelblue") +
+      coord_flip() +
+      labs(
+        title = "Student Participation by Utterance Count",
+        x = "Student Name",
+        y = "Number of Utterances"
+      ) +
+      theme_minimal()
+    
+    print(p1)
+  }
   
   # Plot participation by duration
-  p2 <- ggplot(student_summary, aes(x = reorder(student_name, total_duration), y = total_duration / 60)) +
-    geom_bar(stat = "identity", fill = "darkgreen") +
-    coord_flip() +
-    labs(
-      title = "Student Participation by Speaking Time",
-      x = "Student Name",
-      y = "Speaking Time (minutes)"
-    ) +
-    theme_minimal()
-  
-  print(p2)
+  if ("total_duration" %in% names(student_summary)) {
+    p2 <- ggplot(student_summary, aes(x = reorder(!!sym(name_col), total_duration), y = total_duration / 60)) +
+      geom_bar(stat = "identity", fill = "darkgreen") +
+      coord_flip() +
+      labs(
+        title = "Student Participation by Speaking Time",
+        x = "Student Name",
+        y = "Speaking Time (minutes)"
+      ) +
+      theme_minimal()
+    
+    print(p2)
+  }
   
   # Save plots
-  ggsave("participation_by_utterances.png", p1, width = 10, height = 8)
-  ggsave("participation_by_duration.png", p2, width = 10, height = 8)
-  
-  cat("Plots saved as:\n")
-  cat("- participation_by_utterances.png\n")
-  cat("- participation_by_duration.png\n")
+  if (exists("p1")) {
+    ggsave("participation_by_utterances.png", p1, width = 10, height = 8)
+    cat("Plot saved: participation_by_utterances.png\n")
+  }
+  if (exists("p2")) {
+    ggsave("participation_by_duration.png", p2, width = 10, height = 8)
+    cat("Plot saved: participation_by_duration.png\n")
+  }
 } else {
   cat("⚠️  Cannot create visualizations - missing student summary data\n")
 }
@@ -821,23 +871,54 @@ Look for students who might need encouragement to participate:
 ```{r identify-gaps}
 if (exists("student_summary") && nrow(student_summary) > 0) {
   # Identify students with low participation
-  median_utterances <- median(student_summary$total_utterances, na.rm = TRUE)
-  low_participation <- student_summary %>%
-    filter(total_utterances < median_utterances) %>%
-    arrange(total_utterances)
+  if ("utterance_count" %in% names(student_summary)) {
+    median_utterances <- median(student_summary$utterance_count, na.rm = TRUE)
+    low_participation <- student_summary %>%
+      filter(utterance_count < median_utterances) %>%
+      arrange(utterance_count)
+  } else if ("total_duration" %in% names(student_summary)) {
+    median_duration <- median(student_summary$total_duration, na.rm = TRUE)
+    low_participation <- student_summary %>%
+      filter(total_duration < median_duration) %>%
+      arrange(total_duration)
+  } else {
+    cat("⚠️  Cannot identify low participation - no suitable metrics available\n")
+    low_participation <- student_summary
+  }
+  
+  # Get the name column used in the summary
+  name_col <- if ("preferred_name" %in% names(student_summary)) "preferred_name" else "name"
   
   cat("Students with below-median participation:\n")
-  print(low_participation[, c("student_name", "total_utterances", "total_duration")])
+  if ("total_duration" %in% names(low_participation)) {
+    print(low_participation[, c(name_col, "utterance_count", "total_duration")])
+  } else {
+    print(low_participation[, c(name_col, "utterance_count")])
+  }
   
   # Create participation categories
-  participation_categories <- student_summary %>%
-    mutate(
-      participation_level = case_when(
-        total_utterances >= quantile(total_utterances, 0.75, na.rm = TRUE) ~ "High",
-        total_utterances >= quantile(total_utterances, 0.25, na.rm = TRUE) ~ "Medium",
-        TRUE ~ "Low"
+  if ("utterance_count" %in% names(student_summary)) {
+    participation_categories <- student_summary %>%
+      mutate(
+        participation_level = case_when(
+          utterance_count >= quantile(utterance_count, 0.75, na.rm = TRUE) ~ "High",
+          utterance_count >= quantile(utterance_count, 0.25, na.rm = TRUE) ~ "Medium",
+          TRUE ~ "Low"
+        )
       )
-    )
+  } else if ("total_duration" %in% names(student_summary)) {
+    participation_categories <- student_summary %>%
+      mutate(
+        participation_level = case_when(
+          total_duration >= quantile(total_duration, 0.75, na.rm = TRUE) ~ "High",
+          total_duration >= quantile(total_duration, 0.25, na.rm = TRUE) ~ "Medium",
+          TRUE ~ "Low"
+        )
+      )
+  } else {
+    participation_categories <- student_summary %>%
+      mutate(participation_level = "Unknown")
+  }
   
   # Summary by participation level
   level_summary <- participation_categories %>%
