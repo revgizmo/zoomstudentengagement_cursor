@@ -29,14 +29,90 @@ fi
 # Generate branch name
 BRANCH_NAME="feature/issue-${ISSUE_NUMBER}-${PHASE_DESCRIPTION// /-}-${WORK_TYPE}"
 
-# Create the prompt
-cat << EOF
-# AI Agent Prompt Generator Output
+# Create the prompt based on work type
+if [ "$WORK_TYPE" = "testing" ]; then
+    PROMPT_CONTENT="Mission: Implement ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER} for ${WORK_TYPE}.
 
-## 🎯 **Copy this message to your new AI chat:**
+FIRST: Create new branch for this work:
+git checkout -b ${BRANCH_NAME}
+git push -u origin ${BRANCH_NAME}
 
-\`\`\`
-Mission: Implement ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER} for ${WORK_TYPE}.
+Context files to link:
+- @PROJECT.md (Project status and CRAN readiness)
+- @full-context.md (Complete project context)
+- @ISSUE_${ISSUE_NUMBER}_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
+- @docs/development/ISSUE_${ISSUE_NUMBER}_CONSOLIDATED_PLAN.md (Overall plan)
+
+Your task: Follow the implementation guide to complete ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER}.
+
+Focus: ${WORK_TYPE} work for Issue #${ISSUE_NUMBER} ${PHASE_DESCRIPTION}
+
+Key requirements:
+- Create comprehensive test scenarios covering edge cases
+- Test with realistic data including international names and custom names
+- Validate privacy compliance throughout testing
+- Document test results and any issues found
+- Ensure all tests pass and coverage is maintained
+
+Success criteria: ${PHASE_DESCRIPTION} completed, all tests pass, issues documented, and ready for review.
+
+Start with the implementation guide and follow the step-by-step plan."
+elif [ "$WORK_TYPE" = "implementation" ]; then
+    PROMPT_CONTENT="Mission: Implement ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER} for ${WORK_TYPE}.
+
+FIRST: Create new branch for this work:
+git checkout -b ${BRANCH_NAME}
+git push -u origin ${BRANCH_NAME}
+
+Context files to link:
+- @PROJECT.md (Project status and CRAN readiness)
+- @full-context.md (Complete project context)
+- @ISSUE_${ISSUE_NUMBER}_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
+- @docs/development/ISSUE_${ISSUE_NUMBER}_CONSOLIDATED_PLAN.md (Overall plan)
+
+Your task: Follow the implementation guide to complete ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER}.
+
+Focus: ${WORK_TYPE} work for Issue #${ISSUE_NUMBER} ${PHASE_DESCRIPTION}
+
+Key requirements:
+- Follow project coding standards and privacy-first approach
+- Implement functionality according to specifications
+- Create comprehensive documentation
+- Test thoroughly with realistic scenarios
+- Ensure CRAN compliance
+
+Success criteria: ${PHASE_DESCRIPTION} completed, documented, tested, and ready for review.
+
+Start with the implementation guide and follow the step-by-step plan."
+elif [ "$WORK_TYPE" = "docs" ]; then
+    PROMPT_CONTENT="Mission: Implement ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER} for ${WORK_TYPE}.
+
+FIRST: Create new branch for this work:
+git checkout -b ${BRANCH_NAME}
+git push -u origin ${BRANCH_NAME}
+
+Context files to link:
+- @PROJECT.md (Project status and CRAN readiness)
+- @full-context.md (Complete project context)
+- @ISSUE_${ISSUE_NUMBER}_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
+- @docs/development/ISSUE_${ISSUE_NUMBER}_CONSOLIDATED_PLAN.md (Overall plan)
+
+Your task: Follow the implementation guide to complete ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER}.
+
+Focus: ${WORK_TYPE} work for Issue #${ISSUE_NUMBER} ${PHASE_DESCRIPTION}
+
+Key requirements:
+- Create comprehensive documentation following project standards
+- Include clear examples and use cases
+- Ensure all documentation is accurate and up-to-date
+- Test all code examples and ensure they work
+- Follow roxygen2 standards for function documentation
+
+Success criteria: ${PHASE_DESCRIPTION} completed, documentation comprehensive, examples tested, and ready for review.
+
+Start with the implementation guide and follow the step-by-step plan."
+else
+    PROMPT_CONTENT="Mission: Implement ${PHASE_DESCRIPTION} of Issue #${ISSUE_NUMBER} for ${WORK_TYPE}.
 
 FIRST: Create new branch for this work:
 git checkout -b ${BRANCH_NAME}
@@ -60,7 +136,20 @@ Key requirements:
 
 Success criteria: ${PHASE_DESCRIPTION} completed, documented, tested, and ready for review.
 
-Start with the implementation guide and follow the step-by-step plan.
+Start with the implementation guide and follow the step-by-step plan."
+fi
+
+# Create output file
+OUTPUT_FILE="ai_agent_prompt_${ISSUE_NUMBER}_${PHASE_DESCRIPTION// /_}.md"
+
+# Create the prompt
+cat << EOF > "$OUTPUT_FILE"
+# AI Agent Prompt Generator Output
+
+## 🎯 **Copy this message to your new AI chat:**
+
+\`\`\`
+${PROMPT_CONTENT}
 \`\`\`
 
 ## 📋 **Required Files to Create:**
@@ -168,10 +257,24 @@ Create a comprehensive implementation guide following this template:
 ## 🎯 **Next Steps:**
 
 1. **Create the consolidated plan** using the template above (captures current knowledge and context)
+   - File: \`docs/development/ISSUE_${ISSUE_NUMBER}_CONSOLIDATED_PLAN.md\`
+   - This documents what was accomplished and plans the remaining work
+
 2. **Create the implementation guide** using the template above (for the next phase)
+   - File: \`ISSUE_${ISSUE_NUMBER}_IMPLEMENTATION_GUIDE.md\`
+   - This provides specific instructions for the next AI agent
+
 3. **Create the new branch** using the generated branch name
+   - Branch: \`${BRANCH_NAME}\`
+   - Push to remote to set upstream
+
 4. **Copy the prompt** to a new AI chat
+   - The prompt above is ready to copy/paste
+   - It references the files you just created
+
 5. **Monitor progress** and provide guidance as needed
+   - Check in periodically to ensure progress
+   - Provide clarification if needed
 
 ## 📝 **Template Variables Used:**
 - **Issue Number**: ${ISSUE_NUMBER}
@@ -193,6 +296,17 @@ Create a comprehensive implementation guide following this template:
 \`\`\`
 EOF
 
+# Display summary
 echo -e "${GREEN}✅ AI Agent Prompt generated successfully!${NC}"
 echo -e "${BLUE}📋 Branch name: ${BRANCH_NAME}${NC}"
-echo -e "${YELLOW}💡 Copy the prompt above to your new AI chat${NC}"
+echo -e "${BLUE}📄 Output file: ${OUTPUT_FILE}${NC}"
+echo -e "${YELLOW}💡 Open ${OUTPUT_FILE} to copy the prompt to your new AI chat${NC}"
+echo ""
+echo -e "${BLUE}📝 IMPORTANT: Create the referenced files BEFORE copying the prompt:${NC}"
+echo -e "   1. Create \`docs/development/ISSUE_${ISSUE_NUMBER}_CONSOLIDATED_PLAN.md\`"
+echo -e "   2. Create \`ISSUE_${ISSUE_NUMBER}_IMPLEMENTATION_GUIDE.md\`"
+echo -e "   3. Then copy the prompt to the new AI chat"
+echo ""
+echo -e "${YELLOW}💡 The prompt references these files, so they must exist first!${NC}"
+
+
