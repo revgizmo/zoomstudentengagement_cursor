@@ -24,34 +24,35 @@ The AI will first create detailed planning documents, then provide a concise mes
 
 ## 🚀 **Usage Examples**
 
-### **Example 1: Phase 2 of Issue 160**
+### **Example 1: Enhanced Phase 2 of Issue 160**
 ```
-Mission: Implement Phase 2 of Issue #160 for implementation.
+Mission: Implement Enhanced Phase 2 of Issue #160 for implementation.
 
 FIRST: Create new branch for this work:
-git checkout -b feature/issue-160-Phase-2-implementation
-git push -u origin feature/issue-160-Phase-2-implementation
+git checkout -b feature/issue-160-enhanced-phase2-implementation
+git push -u origin feature/issue-160-enhanced-phase2-implementation
 
 Context files to link:
 - @PROJECT.md (Project status and CRAN readiness)
 - @full-context.md (Complete project context)
-- @ISSUE_160_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
-- @docs/development/ISSUE_160_CONSOLIDATED_PLAN.md (Overall plan)
+- @ISSUE_160_CONSOLIDATED_PLAN.md (MAIN IMPLEMENTATION GUIDE)
+- @R/safe_name_matching_workflow.R (Core name matching functions)
+- @scripts/real_world_testing/whole_game_real_world.Rmd (Current real-world testing)
 
-Your task: Follow the implementation guide to complete Phase 2 of Issue #160.
+Your task: Follow the consolidated plan to complete Enhanced Phase 2 of Issue #160.
 
-Focus: implementation work for Issue #160 Phase 2
+Focus: implementation work for Issue #160 Enhanced Phase 2
 
 Key requirements:
 - Follow project coding standards and privacy-first approach
-- Implement functionality according to specifications
-- Create comprehensive documentation
+- Implement hybrid documentation + targeted technical improvements
+- Create comprehensive user guidance for all 4 scenarios
 - Test thoroughly with realistic scenarios
 - Ensure CRAN compliance
 
-Success criteria: Phase 2 completed, documented, tested, and ready for review.
+Success criteria: Enhanced Phase 2 completed, documented, tested, and ready for review.
 
-Start with the implementation guide and follow the step-by-step plan.
+Start with the consolidated plan and follow the step-by-step implementation.
 ```
 
 ### **Example 2: Real-world testing for Issue 129**
