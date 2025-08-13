@@ -74,8 +74,11 @@ for name in "${labels[@]}"; do
   fi
 done
 
-# Parse sections: split by lines starting with '## '
-mapfile -t sections < <(awk '/^## /{print NR":"substr($0,4)}' "$PLAN_FILE")
+# Build sections list without mapfile (macOS bash compatible)
+sections=()
+while IFS= read -r line; do
+  sections+=("$line")
+done < <(awk '/^## /{print NR":"substr($0,4)}' "$PLAN_FILE")
 
 issue_numbers=()
 issue_titles=()
@@ -158,7 +161,7 @@ for ((i=0; i<${#sections[@]}; i++)); do
   issue_numbers+=("$num")
   issue_titles+=("$title")
   rm -f "$tmp"
- done
+done
 
 # Tracking issue
 if [ -n "${TRACKING_TITLE:-}" ]; then
