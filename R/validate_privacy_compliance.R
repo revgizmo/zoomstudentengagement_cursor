@@ -169,7 +169,7 @@ detect_privacy_violations <- function(character_values, real_names, privacy_leve
       potential_violations <- character_values[matches]
       # Exclude obvious masked names (Student_XX, etc.)
       not_masked <- !grepl("^(Student|Guest|Instructor)_\\d+$", potential_violations)
-      
+
       # Exclude common non-name phrases that might match patterns
       common_phrases <- c(
         "World Testing Report", "Test Results Summary", "Test Report",
@@ -178,7 +178,7 @@ detect_privacy_violations <- function(character_values, real_names, privacy_leve
         "Test Summary", "Report Results", "Analysis Report"
       )
       not_common_phrase <- !potential_violations %in% common_phrases
-      
+
       # Only flag if both conditions are met
       final_violations <- potential_violations[not_masked & not_common_phrase]
       if (length(final_violations) > 0) {

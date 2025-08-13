@@ -162,7 +162,7 @@ test_with_data_files <- function() {
   # Test roster loading
   cat("Testing roster loading... ")
   tryCatch({
-    roster <- load_roster(roster_file)
+    roster <- load_roster(data_folder = dirname(roster_file), roster_file = basename(roster_file))
     if (nrow(roster) > 0) {
       cat("✓ PASSED (", nrow(roster), "students loaded)\n")
     } else {
