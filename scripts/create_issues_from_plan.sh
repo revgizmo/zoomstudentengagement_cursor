@@ -10,7 +10,8 @@ fi
 : "${DRY_RUN:=}"  # if set, do not call API
 : "${UPDATE_IF_EXISTS:=}"  # if set, update labels/milestone/body on existing issues
 
-if [ -z "${GH_TOKEN:-}" ]; then
+# Only require GH_TOKEN if not a dry run
+if [ -z "${GH_TOKEN:-}" ] && [ -z "${DRY_RUN}" ]; then
   echo "GH_TOKEN env var is required (with repo scope)" >&2
   exit 1
 fi
@@ -32,7 +33,10 @@ else
 fi
 
 API="https://api.github.com"
-HEADERS=(-H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28")
+HEADERS=()
+if [ -z "$DRY_RUN" ]; then
+  HEADERS=(-H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28")
+fi
 
 # Pull defaults from front matter if present (robust --- ... --- capture)
 if head -n1 "$PLAN_FILE" | grep -q '^---$'; then
@@ -43,24 +47,31 @@ if head -n1 "$PLAN_FILE" | grep -q '^---$'; then
   fi
 fi
 
-# Ensure milestone exists
+# Ensure milestone exists or note in dry run
 MS_NUM=""
 if [ -n "$MILESTONE_TITLE" ]; then
-  MS_NUM=$(curl -sS "${API}/repos/${REPO}/milestones?state=all" "${HEADERS[@]}" | \
-    sed -nE 's/.*\"number\": ([0-9]+), \"state\": \"(open|closed)\", \"title\": \"([^\"]+)\".*/\1 \3/p' | \
-    awk -v title="$MILESTONE_TITLE" '$0 ~ title {print $1; exit}')
-  if [ -z "${MS_NUM:-}" ] && [ -z "$DRY_RUN" ]; then
-    MS_NUM=$(curl -sS -X POST "${API}/repos/${REPO}/milestones" "${HEADERS[@]}" \
-      -d "{\"title\":\"${MILESTONE_TITLE}\"}" | sed -nE 's/.*\"number\": ([0-9]+).*/\1/p')
+  if [ -n "$DRY_RUN" ]; then
+    echo "DRY_RUN: would ensure milestone: $MILESTONE_TITLE"
+  else
+    MS_NUM=$(curl -sS "${API}/repos/${REPO}/milestones?state=all" "${HEADERS[@]}" | \
+      sed -nE 's/.*\"number\": ([0-9]+), \"state\": \"(open|closed)\", \"title\": \"([^\"]+)\".*/\1 \3/p' | \
+      awk -v title="$MILESTONE_TITLE" '$0 ~ title {print $1; exit}')
+    if [ -z "${MS_NUM:-}" ]; then
+      MS_NUM=$(curl -sS -X POST "${API}/repos/${REPO}/milestones" "${HEADERS[@]}" \
+        -d "{\"title\":\"${MILESTONE_TITLE}\"}" | sed -nE 's/.*\"number\": ([0-9]+).*/\1/p')
+    fi
   fi
 fi
 
 # Ensure default labels
 labels=(docs readme pkgdown vignettes faq reference privacy performance coverage ci tracking)
 for name in "${labels[@]}"; do
-  [ -n "$DRY_RUN" ] && { echo "DRY_RUN: would ensure label $name"; continue; }
-  curl -sS -X POST "${API}/repos/${REPO}/labels" "${HEADERS[@]}" \
-    -d "{\"name\":\"$name\",\"color\":\"1f883d\"}" >/dev/null || true
+  if [ -n "$DRY_RUN" ]; then
+    echo "DRY_RUN: would ensure label $name"
+  else
+    curl -sS -X POST "${API}/repos/${REPO}/labels" "${HEADERS[@]}" \
+      -d "{\"name\":\"$name\",\"color\":\"1f883d\"}" >/dev/null || true
+  fi
 done
 
 # Parse sections: split by lines starting with '## '
@@ -83,31 +94,40 @@ for ((i=0; i<${#sections[@]}; i++)); do
   labels_line=$(echo "$block" | sed -nE 's/^Labels:\s*(.*)$/\1/p' | head -n1)
   assignees_line=$(echo "$block" | sed -nE 's/^Assignees:\s*(.*)$/\1/p' | head -n1)
   if [ -n "$labels_line" ]; then
-    labels_json=$(echo "$labels_line" | sed 's/,\s*/,/g; s/^/[/; s/$/]/; s/([^,]+)/"\1"/g')
+    labels_json=$(echo "$labels_line" | awk -F',' '{printf("["); for(i=1;i<=NF;i++){gsub(/^\040+|\040+$/, "", $i); printf("\"%s\"", $i); if(i<NF) printf(",");} printf("]\n");}')
   else
     labels_json='["docs"]'
   fi
   if [ -n "$assignees_line" ]; then
-    assignees_json=$(echo "$assignees_line" | sed 's/,\s*/,/g; s/^/[/; s/$/]/; s/([^,]+)/"\1"/g')
+    assignees_json=$(echo "$assignees_line" | awk -F',' '{printf("["); for(i=1;i<=NF;i++){gsub(/^\040+|\040+$/, "", $i); printf("\"%s\"", $i); if(i<NF) printf(",");} printf("]\n");}')
   else
     assignees_json='[]'
   fi
   body=$(echo "$block" | sed '/^Labels:/d; /^Assignees:/d')
 
+  if [ -n "$DRY_RUN" ]; then
+    echo "DRY_RUN: would create issue: $title"
+    echo "  labels: $labels_json"
+    echo "  assignees: $assignees_json"
+    issue_titles+=("$title")
+    continue
+  fi
+
   # Check for existing issue by exact title
   existing_json=$(curl -sS "${API}/search/issues?q=repo:${REPO}+in:title+\"$(printf '%s' "$title" | sed 's/"/%22/g')\"" "${HEADERS[@]}")
   existing_count=$(echo "$existing_json" | sed -nE 's/.*"total_count": ([0-9]+).*/\1/p')
   if [ "${existing_count:-0}" -gt 0 ]; then
-    # get first match issue number
     existing_num=$(echo "$existing_json" | sed -nE 's/.*"number": ([0-9]+).*/\1/p' | head -n1)
     if [ -n "$UPDATE_IF_EXISTS" ]; then
       echo "Updating existing #$existing_num: $title"
       tmp=$(mktemp)
+      esc_title=$(printf '%s' "$title" | sed 's/\\/\\\\/g; s/"/\\"/g')
+      esc_body=$(printf '%s' "$body" | sed 's/\\/\\\\/g; s/"/\\"/g')
       printf '{"title":"%s","body":"%s","labels":%s%s,"assignees":%s}\n' \
-        "${title//"/\"}" "${body//"/\"}" "$labels_json" \
+        "$esc_title" "$esc_body" "$labels_json" \
         "$( [ -n "$MS_NUM" ] && printf ',"milestone":%s' "$MS_NUM" )" \
         "$assignees_json" > "$tmp"
-      [ -z "$DRY_RUN" ] && curl -sS -X PATCH "${API}/repos/${REPO}/issues/${existing_num}" "${HEADERS[@]}" -d @"$tmp" >/dev/null
+      curl -sS -X PATCH "${API}/repos/${REPO}/issues/${existing_num}" "${HEADERS[@]}" -d @"$tmp" >/dev/null
       rm -f "$tmp"
       issue_numbers+=("$existing_num")
       issue_titles+=("$title")
@@ -120,39 +140,41 @@ for ((i=0; i<${#sections[@]}; i++)); do
 
   echo "Creating: $title"
   tmp=$(mktemp)
+  esc_title=$(printf '%s' "$title" | sed 's/\\/\\\\/g; s/"/\\"/g')
+  esc_body=$(printf '%s' "$body" | sed 's/\\/\\\\/g; s/"/\\"/g')
   printf '{"title":"%s","body":"%s","labels":%s%s,"assignees":%s}\n' \
-    "${title//"/\"}" "${body//"/\"}" "$labels_json" \
+    "$esc_title" "$esc_body" "$labels_json" \
     "$( [ -n "$MS_NUM" ] && printf ',"milestone":%s' "$MS_NUM" )" \
     "$assignees_json" > "$tmp"
-  if [ -z "$DRY_RUN" ]; then
-    resp=$(curl -sS -X POST "${API}/repos/${REPO}/issues" "${HEADERS[@]}" -d @"$tmp")
-    num=$(echo "$resp" | sed -nE 's/.*\"number\": ([0-9]+).*/\1/p' | head -n1)
-    if [ -z "$num" ]; then
-      echo "Failed to create issue for: $title" >&2
-      echo "$resp" >&2
-      rm -f "$tmp"
-      exit 1
-    fi
-    echo "Created issue #$num: $title"
-    issue_numbers+=("$num")
-    issue_titles+=("$title")
-  else
-    echo "DRY_RUN: would create issue for: $title"
+  resp=$(curl -sS -X POST "${API}/repos/${REPO}/issues" "${HEADERS[@]}" -d @"$tmp")
+  num=$(echo "$resp" | sed -nE 's/.*\"number\": ([0-9]+).*/\1/p' | head -n1)
+  if [ -z "$num" ]; then
+    echo "Failed to create issue for: $title" >&2
+    echo "$resp" >&2
+    rm -f "$tmp"
+    exit 1
   fi
+  echo "Created issue #$num: $title"
+  issue_numbers+=("$num")
+  issue_titles+=("$title")
   rm -f "$tmp"
  done
 
 # Tracking issue
-if [ -n "${TRACKING_TITLE:-}" ] && [ ${#issue_numbers[@]} -gt 0 ]; then
-  body="Plan: $(basename "$PLAN_FILE")\n\nChecklist\n"
-  for i in "${!issue_numbers[@]}"; do
-    body+="- [ ] #${issue_numbers[$i]} ${issue_titles[$i]}\n"
-  done
-  tmp=$(mktemp)
-  printf '{"title":"%s","body":"%s","labels":["docs","tracking"]%s}\n' \
-    "${TRACKING_TITLE//"/\"}" "${body//"/\"}" \
-    "$( [ -n "$MS_NUM" ] && printf ',"milestone":%s' "$MS_NUM" )" > "$tmp"
-  if [ -z "$DRY_RUN" ]; then
+if [ -n "${TRACKING_TITLE:-}" ]; then
+  if [ -n "$DRY_RUN" ]; then
+    echo "DRY_RUN: would create tracking issue: $TRACKING_TITLE"
+  elif [ ${#issue_numbers[@]} -gt 0 ]; then
+    body="Plan: $(basename "$PLAN_FILE")\n\nChecklist\n"
+    for i in "${!issue_numbers[@]}"; do
+      body+="- [ ] #${issue_numbers[$i]} ${issue_titles[$i]}\n"
+    done
+    tmp=$(mktemp)
+    esc_ttitle=$(printf '%s' "$TRACKING_TITLE" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    esc_tbody=$(printf '%s' "$body" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    printf '{"title":"%s","body":"%s","labels":["docs","tracking"]%s}\n' \
+      "$esc_ttitle" "$esc_tbody" \
+      "$( [ -n "$MS_NUM" ] && printf ',"milestone":%s' "$MS_NUM" )" > "$tmp"
     resp=$(curl -sS -X POST "${API}/repos/${REPO}/issues" "${HEADERS[@]}" -d @"$tmp")
     track_num=$(echo "$resp" | sed -nE 's/.*\"number\": ([0-9]+).*/\1/p' | head -n1)
     if [ -z "$track_num" ]; then
@@ -162,8 +184,6 @@ if [ -n "${TRACKING_TITLE:-}" ] && [ ${#issue_numbers[@]} -gt 0 ]; then
       exit 1
     fi
     echo "Tracking issue #$track_num created."
-  else
-    echo "DRY_RUN: would create tracking issue: $TRACKING_TITLE"
+    rm -f "$tmp"
   fi
-  rm -f "$tmp"
 fi
