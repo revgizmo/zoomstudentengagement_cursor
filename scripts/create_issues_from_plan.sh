@@ -116,8 +116,9 @@ for ((i=0; i<${#sections[@]}; i++)); do
     continue
   fi
 
-  # Check for existing issue by exact title
-  existing_json=$(curl -sS "${API}/search/issues?q=repo:${REPO}+in:title+\"$(printf '%s' "$title" | sed 's/"/%22/g')\"" "${HEADERS[@]}")
+  # Check for existing issue by exact title (URL-encode query via --data-urlencode)
+  existing_json=$(curl -sS --get "${API}/search/issues" "${HEADERS[@]}" \
+    --data-urlencode "q=repo:${REPO} in:title ${title}")
   existing_count=$(echo "$existing_json" | sed -nE 's/.*"total_count": ([0-9]+).*/\1/p')
   if [ "${existing_count:-0}" -gt 0 ]; then
     existing_num=$(echo "$existing_json" | sed -nE 's/.*"number": ([0-9]+).*/\1/p' | head -n1)
