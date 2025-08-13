@@ -18,3 +18,11 @@
   - Scope: Edit vignettes and examples
 - Tests: Add coverage for new functions and deprecation paths
   - Scope: Add tests and ensure CI green
+
+## Follow-up checklist (to file as GitHub issues)
+
+- Deprecation hygiene: add lifecycle badges and deprecation notes to legacy functions; document removal timeline in `NEWS.md` and function docs
+- Export curation: convert non-user helpers to internal (remove `@export`, add `@keywords internal`), regenerate `NAMESPACE`
+- Schema docs: add a short “Schemas/Provenance” section documenting `schema_version`, `source_files`, `processing_timestamp`, `privacy_level`
+- Tests: add edge/error-path tests for `analyze_transcripts()`; tests for `ensure_privacy()` at `ferpa_standard`/`ferpa_strict`; tests asserting provenance attributes on outputs
+- CI budgets: set default performance budgets in `benchmarks.yaml`, adjust thresholds after first CI run, and make budgets configurable via repo settings or env vars
