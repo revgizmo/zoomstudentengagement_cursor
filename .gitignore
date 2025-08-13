@@ -107,3 +107,5 @@ zoom_real_world_testing/
 
 # IDE files
 .vscode/
+data/
+my_data/
