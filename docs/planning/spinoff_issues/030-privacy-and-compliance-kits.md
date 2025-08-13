@@ -27,3 +27,11 @@ Related doc: `docs/planning/SPINOFF_PROJECTS_PLAN.md`
 
 ### Labels
 Suggested: `priority:medium`, `area:core`, `enhancement`, `area:documentation`
+
+### Related issues (cross-links)
+- #154 docs: Institutional FERPA compliance adoption guide
+- #153 test: Real-world FERPA compliance validation
+- #183 Clarify privacy defaults in README and link FERPA vignette
+- #191 Add vignette: Privacy-aware name matching
+- #190 Document privacy-aware name matching workflow
+- #148 privacy: evaluate masking of additional identifiers

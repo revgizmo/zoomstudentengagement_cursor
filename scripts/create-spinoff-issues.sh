@@ -45,36 +45,36 @@ echo "🚀 Creating spin-off issues..."
 ./scripts/create-issue.sh \
   "Spin-off projects: roadmap and tracking" \
   "docs/planning/spinoff_issues/000-epic-spinoff-roadmap.md" \
-  "priority:high,area:development,enhancement"
+  "priority: high,area:development,enhancement"
 
 # Group 1
 ./scripts/create-issue.sh \
   "Spin-offs: Testing & QA Kits (Real-World Testing, Shell QA, Segfault/Memcheck)" \
   "docs/planning/spinoff_issues/010-testing-and-qa-kits.md" \
-  "priority:high,area:testing,enhancement"
+  "priority: high,area:testing,enhancement"
 
 # Group 2
 ./scripts/create-issue.sh \
   "Spin-offs: Dev Workflow & Context Automation" \
   "docs/planning/spinoff_issues/020-dev-workflow-context-automation.md" \
-  "priority:high,area:development,area:documentation,enhancement"
+  "priority: high,area:development,area:documentation,enhancement"
 
 # Group 3
 ./scripts/create-issue.sh \
   "Spin-offs: Privacy & Compliance Kits (Privacy Core, FERPA Toolkit)" \
   "docs/planning/spinoff_issues/030-privacy-and-compliance-kits.md" \
-  "priority:medium,area:core,area:documentation,enhancement"
+  "priority: medium,area:core,area:documentation,enhancement"
 
 # Group 4
 ./scripts/create-issue.sh \
   "Spin-offs: Data Processing Modules (VTT parser, Consolidation utils, Names, Pipeline)" \
   "docs/planning/spinoff_issues/040-data-processing-modules.md" \
-  "priority:medium,area:core,enhancement"
+  "priority: medium,area:core,enhancement"
 
 # Group 5
 ./scripts/create-issue.sh \
   "Spin-offs: CI Templates for R (R CMD check, pkgdown Pages)" \
   "docs/planning/spinoff_issues/050-ci-templates-for-r.md" \
-  "priority:medium,area:testing,area:documentation,enhancement"
+  "priority: medium,area:testing,area:documentation,enhancement"
 
 echo "✅ Spin-off issues created. Review and link them from the epic."

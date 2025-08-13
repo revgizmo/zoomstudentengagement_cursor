@@ -32,5 +32,13 @@ Related doc: `docs/planning/SPINOFF_PROJECTS_PLAN.md`
 - [ ] Docs emphasize secure handling of confidential data
 - [ ] Works on Ubuntu-latest; macOS guidance included (lldb)
 
+### Related issues (cross-links)
+- #129 HIGH: Complete Real-World Testing with Confidential Data
+- #101 Document QA vs Real-World Testing relationship and integration
+- #99 Improve QA testing process and infrastructure
+- #172 HIGH PRIORITY: Review pre-pr-validation and context scripts
+- #147 test: wrap intentional warnings in expect_warning()
+- #168 investigate: Performance threshold for consolidate_transcript test
+
 ### Labels
 Suggested: `priority:high`, `area:testing`, `enhancement`

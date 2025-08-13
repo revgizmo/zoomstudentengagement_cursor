@@ -35,3 +35,12 @@ Related doc: `docs/planning/SPINOFF_PROJECTS_PLAN.md`
 
 ### Labels
 Suggested: `priority:high`, `area:development`, `area:documentation`, `enhancement`
+
+### Related issues (cross-links)
+- #91 Improve pre-PR validation robustness
+- #93 Analyze Cursor Bugbot comments and improve local validation
+- #47 Create verification helper script
+- #4 CRAN Preparation
+- #2 Documentation Overhaul
+- #199 Documentation overhaul (v0.2)
+- README/pkgdown docs issues: #174–#189, #181, #186, #187, #195

@@ -32,3 +32,10 @@ Related doc: `docs/planning/SPINOFF_PROJECTS_PLAN.md`
 
 ### Labels
 Suggested: `priority:medium`, `area:core`, `enhancement`
+
+### Related issues (cross-links)
+- #97 Support multiple Zoom file types: cc.vtt and chat.txt files
+- #110 Performance: Vectorized operations for lag functions
+- #56 Add transcript_file column with intelligent duplicate handling
+- #50 Generalize Topic parsing in load_zoom_recorded_sessions_list
+- Refactors/naming/internalization: #28–#33, #29–#31

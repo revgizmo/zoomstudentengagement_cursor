@@ -19,3 +19,8 @@ Related doc: `docs/planning/SPINOFF_PROJECTS_PLAN.md`
 
 ### Labels
 Suggested: `priority:medium`, `area:testing`, `area:documentation`, `enhancement`
+
+### Related issues (cross-links)
+- #39 Optimize GitHub Actions workflow for faster dependency installation
+- #187 Add coverage workflow/badge (optional)
+- #186 Add NEWS.md and wire it into pkgdown site
