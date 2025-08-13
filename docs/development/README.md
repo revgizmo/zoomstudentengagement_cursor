@@ -25,6 +25,9 @@
 - **[AUDIT_LOG.md](AUDIT_LOG.md)** - Codebase audit tracking and decisions
 - **[DOCUMENTATION_ORGANIZATION_SUMMARY.md](DOCUMENTATION_ORGANIZATION_SUMMARY.md)** - Summary of documentation reorganization (Issue #105)
 
+### 🎯 Active Issues
+- **[ISSUE_160_CONSOLIDATED_PLAN.md](ISSUE_160_CONSOLIDATED_PLAN.md)** - Name Matching with Privacy-First Design (95% complete)
+
 ---
 
 ## 🎯 Quick Start for Different Roles

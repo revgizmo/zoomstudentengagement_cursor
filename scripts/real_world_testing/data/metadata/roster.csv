@@ -1,0 +1,8 @@
+student_id,first_last,last_first,last_name,first_name,user_id,role,email_address,lec,majors,terms_in_attendance,units,grading_basis,waitlist_position,dept,course,section,roster_dt_min,roster_dt_max,enrolled,roster_dt,preferred_name
+9990000019,Melissa Ko,"Ko, Melissa",Ko,Melissa,9990019,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Melissa Ko
+9990000020,Ryan Sloan,"Sloan, Ryan",Sloan,Ryan,9990020,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Ryan Sloan
+9990000021,Shreeharsh Kelkar,"Kelkar, Shreeharsh",Kelkar,Shreeharsh,9990021,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Shreeharsh Kelkar
+9990000022,Srijani Ghosh,"Ghosh, Srijani",Ghosh,Srijani,9990022,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Srijani Ghosh
+9990000023,Khalilah Beal-Uribe,"Beal-Uribe, Khalilah",Beal-Uribe,Khalilah,9990023,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Khalilah Beal-Uribe
+9990000024,John Fielding,"Fielding, John",Fielding,John,9990024,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,John Fielding
+9990000025,Conor Healy,"Healy, Conor",Healy,Conor,9990025,Student,email@berkeley.edu,24,Info & Data Science MIDS,G,3,Letter,NA,LTF,23,24,1/23/24,1/23/24,TRUE,1/23/24,Conor Healy

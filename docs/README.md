@@ -16,6 +16,7 @@ This directory contains detailed documentation organized by purpose and audience
 - **[AUDIT_LOG.md](development/AUDIT_LOG.md)** - Codebase audit tracking and decisions
 
 ### `planning/` - Planning Documents
+- **[SPINOFF_PROJECTS_PLAN.md](planning/SPINOFF_PROJECTS_PLAN.md)** - Spin-off projects plan and roadmap
 - **[ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md](planning/ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md)** - Issue cleanup process and results
 - **[DOCUMENTATION_AUDIT_RESULTS.md](planning/DOCUMENTATION_AUDIT_RESULTS.md)** - Documentation audit findings
 - **[COLUMN_NAMING_ANALYSIS.md](planning/COLUMN_NAMING_ANALYSIS.md)** - Column naming analysis and decisions
@@ -33,7 +34,8 @@ This directory contains detailed documentation organized by purpose and audience
 - Check [development/AUDIT_LOG.md](development/AUDIT_LOG.md) for recent decisions
 
 ### For Project Planning
-- Review [planning/ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md](planning/ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md) for current status
+- Review [planning/SPINOFF_PROJECTS_PLAN.md](planning/SPINOFF_PROJECTS_PLAN.md) for spin-off roadmap
+- Check [planning/ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md](planning/ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md) for current status
 - Check [planning/DOCUMENTATION_AUDIT_RESULTS.md](planning/DOCUMENTATION_AUDIT_RESULTS.md) for audit findings
 
 ### For Technical Reference

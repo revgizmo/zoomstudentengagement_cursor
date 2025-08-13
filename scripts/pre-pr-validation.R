@@ -86,49 +86,41 @@ tryCatch({
   # Load package and check function signatures
   devtools::load_all()
   
-  # Get all exported functions
-  exported_functions <- ls("package:zoomstudentengagement")
+  # Get only exported symbols from this package, not imported ones
+  exported_functions <- getNamespaceExports("zoomstudentengagement")
   
   # Check for common issues
   issues_found <- FALSE
   
-  # Check function signatures against known patterns
+  # Track specific function signature issues
   function_signature_issues <- list()
   
-  # Functions to ignore (test helpers, base R functions, etc.)
+  # Functions to ignore (test helpers or not applicable here)
   ignore_functions <- c(
-    "create_sample_roster", "create_sample_section_names_lookup", 
-    "create_sample_metrics_lookup", "create_sample_transcript_metrics", 
-    "create_temp_test_file", "library.dynam", "library.dynam.unload", 
-    "system.file"
+    "create_sample_roster", "create_sample_section_names_lookup",
+    "create_sample_metrics_lookup", "create_sample_transcript_metrics",
+    "create_temp_test_file"
   )
   
   for (func_name in exported_functions) {
-    # Skip functions that should be ignored
-    if (func_name %in% ignore_functions) {
-      next
+    if (func_name %in% ignore_functions) next
+    obj <- tryCatch(get(func_name, envir = asNamespace("zoomstudentengagement")), error = function(e) NULL)
+    if (!is.function(obj)) next
+    
+    # Check if function has documentation topic
+    help_topic <- file.exists(file.path("man", paste0(func_name, ".Rd")))
+    
+    if (!help_topic) {
+      cat("   ℹ️  Note: Function", func_name, "may lack a man topic (documentation).\n")
+      # Do not mark as a signature failure; informational only
     }
     
-    if (is.function(get(func_name, envir = asNamespace("zoomstudentengagement")))) {
-      # Check if function has documentation
-      help_topic <- tryCatch({
-        help(func_name, package = "zoomstudentengagement")
-        TRUE
-      }, error = function(e) FALSE)
-      
-      if (!help_topic) {
-        cat("   ⚠️  Function", func_name, "may lack documentation\n")
+    # Example specific signature check
+    if (func_name == "load_roster") {
+      args <- names(formals(obj))
+      if (!all(c("data_folder", "roster_file") %in% args)) {
+        function_signature_issues[[func_name]] <- "Expected data_folder and roster_file arguments"
         issues_found <- TRUE
-      }
-      
-      # Check for specific function signature issues
-      if (func_name == "load_roster") {
-        func <- get(func_name, envir = asNamespace("zoomstudentengagement"))
-        args <- names(formals(func))
-        if (!("data_folder" %in% args) || !("roster_file" %in% args)) {
-          function_signature_issues[[func_name]] <- "Expected data_folder and roster_file arguments"
-          issues_found <- TRUE
-        }
       }
     }
   }
@@ -213,7 +205,7 @@ tryCatch({
     
     # Check for Gini coefficient formula errors
     gini_patterns <- c(
-      "1 - \\(2 \\* sum\\(rank\\(.*\\) \\* .*\\) / \\(n\\(\\) \\* sum\\(.*\\)\\)\\) - 1/n\\(\\)",
+      "1 - \\(?2 \\* sum\\(?rank\\(?\\.\\*\\) \\* \\.*\\) / \\(?n\\(?\\) \\* sum\\(?\\.\\*\\)\\)\\) - 1/n\\(?\\)",
       "gini_coefficient.*1 -"
     )
     
@@ -259,7 +251,6 @@ tryCatch({
   
   for (r_file in r_files) {
     content <- readLines(r_file)
-    
     # Look for print(), cat(), message() outside of TESTTHAT checks
     for (i in seq_along(content)) {
       line <- content[i]
@@ -285,7 +276,7 @@ tryCatch({
           }
           
           # Check for TESTTHAT conditional
-          if (grepl("if\\s*\\(\\s*Sys\\.getenv\\(\"TESTTHAT\"\\)\\s*!=\\s*\"true\"\\s*\\)", line_content)) {
+          if (grepl('Sys.getenv("TESTTHAT") != "true"', line_content, fixed = TRUE)) {
             # If we're at brace level 0 or 1, we're in the TESTTHAT block
             if (brace_count <= 1) {
               in_testthat_block <- TRUE

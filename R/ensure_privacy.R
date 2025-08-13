@@ -36,7 +36,7 @@ ensure_privacy <- function(x,
                            ),
                            id_columns = c(
                              "preferred_name", "name", "first_last",
-                             "name_raw", "student_id", "email"
+                             "name_raw", "student_id", "email", "transcript_name", "formal_name"
                            )) {
   # Validate privacy level
   valid_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")

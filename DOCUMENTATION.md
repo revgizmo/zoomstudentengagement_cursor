@@ -45,6 +45,7 @@
 
 ### Current Status
 - **[PROJECT.md](PROJECT.md)** - Real-time project status and CRAN readiness
+- **[docs/planning/SPINOFF_PROJECTS_PLAN.md](docs/planning/SPINOFF_PROJECTS_PLAN.md)** - Spin-off projects plan and roadmap
 - **[docs/planning/ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md](docs/planning/ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md)** - Issue cleanup process and results
 
 ### Planning Documents
