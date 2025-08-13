@@ -1,3 +1,70 @@
+test_that("missing lookup file returns blank template without error in tests", {
+  # Ensure TESTTHAT env is set by testthat
+  tmpdir <- tempfile("data-lookup-")
+  dir.create(tmpdir)
+  on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
+
+  res <- load_section_names_lookup(data_folder = tmpdir, names_lookup_file = "section_names_lookup.csv")
+  expect_true(is.data.frame(res))
+  expect_true(all(c(
+    "course_section", "day", "time", "course", "section",
+    "preferred_name", "formal_name", "transcript_name", "student_id"
+  ) %in% names(res)))
+  expect_equal(nrow(res), 0)
+})
+
+test_that("malformed lookup file (missing columns) handled gracefully", {
+  tmpdir <- tempfile("data-lookup-")
+  dir.create(tmpdir)
+  on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
+
+  # Write a CSV missing required columns
+  bad_path <- file.path(tmpdir, "section_names_lookup.csv")
+  writeLines(
+    c(
+      "HEADER LINE TO SKIP",
+      paste(c("course_section", "preferred_name", "transcript_name"), collapse = ","),
+      paste(c("101.A", "Alice A", "Alice"), collapse = ",")
+    ),
+    con = bad_path
+  )
+
+  result <- load_section_names_lookup(data_folder = tmpdir)
+  expect_s3_class(result, "tbl_df")
+  # Should include all required columns with NAs for missing ones
+  expect_true(all(c(
+    "course_section", "day", "time", "course", "section",
+    "preferred_name", "formal_name", "transcript_name", "student_id"
+  ) %in% names(result)))
+  expect_equal(nrow(result), 1)
+})
+
+test_that("lookup file with wrong types causes clear error", {
+  tmpdir <- tempfile("data-lookup-")
+  dir.create(tmpdir)
+  on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
+
+  good_header <- paste(
+    c("course_section", "day", "time", "course", "section",
+      "preferred_name", "formal_name", "transcript_name", "student_id"),
+    collapse = ","
+  )
+  path <- file.path(tmpdir, "section_names_lookup.csv")
+  # Force a numeric column by writing without quotes and using numeric-like value
+  lines <- c(
+    "HEADER LINE TO SKIP",
+    good_header,
+    paste(c("101.A", "Mon", "0900", "101", "A", 123, 456, 789, "S001"), collapse = ",")
+  )
+  writeLines(lines, con = path)
+
+expect_error(
+    load_section_names_lookup(data_folder = tmpdir),
+    regexp = "Column 'preferred_name' must be of type character",
+    fixed = FALSE
+  )
+})
+
 test_that("load_section_names_lookup loads valid file with all required columns", {
   # Minimal valid data: all columns, one row
   lookup_content <- "course_section,day,time,course,section,preferred_name,formal_name,transcript_name,student_id\n23.24,Thurs,6:30PM,23,24,John Smith,John Smith,John Smith,123"
