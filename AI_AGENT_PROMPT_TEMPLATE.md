@@ -2,32 +2,106 @@
 
 ## 🎯 **Quick Usage**
 
-**Copy this template and fill in the variables:**
+**Simply ask an AI: "Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_TEMPLATE.md"**
 
+The AI will generate a complete prompt ready to copy to a new AI chat.
+
+## 📋 **Template Variables**
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `[ISSUE_NUMBER]` | GitHub issue number | `160` |
+| `[PHASE_DESCRIPTION]` | Description of the phase/work | `Phase 2`, `real-world testing`, `documentation` |
+| `[WORK_TYPE]` | Type of work being done | `implementation`, `testing`, `docs` |
+
+## 🚀 **Usage Examples**
+
+### **Example 1: Phase 2 of Issue 160**
 ```
-Mission: Implement [PHASE_DESCRIPTION] of Issue #[ISSUE_NUMBER] for [WORK_TYPE].
+Mission: Implement Phase 2 of Issue #160 for implementation.
 
 FIRST: Create new branch for this work:
-git checkout -b feature/issue-[ISSUE_NUMBER]-[PHASE_DESCRIPTION]-[WORK_TYPE]
-git push -u origin feature/issue-[ISSUE_NUMBER]-[PHASE_DESCRIPTION]-[WORK_TYPE]
+git checkout -b feature/issue-160-Phase-2-implementation
+git push -u origin feature/issue-160-Phase-2-implementation
 
 Context files to link:
 - @PROJECT.md (Project status and CRAN readiness)
 - @full-context.md (Complete project context)
-- @ISSUE_[ISSUE_NUMBER]_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
-- @docs/development/ISSUE_[ISSUE_NUMBER]_CONSOLIDATED_PLAN.md (Overall plan)
+- @ISSUE_160_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
+- @docs/development/ISSUE_160_CONSOLIDATED_PLAN.md (Overall plan)
 
-Your task: Follow the implementation guide to complete [PHASE_DESCRIPTION] of Issue #[ISSUE_NUMBER].
+Your task: Follow the implementation guide to complete Phase 2 of Issue #160.
 
-Focus: [WORK_TYPE] work for Issue #[ISSUE_NUMBER] [PHASE_DESCRIPTION]
+Focus: implementation work for Issue #160 Phase 2
 
 Key requirements:
 - Follow project coding standards and privacy-first approach
+- Implement functionality according to specifications
 - Create comprehensive documentation
 - Test thoroughly with realistic scenarios
 - Ensure CRAN compliance
 
-Success criteria: [PHASE_DESCRIPTION] completed, documented, tested, and ready for review.
+Success criteria: Phase 2 completed, documented, tested, and ready for review.
+
+Start with the implementation guide and follow the step-by-step plan.
+```
+
+### **Example 2: Real-world testing for Issue 129**
+```
+Mission: Implement real-world testing of Issue #129 for testing.
+
+FIRST: Create new branch for this work:
+git checkout -b feature/issue-129-real-world-testing-testing
+git push -u origin feature/issue-129-real-world-testing-testing
+
+Context files to link:
+- @PROJECT.md (Project status and CRAN readiness)
+- @full-context.md (Complete project context)
+- @ISSUE_129_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
+- @docs/development/ISSUE_129_CONSOLIDATED_PLAN.md (Overall plan)
+
+Your task: Follow the implementation guide to complete real-world testing of Issue #129.
+
+Focus: testing work for Issue #129 real-world testing
+
+Key requirements:
+- Create comprehensive test scenarios covering edge cases
+- Test with realistic data including international names and custom names
+- Validate privacy compliance throughout testing
+- Document test results and any issues found
+- Ensure all tests pass and coverage is maintained
+
+Success criteria: real-world testing completed, all tests pass, issues documented, and ready for review.
+
+Start with the implementation guide and follow the step-by-step plan.
+```
+
+### **Example 3: Documentation for Issue 90**
+```
+Mission: Implement documentation of Issue #90 for docs.
+
+FIRST: Create new branch for this work:
+git checkout -b feature/issue-90-documentation-docs
+git push -u origin feature/issue-90-documentation-docs
+
+Context files to link:
+- @PROJECT.md (Project status and CRAN readiness)
+- @full-context.md (Complete project context)
+- @ISSUE_90_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
+- @docs/development/ISSUE_90_CONSOLIDATED_PLAN.md (Overall plan)
+
+Your task: Follow the implementation guide to complete documentation of Issue #90.
+
+Focus: docs work for Issue #90 documentation
+
+Key requirements:
+- Create comprehensive documentation following project standards
+- Include clear examples and use cases
+- Ensure all documentation is accurate and up-to-date
+- Test all code examples and ensure they work
+- Follow roxygen2 standards for function documentation
+
+Success criteria: documentation completed, documentation comprehensive, examples tested, and ready for review.
 
 Start with the implementation guide and follow the step-by-step plan.
 ```
@@ -69,50 +143,40 @@ git checkout -b feature/issue-90-documentation-docs
 git push -u origin feature/issue-90-documentation-docs
 ```
 
-## 📝 **Required Files to Create**
 
-### **1. Consolidated Plan**: `docs/development/ISSUE_[ISSUE_NUMBER]_CONSOLIDATED_PLAN.md`
-
-Create a comprehensive plan document with:
-
-1. **Mission Overview** - Overall goal and context
-2. **Current Status** - What has been completed so far
-3. **Objectives** - Specific objectives for the issue
-4. **Implementation Phases** - Multi-phase breakdown with status
-5. **Technical Requirements** - Technical specifications
-6. **Success Criteria** - Clear completion criteria
-7. **Critical Requirements** - Must-have requirements
-8. **Next Steps** - Immediate and follow-up actions
-
-### **2. Implementation Guide**: `ISSUE_[ISSUE_NUMBER]_IMPLEMENTATION_GUIDE.md`
-
-Create a comprehensive implementation guide with:
-
-1. **Mission Overview** - Primary goal and context
-2. **Objectives** - Specific objectives for this work
-3. **Implementation Steps** - Step-by-step plan with time estimates
-4. **Technical Requirements** - Technical specifications
-5. **Success Criteria** - Clear completion criteria
-6. **Critical Requirements** - Must-have requirements
-7. **Documentation Standards** - Format requirements
-8. **Important Notes** - Key considerations
 
 ## 🎯 **Workflow**
 
-1. **Fill in template variables** above
-2. **Create consolidated plan** using the template (captures current knowledge)
-3. **Create implementation guide** using the template (for next phase)
-4. **Copy the prompt** to a new AI chat
-5. **Monitor progress** and provide guidance
+1. **Ask AI to generate prompt**: "Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_TEMPLATE.md"
+2. **AI creates required files**: Consolidated plan and implementation guide
+3. **Copy generated prompt** to a new AI chat
+4. **Monitor progress** and provide guidance
+
+## 📝 **Required Files to Create**
+
+**The AI will create these files automatically:**
+
+### **1. Consolidated Plan**: `docs/development/ISSUE_[ISSUE_NUMBER]_CONSOLIDATED_PLAN.md`
+Documents what was accomplished and plans remaining work.
+
+### **2. Implementation Guide**: `ISSUE_[ISSUE_NUMBER]_IMPLEMENTATION_GUIDE.md`
+Provides specific instructions for the next AI agent.
 
 ## 💡 **Pro Tips**
 
-- **Keep it simple** - Focus on the essential information
-- **Be specific** - Clear objectives and success criteria
-- **Include context** - Link to relevant project files
-- **Follow patterns** - Use consistent naming and structure
-- **Test the prompt** - Make sure it's clear and actionable
+- **Keep it simple** - Just ask the AI to generate the prompt
+- **Be specific** - Include the issue number and phase description
+- **Let AI handle details** - The AI will create all required files
+- **Copy and go** - The generated prompt is ready to use
+
+## 🎯 **Example Usage**
+
+```
+User: "Make me a prompt for issue 160 phase 2 with @AI_AGENT_PROMPT_TEMPLATE.md"
+
+AI: [Generates complete prompt with all files created]
+```
 
 ---
 
-**Remember**: This template is designed to be simple and reusable. Just fill in the variables and you're ready to go!
+**Remember**: This is the simplest possible approach - just ask the AI and it handles everything!
