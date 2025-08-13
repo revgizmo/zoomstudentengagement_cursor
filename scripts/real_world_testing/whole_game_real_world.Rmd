@@ -58,7 +58,7 @@ Before running this workflow, ensure you have the following:
 ```bash
 # From the scripts/real_world_testing directory:
 Rscript -e "rmarkdown::render('whole_game_real_world.Rmd', 
-  params = list(instructor_name = 'Conor Healy'))"
+  params = list(instructor_name = 'Instructor Name'))"
 ```
 
 Or edit the YAML parameters at the top of this file and run:
