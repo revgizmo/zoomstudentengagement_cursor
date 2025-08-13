@@ -1,0 +1,302 @@
+WEBVTT
+
+00:01:08.000 --> 00:01:09.000
+This doesn't.
+
+00:01:09.000 --> 00:01:13.000
+This as a nerd, it's the window that we use to write our code.
+
+00:01:13.000 --> 00:01:14.000
+Yeah.
+
+00:01:14.000 --> 00:01:17.000
+And I actually really like this format that our studio has for doing that. So this is the text document.
+
+00:01:17.000 --> 00:01:20.000
+You're an honest team.
+
+00:01:20.000 --> 00:01:21.000
+Yep. Okay.
+
+00:01:21.000 --> 00:01:31.000
+That has the basics telling us that this is the Zoom student engagement analysis and when I hit the button it will spit out an HTML file.
+
+00:01:31.000 --> 00:01:32.000
+Yeah.
+
+00:01:32.000 --> 00:01:34.000
+How Yes.
+
+00:01:34.000 --> 00:01:35.000
+Okay.
+
+00:01:35.000 --> 00:01:39.000
+And then this is the code that I can run on the computer to do this. So I'm telling it to load a bunch of libraries, for example.
+
+00:01:39.000 --> 00:01:40.000
+And then these are the steps. Okay. Okay. Okay.
+
+00:01:40.000 --> 00:01:51.000
+And then these are the steps. Consistent with this outline here of the steps that I can. I organized my code and tell myself what to do.
+
+00:01:51.000 --> 00:01:52.000
+I don't expect anything.
+
+00:01:52.000 --> 00:01:56.000
+No, I don't expect anybody to follow the code part of this, but this is where I read in.
+
+00:01:56.000 --> 00:01:57.000
+The.
+
+00:01:57.000 --> 00:01:59.000
+The file and then do things with it to turn the transcript into data.
+
+00:01:59.000 --> 00:02:05.000
+In.
+
+00:02:05.000 --> 00:02:06.000
+Okay.
+
+00:02:06.000 --> 00:02:07.000
+Thank you.
+
+00:02:07.000 --> 00:02:09.000
+And then I have more, but the basic idea of what I'm doing. Is I start that everything I did above is the formula and the code function that I wrote to be able to do this analysis.
+
+00:02:09.000 --> 00:02:19.000
+In. Yeah. Yeah.
+
+00:02:19.000 --> 00:02:26.000
+So here is where I'm actually doing something I would ask somebody else to do, which is. How many weeks is your class?
+
+00:02:26.000 --> 00:02:36.000
+How, you know, how long or what time of the day is your class. Have them fill it in and then this spits me out a list of all 14 weeks.
+
+00:02:36.000 --> 00:02:41.000
+With a start time and end time in GMT.
+
+00:02:41.000 --> 00:02:51.000
+And then I say this is the LTF, 2324 class term. And then I load some stuff.
+
+00:02:51.000 --> 00:02:57.000
+I set up a class roster and I load that.
+
+00:02:57.000 --> 00:03:03.000
+And now I have a list of students. What I'll have after this is I'm going to see Dr.
+
+00:03:03.000 --> 00:03:12.000
+Melissa Coe, Shihar Shujani in the transcript file. And I'll be able to organize it for the actual people in the class.
+
+00:03:12.000 --> 00:03:20.000
+And then I can go to zoom. And this is anybody who's using them can go to Zoom, go to the cloud recordings.
+
+00:03:20.000 --> 00:03:33.000
+Copy a CSV file that tells us which recordings the Download the transcripts themselves that are just text file, but they come with a dot VTT format.
+
+00:03:33.000 --> 00:03:38.000
+And all you're doing is going and clicking on it saying, yeah, I want to download that one, download that.
+
+00:03:38.000 --> 00:03:46.000
+And then I load all that stuff in automatically. So. When I'm pulling this stuff down, I don't have to know the name of the course.
+
+00:03:46.000 --> 00:03:55.000
+I don't need to know any of when the sessions were. I just need to go grab the files and toss them in the folder and this will load them automatically.
+
+00:03:55.000 --> 00:04:04.000
+And what it saw was there are 2 files in there for 2 different course sessions. These are just examples that I loaded it.
+
+00:04:04.000 --> 00:04:14.000
+And I'm able to process it. In this little example, I'm doing lots of talking, but what questions to people at?
+
+00:04:14.000 --> 00:04:17.000
+It was completely lost.
+
+00:04:17.000 --> 00:04:24.000
+I have a question. What does the output look like? Like what it actually, are you able to show us like an example?
+
+00:04:24.000 --> 00:04:25.000
+Transfer.
+
+00:04:25.000 --> 00:04:35.000
+I absolutely will do that. So looking through really quickly, I, I do the couple of extra steps just to kind of get the, the data dump of steps.
+
+00:04:35.000 --> 00:04:42.000
+If I cancel a class, I'm expecting not to have a recording. I have a file where I load that.
+
+00:04:42.000 --> 00:04:52.000
+And then I end up with a file that I then once it now that I have my classes and my transcripts, this is the step where actually do the transcription and analysis.
+
+00:04:52.000 --> 00:05:01.000
+So I went from having one row. To having 13 rows, one for each person who talked.
+
+00:05:01.000 --> 00:05:08.000
+Me and each of the students. And this is the number of times they talked. Ryan, what do you got?
+
+00:05:08.000 --> 00:05:14.000
+Yeah, I think, it's so interesting. One thing that I'm wondering is for people who are less, let's say tech savvy than you are.
+
+00:05:14.000 --> 00:05:18.000
+I'm sure there will be some rootinizing of these things as you share the tool, for other people.
+
+00:05:18.000 --> 00:05:27.000
+It looks like a number of steps for populating the data need to be done currently by the user.
+
+00:05:27.000 --> 00:05:35.000
+It looks like a number of steps, for populating the data need to be done currently by the user and I wonder Do you anticipate ways to sort of, I don't know, rootinize that or make it sort of an automatic sort of process or.
+
+00:05:35.000 --> 00:05:40.000
+You know the lowest pain point possible for instructors
+
+00:05:40.000 --> 00:05:44.000
+Who answers? Yes, I very much intend to automate it or routinize it. I like the way that you're framing that.
+
+00:05:44.000 --> 00:05:59.000
+Say here are the steps and just have that be, you know, step one. Load your file, step 2, do this, tell me what the term is, whatever the steps are, and have that be a standardized process.
+
+00:05:59.000 --> 00:06:10.000
+That has a much friendlier user interface. And part of today is getting some feedback about where to draw that line or what it is that would help clarify.
+
+00:06:10.000 --> 00:06:19.000
+Which is why I'm diving into the deep end with some intention now. Because if it isn't clear now and it is clear later, that's a helpful.
+
+00:06:19.000 --> 00:06:23.000
+Traditional.
+
+00:06:23.000 --> 00:06:27.000
+And if it's not clear later, that helps me calibrate a lot.
+
+00:06:27.000 --> 00:06:28.000
+So what I end up with. Go on. Yeah, sure.
+
+00:06:28.000 --> 00:06:46.000
+How sensitive. Oh, how sensitive is your analysis to the noisiness of the transcript. So if it's a noisy call and the transcript is, You know, Zoom can have.
+
+00:06:46.000 --> 00:06:47.000
+The performance of the Zoom transcript can depend on the qualities of the call.
+
+00:06:47.000 --> 00:06:59.000
+So right now I started talking and I started talking right there a little early with intention because the green box is my experience what zoom is going to do.
+
+00:06:59.000 --> 00:07:06.000
+It's gonna take the sound that it hears and transcribe those words and assign them to the person who is in the green box.
+
+00:07:06.000 --> 00:07:12.000
+When you were talking at the at first, you were talking everything that it transcribed from the voice stream.
+
+00:07:12.000 --> 00:07:18.000
+Goes to you and I started interjecting at first it didn't take it so my words will be assigned to you.
+
+00:07:18.000 --> 00:07:24.000
+And then about halfway through when I started talking and you were. I watched the green box move to me.
+
+00:07:24.000 --> 00:07:34.000
+So some of the stuff you were saying is the time to me. Which is a big challenge for me when doing when I have students who interject with small insightful thoughts occasionally.
+
+00:07:34.000 --> 00:07:41.000
+In the middle of a long run on thought from my talkative student. Because the green box never moves.
+
+00:07:41.000 --> 00:07:49.000
+To the other person. And how much of a problem that is, is one of the things I'm struggling.
+
+00:07:49.000 --> 00:08:01.000
+I had one thing to clarify, Connor. So is it participation in your class only when someone on mutes and talks or is is a chat comments question also counted as participation.
+
+00:08:01.000 --> 00:08:08.000
+Right now I use a pretty holistic definition of participation. The rubric is very light in what we're saying.
+
+00:08:08.000 --> 00:08:23.000
+Meaningfully contributing throughout the semester. It's about as precise as again. So that's one of my big tension points is I have breakout sessions that last half an hour or more of the 90 min class and those aren't recorded.
+
+00:08:23.000 --> 00:08:24.000
+Hmm.
+
+00:08:24.000 --> 00:08:36.000
+Only the group up time is recorded. And so how much can I use this? I feel like I can use this as concrete feedback about what it's capturing.
+
+00:08:36.000 --> 00:08:46.000
+No, that I have this green box problem of who's talking. But how much can I get use that with the qualitative other thoughts that I have and not negatively impact student participation and experience.
+
+00:08:46.000 --> 00:08:58.000
+Because they talk in breakout. And then don't talk much in the big group. So they're hugely impacting the overall class experience.
+
+00:08:58.000 --> 00:09:01.000
+They don't get points in this amount.
+
+00:09:01.000 --> 00:09:15.000
+I have a follow-up when they do the breakout rooms to you kind of pop in and out of the rooms to see if everyone is more, well you can't tell because they might be talking just because you're there but do you happen to pop it out or is it mostly on a trust basis?
+
+00:09:15.000 --> 00:09:28.000
+Throughout the semester I pop in and out mostly for the logistical like I just want to make sure everything's working here nobody's having a problem that gives me the convenience of my random pop in somebody's talking.
+
+00:09:28.000 --> 00:09:36.000
+At some point is everybody talking. At least do they seem attentive in that and they so I have a qualitative element of it, but I don't track that.
+
+00:09:36.000 --> 00:09:50.000
+Okay, thank you. Can I say something before about I'm sorry. I was gonna say, I think we could probably even keep talking about it.
+
+00:09:50.000 --> 00:09:51.000
+Huh.
+
+00:09:51.000 --> 00:10:00.000
+It's, yeah, there's a lot to go off of there. But to go back to the greenbox problem, something that occurs to me would be to just ask real fast. To go back to the green box problem, something that occurs to me would be to just ask real fast. Can you repeat that?
+
+00:10:00.000 --> 00:10:01.000
+And
+
+00:10:01.000 --> 00:10:02.000
+I like that. Thank you.
+
+00:10:02.000 --> 00:10:04.000
+Yeah.
+
+00:10:04.000 --> 00:10:12.000
+Yeah, this is where I need to deal with the multiple screens issue that I have because I need to write stuff down.
+
+00:10:12.000 --> 00:10:21.000
+That the last couple of thoughts and then I could bring everybody back and we can talk about stuff. Well, one of the challenges of L is people can change their name.
+
+00:10:21.000 --> 00:10:30.000
+And I haven't run into name collision. Where somebody changes their name.
+
+00:10:30.000 --> 00:10:35.000
+What happens if I do this? Well, I have a he him issue, but I'm sitting here.
+
+00:10:35.000 --> 00:10:43.000
+I've become Ryan. But I do have things where people go by different names or they're logged in on computers that don't have that.
+
+00:10:43.000 --> 00:10:57.000
+And this step is integral to it to being able to do that where I have their zoom name in their formal name and I can match them up which allows me to tie it back to the student within the roster and more importantly, duke them across class sessions.
+
+00:10:57.000 --> 00:11:04.000
+If their name changes, I wanna make sure that Ryan is Ryan throughout.
+
+00:11:04.000 --> 00:11:13.000
+So ultimately I get a summary and I can start doing analytics like having charts of who participated in who didn't.
+
+00:11:13.000 --> 00:11:21.000
+And final reports. But, are there any questions about this? Data nerdy stuff. Cool.
+
+00:11:21.000 --> 00:11:22.000
+Then why don't we come back in for the. Yes, please.
+
+00:11:22.000 --> 00:11:32.000
+One question, one question. What happens when breakout rooms? How would does this work for breakout rooms or just for the main room?
+
+00:11:32.000 --> 00:11:33.000
+Only the main room.
+
+00:11:33.000 --> 00:11:36.000
+Okay.
+
+00:11:36.000 --> 00:11:43.000
+Which is a huge limitation and it's a question of. I can get value on it, but what anybody else or is it like is it?
+
+00:11:43.000 --> 00:11:50.000
+Insufficient to meet that need is a big question.
+
+00:11:50.000 --> 00:12:04.000
+Yes.
+
+00:12:04.000 --> 00:12:19.000
+Can those in the call here? Okay, then why don't we just in into that as a conversation and I'll go ahead and stop the Zoom Meeting and everybody can come join.
+

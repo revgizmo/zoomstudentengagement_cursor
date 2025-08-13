@@ -1,0 +1,410 @@
+WEBVTT
+
+1
+00:00:00.050 --> 00:00:01.790
+Srijani Ghosh: Hi!
+
+2
+00:00:02.070 --> 00:00:04.050
+Conor Healy: Get this party started.
+
+3
+00:00:05.140 --> 00:00:08.310
+Srijani Ghosh: Hello! Hello! Hello! Why are you so dark?
+
+4
+00:00:09.710 --> 00:00:11.670
+Srijani Ghosh: So
+
+5
+00:00:12.160 --> 00:00:14.309
+Conor Healy: let's see.
+
+6
+00:00:14.550 --> 00:00:30.599
+Conor Healy: Student engagement. Okay? So for the nerds among us. You can see the our studio window that I have open. This is the tool that I use to write the code to do this thing
+
+7
+00:00:31.440 --> 00:00:32.390
+Conor Healy: that.
+
+8
+00:00:32.520 --> 00:00:43.089
+Dr. Melissa Ko: and I'll just do a little bit of walkthrough. But, hey, does anybody have any questions about what you're seeing right now? Yes, Connor, everything. I have no idea what I'm looking at.
+
+9
+00:00:43.500 --> 00:00:51.110
+Dr. Melissa Ko: Can you zoom it? Just so the text shows up picker. I think it should work if you do command, plus.
+
+10
+00:00:51.130 --> 00:00:58.459
+Dr. Melissa Ko: yeah, actually command control device. Oh, yeah.
+
+11
+00:00:58.590 --> 00:01:06.220
+Dr. Melissa Ko: Okay, the briefest of introduction to our and our studio.
+
+12
+00:01:06.660 --> 00:01:20.280
+Conor Healy: This as a nerd is the window that we use to write our code. And I actually really like this format that our studio has for doing that. So this is a text document
+
+13
+00:01:20.300 --> 00:01:29.310
+Dr. Melissa Ko: that has the basics telling us that this is the zoom student engagement analysis, and when I hit the button it will spit out an HTML file.
+
+14
+00:01:30.550 --> 00:01:31.340
+Shreeharsh Kelkar: And then
+
+15
+00:01:31.460 --> 00:01:40.930
+Conor Healy: this is the code that I can run on the computer to do that. So I'm telling it to load a bunch of libraries, for example. And then these are the steps
+
+16
+00:01:40.970 --> 00:01:49.569
+Conor Healy: consistent with this outline here of the the steps that I can. I organize my code and tell myself what to do
+
+17
+00:01:49.850 --> 00:02:00.379
+Conor Healy: so. I don't expect anybody to follow the code part of this, but this is where I read in the file, and then do things with it. To turn the transcript into data.
+
+18
+00:02:02.410 --> 00:02:03.260
+Conor Healy: and then
+
+19
+00:02:03.370 --> 00:02:08.119
+Conor Healy: I have more. But the the basic idea of what I'm doing
+
+20
+00:02:08.620 --> 00:02:17.910
+Conor Healy: is I start. The everything I did above is the formula and the code function that I wrote to be able to do this analysis.
+
+21
+00:02:18.180 --> 00:02:29.950
+Conor Healy: So here is where I'm actually doing something. I would ask somebody else to do, which is, how many weeks is your class? How you know how long or what time of the day is your class?
+
+22
+00:02:30.290 --> 00:02:31.700
+Conor Healy: Have them fill it in.
+
+23
+00:02:31.740 --> 00:02:38.889
+Conor Healy: and then this spits me out a list of all 14 weeks with a start time and end time in GMT.
+
+24
+00:02:40.190 --> 00:02:47.480
+Conor Healy: And then I say, this is the Ltf 2324 class term and then
+
+25
+00:02:48.380 --> 00:02:54.330
+Conor Healy: I load some stuff. I set up a class roster and I load that.
+
+26
+00:02:56.340 --> 00:02:57.780
+Conor Healy: And now I have
+
+27
+00:02:57.840 --> 00:03:05.750
+Conor Healy: a list of students. What I'll have after this is, I'm going to see Dr. Melissa Koh Shrihar Shujani in the Transcript file.
+
+28
+00:03:05.820 --> 00:03:10.220
+Conor Healy: and I'll be able to organize it for the actual people in the class.
+
+29
+00:03:11.290 --> 00:03:13.499
+Conor Healy: And then I can go to Zoom.
+
+30
+00:03:13.550 --> 00:03:18.939
+Conor Healy: And this is anybody who's using Zoom can go to zoom. Go to the cloud recordings.
+
+31
+00:03:19.540 --> 00:03:23.900
+Conor Healy: copy a Csv file that tells us which recordings exist.
+
+32
+00:03:24.520 --> 00:03:31.469
+Conor Healy: download the transcripts themselves that are just text files, but they come with a dot Vt format.
+
+33
+00:03:32.040 --> 00:03:36.500
+Conor Healy: and all you're doing is going and clicking on it and saying, Yeah, I want to download that one download that.
+
+34
+00:03:37.730 --> 00:03:42.119
+Conor Healy: and then I load all that stuff in automatically. So
+
+35
+00:03:42.370 --> 00:03:53.719
+Conor Healy: when I'm pulling the stuff down, I don't have to know the name of the course. I don't need to know any of when the sessions were. I just need to go grab the files and toss them in the folder, and this will load them automatically.
+
+36
+00:03:54.080 --> 00:03:59.190
+Conor Healy: and what it saw was, there are 2 files in there for 2 different course sessions.
+
+37
+00:03:59.860 --> 00:04:02.169
+Conor Healy: These are just examples that I loaded in.
+
+38
+00:04:03.810 --> 00:04:05.789
+Conor Healy: and I'm able to process it.
+
+39
+00:04:06.460 --> 00:04:10.969
+Conor Healy: you know, in this little example I'm doing lots of talking. But what questions do people have?
+
+40
+00:04:13.590 --> 00:04:14.930
+Conor Healy: It was completely lost.
+
+41
+00:04:16.180 --> 00:04:26.270
+Srijani Ghosh: I have a question. What does the output look like? Like what it actually are you able to show us like a example transcript? I absolutely will do that.
+
+42
+00:04:26.280 --> 00:04:39.930
+Conor Healy: So, looking through really quickly. II do the couple of extra steps just to kind of get the the data dump of steps. If I cancel a class, I'm expecting not to have a recording. I have a file where I load that.
+
+43
+00:04:41.440 --> 00:04:51.220
+Conor Healy: and then I end up with a file that I then once, now that I have my classes and my transcripts. This is the step where actually do the transcription in and out.
+
+44
+00:04:51.970 --> 00:04:55.399
+Conor Healy: So I went from having one row
+
+45
+00:04:55.940 --> 00:05:00.090
+Conor Healy: to having 13 rows, one for each person who talked
+
+46
+00:05:00.130 --> 00:05:01.799
+Conor Healy: me and each of the students.
+
+47
+00:05:02.740 --> 00:05:06.220
+Conor Healy: And this is the number of times they talked. Ryan, what do you got?
+
+48
+00:05:07.300 --> 00:05:07.980
+Hmm.
+
+49
+00:05:08.040 --> 00:05:28.170
+Ryan Sloan: yeah, I think. It's so interesting. One thing that I'm wondering is for people who are less. Let's say, tech savvy than you are. I'm sure there'll be some routinizing of these things as you share the tool. For other people. It looks like a number of steps for populating the data need to be done currently by the user. And I wonder.
+
+50
+00:05:28.170 --> 00:05:39.309
+Ryan Sloan: do you anticipate ways to sort of I don't know. Routinize that or make it sort of an automatic sort of process, or you know the lowest pain pointing possible. For instructors.
+
+51
+00:05:39.820 --> 00:05:58.590
+Conor Healy: 2 answers. Yes, I very much intend to automate it or brutonize it. I like the way that you're framing that. Here are the steps and just have that be. Yeah, you know. Step one, load your file step 2. Do this, tell me what the term is, whatever the steps are, and have that be a standardized product
+
+52
+00:05:58.650 --> 00:06:01.799
+Conor Healy: that has a much friendlier user interface
+
+53
+00:06:02.570 --> 00:06:09.639
+Conor Healy: and part of today is getting some feedback about where to draw that line or what it is that would help clarify.
+
+54
+00:06:09.910 --> 00:06:13.789
+Conor Healy: Which is why I'm I'm diving into the deep end with some intention now.
+
+55
+00:06:13.970 --> 00:06:20.100
+Conor Healy: because if it isn't clear now, and it is clear later, that's a helpful trajectory for me.
+
+56
+00:06:21.890 --> 00:06:24.810
+Conor Healy: And if it's not clear later that helps me calibrate a lot.
+
+57
+00:06:26.700 --> 00:06:42.080
+Shreeharsh Kelkar: How? How is your analysis to the noise? Noisiness of the Transcript? So if it's a noisy call, and the transcript is
+
+58
+00:06:42.200 --> 00:06:44.780
+Shreeharsh Kelkar: you know Zoom can have
+
+59
+00:06:45.380 --> 00:06:55.460
+Shreeharsh Kelkar: the performance of the Zoom Transcript can depend right now. All of these of the test started talking, and I started talking right there a little early with intention, because the Green box
+
+60
+00:06:55.480 --> 00:06:57.990
+Conor Healy: is my experience. What Zoom is going to do?
+
+61
+00:06:58.190 --> 00:07:05.019
+Conor Healy: It's going to take the sound that it hears, and transcribe those words, and assign them to the person who is in the green box.
+
+62
+00:07:05.250 --> 00:07:16.940
+Conor Healy: When you were talking at the at first you were talking everything that it transcribed from the voice stream goes to you, and I started interjecting. At first it didn't take it so my words will be assigned to you.
+
+63
+00:07:17.030 --> 00:07:25.659
+Conor Healy: And then about halfway through, when I started talking, and you were I watched the green box move to me, so some of the stuff you were saying at the time to me.
+
+64
+00:07:26.280 --> 00:07:33.889
+Conor Healy: which is a big challenge for me when doing, when I have students who interject with small, insightful thoughts occasionally.
+
+65
+00:07:33.960 --> 00:07:41.119
+Conor Healy: in the middle of a long run on thought from my talkative student, because the Green box never moves to the other person.
+
+66
+00:07:42.660 --> 00:07:46.349
+Conor Healy: and how much of a problem that is is one of the things I'm struggling with.
+
+67
+00:07:48.310 --> 00:07:59.819
+Srijani Ghosh: I had one thing to clarify Connor, so is is participation in your class only when someone unmutes and talks or is, is a chat. Comment question also counted as participation.
+
+68
+00:08:00.550 --> 00:08:07.569
+Conor Healy: Right now I use a pretty holistic definition of participation. The rubric is very light in what we're saying.
+
+69
+00:08:07.620 --> 00:08:12.140
+Conor Healy: meaningfully contributing throughout. The semester is about as precise as again.
+
+70
+00:08:12.750 --> 00:08:15.380
+Conor Healy: So that's one of my big tension points is
+
+71
+00:08:15.720 --> 00:08:22.250
+Conor Healy: I have breakout sessions that last half an hour or more of the 90 min class, and those aren't recorded.
+
+72
+00:08:22.340 --> 00:08:25.670
+Srijani Ghosh: Only the group upline is recorded.
+
+73
+00:08:25.830 --> 00:08:39.020
+Conor Healy: And so how much can I use this? II feel like I can use this as concrete feedback about what it's capturing. Knowing that I have this green box problem of who's talking. But
+
+74
+00:08:39.480 --> 00:08:52.530
+Conor Healy: how much can I get used that with the qualitative other thoughts that I have and not negatively impact student participation and experience because they talk and breakout, and they don't talk much in the big group.
+
+75
+00:08:52.690 --> 00:08:56.749
+Conor Healy: So they're hugely impacting the overall class experience.
+
+76
+00:08:57.820 --> 00:09:00.160
+Conor Healy: They don't get points in this an hour
+
+77
+00:09:01.050 --> 00:09:14.529
+Srijani Ghosh: follow up when they do the breakout rooms. Do you kind of pop in and out of the room to see if everyone is more of every. But you can't tell, because they might be talking just because you're there. But do you happen to pop in and out, or is it mostly on a trust basis
+
+78
+00:09:15.030 --> 00:09:22.039
+Conor Healy: throughout the semester. I pop in and out mostly for the logistical like, I just want to make sure everything's working here. Nobody's having a problem
+
+79
+00:09:22.110 --> 00:09:27.000
+Conor Healy: that gives me the convenience of my random pop in somebody's talking
+
+80
+00:09:27.160 --> 00:09:35.369
+Conor Healy: at some point. Is everybody talking at least, do they seem attentive in that? And they. So I have a qualitative element of it. But I don't track that.
+
+81
+00:09:35.680 --> 00:09:59.479
+Srijani Ghosh: Okay. Thank you. Can I say something before? But I mean, I'm sorry. I was gonna say, I think we could probably even keep talking about 3, Johnny's comment, because it's yeah. There's a lot to go off of there. But to go back to the Green Box problem something that occurs to me would be to just ask real fast. Can you repeat that? And then maybe they would repeat it, and then it would give them that credit.
+
+82
+00:10:00.500 --> 00:10:04.320
+Conor Healy: I like that. Thank you. Yeah.
+
+83
+00:10:05.170 --> 00:10:10.900
+Conor Healy: This is where I need to deal with the multiple screens issues that I have because I need to write stuff down.
+
+84
+00:10:11.360 --> 00:10:16.779
+Conor Healy: the the last couple of thoughts. And then I could bring everybody back. And we can talk about stuff.
+
+85
+00:10:16.930 --> 00:10:19.530
+Conor Healy: one of the challenges of Zoom is, people can change their name.
+
+86
+00:10:20.770 --> 00:10:23.710
+Conor Healy: and I haven't run into name collision
+
+87
+00:10:23.740 --> 00:10:26.439
+Conor Healy: where somebody changes their name.
+
+88
+00:10:29.350 --> 00:10:30.479
+Conor Healy: What happens if I do this?
+
+89
+00:10:32.160 --> 00:10:42.920
+Conor Healy: I have a hee him issue. But I'm I'm sitting here. I've become Ryan but I do have things where people go by different names, or they're logged in on computers that don't have that. And
+
+90
+00:10:43.000 --> 00:10:55.839
+Conor Healy: this step is integral to it to being able to do that where I have their zoom name and their formal name, and I can match them up, which allows me to tie it back to the student in the roster, and, more importantly, d dupe them across class sessions
+
+91
+00:10:56.090 --> 00:10:59.760
+Conor Healy: if their name changes, I want to make sure that Ryan, as Ryan threw up
+
+92
+00:11:03.120 --> 00:11:14.380
+Conor Healy: so ultimately, I get a summary. And I can start doing analytics like having charts of who participated and who didn't. And final reports.
+
+93
+00:11:14.560 --> 00:11:17.630
+Conor Healy: Are there any questions about this
+
+94
+00:11:17.640 --> 00:11:19.180
+Conor Healy: data and nerdy stuff.
+
+95
+00:11:20.420 --> 00:11:30.919
+Shreeharsh Kelkar: What happens when breakout rooms? How would does this work for breakout rooms or just for the main room?
+
+96
+00:11:31.870 --> 00:11:34.190
+Shreeharsh Kelkar: Only the main room. Okay?
+
+97
+00:11:35.350 --> 00:11:41.949
+Conor Healy: Which is a huge limitation, and it's a question of I can get value out of it. But what anybody else or do? Is it like? Is it
+
+98
+00:11:41.980 --> 00:11:44.349
+Conor Healy: insufficient to meet that need? That's a big question.
+
+99
+00:11:48.630 --> 00:11:50.590
+Conor Healy: Cool? Yes.
+
+100
+00:12:03.570 --> 00:12:05.880
+Conor Healy: Can those in the call here?
+
+101
+00:12:07.070 --> 00:12:08.480
+Conor Healy: Okay, then
+
+102
+00:12:08.760 --> 00:12:15.620
+Conor Healy: why don't we just spin into that as a conversation, and I'll I'll go ahead and stop the Zoom Meeting, and everybody can come join.
+
