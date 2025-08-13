@@ -204,3 +204,78 @@ What
 
 Acceptance
 - Link present and working; template accessible via `system.file()`.
+
+## Document privacy-aware name matching workflow
+Labels: docs, privacy, reference
+
+Why
+- New name-matching functions and privacy checks were added on main. Users need clear guidance.
+
+What
+- Document `safe_name_matching_workflow()`, `prompt_name_matching()`, `validate_privacy_compliance()`, and related helpers (e.g., `hash_name_consistently()`).
+- Clarify expected inputs/outputs, privacy guarantees, and typical failure modes.
+
+Acceptance
+- Help pages describe parameters, return values, and privacy behavior, with runnable examples using bundled data.
+
+## Add vignette: Privacy-aware name matching
+Labels: docs, vignettes, privacy
+
+Why
+- Provide an end-to-end, FERPA-conscious workflow for matching transcript names to rosters.
+
+What
+- New vignette that walks through: extracting names, matching with privacy, handling unmatched names, validating compliance, and exporting masked outputs.
+
+Acceptance
+- Vignette builds; linked from README and pkgdown under a new "Name Matching & Privacy" section.
+
+## Update README with name matching quickstart and links
+Labels: docs, readme, privacy
+
+Why
+- Surface the new, safer matching workflow to first-time users.
+
+What
+- Add a short quickstart snippet for `safe_name_matching_workflow()` and link to the new vignette.
+- Mention privacy defaults and how matching respects masking.
+
+Acceptance
+- README renders with the snippet; links resolve to the vignette and reference topics.
+
+## Document dataset: section_names_lookup
+Labels: docs, reference, data
+
+Why
+- A new data object `section_names_lookup` was added and should be documented for users/tests.
+
+What
+- Ensure `R/data.R` roxygen for `section_names_lookup` is complete (title, description, format, examples).
+- Confirm `man/section_names_lookup.Rd` renders correctly and examples run.
+
+Acceptance
+- Data object appears on pkgdown; help page is complete with runnable examples.
+
+## Update pkgdown reference groups for Name Matching & Privacy
+Labels: docs, pkgdown, privacy
+
+Why
+- Improve discoverability of the new API surface.
+
+What
+- Update `_pkgdown.yml` to add a "Name Matching & Privacy" reference group containing the new functions.
+
+Acceptance
+- Pkgdown site shows the new group; functions appear under it.
+
+## Document real-world testing scripts and workflow
+Labels: docs
+
+Why
+- New scripts under `scripts/real_world_testing/` enable realistic validation and should be discoverable.
+
+What
+- Add a short docs page (or README section) explaining how to run the real-world tests, required inputs, and expected outputs.
+
+Acceptance
+- Users can follow the docs to run the scripts and reproduce expected artifacts.
