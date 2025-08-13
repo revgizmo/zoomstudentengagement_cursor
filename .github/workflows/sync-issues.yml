@@ -32,4 +32,8 @@ jobs:
         run: |
           chmod +x scripts/create_issues_from_plan.sh
           if [ "${{ github.event.inputs.update }}" = "true" ]; then export UPDATE_IF_EXISTS=1; fi
-          scripts/create_issues_from_plan.sh "${{ github.event.inputs.plan_path }}" "${{ github.event.inputs.milestone }}" "${{ github.event.inputs.tracking_title }}"
+          scripts/create_issues_from_plan.sh "${{ github.event.inputs.plan_path }}" "${{ github.event.inputs.milestone }}" "${{ github.event.inputs.tracking_title }}" || {
+            echo "Sync failed; trying again with sanitized titles (URL-encoded search)";
+            sed -i 's/curl -sS \"\${API}\/search\/issues\?q=.*/curl -sS --get \"\${API}\/search\/issues\" \"\${HEADERS[@]}\" \\\n    --data-urlencode \"q=repo:\${REPO} in:title \$title\"\)/' scripts/create_issues_from_plan.sh;
+            scripts/create_issues_from_plan.sh "${{ github.event.inputs.plan_path }}" "${{ github.event.inputs.milestone }}" "${{ github.event.inputs.tracking_title }}";
+          }
