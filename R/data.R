@@ -28,5 +28,8 @@
 #' head(lookup)
 #' }
 #'
+#' @docType data
+#' @name section_names_lookup
+#' @usage data(section_names_lookup)
 #' @keywords datasets
 "section_names_lookup"
