@@ -30,7 +30,7 @@ echo ""
 
 # Run the R analysis script
 echo "Running Phase 1 analysis..."
-Rscript phase1_user_experience_analysis.R
+Rscript phase1_simple_analysis.R
 
 echo ""
 echo "=== Phase 1 Analysis Complete ==="
