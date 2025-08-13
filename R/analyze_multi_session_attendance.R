@@ -35,6 +35,7 @@
 #' print(results$attendance_summary)
 #' }
 #'
+#' @importFrom stats median sd
 #' @export
 analyze_multi_session_attendance <- function(
     transcript_files,

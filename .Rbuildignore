@@ -88,4 +88,18 @@
 # Development planning files
 ^ISSUE_128_RESOLUTION_PLAN\.md$
 
+# Additional non-standard top-level files to exclude
+^AI_AGENT_PROMPT_GENERATOR\.md$
+^AI_CHAT_PROMPT_ISSUE_115_INVESTIGATION\.md$
+^IMPLEMENTATION_CUSTOMIZATION_GUIDE\.md$
+^ISSUE_129_UPDATED_PLAN\.md$
+^ISSUE_160_CONSOLIDATED_PLAN\.md$
+^ISSUE_160_DOCUMENTATION_CLEANUP_SUMMARY\.md$
+^ISSUE_160_PHASE2B_IMPLEMENTATION_GUIDE\.md$
+^PROJECT_MANAGEMENT_WORKFLOW_GUIDE\.md$
+^my_data$
+^test_data_large\.rds$
+^test_data_medium\.rds$
+^test_data_very_large\.rds$
+
 
