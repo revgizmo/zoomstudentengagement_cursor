@@ -279,3 +279,48 @@ What
 
 Acceptance
 - Users can follow the docs to run the scripts and reproduce expected artifacts.
+
+## Enforce strict input validation in transcript functions
+Labels: docs, reference
+
+Why
+- Improve UX and predictability by failing fast on missing/invalid inputs.
+
+What
+- In `summarize_transcript_metrics()` and related loaders/processors, emit clear `stop()` errors when:
+  - `transcript_file_path` does not exist and `transcript_df` is NULL
+  - File extension is unsupported
+- Document the error behavior explicitly in roxygen and README (Troubleshooting section).
+
+Acceptance
+- Functions error with actionable messages; tests cover negative cases; docs reflect behavior.
+
+## Auto-detect unsupported Zoom file types with guidance
+Labels: docs, reference, privacy
+
+Why
+- Users often pass `.cc.vtt` or chat logs. We should detect and guide them.
+
+What
+- Detect common unsupported types (e.g., `.cc.vtt`, `newChat.txt`) and fail with a message that explains:
+  - Current support status
+  - How to obtain `.transcript.vtt`
+  - Link to docs and roadmap
+- Add a short troubleshooting entry in README and vignette.
+
+Acceptance
+- Passing unsupported files yields a clear error with next steps; docs provide guidance.
+
+## Add a one-call orchestration helper
+Labels: docs, reference
+
+Why
+- Reduce friction for first-time users; provide a battery-included workflow.
+
+What
+- Add `analyze_transcripts()` (or similar) to run: load → process → summarize → optional plot, using a directory of transcripts and optional roster/mapping.
+- Ensure privacy defaults are respected and outputs are masked by default.
+- Document in README quickstart, with a minimal example.
+
+Acceptance
+- Function exists with sensible params and returns a tibble/ggplot; example runs with bundled sample data.
