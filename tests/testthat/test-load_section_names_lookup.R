@@ -45,8 +45,10 @@ test_that("lookup file with wrong types causes clear error", {
   on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
 
   good_header <- paste(
-    c("course_section", "day", "time", "course", "section",
-      "preferred_name", "formal_name", "transcript_name", "student_id"),
+    c(
+      "course_section", "day", "time", "course", "section",
+      "preferred_name", "formal_name", "transcript_name", "student_id"
+    ),
     collapse = ","
   )
   path <- file.path(tmpdir, "section_names_lookup.csv")
@@ -58,7 +60,7 @@ test_that("lookup file with wrong types causes clear error", {
   )
   writeLines(lines, con = path)
 
-expect_error(
+  expect_error(
     load_section_names_lookup(data_folder = tmpdir),
     regexp = "Column 'preferred_name' must be of type character",
     fixed = FALSE
