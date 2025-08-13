@@ -13,6 +13,10 @@ on:
       tracking_title:
         description: Tracking issue title (optional; overrides plan front matter)
         required: false
+      update:
+        description: Update existing issues (labels/milestone/body) if titles match
+        required: false
+        default: 'false'
 
 jobs:
   sync:
@@ -24,4 +28,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x scripts/create_issues_from_plan.sh
+          if [ "${{ github.event.inputs.update }}" = "true" ]; then export UPDATE_IF_EXISTS=1; fi
           scripts/create_issues_from_plan.sh "${{ github.event.inputs.plan_path }}" "${{ github.event.inputs.milestone }}" "${{ github.event.inputs.tracking_title }}"
