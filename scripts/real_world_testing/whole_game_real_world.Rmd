@@ -453,7 +453,6 @@ cat("- transcript_name: The name as it appears in Zoom\n")
 cat("- preferred_name: The instructor's preferred name\n")
 cat("- participant_type: 'instructor'\n")
 ```
-```
 
 ## Step 3: Loading Your Student Roster
 
