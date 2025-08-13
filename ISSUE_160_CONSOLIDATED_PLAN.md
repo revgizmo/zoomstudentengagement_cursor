@@ -31,6 +31,19 @@ Issue #160 has been **successfully analyzed** with Phase 1 complete. The privacy
 - Lookup file validation could be enhanced
 - Error messages could be more specific
 
+## 🔗 **Dependencies and Coordination**
+
+### **Critical Dependencies**
+- **Issue #129**: Real-world testing with confidential data - Coordinate timeline
+- **Issue #115**: dplyr to base R conversion - Align with performance improvements
+- **CRAN Notes**: Ensure technical improvements don't create new R CMD check notes
+
+### **Coordination Points**
+- **Week 1**: Focus on Issue #160 Phase 2 implementation
+- **Week 2**: Coordinate with Issue #129 real-world testing
+- **Week 3**: Align with Issue #115 performance improvements
+- **Ongoing**: Monitor for CRAN note impacts
+
 ## 🚀 **Enhanced Phase 2: Hybrid Documentation + Targeted Implementation**
 
 ### **Phase 2A: Documentation and User Guidance (2-3 days)**
@@ -56,27 +69,37 @@ Issue #160 has been **successfully analyzed** with Phase 1 complete. The privacy
 ### **Phase 2B: Targeted Technical Improvements (3-5 days)**
 
 #### **1. Fix Warning Messages**
-- **Issue**: Some sessions produce warnings about missing columns
-- **Solution**: Improve column handling in cross-session scenarios
+- **Specific Issue**: "Unknown or uninitialised column" warnings in cross-session scenarios
+- **Root Cause**: Missing column handling in `safe_name_matching_workflow()`
+- **Solution**: Add column existence checks before processing
+- **Files to Modify**: `R/safe_name_matching_workflow.R`
 - **Impact**: Cleaner user experience, fewer confusing warnings
 
 #### **2. Enhance Empty Roster Handling**
-- **Issue**: Empty roster handling needs review
-- **Solution**: Provide clear error messages and recovery guidance
+- **Specific Issue**: Empty roster causes unclear error messages
+- **Root Cause**: No validation for empty roster in workflow
+- **Solution**: Add roster validation with clear error messages
+- **Files to Modify**: `R/safe_name_matching_workflow.R`
 - **Impact**: Better error handling for edge cases
 
 #### **3. Add Lookup File Validation**
-- **Issue**: No validation for lookup file format
+- **Specific Issue**: No validation for lookup file format
+- **Root Cause**: Missing format validation in `load_section_names_lookup()`
 - **Solution**: Add format validation and helpful error messages
+- **Files to Modify**: `R/load_section_names_lookup.R`
 - **Impact**: Users get immediate feedback on file format issues
 
 #### **4. Improve Error Messages**
-- **Issue**: Error messages could be more specific
+- **Specific Issue**: Error messages could be more specific and actionable
+- **Root Cause**: Generic error messages in multiple functions
 - **Solution**: Enhance error messages with actionable guidance
+- **Files to Modify**: `R/safe_name_matching_workflow.R`, `R/load_section_names_lookup.R`
 - **Impact**: Users can resolve issues more quickly
 
 #### **5. Optional: Name Matching Confidence Scores**
 - **Enhancement**: Add confidence scores for name matching suggestions
+- **Implementation**: Extend `find_roster_match()` function
+- **Files to Modify**: `R/safe_name_matching_workflow.R`
 - **Impact**: Users can make informed decisions about name mappings
 
 ### **Phase 2C: Integration and Testing (2-3 days)**
@@ -96,6 +119,26 @@ Issue #160 has been **successfully analyzed** with Phase 1 complete. The privacy
 - Create migration guide for existing users
 - Update vignettes with enhanced examples
 
+## ⚠️ **Risk Assessment and Mitigation**
+
+### **Technical Risks**
+- **Risk**: Technical changes could break existing functionality
+- **Mitigation**: Comprehensive testing with existing scenarios
+- **Risk**: Performance impact of new validation
+- **Mitigation**: Profile changes and optimize if needed
+
+### **User Experience Risks**
+- **Risk**: Documentation changes could confuse existing users
+- **Mitigation**: Create migration guide and maintain backward compatibility
+- **Risk**: New error messages might be too verbose
+- **Mitigation**: User testing and feedback incorporation
+
+### **Integration Risks**
+- **Risk**: Conflicts with Issue #115 dplyr to base R conversion
+- **Mitigation**: Coordinate implementation timeline
+- **Risk**: New CRAN notes from technical changes
+- **Mitigation**: Test R CMD check after each change
+
 ## 🎯 **Implementation Timeline**
 
 ### **Week 1: Enhanced Phase 2 Implementation**
@@ -109,6 +152,8 @@ Issue #160 has been **successfully analyzed** with Phase 1 complete. The privacy
 - [ ] Real-world testing validates all improvements
 - [ ] Documentation is comprehensive and user-friendly
 - [ ] No regression in existing functionality
+- [ ] No new CRAN notes introduced
+- [ ] Performance maintained or improved
 
 ## 🚫 **Avoiding Bloat and Over-Engineering**
 
@@ -156,6 +201,7 @@ Issue #160 has been **successfully analyzed** with Phase 1 complete. The privacy
 - Performance testing for large datasets
 - Backward compatibility confirmed
 - No regression in existing functionality
+- R CMD check passes with no new notes
 
 ### **Documentation Requirements**
 - Clear and actionable user guidance
@@ -177,6 +223,7 @@ Issue #160 has been **successfully analyzed** with Phase 1 complete. The privacy
 - **Technical Quality**: No warnings or errors in normal operation
 - **Privacy Compliance**: All outputs maintain privacy settings
 - **Documentation**: Clear guidance for all common scenarios
+- **CRAN Readiness**: No new notes or errors introduced
 
 ## 🎯 **Conclusion**
 
