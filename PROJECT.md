@@ -5,6 +5,8 @@
 ## Overview
 A package to analyze and visualize student engagement from Zoom transcripts, aimed at instructors and educational researchers.
 
+- See also: `docs/planning/SPINOFF_PROJECTS_PLAN.md` for the spin-off projects roadmap and grouped issues.
+
 ## Goals
 - Prepare for CRAN submission
 - Improve documentation and usability
