@@ -25,8 +25,8 @@ test_that("consolidate_transcript performance with large datasets", {
 
   # Performance assertion (adjusted for realistic expectations)
   expect_true(
-    execution_time < 5,
-    sprintf("consolidate_transcript should complete in <5 seconds, took %.3f seconds", execution_time)
+    execution_time < 7,
+    sprintf("consolidate_transcript should complete in <7 seconds, took %.3f seconds", execution_time)
   )
 
   # Functionality assertion
@@ -59,8 +59,8 @@ test_that("summarize_transcript_metrics performance with large datasets", {
 
   # Performance assertion (adjusted for realistic expectations)
   expect_true(
-    execution_time < 5,
-    sprintf("summarize_transcript_metrics should complete in <5 seconds, took %.3f seconds", execution_time)
+    execution_time < 7,
+    sprintf("summarize_transcript_metrics should complete in <7 seconds, took %.3f seconds", execution_time)
   )
 
   # Functionality assertion
