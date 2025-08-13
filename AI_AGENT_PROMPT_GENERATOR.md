@@ -14,6 +14,7 @@ When a user asks: **"Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_
    - Document current status and accomplishments
    - Plan remaining phases with timelines
    - Include technical requirements and success criteria
+   - Save the file to the appropriate location for this project if it is not `docs/development/`
 
 2. **Create Implementation Guide**: `ISSUE_[NUMBER]_IMPLEMENTATION_GUIDE.md`
    - Provide step-by-step implementation plan
@@ -35,7 +36,7 @@ Context files to link:
 - @PROJECT.md (Project status and CRAN readiness)
 - @full-context.md (Complete project context)
 - @ISSUE_[NUMBER]_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
-- @docs/development/ISSUE_[NUMBER]_CONSOLIDATED_PLAN.md (Overall plan)
+- @ISSUE_[NUMBER]_CONSOLIDATED_PLAN.md (Overall plan)
 
 Your task: Follow the implementation guide to complete [PHASE] of Issue #[NUMBER].
 
@@ -102,7 +103,7 @@ Context files to link:
 - @PROJECT.md (Project status and CRAN readiness)
 - @full-context.md (Complete project context)
 - @ISSUE_160_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
-- @docs/development/ISSUE_160_CONSOLIDATED_PLAN.md (Overall plan)
+- @dISSUE_160_CONSOLIDATED_PLAN.md (Overall plan)
 
 Your task: Follow the implementation guide to complete Phase 2 of Issue #160.
 
