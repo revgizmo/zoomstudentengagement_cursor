@@ -1,3 +1,49 @@
+test_that("empty roster triggers informative error", {
+  tmp <- tempfile(fileext = ".vtt")
+  writeLines("", tmp)
+
+  empty_roster <- data.frame(stringsAsFactors = FALSE)
+
+  expect_error(
+    safe_name_matching_workflow(
+      transcript_file_path = tmp,
+      roster_data = empty_roster
+    ),
+    regexp = "Roster data appears empty or lacks required name columns",
+    fixed = FALSE
+  )
+})
+
+test_that("roster without non-empty names triggers informative error", {
+  tmp <- tempfile(fileext = ".vtt")
+  writeLines("", tmp)
+
+  roster_blank <- data.frame(
+    first_last = c(" ", NA_character_),
+    stringsAsFactors = FALSE
+  )
+
+  expect_error(
+    safe_name_matching_workflow(
+      transcript_file_path = tmp,
+      roster_data = roster_blank
+    ),
+    regexp = "Roster data appears empty or lacks required name columns",
+    fixed = FALSE
+  )
+})
+
+test_that("process_transcript_with_privacy errors when transcript lacks name column", {
+  transcript_df <- data.frame(message = c("Hello", "World"), stringsAsFactors = FALSE)
+  roster_df <- data.frame(first_last = c("Alice A", "Bob B"), stringsAsFactors = FALSE)
+
+  expect_error(
+    process_transcript_with_privacy(transcript_df, roster_df),
+    regexp = "No name column found in transcript data",
+    fixed = TRUE
+  )
+})
+
 test_that("safe_name_matching_workflow validates inputs correctly", {
   # Test invalid transcript_file_path
   expect_error(
