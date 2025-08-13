@@ -19,7 +19,7 @@
 #' \dontrun{
 #' # Load the lookup data
 #' lookup <- load_section_names_lookup()
-#' 
+#'
 #' # View the structure
 #' head(lookup)
 #' }
