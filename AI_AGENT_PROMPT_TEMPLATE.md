@@ -2,9 +2,17 @@
 
 ## 🎯 **Quick Usage**
 
-**Simply ask an AI: "Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_TEMPLATE.md"**
+**Step 1: Ask AI to create planning documents**
+```
+"Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_TEMPLATE.md"
+```
 
-The AI will generate a complete prompt ready to copy to a new AI chat.
+**Step 2: Ask AI to provide short message**
+```
+"Now give me a short message to copy to the new AI chat"
+```
+
+The AI will first create detailed planning documents, then provide a concise message for the new AI agent.
 
 ## 📋 **Template Variables**
 
@@ -147,10 +155,11 @@ git push -u origin feature/issue-90-documentation-docs
 
 ## 🎯 **Workflow**
 
-1. **Ask AI to generate prompt**: "Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_TEMPLATE.md"
-2. **AI creates required files**: Consolidated plan and implementation guide
-3. **Copy generated prompt** to a new AI chat
-4. **Monitor progress** and provide guidance
+1. **Ask AI to create planning documents**: "Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_TEMPLATE.md"
+2. **AI creates detailed files**: Consolidated plan and implementation guide
+3. **Ask AI for short message**: "Now give me a short message to copy to the new AI chat"
+4. **Copy short message** to a new AI chat
+5. **Monitor progress** and provide guidance
 
 ## 📝 **Required Files to Create**
 
@@ -164,17 +173,52 @@ Provides specific instructions for the next AI agent.
 
 ## 💡 **Pro Tips**
 
-- **Keep it simple** - Just ask the AI to generate the prompt
+- **Two-step process** - First create documents, then get short message
 - **Be specific** - Include the issue number and phase description
 - **Let AI handle details** - The AI will create all required files
-- **Copy and go** - The generated prompt is ready to use
+- **Short message** - Keep the chat message concise and actionable
 
 ## 🎯 **Example Usage**
 
 ```
 User: "Make me a prompt for issue 160 phase 2 with @AI_AGENT_PROMPT_TEMPLATE.md"
+AI: [Creates detailed consolidated plan and implementation guide]
 
-AI: [Generates complete prompt with all files created]
+User: "Now give me a short message to copy to the new AI chat"
+AI: [Provides concise message ready to copy/paste]
+```
+
+## 📝 **Short Message Format**
+
+The short message should be **concise and actionable**:
+
+```
+Mission: Implement Phase 2 of Issue #160 for implementation.
+
+FIRST: Create new branch for this work:
+git checkout -b feature/issue-160-Phase-2-implementation
+git push -u origin feature/issue-160-Phase-2-implementation
+
+Context files to link:
+- @PROJECT.md (Project status and CRAN readiness)
+- @full-context.md (Complete project context)
+- @ISSUE_160_IMPLEMENTATION_GUIDE.md (MAIN IMPLEMENTATION GUIDE)
+- @docs/development/ISSUE_160_CONSOLIDATED_PLAN.md (Overall plan)
+
+Your task: Follow the implementation guide to complete Phase 2 of Issue #160.
+
+Focus: implementation work for Issue #160 Phase 2
+
+Key requirements:
+- Follow project coding standards and privacy-first approach
+- Implement functionality according to specifications
+- Create comprehensive documentation
+- Test thoroughly with realistic scenarios
+- Ensure CRAN compliance
+
+Success criteria: Phase 2 completed, documented, tested, and ready for review.
+
+Start with the implementation guide and follow the step-by-step plan.
 ```
 
 ---
