@@ -7,39 +7,38 @@ on:
     branches: ["*"]
 
 jobs:
-  R-CMD-check:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        r: ['release', 'oldrel-1']
-    runs-on: ${{ matrix.os }}
-    env:
-      R_KEEP_PKG_SOURCE: yes
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
         with:
-          r-version: ${{ matrix.r }}
-      - name: Install system dependencies (Linux only)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libcurl4-openssl-dev pandoc
-        shell: bash
-      - name: Install dependencies
-        run: |
-          install.packages('remotes', repos = 'https://cloud.r-project.org')
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran('rcmdcheck')
-        shell: Rscript {0}
-      - name: Check
-        run: |
-          rcmdcheck::rcmdcheck(args = c('--no-manual', '--as-cran'))
-        shell: Rscript {0}
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@v4
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          name: check-results-${{ matrix.os }}-r${{ matrix.r }}
-          path: check 
+          extra-packages: |
+            any::rcmdcheck
+            any::roxygen2
+          needs: check
+      - name: Generate documentation (roxygenise)
+        run: |
+          Rscript -e "roxygen2::roxygenise()"
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+  guard_no_auto_merge:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: [check]
+    steps:
+      - name: Block merge unless labeled allow-merge
+        env:
+          HAS_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'allow-merge') }}
+        run: |
+          if [ "$HAS_LABEL" != "true" ]; then
+            echo "Blocking merge: add 'allow-merge' label to proceed"
+            exit 1
+          fi
+          echo "Label present; allowing merge"

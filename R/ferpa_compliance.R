@@ -48,6 +48,10 @@ validate_ferpa_compliance <- function(data,
   institution_type <- match.arg(institution_type)
   retention_period <- match.arg(retention_period)
 
+  if (!is.data.frame(data)) {
+    abort_zse("`data` must be a data.frame or tibble", class = "zse_input_error")
+  }
+
   # Initialize results
   result <- list(
     compliant = TRUE,

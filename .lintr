@@ -1,1 +1,6 @@
-linters: linters_with_defaults(line_length_linter = NULL, object_length_linter = NULL, object_usage_linter = NULL, commented_code_linter = NULL, indentation_linter = NULL, return_linter = NULL, object_name_linter = NULL) 
+linters: linters_with_defaults(
+  # Keep line_length_linter disabled to avoid noisy diffs in roxygen and vignettes
+  line_length_linter = NULL,
+  # Keep object_length_linter relaxed; package exports can be verbose
+  object_length_linter = NULL
+) 

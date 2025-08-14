@@ -33,7 +33,7 @@ load_session_mapping <- function(
 
   # Check if mapping file exists
   if (!file.exists(mapping_file)) {
-    stop("Session mapping file not found: ", mapping_file)
+    abort_zse(paste0("Session mapping file not found: ", mapping_file), class = "zse_input_error")
   }
 
   # Load mapping file with proper column types (flexible for optional columns)
@@ -59,9 +59,9 @@ load_session_mapping <- function(
   )
   missing_cols <- setdiff(required_cols, names(mapping_df))
   if (length(missing_cols) > 0) {
-    stop(
-      "Session mapping file missing required columns: ",
-      paste(missing_cols, collapse = ", ")
+    abort_zse(
+      paste0("Session mapping file missing required columns: ", paste(missing_cols, collapse = ", ")),
+      class = "zse_schema_error"
     )
   }
 
@@ -85,12 +85,12 @@ load_session_mapping <- function(
   # Merge with Zoom recordings if provided using base R instead of dplyr
   if (!is.null(zoom_recordings_df)) {
     if (!tibble::is_tibble(zoom_recordings_df)) {
-      stop("zoom_recordings_df must be a tibble")
+      abort_zse("zoom_recordings_df must be a tibble", class = "zse_input_error")
     }
 
     # Ensure ID column exists in zoom_recordings_df
     if (!"ID" %in% names(zoom_recordings_df)) {
-      stop("zoom_recordings_df must contain 'ID' column")
+      abort_zse("zoom_recordings_df must contain 'ID' column", class = "zse_schema_error")
     }
 
     # Merge mapping with recordings using base R instead of dplyr to avoid segmentation fault
@@ -188,5 +188,5 @@ load_session_mapping <- function(
   }
 
   # Return just the mapping if no recordings provided
-  mapping_df
+  tibble::as_tibble(mapping_df)
 }
