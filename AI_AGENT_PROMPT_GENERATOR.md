@@ -4,7 +4,7 @@
 
 ## 🎯 **Instructions for AI Agent**
 
-When a user asks: **"Make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_TEMPLATE.md"**
+When a user asks: **"Please make me a prompt for issue [NUMBER] [PHASE] with @AI_AGENT_PROMPT_GENERATOR.md"**
 
 **Complete these steps automatically:**
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
-suppressPackageStartupMessages(library(zoomstudentengagement))
+# Load the package in development mode
+suppressPackageStartupMessages(devtools::load_all())
 suppressPackageStartupMessages(library(tibble))
 
 args <- commandArgs(trailingOnly = TRUE)

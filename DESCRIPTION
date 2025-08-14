@@ -1,7 +1,7 @@
 Package: zoomstudentengagement
 Type: Package
 Title: Zoom Student Engagement
-Version: 0.1.2
+Version: 1.0.0
 Author: Conor Healy
 Maintainer: Conor Healy <conorhealy@berkeley.edu>
 Description: Takes Zoom transcripts and student rosters,

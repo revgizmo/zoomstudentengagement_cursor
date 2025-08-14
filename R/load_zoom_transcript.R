@@ -34,13 +34,13 @@ load_zoom_transcript <- function(transcript_file_path) {
     prior_dead_air <- start <- timestamp <- wordcount <- prior_speaker <- NULL
 
   if (!file.exists(transcript_file_path)) {
-    stop("file.exists(transcript_file_path) is not TRUE")
+    abort_zse("file.exists(transcript_file_path) is not TRUE", class = "zse_input_error")
   }
 
   # Read the first line to validate VTT format
   first_line <- readLines(transcript_file_path, n = 1)
   if (first_line != "WEBVTT") {
-    stop("File does not appear to be a valid VTT file. Expected first line to be 'WEBVTT', got: '", first_line, "'")
+    abort_zse(paste0("Invalid VTT: expected 'WEBVTT', got '", first_line, "'"), class = "zse_input_error")
   }
 
   transcript_file <- basename(transcript_file_path)
@@ -117,6 +117,8 @@ load_zoom_transcript <- function(transcript_file_path) {
     return(NULL)
   }
 
-  # Convert to tibble to maintain expected return type
-  return(tibble::as_tibble(result))
+  # Convert to tibble to maintain expected return type and validate minimal shape
+  result <- tibble::as_tibble(result)
+  try(validate_schema(result, c("transcript_file", "comment_num", "name", "comment", "start", "end", "duration", "wordcount")), silent = TRUE)
+  return(result)
 }

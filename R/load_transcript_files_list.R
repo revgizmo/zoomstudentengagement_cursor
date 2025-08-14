@@ -57,6 +57,10 @@ load_transcript_files_list <-
 
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
+    if (!dir.exists(transcripts_folder_path)) {
+      return(NULL)
+    }
+
     if (file.exists(transcripts_folder_path)) {
       transcript_files <- list.files(
         transcripts_folder_path,
@@ -115,9 +119,9 @@ load_transcript_files_list <-
           }
         }
 
-        return(result)
+        return(tibble::as_tibble(result))
       } else {
-        return(data.frame())
+        return(tibble::as_tibble(data.frame()))
       }
     }
   }

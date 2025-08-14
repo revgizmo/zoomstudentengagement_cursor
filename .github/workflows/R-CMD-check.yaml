@@ -25,14 +25,17 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libcurl4-openssl-dev pandoc
-        shell: bash
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
       - name: Install dependencies
         run: |
           install.packages('remotes', repos = 'https://cloud.r-project.org')
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran('rcmdcheck')
+          remotes::install_cran('roxygen2')
         shell: Rscript {0}
+      - name: Generate documentation (roxygenise)
+        run: |
+          Rscript -e "roxygen2::roxygenise()"
       - name: Check
         run: |
           rcmdcheck::rcmdcheck(args = c('--no-manual', '--as-cran'))
@@ -42,4 +45,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: check-results-${{ matrix.os }}-r${{ matrix.r }}
-          path: check 
+          path: check
+  guard_no_auto_merge:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: [R-CMD-check]
+    steps:
+      - name: Prevent auto-merge on PRs (intentional fail)
+        run: |
+          echo "Failing guard to prevent auto-merge during refactor"
+          exit 1
