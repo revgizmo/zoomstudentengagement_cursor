@@ -512,3 +512,85 @@ For feature requests, include:
 - Write comprehensive documentation
 - Maintain high test coverage
 - Regular code reviews and updates 
+
+## Branch Management and Workflow Best Practices
+
+### Branch Lifecycle Management
+
+#### **Regular Branch Pruning**
+- **Check merged branches**: `git branch -r --merged origin/main`
+- **Verify unmerged work**: `git log --oneline <branch> --not origin/main`
+- **Prune remote references**: `git fetch --prune`
+- **Document decisions**: Record branch pruning rationale
+
+#### **Branch Status Analysis**
+```bash
+# List all remote branches
+git branch -r
+
+# Check which branches are merged
+git branch -r --merged origin/main
+
+# See commits ahead of main
+git log --oneline <branch> --not origin/main
+
+# View commit statistics
+git show --stat <commit-hash>
+```
+
+### Pull Request Workflow
+
+#### **Pre-PR Validation**
+```bash
+# Run comprehensive validation
+Rscript scripts/pre-pr-validation.R
+
+# Commit context updates
+git add docs/development/archive/issue-160/README.md
+git commit -m "chore(context): save context files before PR"
+
+# Push to remote
+git push origin <branch-name>
+```
+
+#### **PR Creation and Merge**
+```bash
+# Create PR with detailed description
+gh pr create --title "type: description" --body "## Summary..."
+
+# Merge with admin override (if needed)
+gh pr merge <PR_NUMBER> --merge --admin
+
+# Clean up local branch
+git checkout main
+git pull origin main
+git branch -d <branch-name>
+```
+
+### Git Merge Strategy Insights
+
+#### **Automatic Conflict Resolution**
+- **ORT Strategy**: Git's "Ostensibly Recursive's Twin" strategy can automatically handle compatible changes
+- **No Manual Resolution**: Sometimes what appears to be conflicts are actually compatible changes
+- **Smart Merging**: Git recognizes when changes can be merged without manual intervention
+
+#### **Best Practices**
+- **Always test merges**: Use `git merge main` to test compatibility
+- **Document findings**: Record lessons learned about merge strategies
+- **Regular cleanup**: Prevent repository bloat with systematic pruning
+
+### Recent Branch Pruning Experience (2025-08-13)
+
+#### **Successfully Pruned Branches**
+- ✅ `origin/feature/status-update-2025-08-08` - Status documentation (merged)
+- ✅ `origin/fix/name-matching-privacy-masking-issue-160` - Privacy implementation (merged)  
+- ✅ `origin/cursor/prepare-product-requirements-document-for-realignment-e85c` - PRD updates (merged)
+- ✅ `origin/cursor/user-perspective-review-of-r-package-45f9` - Issue backup functionality (merged)
+
+#### **Key Learnings**
+1. **Git Merge Strategy Sophistication**: ORT strategy automatically handled "conflicts" that weren't actually conflicts
+2. **Compatible Changes**: Despite overlapping work, changes were compatible and merged cleanly
+3. **Automatic Conflict Resolution**: Git recognized that changes could be merged without manual intervention
+4. **Branch Lifecycle Management**: Regular pruning prevents repository bloat and confusion
+
+For detailed refactoring roadmap and branch management tasks, see [`.github/ISSUES/refactor/011-repo-hygiene-and-data.md`](.github/ISSUES/refactor/011-repo-hygiene-and-data.md). 
