@@ -5,12 +5,14 @@
 ## Overview
 A package to analyze and visualize student engagement from Zoom transcripts, aimed at instructors and educational researchers.
 
+- See also: `docs/planning/SPINOFF_PROJECTS_PLAN.md` for the spin-off projects roadmap and grouped issues.
+
 ## Goals
 - Prepare for CRAN submission
 - Improve documentation and usability
 - Ensure robust testing and error handling
 
-## Current Status (Updated: 2025-08-13)
+## Current Status (Updated: 2025-08-14)
 **Package Status: EXCELLENT - Very Close to CRAN Ready**
 
 ### 🚨 **Critical Ethical Research Findings**
@@ -52,6 +54,9 @@ A comprehensive ethical analysis conducted on 2025-08-04 revealed **CATASTROPHIC
 - **Master Audit**: Comprehensive codebase audit completed ([Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) - CLOSED)
 - **Vignettes**: Complete vignette suite created and deployed to GitHub Pages ([Issue #45](https://github.com/revgizmo/zoomstudentengagement/issues/45) - CLOSED)
 - **Privacy Implementation**: Privacy-first MVP implemented with `ensure_privacy()` and `set_privacy_defaults()` functions
+ - **API Consolidation & Privacy Tools**: Unified user-facing APIs with `plot_users()`, `write_metrics()`, and `analyze_transcripts()`; legacy plotting/writing functions now delegate for backward compatibility. Added `privacy_audit()` and provenance attributes on outputs; standardized metric names to `perc_*` with backward-compatible aliases.
+ - **CI Enhancements**: Added benchmark workflow with configurable performance budgets; expanded R-CMD-check matrix across OS/R versions.
+ - **Traceability Updates**: Filed follow-up issues for hygiene and enforcement: #206 (deprecation badges/timeline), #207 (curate exports), #208 (schema/provenance docs), #209 (benchmark budgets), #210 (edge/error-path tests), #211 (`.Rbuildignore` top-level dirs).
  - **Test Suite**: **1065 tests passing, 0 failures**
  - **R CMD Check**: **0 errors, 0 warnings, 3 notes** (excellent progress!)
  - **Test Coverage**: 93.82% (target achieved)

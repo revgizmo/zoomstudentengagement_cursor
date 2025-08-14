@@ -39,6 +39,7 @@
 ^COMPREHENSIVE_CHECK_RESULTS\.md$
 ^ISSUE_MANAGEMENT_QUICK_REFERENCE\.md$
 ^DOCUMENTATION\.md$
+^backups/
 
 # Test and development scripts
 ^test_script\.R$

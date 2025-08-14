@@ -202,11 +202,11 @@ The summary metrics include:
 
 - **name**: Speaker name
 - **n**: Number of comments
-- **perc_n**: Percentage of total comments
+- **n_perc**: Percentage of total comments
 - **duration**: Total speaking time
-- **perc_duration**: Percentage of total time
+- **duration_perc**: Percentage of total time
 - **wordcount**: Total words spoken
-- **perc_wordcount**: Percentage of total words
+- **wordcount_perc**: Percentage of total words
 - **wpm**: Words per minute
 
 ## Privacy and FERPA Compliance

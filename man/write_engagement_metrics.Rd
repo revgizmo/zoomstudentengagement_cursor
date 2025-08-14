@@ -21,18 +21,5 @@ write_engagement_metrics(
 Invisibly returns the processed data that was written
 }
 \description{
-Export engagement metrics data to CSV format with proper handling of list columns.
-This function converts list columns (like comments) to CSV-compatible formats.
-}
-\examples{
-\dontrun{
-# Load sample data
-transcript_file <- system.file("extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
-  package = "zoomstudentengagement"
-)
-metrics <- summarize_transcript_metrics(transcript_file_path = transcript_file)
-
-# Export to CSV
-write_engagement_metrics(metrics, "engagement_metrics.csv")
-}
+Deprecated: use `write_metrics(data, what = 'engagement', path = ...)` instead.
 }

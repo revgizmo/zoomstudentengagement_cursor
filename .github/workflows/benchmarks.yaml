@@ -1,0 +1,32 @@
+name: Benchmarks
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/benchmarks/**'
+      - 'R/**'
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    env:
+      BUDGET_1: '10'
+      BUDGET_50: '120'
+      BUDGET_500: '1200'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev pandoc
+        shell: bash
+      - name: Install package deps
+        run: |
+          install.packages('remotes', repos = 'https://cloud.r-project.org')
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+      - name: Run benchmark
+        run: |
+          Rscript scripts/benchmarks/bench_transcript_pipeline.R
