@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck", "devtools"))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran(c("knitr", "rmarkdown"))
         shell: Rscript {0}
