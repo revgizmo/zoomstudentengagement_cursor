@@ -155,6 +155,15 @@ For each FR, include acceptance criteria (AC).
   - Given a tibble produced by user-facing functions, `privacy_audit()` reports identifier columns present and masked counts
   - Example audit is included in docs/tests to demonstrate masking is effective by default
 
+### FR-12 Privacy‑Safe Name Matching Workflow
+- Description: A guided, privacy‑aware workflow to resolve unmatched names safely and reproducibly.
+- Functions: `process_transcript_with_privacy()`, `match_names_with_privacy()`, `prompt_name_matching()`
+- AC:
+  - Unmatched name detection generates a lookup CSV (with clear instructions) and never writes unmasked outputs by default
+  - Any temporary visibility needed during matching is scoped to the interactive step and never propagates to writers/plots unless `privacy_level = "none"`
+  - Console guidance and diagnostics are guarded in tests (e.g., respect `Sys.getenv("TESTTHAT")`)
+  - Parameter `unmatched_names_action` supports `"stop"` (default) or `"warn"` with explicit, actionable messages
+
 ### FR-8 Privacy Controls (Default Safe)
 - Description: Global configuration and enforcement hooks.
 - Functions: `set_privacy_defaults()`, `ensure_privacy()`, `.onLoad()`
@@ -198,6 +207,18 @@ For each FR, include acceptance criteria (AC).
   - 50 files ≤ 120 seconds (`BUDGET_50`)
   - 500 files ≤ 1200 seconds (`BUDGET_500`)
 
+### NFR-6 Support Policy
+- R versions: current release and oldrel‑1 (as reflected in CI matrix)
+- Operating systems: Linux, macOS, Windows (as reflected in CI matrix)
+
+### NFR-7 Development Process Gates
+- Before merging to `main`:
+  - Pre‑PR validation passes: tests, vignettes, R CMD check
+  - Docs regenerated (roxygen, README) and committed
+  - Benchmarks within configured budgets; CI fails on regression
+  - No unguarded print/cat/message output in user‑facing paths; tests guard diagnostics
+  - Test coverage ≥ target for exported functions
+
 ---
 
 ## 7) Data Model and Schemas (high level)
@@ -230,6 +251,7 @@ For each FR, include acceptance criteria (AC).
 ### Post-CRAN Minor Releases
 - Performance enhancements and large-dataset tuning
 - Additional input support (e.g., `.cc.vtt`, chat logs) as separate, opt-in features with updated ethics guidance
+- Multi‑session attendance analysis workflow (e.g., `analyze_multi_session_attendance()`), privacy‑verified summaries
 
 ---
 
