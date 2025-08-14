@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
-          install.packages(c("remotes", "rcmdcheck", "devtools"))
+          install.packages(c("remotes", "rcmdcheck", "roxygen2"))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran(c("knitr", "rmarkdown"))
         shell: Rscript {0}
@@ -58,7 +58,7 @@ jobs:
       - name: Generate documentation (roxygenise)
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
-          devtools::document()
+          roxygen2::roxygenise()
         shell: Rscript {0}
 
       - name: Check

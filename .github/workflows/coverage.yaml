@@ -32,14 +32,14 @@ jobs:
       - name: Install dependencies
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
-          install.packages(c("remotes", "covr", "devtools"))
+          install.packages(c("remotes", "covr", "roxygen2"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Generate documentation
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
-          devtools::document()
+          roxygen2::roxygenise()
         shell: Rscript {0}
 
       - name: Run coverage
