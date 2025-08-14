@@ -35,7 +35,6 @@
 #' print(results$attendance_summary)
 #' }
 #'
-#' @importFrom stats median sd
 #' @export
 analyze_multi_session_attendance <- function(
     transcript_files,
@@ -167,8 +166,8 @@ analyze_multi_session_attendance <- function(
     occasional_attendees = length(occasional_attendees),
     one_time_attendees = length(one_time_attendees),
     average_attendance_rate = round(mean(attendance_rates) * 100, 1),
-    median_attendance_rate = round(median(attendance_rates) * 100, 1),
-    attendance_rate_std = round(sd(attendance_rates) * 100, 1)
+    median_attendance_rate = round(stats::median(attendance_rates) * 100, 1),
+    attendance_rate_std = round(stats::sd(attendance_rates) * 100, 1)
   )
 
   # Validate privacy compliance

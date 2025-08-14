@@ -40,6 +40,26 @@ The goal of `zoomstudentengagement` is to allow instructors to gain insights int
 devtools::install_github("revgizmo/zoomstudentengagement")
 ```
 
+### 5-minute whole-game example
+
+```{r quick-whole-game}
+library(zoomstudentengagement)
+
+# 1) Compute metrics for a single transcript
+transcript_file <- system.file(
+  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+  package = "zoomstudentengagement"
+)
+metrics <- summarize_transcript_metrics(transcript_file_path = transcript_file)
+
+# 2) Plot one metric with privacy-first defaults
+plot <- plot_users(metrics, metric = "session_ct", facet_by = "none", mask_by = "name")
+print(plot)
+
+# 3) Write masked metrics to CSV
+invisible(write_metrics(metrics, what = "engagement", path = "engagement_metrics.csv"))
+```
+
 ### Basic Example
 
 ```{r quick-example}
@@ -98,8 +118,9 @@ The `zoomstudentengagement` package provides tools for:
 - `create_session_mapping()` - Map recordings to courses (advanced)
 
 ### Analysis and Visualization
-- `plot_users_by_metric()` - Create engagement visualizations
-- `plot_users_masked_section_by_metric()` - Privacy-conscious plotting
+- `plot_users()` - Unified plotting with privacy-aware options
+- `plot_users_by_metric()` - Legacy plotting API (still available)
+- `plot_users_masked_section_by_metric()` - Legacy plotting API (still available)
 - `make_transcripts_summary_df()` - Generate summary statistics
 
 ## 📊 Typical Workflow

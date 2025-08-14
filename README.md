@@ -4,6 +4,8 @@
   - <a href="#-documentation" id="toc--documentation">📚 Documentation</a>
   - <a href="#-quick-start" id="toc--quick-start">🚀 Quick Start</a>
     - <a href="#installation" id="toc-installation">Installation</a>
+    - <a href="#5-minute-whole-game-example"
+      id="toc-5-minute-whole-game-example">5-minute whole-game example</a>
     - <a href="#basic-example" id="toc-basic-example">Basic Example</a>
   - <a href="#-vignettes" id="toc--vignettes">📖 Vignettes</a>
   - <a href="#-what-the-package-does" id="toc--what-the-package-does">🎯
@@ -52,6 +54,26 @@ participation equity, from Zoom transcripts of recorded course sessions.
 
 ``` r
 devtools::install_github("revgizmo/zoomstudentengagement")
+```
+
+### 5-minute whole-game example
+
+``` r
+library(zoomstudentengagement)
+
+# 1) Compute metrics for a single transcript
+transcript_file <- system.file(
+  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+  package = "zoomstudentengagement"
+)
+metrics <- summarize_transcript_metrics(transcript_file_path = transcript_file)
+
+# 2) Plot one metric with privacy-first defaults
+plot <- plot_users(metrics, metric = "session_ct", facet_by = "none", mask_by = "name")
+print(plot)
+
+# 3) Write masked metrics to CSV
+invisible(write_metrics(metrics, what = "engagement", path = "engagement_metrics.csv"))
 ```
 
 ### Basic Example
@@ -134,8 +156,10 @@ currently supported but may be added in future versions.
 
 ### Analysis and Visualization
 
-- `plot_users_by_metric()` - Create engagement visualizations
-- `plot_users_masked_section_by_metric()` - Privacy-conscious plotting
+- `plot_users()` - Unified plotting with privacy-aware options
+- `plot_users_by_metric()` - Legacy plotting API (still available)
+- `plot_users_masked_section_by_metric()` - Legacy plotting API (still
+  available)
 - `make_transcripts_summary_df()` - Generate summary statistics
 
 ## 📊 Typical Workflow
