@@ -119,6 +119,6 @@ load_zoom_transcript <- function(transcript_file_path) {
 
   # Convert to tibble to maintain expected return type and validate minimal shape
   result <- tibble::as_tibble(result)
-  try(validate_schema(result, c("transcript_file", "comment_num", "name", "comment", "start", "end", "duration", "wordcount")), silent = TRUE)
+  try(validate_schema(result, zse_schema$transcript_processed$required), silent = TRUE)
   return(result)
 }

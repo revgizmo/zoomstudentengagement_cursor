@@ -60,3 +60,18 @@ zse_schema <- list(
     types = list(student_id = "character", preferred_name = "character")
   )
 )
+
+# Processed transcript schema used by load_zoom_transcript()
+# Kept light on types to avoid false positives across R versions
+zse_schema$transcript_processed <- list(
+  required = c(
+    "transcript_file",
+    "comment_num",
+    "name",
+    "comment",
+    "start",
+    "end",
+    "duration",
+    "wordcount"
+  )
+)
