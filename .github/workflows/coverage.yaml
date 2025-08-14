@@ -2,30 +2,65 @@ name: Coverage
 
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
 
 jobs:
   coverage:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    
     steps:
       - uses: actions/checkout@v4
+
       - uses: r-lib/actions/setup-r@v2
         with:
-          use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
+          r-version: 'release'
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Cache R packages
+        uses: actions/cache@v4
         with:
-          extra-packages: any::covr
-          needs: coverage
-      - name: Test coverage
+          path: |
+            ~/.local/share/R
+            ~/.cache/R
+          key: ${{ runner.os }}-coverage-${{ hashFiles('.github/workflows/coverage.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-coverage-
+
+      - name: Install dependencies
         run: |
-          Rscript -e "covr::codecov(quiet = FALSE)"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          install.packages(c("remotes", "covr"))
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Run coverage
+        run: |
+          library(covr)
+          coverage <- package_coverage()
+          print(coverage)
+          
+          # Generate coverage report
+          report <- to_cobertura(coverage)
+          writeLines(report, "coverage.xml")
+          
+          # Check coverage threshold
+          coverage_percent <- attr(coverage, "percent")
+          cat("Coverage is", coverage_percent, "%\n")
+          
+          if (coverage_percent < 90) {
+            cat("Coverage is below 90% threshold\n")
+            exit(1)
+          } else {
+            cat("Coverage meets 90% threshold\n")
+          }
+        shell: Rscript {0}
+
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
           fail_ci_if_error: false

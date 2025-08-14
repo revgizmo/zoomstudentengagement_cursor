@@ -1,6 +1,6 @@
 {
     "name": "R 4.4 (rocker)",
-    "image": "rocker/r-ver:4.4.0",
+    "image": "ghcr.io/rocker-org/devcontainer/r-ver:4.4.2",
   
     "postCreateCommand": [
       "apt-get update",

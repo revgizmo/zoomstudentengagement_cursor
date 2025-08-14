@@ -103,4 +103,14 @@
 ^test_data_medium\.rds$
 ^test_data_very_large\.rds$
 
+# Implementation guide files (Issue #216)
+^ISSUE_214_IMPLEMENTATION_GUIDE\.md$
+^ISSUE_215_IMPLEMENTATION_GUIDE\.md$
+^ISSUE_216_IMPLEMENTATION_GUIDE\.md$
+^ISSUE_216_CONSOLIDATED_PLAN\.md$
+^REFACTOR_EPIC_IMPLEMENTATION_GUIDE\.md$
+^_pkgdown\.yml$
+^Rplots\.pdf$
+^ISSUES/
+
 
