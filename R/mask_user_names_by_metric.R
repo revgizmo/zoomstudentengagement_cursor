@@ -66,7 +66,7 @@ mask_user_names_by_metric <-
       metric_col_clean <- ifelse(is.na(metric_col), -Inf, metric_col)
 
       # Sort by metric (descending) and get row numbers
-      sorted_indices <- order(-metric_col_clean)
+      sorted_indices <- order(metric_col_clean, decreasing = TRUE)
       row_numbers <- match(seq_along(metric_col_clean), sorted_indices)
 
       # Create student names using base R

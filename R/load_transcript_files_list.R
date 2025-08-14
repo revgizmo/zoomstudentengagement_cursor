@@ -57,8 +57,8 @@ load_transcript_files_list <-
 
     transcripts_folder_path <- paste0(data_folder, "/", transcripts_folder, "/")
 
-    if (!file.exists(transcripts_folder_path)) {
-      abort_zse(paste0("Transcripts folder not found at `", transcripts_folder_path, "`"), class = "zse_input_error")
+    if (!dir.exists(transcripts_folder_path)) {
+      return(NULL)
     }
 
     if (file.exists(transcripts_folder_path)) {

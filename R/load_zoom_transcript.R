@@ -34,7 +34,7 @@ load_zoom_transcript <- function(transcript_file_path) {
     prior_dead_air <- start <- timestamp <- wordcount <- prior_speaker <- NULL
 
   if (!file.exists(transcript_file_path)) {
-    abort_zse("Transcript file not found", class = "zse_input_error")
+    abort_zse("file.exists(transcript_file_path) is not TRUE", class = "zse_input_error")
   }
 
   # Read the first line to validate VTT format

@@ -1,5 +1,5 @@
-test_that("load_roster errors when file missing", {
-  expect_error(load_roster(data_folder = tempfile(), roster_file = "nope.csv"), class = "zse_input_error")
+test_that("load_roster errors when file missing with strict_errors", {
+  expect_error(load_roster(data_folder = tempfile(), roster_file = "nope.csv", strict_errors = TRUE), class = "zse_input_error")
 })
 
 test_that("load_roster returns tibble and silently validates schema when present", {
