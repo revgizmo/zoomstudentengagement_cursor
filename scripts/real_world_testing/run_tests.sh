@@ -71,24 +71,33 @@ check_dependencies() {
 check_test_data() {
     print_status "Checking test data..."
     
-    # Check if data directory exists
-    if [[ ! -d "data" ]]; then
+    # Determine the correct data directory
+    if [[ -d "scripts/real_world_testing/data" ]]; then
+        # We're in the package root
+        DATA_DIR="scripts/real_world_testing/data"
+        print_status "Detected package root - using data from: $DATA_DIR"
+    elif [[ -d "data" ]]; then
+        # We're in the real_world_testing directory
+        DATA_DIR="data"
+        print_status "Detected testing directory - using data from: $DATA_DIR"
+    else
         print_error "Data directory not found. Please ensure test data is available."
+        print_error "Expected: data/ or scripts/real_world_testing/data/"
         exit 1
     fi
     
     # Check if transcript files exist
-    transcript_count=$(find data/transcripts -name "*.vtt" -o -name "*.txt" -o -name "*.csv" 2>/dev/null | wc -l)
+    transcript_count=$(find "$DATA_DIR/transcripts" -name "*.vtt" -o -name "*.txt" -o -name "*.csv" 2>/dev/null | wc -l)
     if [[ $transcript_count -eq 0 ]]; then
-        print_error "No transcript files found in data/transcripts/"
-        print_error "Please add Zoom transcript files (.vtt, .txt, .csv) to data/transcripts/"
+        print_error "No transcript files found in $DATA_DIR/transcripts/"
+        print_error "Please add Zoom transcript files (.vtt, .txt, .csv) to $DATA_DIR/transcripts/"
         exit 1
     fi
     
     # Check if roster file exists
-    if [[ ! -f "data/metadata/roster.csv" ]]; then
-        print_error "Roster file not found: data/metadata/roster.csv"
-        print_error "Please add your roster.csv file to data/metadata/"
+    if [[ ! -f "$DATA_DIR/metadata/roster.csv" ]]; then
+        print_error "Roster file not found: $DATA_DIR/metadata/roster.csv"
+        print_error "Please add your roster.csv file to $DATA_DIR/metadata/"
         exit 1
     fi
     
@@ -99,11 +108,27 @@ check_test_data() {
 run_tests() {
     print_status "Starting real-world tests..."
     
+    # Determine working directory and script location
+    if [[ -d "scripts/real_world_testing" ]]; then
+        # We're in the package root
+        WORKING_DIR="scripts/real_world_testing"
+        SCRIPT_PATH="run_real_world_tests.R"
+        print_status "Running from package root - changing to: $WORKING_DIR"
+    else
+        # We're in the real_world_testing directory
+        WORKING_DIR="."
+        SCRIPT_PATH="run_real_world_tests.R"
+        print_status "Running from testing directory"
+    fi
+    
+    # Change to working directory
+    cd "$WORKING_DIR"
+    
     # Create reports directory
     mkdir -p reports
     
     # Run the R test script
-    Rscript run_real_world_tests.R --output-dir=reports --data-dir=data
+    Rscript "$SCRIPT_PATH" --output-dir=reports --data-dir=data
     
     if [[ $? -eq 0 ]]; then
         print_success "All tests completed successfully!"
@@ -117,14 +142,26 @@ run_tests() {
 show_results() {
     print_status "Test results:"
     
-    if [[ -f "reports/test_report.md" ]]; then
+    # Determine the correct reports directory
+    if [[ -d "scripts/real_world_testing/reports" ]]; then
+        # We're in the package root
+        REPORTS_DIR="scripts/real_world_testing/reports"
+    elif [[ -d "reports" ]]; then
+        # We're in the real_world_testing directory
+        REPORTS_DIR="reports"
+    else
+        print_warning "Reports directory not found"
+        return
+    fi
+    
+    if [[ -f "$REPORTS_DIR/test_report.md" ]]; then
         echo
-        cat reports/test_report.md
+        cat "$REPORTS_DIR/test_report.md"
         echo
     fi
     
-    if [[ -f "reports/test_basic_plot.png" ]]; then
-        print_success "Test plots generated: reports/test_basic_plot.png, reports/test_masked_plot.png"
+    if [[ -f "$REPORTS_DIR/test_basic_plot.png" ]]; then
+        print_success "Test plots generated: $REPORTS_DIR/test_basic_plot.png, $REPORTS_DIR/test_masked_plot.png"
     fi
 }
 

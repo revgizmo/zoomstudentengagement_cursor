@@ -5,15 +5,20 @@
 \title{Set Privacy Defaults}
 \usage{
 set_privacy_defaults(
-  privacy_level = c("ferpa_strict", "ferpa_standard", "mask", "none")
+  privacy_level = c("ferpa_strict", "ferpa_standard", "mask", "none"),
+  unmatched_names_action = c("stop", "warn")
 )
 }
 \arguments{
 \item{privacy_level}{One of `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
 Defaults to `"mask"`. Use `"ferpa_strict"` for maximum FERPA compliance.}
+
+\item{unmatched_names_action}{Action to take when unmatched names are found.
+One of `c("stop", "warn")`. Defaults to `"stop"` for maximum privacy protection.
+Use `"warn"` for guided matching with user intervention.}
 }
 \value{
-Invisibly returns the chosen privacy level.
+Invisibly returns a list with the chosen privacy level and unmatched names action.
 }
 \description{
 Configure global privacy behavior for the package. The default on package
@@ -33,7 +38,13 @@ set_privacy_defaults("ferpa_strict")
 
 # Temporarily disable masking (will emit a warning)
 set_privacy_defaults("none")
+
+# Configure unmatched names behavior
+set_privacy_defaults(
+  privacy_level = "mask",
+  unmatched_names_action = "warn"
+)
 }
 \seealso{
-[ensure_privacy()]
+[ensure_privacy()], [safe_name_matching_workflow()]
 }

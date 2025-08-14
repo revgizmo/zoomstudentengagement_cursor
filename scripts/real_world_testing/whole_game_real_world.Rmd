@@ -3,6 +3,8 @@ title: "Whole Game: Real-World Workflow for Instructors"
 author: "zoomstudentengagement package"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_document
+params:
+  instructor_name: "Conor Healy"
 ---
 
 ```{r setup, include = FALSE}
@@ -29,6 +31,40 @@ library(jsonlite)
 # Whole Game: Real-World Workflow for Instructors
 
 This document demonstrates the complete workflow for analyzing student engagement in Zoom sessions using your actual data. It's designed to work with the real-world testing environment.
+
+## Required Inputs
+
+Before running this workflow, ensure you have the following:
+
+### 1. Instructor Information (YAML Parameters)
+- **instructor_name**: Name of the instructor as it appears in Zoom transcripts (e.g., "Conor Healy", "Dr. Healy", "Professor Healy", "Instructor")
+
+### 2. Student Roster (`data/metadata/roster.csv`)
+- CSV file with enrolled student information
+- Columns: `preferred_name`, `formal_name`, `student_id`
+- **Note**: Instructors should NOT be in the roster
+
+### 3. Zoom Transcript Files (`data/transcripts/`)
+- `.transcript.vtt` files from Zoom recordings
+- Only transcript files are processed (not `.cc.vtt` or `.txt` files)
+
+### 4. Name Lookup Configuration (`data/metadata/section_names_lookup.csv`)
+- **Auto-created** from instructor parameters
+- Maps Zoom transcript names to preferred names
+- Identifies instructors vs. students via `participant_type` column
+
+## How to Run
+
+```bash
+# From the scripts/real_world_testing directory:
+Rscript -e "rmarkdown::render('whole_game_real_world.Rmd', 
+  params = list(instructor_name = 'Instructor Name'))"
+```
+
+Or edit the YAML parameters at the top of this file and run:
+```bash
+Rscript -e "rmarkdown::render('whole_game_real_world.Rmd')"
+```
 
 ## Prerequisites
 
@@ -305,7 +341,120 @@ if (!is.null(mask_metrics)) {
 }
 ```
 
-## Step 2: Loading Your Student Roster
+## Step 2: Configuring Instructor Names (Recommended First Step)
+
+**Important**: Before running the main workflow, it's recommended to configure instructor names in the `section_names_lookup.csv` file. This prevents expected exceptions and makes the process smoother.
+
+```{r configure-instructors}
+# Function to create instructor entries
+create_instructor_entries <- function(name) {
+  # Only use the exact instructor name provided
+  # Users can add variations manually after seeing what appears in transcripts
+  data.frame(
+    transcript_name = name,
+    preferred_name = name,
+    formal_name = name,
+    participant_type = "instructor",
+    student_id = "INSTRUCTOR",
+    notes = "Primary instructor name - add variations manually if needed",
+    stringsAsFactors = FALSE
+  )
+}
+
+# Get instructor information from YAML parameters
+instructor_name <- params$instructor_name
+
+cat("=== Instructor Configuration ===\n")
+cat("Instructor Name:", instructor_name, "\n")
+
+# Check if section_names_lookup.csv exists
+lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
+
+if (file.exists(lookup_file)) {
+  cat("\n=== Existing Name Lookup Configuration ===\n")
+  existing_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
+  cat("Found existing lookup file with", nrow(existing_lookup), "entries\n")
+  
+  # Check for instructor entries
+  if ("participant_type" %in% names(existing_lookup)) {
+    instructor_entries <- existing_lookup[existing_lookup$participant_type == "instructor", ]
+    if (nrow(instructor_entries) > 0) {
+      cat("✅ Instructors already configured:\n")
+      print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+      
+      # Check if current instructor is already configured
+      current_instructor_configured <- any(instructor_entries$preferred_name == instructor_name)
+      if (!current_instructor_configured) {
+        cat("⚠️  Current instructor not found in existing configuration.\n")
+        cat("Adding current instructor to configuration...\n")
+        
+        # Add current instructor to existing configuration
+        new_instructor_entries <- create_instructor_entries(instructor_name)
+        updated_lookup <- rbind(existing_lookup, new_instructor_entries)
+        write.csv(updated_lookup, lookup_file, row.names = FALSE)
+        cat("✅ Updated instructor configuration.\n")
+      }
+    } else {
+      cat("⚠️  No instructors configured in lookup file\n")
+      cat("Adding current instructor to configuration...\n")
+      
+      # Create instructor entries and save
+      instructor_lookup <- create_instructor_entries(instructor_name)
+      write.csv(instructor_lookup, lookup_file, row.names = FALSE)
+      cat("✅ Instructor configuration created.\n")
+    }
+  } else {
+    cat("⚠️  Lookup file missing participant_type column.\n")
+    cat("Creating new lookup file with instructor configuration...\n")
+    
+    # Create new lookup file with instructor entries
+    instructor_lookup <- create_instructor_entries(instructor_name)
+    write.csv(instructor_lookup, lookup_file, row.names = FALSE)
+    cat("✅ Instructor configuration created.\n")
+  }
+} else {
+  cat("\n=== Creating Instructor Configuration ===\n")
+  cat("No section_names_lookup.csv found. Creating one with instructor configuration.\n")
+  
+  # Create instructor entries and save
+  instructor_lookup <- create_instructor_entries(instructor_name)
+  write.csv(instructor_lookup, lookup_file, row.names = FALSE)
+  cat("✅ Instructor configuration created:", lookup_file, "\n")
+  cat("This file maps Zoom transcript names to your instructor's preferred name.\n")
+  cat("Edit this file to add more instructor name variations or other participants.\n")
+}
+
+cat("\n=== Instructor Configuration Instructions ===\n")
+cat("The section_names_lookup.csv file contains:\n")
+cat("- transcript_name: Names as they appear in Zoom transcripts\n")
+cat("- preferred_name: How you want them displayed in reports\n")
+cat("- participant_type: 'instructor' for instructors, 'enrolled_student' for students\n")
+cat("- student_id: Student ID or 'INSTRUCTOR' for instructors\n")
+cat("- notes: Any additional information\n")
+cat("\nCurrent instructor configuration:\n")
+if (exists("instructor_lookup")) {
+  print(instructor_lookup[, c("transcript_name", "preferred_name", "participant_type")])
+} else if (file.exists(lookup_file)) {
+  current_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
+  instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
+  if (nrow(instructor_entries) > 0) {
+    print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+  }
+}
+
+cat("\n=== Adding Instructor Name Variations ===\n")
+cat("After processing transcripts, you may need to add variations of the instructor name.\n")
+cat("Common reasons to add variations:\n")
+cat("- Zoom shows 'Dr. Healy' instead of 'Conor Healy'\n")
+cat("- Zoom shows 'Instructor' or 'Host' for the instructor\n")
+cat("- Different sessions show different name formats\n")
+cat("\nTo add variations, edit data/metadata/section_names_lookup.csv and add new rows with:\n")
+cat("- transcript_name: The name as it appears in Zoom\n")
+cat("- preferred_name: The instructor's preferred name\n")
+cat("- participant_type: 'instructor'\n")
+```
+
+## Step 3: Loading Your Student Roster
 
 Start by loading your student roster:
 
@@ -322,6 +471,12 @@ if (file.exists(roster_path)) {
     head(roster)
     cat("\nRoster dimensions:", nrow(roster), "students\n")
     cat("Roster columns:", paste(names(roster), collapse = ", "), "\n")
+    
+    # Note about instructor configuration
+    cat("\n=== Note: Instructor Configuration ===\n")
+    cat("Instructors should be configured in section_names_lookup.csv (Step 2),\n")
+    cat("not in the roster.csv file. The roster is for enrolled students only.\n")
+    
   }, error = function(e) {
     cat("⚠️  Error loading roster:", e$message, "\n")
     cat("Please check that your roster.csv file is properly formatted\n")
@@ -329,6 +484,22 @@ if (file.exists(roster_path)) {
 } else {
   cat("⚠️  Roster file not found at:", roster_path, "\n")
   cat("Please add your roster.csv file to data/metadata/\n")
+  
+  # Create a sample roster template (students only)
+  cat("\n=== Creating Sample Roster Template ===\n")
+  sample_roster <- data.frame(
+    preferred_name = c("Student One", "Student Two", "Student Three"),
+    formal_name = c("Student One", "Student Two", "Student Three"),
+    student_id = c("STU001", "STU002", "STU003"),
+    stringsAsFactors = FALSE
+  )
+  
+  # Save sample roster
+  sample_roster_path <- file.path("data/metadata", "sample_roster.csv")
+  write.csv(sample_roster, sample_roster_path, row.names = FALSE)
+  cat("Sample roster template created:", sample_roster_path, "\n")
+  cat("Edit this file to match your actual student roster.\n")
+  cat("Note: Instructors should be configured in section_names_lookup.csv (Step 2).\n")
 }
 ```
 
@@ -439,241 +610,414 @@ if (length(transcript_files) > 0) {
 }
 ```
 
-## Step 6: Matching Student Names
+## Step 6: Instructor Identification and Name Matching
 
-This is often the most challenging part - matching Zoom names to your roster:
+This is a critical step that combines instructor identification with privacy-aware name matching. The package now includes sophisticated name matching capabilities that maintain privacy while helping you match Zoom names to your roster.
 
-### **⚠️ Important Note: Name Matching Limitation**
+### **Step 6.1: Instructor Configuration Check**
 
-**Current Issue**: The privacy-first framework masks names immediately upon loading, which can make name matching challenging. This is a known limitation being addressed in Issue #160.
+Let's verify that instructors are properly configured in the lookup file:
 
-**Workaround**: For now, you may need to:
-1. Use the `none` privacy level temporarily for matching
-2. Create manual name mappings
-3. Use the privacy testing above to validate your approach
+```{r instructor-configuration-check}
+# Check instructor configuration in section_names_lookup.csv
+lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
 
-**Future Solution**: A consistent hashing approach is being developed to enable matching while maintaining privacy.
-
-```{r name-matching}
-if (exists("metrics") && nrow(metrics) > 0 && exists("roster")) {
-  # Get names from transcripts
-  transcript_names <- unique(metrics$name)
-  cat("Names in transcripts:\n")
-  print(transcript_names)
+if (file.exists(lookup_file)) {
+  cat("=== Instructor Configuration Check ===\n")
+  lookup_data <- read.csv(lookup_file, stringsAsFactors = FALSE)
   
-  # Get names from roster
-  roster_names <- unique(roster$preferred_name)
-  cat("\nNames in roster:\n")
-  print(roster_names)
-  
-  # Find exact matches
-  exact_matches <- intersect(transcript_names, roster_names)
-  cat("\nExact matches found:", length(exact_matches), "\n")
-  print(exact_matches)
-  
-  # Find unmatched names
-  unmatched_transcript <- setdiff(transcript_names, roster_names)
-  unmatched_roster <- setdiff(roster_names, transcript_names)
-  
-  cat("\nNames in transcripts but not in roster:\n")
-  print(unmatched_transcript)
-  
-  cat("\nNames in roster but not in transcripts:\n")
-  print(unmatched_roster)
+  if ("participant_type" %in% names(lookup_data)) {
+    instructor_entries <- lookup_data[lookup_data$participant_type == "instructor", ]
+    
+    if (nrow(instructor_entries) > 0) {
+      cat("✅ Instructors configured in lookup file:\n")
+      print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+      
+      # Check if any of these names appear in the transcript
+      if (exists("transcript_data")) {
+        transcript_speakers <- unique(transcript_data$name)
+        configured_instructor_names <- instructor_entries$transcript_name
+        
+        matching_instructors <- intersect(transcript_speakers, configured_instructor_names)
+        if (length(matching_instructors) > 0) {
+          cat("✅ Found configured instructors in transcript:", paste(matching_instructors, collapse = ", "), "\n")
+        } else {
+          cat("⚠️  Configured instructors not found in transcript.\n")
+          cat("Transcript speakers:", paste(transcript_speakers, collapse = ", "), "\n")
+          cat("Consider adding more name variations to section_names_lookup.csv\n")
+        }
+      }
+    } else {
+      cat("⚠️  No instructors configured in lookup file.\n")
+      cat("Please add instructor entries to section_names_lookup.csv before proceeding.\n")
+    }
+  } else {
+    cat("⚠️  Lookup file missing participant_type column.\n")
+    cat("Please ensure section_names_lookup.csv has a participant_type column.\n")
+  }
 } else {
-  cat("⚠️  Cannot perform name matching - missing metrics or roster data\n")
+  cat("⚠️  No section_names_lookup.csv found.\n")
+  cat("Please run Step 2 to configure instructor names first.\n")
 }
 ```
 
-## Step 7: Creating Name Mappings
+### **Step 6.2: Privacy-Aware Name Matching Workflow**
 
-For names that don't match exactly, you'll need to create mappings:
+Now let's use the new privacy-aware name matching workflow. This is the recommended approach that maintains privacy while helping you match names:
 
-```{r create-mappings}
-if (exists("metrics") && nrow(metrics) > 0) {
-  # Create a template for name mappings
-  transcript_names <- unique(metrics$name)
+```{r privacy-aware-name-matching}
+# Use the safe name matching workflow for privacy-aware matching
+if (exists("transcript_data") && exists("roster")) {
+  cat("\n=== Privacy-Aware Name Matching ===\n")
   
-  # Create initial mapping (exact matches)
-  name_mapping <- data.frame(
-    name_to_clean = transcript_names,
-    clean_name = transcript_names,  # Start with exact matches
-    notes = "",
-    stringsAsFactors = FALSE
+  # Get the first transcript file for processing
+  transcript_files <- list.files(
+    "data/transcripts",
+    pattern = "\\.transcript\\.vtt$",
+    full.names = TRUE,
+    recursive = TRUE
   )
   
-  # If roster exists, update with exact matches
-  if (exists("roster")) {
-    roster_names <- unique(roster$preferred_name)
-    exact_matches <- intersect(transcript_names, roster_names)
+  if (length(transcript_files) > 0) {
+    transcript_file <- transcript_files[1]
+    cat("Processing transcript:", basename(transcript_file), "\n")
     
-    name_mapping$clean_name[match(exact_matches, name_mapping$name_to_clean)] <- exact_matches
-    name_mapping$notes[match(exact_matches, name_mapping$name_to_clean)] <- "Exact match"
+    # Set up privacy defaults for name matching
+    set_privacy_defaults(
+      privacy_level = "ferpa_standard",  # Standard privacy for matching
+      unmatched_names_action = "warn"    # Warn about unmatched names
+    )
+    
+    # Run the safe name matching workflow
+    tryCatch({
+      cat("Running privacy-aware name matching workflow...\n")
+      
+      # First, try with default settings (stops on unmatched names)
+      result <- safe_name_matching_workflow(
+        transcript_file_path = transcript_file,
+        roster_data = roster,
+        privacy_level = "ferpa_standard",
+        unmatched_names_action = "warn",  # This will warn and guide through matching
+        data_folder = "data/metadata"  # Use the same directory as instructor configuration
+      )
+      
+      cat("✅ Name matching workflow completed successfully!\n")
+      
+      # Show matching results
+      if (!is.null(result) && nrow(result) > 0) {
+        cat("\nName Matching Results:\n")
+        cat("Total participants:", nrow(result), "\n")
+        
+        # Count by participant type
+        if ("participant_type" %in% names(result)) {
+          type_counts <- table(result$participant_type)
+          cat("Participant types:\n")
+          for (type in names(type_counts)) {
+            cat("  ", type, ":", type_counts[type], "\n")
+          }
+        }
+        
+        # Show matched vs unmatched
+        if ("is_matched" %in% names(result)) {
+          matched_count <- sum(result$is_matched, na.rm = TRUE)
+          unmatched_count <- sum(!result$is_matched, na.rm = TRUE)
+          cat("Matched names:", matched_count, "\n")
+          cat("Unmatched names:", unmatched_count, "\n")
+        }
+        
+        # Store the result for later use
+        clean_metrics <- result
+        
+      } else {
+        cat("⚠️  No results returned from name matching workflow\n")
+      }
+      
+    }, error = function(e) {
+      cat("❌ Error in name matching workflow:", e$message, "\n")
+      cat("This may indicate unmatched names that need manual resolution.\n")
+      
+      # Try to provide guidance for manual matching
+      cat("\n=== Manual Name Matching Guidance ===\n")
+      cat("If you have unmatched names, you can:\n")
+      cat("1. Use prompt_name_matching() to create a lookup template\n")
+      cat("2. Edit the template manually with correct name mappings\n")
+      cat("3. Re-run the workflow with the updated mappings\n")
+    })
+    
+    # Ensure instructor is always in the lookup file
+    if (file.exists(lookup_file)) {
+      cat("\n=== Ensuring Instructor Configuration ===\n")
+      current_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
+      
+      # Check if instructor is already configured
+      if ("participant_type" %in% names(current_lookup)) {
+        instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
+        if (nrow(instructor_entries) == 0) {
+          cat("Adding instructor configuration to lookup file...\n")
+          instructor_entry <- create_instructor_entries(instructor_name)
+          updated_lookup <- rbind(current_lookup, instructor_entry)
+          write.csv(updated_lookup, lookup_file, row.names = FALSE)
+          cat("✅ Instructor configuration added to lookup file.\n")
+        } else {
+          cat("✅ Instructor already configured in lookup file.\n")
+        }
+      } else {
+        cat("⚠️  Lookup file missing participant_type column. Adding instructor configuration...\n")
+        instructor_entry <- create_instructor_entries(instructor_name)
+        updated_lookup <- rbind(current_lookup, instructor_entry)
+        write.csv(updated_lookup, lookup_file, row.names = FALSE)
+        cat("✅ Instructor configuration added to lookup file.\n")
+      }
+    }
+    
+  } else {
+    cat("⚠️  No transcript files found for name matching\n")
   }
-  
-  # Show mapping template
-  cat("Name mapping template (edit manually as needed):\n")
-  print(name_mapping)
-  
-  # Save mapping template
-  write.csv(name_mapping, "name_mappings_template.csv", row.names = FALSE)
-  cat("\nName mapping template saved to: name_mappings_template.csv\n")
-  cat("Edit this file manually to add your name mappings, then reload it.\n")
 } else {
-  cat("⚠️  Cannot create name mappings - missing metrics data\n")
+  cat("⚠️  Cannot perform name matching - missing transcript data or roster\n")
 }
 ```
 
-## Step 8: Loading Custom Name Mappings
+### **Step 6.3: Manual Name Matching (if needed)**
+
+**Note**: Manual name matching is handled automatically by the privacy-aware workflow in Step 6.2. If unmatched names are found, the workflow will create a `section_names_lookup.csv` file in the `data/` directory with instructions for manual mapping.
+
+If you need to manually create or update name mappings, you can:
+
+1. **Edit the existing file**: `data/section_names_lookup.csv` (created by the workflow)
+2. **Add instructor variations**: If the instructor appears with different names in transcripts
+3. **Map student names**: Link transcript names to roster names
+4. **Set participant types**: Use 'instructor', 'enrolled_student', or 'guest'
+
+The workflow will automatically detect and use your manual mappings on the next run.
+
+### **Step 6.4: Loading Custom Name Mappings**
 
 If you've created custom name mappings, load them here:
 
-```{r load-mappings}
-# Check if custom mappings exist
-mapping_file <- "name_mappings_template.csv"
+```{r load-custom-mappings}
+# Check for custom name mappings
+mapping_files <- list.files(
+  "data/metadata",
+  pattern = ".*names.*lookup.*csv$",
+  full.names = TRUE
+)
 
-if (file.exists(mapping_file)) {
-  custom_mappings <- read.csv(mapping_file, stringsAsFactors = FALSE)
-  cat("Loaded custom name mappings:\n")
-  print(custom_mappings)
+if (length(mapping_files) > 0) {
+  cat("\n=== Loading Custom Name Mappings ===\n")
   
-  # Apply mappings to metrics
-  if (exists("metrics") && nrow(metrics) > 0) {
-    clean_metrics <- metrics %>%
-      left_join(custom_mappings, by = c("name" = "name_to_clean")) %>%
-      mutate(
-        student_name = coalesce(clean_name, name),
-        is_matched = !is.na(clean_name) & clean_name != name
-      )
+  # Use the most recent mapping file
+  mapping_file <- mapping_files[length(mapping_files)]
+  cat("Loading mappings from:", basename(mapping_file), "\n")
+  
+  tryCatch({
+    custom_mappings <- read.csv(mapping_file, stringsAsFactors = FALSE)
     
-    # Summary of matching success
-    matching_summary <- clean_metrics %>%
-      group_by(is_matched) %>%
-      summarise(
-        count = n(),
-        percentage = n() / nrow(clean_metrics) * 100
-      )
+    cat("Loaded", nrow(custom_mappings), "name mappings\n")
     
-    cat("\nName matching summary:\n")
-    print(matching_summary)
-  }
+    # Show a preview of the mappings
+    if (nrow(custom_mappings) > 0) {
+      cat("Mapping preview:\n")
+      print(head(custom_mappings))
+    }
+    
+    # Apply mappings to transcript data if available
+    if (exists("transcript_data")) {
+      clean_transcript <- transcript_data %>%
+        left_join(custom_mappings, by = c("name" = "transcript_name")) %>%
+        mutate(
+          clean_name = coalesce(preferred_name, name),
+          is_matched = !is.na(preferred_name) & preferred_name != name
+        )
+      
+      # Summary of matching success
+      if ("is_matched" %in% names(clean_transcript)) {
+        matched_count <- sum(clean_transcript$is_matched, na.rm = TRUE)
+        total_count <- nrow(clean_transcript)
+        cat("Applied mappings:", matched_count, "of", total_count, "utterances matched\n")
+      }
+      
+      # Store for later use
+      clean_metrics <- clean_transcript
+    }
+    
+  }, error = function(e) {
+    cat("❌ Error loading custom mappings:", e$message, "\n")
+  })
 } else {
-  cat("No custom name mappings found. Using original names.\n")
-  if (exists("metrics")) {
-    clean_metrics <- metrics %>%
-      mutate(
-        student_name = name,
-        is_matched = FALSE
-      )
-  }
+  cat("No custom name mapping files found.\n")
 }
 ```
 
-## Step 9: Analyzing Participation Patterns
+## Step 7: Analyzing Participation Patterns
 
 Now let's analyze participation patterns to understand engagement:
 
 ```{r analyze-patterns}
 if (exists("clean_metrics") && nrow(clean_metrics) > 0) {
   # Create a summary by student
-  student_summary <- clean_metrics %>%
-    group_by(student_name) %>%
-    summarise(
-      total_utterances = sum(n, na.rm = TRUE),
-      total_duration = sum(duration, na.rm = TRUE),
-      total_words = sum(wordcount, na.rm = TRUE),
-      avg_words_per_minute = mean(wpm, na.rm = TRUE),
-      participation_rate = total_utterances / nrow(clean_metrics) * 100
-    ) %>%
-    arrange(desc(total_utterances))
+  # Use the appropriate name column based on what's available
+  name_col <- if ("preferred_name" %in% names(clean_metrics)) "preferred_name" else "name"
+  
+  # Check what columns are available
+  available_cols <- names(clean_metrics)
+  cat("Available columns in clean_metrics:", paste(available_cols, collapse = ", "), "\n")
+  
+  # Create a simple summary based on what's available
+  if ("duration" %in% available_cols) {
+    student_summary <- clean_metrics %>%
+      group_by(!!sym(name_col)) %>%
+      summarise(
+        total_duration = sum(duration, na.rm = TRUE),
+        utterance_count = n(),
+        participation_rate = n() / nrow(clean_metrics) * 100
+      ) %>%
+      arrange(desc(total_duration))
+  } else {
+    # Fallback to just counting utterances
+    student_summary <- clean_metrics %>%
+      group_by(!!sym(name_col)) %>%
+      summarise(
+        utterance_count = n(),
+        participation_rate = n() / nrow(clean_metrics) * 100
+      ) %>%
+      arrange(desc(utterance_count))
+  }
   
   # View the summary
   head(student_summary, 10)
   
   # Basic statistics
   cat("\nParticipation Statistics:\n")
-  participation_stats <- student_summary %>%
-    summarise(
-      mean_utterances = mean(total_utterances, na.rm = TRUE),
-      median_utterances = median(total_utterances, na.rm = TRUE),
-      sd_utterances = sd(total_utterances, na.rm = TRUE),
-      min_utterances = min(total_utterances, na.rm = TRUE),
-      max_utterances = max(total_utterances, na.rm = TRUE)
-    )
+  if ("total_duration" %in% names(student_summary)) {
+    participation_stats <- student_summary %>%
+      summarise(
+        mean_duration = mean(total_duration, na.rm = TRUE),
+        median_duration = median(total_duration, na.rm = TRUE),
+        mean_utterances = mean(utterance_count, na.rm = TRUE),
+        median_utterances = median(utterance_count, na.rm = TRUE)
+      )
+  } else {
+    participation_stats <- student_summary %>%
+      summarise(
+        mean_utterances = mean(utterance_count, na.rm = TRUE),
+        median_utterances = median(utterance_count, na.rm = TRUE)
+      )
+  }
   print(participation_stats)
 } else {
   cat("⚠️  Cannot analyze participation patterns - missing clean metrics data\n")
 }
 ```
 
-## Step 10: Visualizing Participation
+## Step 8: Visualizing Participation
 
 Create visualizations to understand participation patterns:
 
 ```{r visualize-participation}
 if (exists("student_summary") && nrow(student_summary) > 0) {
-  # Plot participation by utterance count
-  p1 <- ggplot(student_summary, aes(x = reorder(student_name, total_utterances), y = total_utterances)) +
-    geom_bar(stat = "identity", fill = "steelblue") +
-    coord_flip() +
-    labs(
-      title = "Student Participation by Utterance Count",
-      x = "Student Name",
-      y = "Number of Utterances"
-    ) +
-    theme_minimal()
+  # Get the name column used in the summary
+  name_col <- if ("preferred_name" %in% names(student_summary)) "preferred_name" else "name"
   
-  print(p1)
+  # Plot participation by utterance count
+  if ("utterance_count" %in% names(student_summary)) {
+    p1 <- ggplot(student_summary, aes(x = reorder(!!sym(name_col), utterance_count), y = utterance_count)) +
+      geom_bar(stat = "identity", fill = "steelblue") +
+      coord_flip() +
+      labs(
+        title = "Student Participation by Utterance Count",
+        x = "Student Name",
+        y = "Number of Utterances"
+      ) +
+      theme_minimal()
+    
+    print(p1)
+  }
   
   # Plot participation by duration
-  p2 <- ggplot(student_summary, aes(x = reorder(student_name, total_duration), y = total_duration / 60)) +
-    geom_bar(stat = "identity", fill = "darkgreen") +
-    coord_flip() +
-    labs(
-      title = "Student Participation by Speaking Time",
-      x = "Student Name",
-      y = "Speaking Time (minutes)"
-    ) +
-    theme_minimal()
-  
-  print(p2)
+  if ("total_duration" %in% names(student_summary)) {
+    p2 <- ggplot(student_summary, aes(x = reorder(!!sym(name_col), total_duration), y = total_duration / 60)) +
+      geom_bar(stat = "identity", fill = "darkgreen") +
+      coord_flip() +
+      labs(
+        title = "Student Participation by Speaking Time",
+        x = "Student Name",
+        y = "Speaking Time (minutes)"
+      ) +
+      theme_minimal()
+    
+    print(p2)
+  }
   
   # Save plots
-  ggsave("participation_by_utterances.png", p1, width = 10, height = 8)
-  ggsave("participation_by_duration.png", p2, width = 10, height = 8)
-  
-  cat("Plots saved as:\n")
-  cat("- participation_by_utterances.png\n")
-  cat("- participation_by_duration.png\n")
+  if (exists("p1")) {
+    ggsave("reports/participation_by_utterances.png", p1, width = 10, height = 8)
+    cat("Plot saved: reports/participation_by_utterances.png\n")
+  }
+  if (exists("p2")) {
+    ggsave("reports/participation_by_duration.png", p2, width = 10, height = 8)
+    cat("Plot saved: reports/participation_by_duration.png\n")
+  }
 } else {
   cat("⚠️  Cannot create visualizations - missing student summary data\n")
 }
 ```
 
-## Step 11: Identifying Participation Gaps
+## Step 9: Identifying Participation Gaps
 
 Look for students who might need encouragement to participate:
 
 ```{r identify-gaps}
 if (exists("student_summary") && nrow(student_summary) > 0) {
   # Identify students with low participation
-  median_utterances <- median(student_summary$total_utterances, na.rm = TRUE)
-  low_participation <- student_summary %>%
-    filter(total_utterances < median_utterances) %>%
-    arrange(total_utterances)
+  if ("utterance_count" %in% names(student_summary)) {
+    median_utterances <- median(student_summary$utterance_count, na.rm = TRUE)
+    low_participation <- student_summary %>%
+      filter(utterance_count < median_utterances) %>%
+      arrange(utterance_count)
+  } else if ("total_duration" %in% names(student_summary)) {
+    median_duration <- median(student_summary$total_duration, na.rm = TRUE)
+    low_participation <- student_summary %>%
+      filter(total_duration < median_duration) %>%
+      arrange(total_duration)
+  } else {
+    cat("⚠️  Cannot identify low participation - no suitable metrics available\n")
+    low_participation <- student_summary
+  }
+  
+  # Get the name column used in the summary
+  name_col <- if ("preferred_name" %in% names(student_summary)) "preferred_name" else "name"
   
   cat("Students with below-median participation:\n")
-  print(low_participation[, c("student_name", "total_utterances", "total_duration")])
+  if ("total_duration" %in% names(low_participation)) {
+    print(low_participation[, c(name_col, "utterance_count", "total_duration")])
+  } else {
+    print(low_participation[, c(name_col, "utterance_count")])
+  }
   
   # Create participation categories
-  participation_categories <- student_summary %>%
-    mutate(
-      participation_level = case_when(
-        total_utterances >= quantile(total_utterances, 0.75, na.rm = TRUE) ~ "High",
-        total_utterances >= quantile(total_utterances, 0.25, na.rm = TRUE) ~ "Medium",
-        TRUE ~ "Low"
+  if ("utterance_count" %in% names(student_summary)) {
+    participation_categories <- student_summary %>%
+      mutate(
+        participation_level = case_when(
+          utterance_count >= quantile(utterance_count, 0.75, na.rm = TRUE) ~ "High",
+          utterance_count >= quantile(utterance_count, 0.25, na.rm = TRUE) ~ "Medium",
+          TRUE ~ "Low"
+        )
       )
-    )
+  } else if ("total_duration" %in% names(student_summary)) {
+    participation_categories <- student_summary %>%
+      mutate(
+        participation_level = case_when(
+          total_duration >= quantile(total_duration, 0.75, na.rm = TRUE) ~ "High",
+          total_duration >= quantile(total_duration, 0.25, na.rm = TRUE) ~ "Medium",
+          TRUE ~ "Low"
+        )
+      )
+  } else {
+    participation_categories <- student_summary %>%
+      mutate(participation_level = "Unknown")
+  }
   
   # Summary by participation level
   level_summary <- participation_categories %>%
@@ -690,7 +1034,7 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
 }
 ```
 
-## Step 12: Creating Actionable Insights
+## Step 10: Creating Actionable Insights
 
 Generate insights that can help improve equitable participation:
 
@@ -719,7 +1063,7 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
 }
 ```
 
-## Step 13: Final Privacy Validation
+## Step 11: Final Privacy Validation
 
 Before saving your analysis, let's do a final privacy check to ensure no sensitive data is exposed:
 
@@ -767,35 +1111,39 @@ if (exists("student_summary")) {
 cat("\n✅ Final privacy validation completed.\n")
 ```
 
-## Step 14: Saving Your Analysis
+## Step 12: Saving Your Analysis
 
 Save your processed data for future reference:
 
 ```{r save-analysis}
-# Create output directory
+# Create output directories
 if (!dir.exists("outputs")) {
   dir.create("outputs")
+}
+if (!dir.exists("reports")) {
+  dir.create("reports")
 }
 
 # Save the clean metrics
 if (exists("clean_metrics")) {
-  write_engagement_metrics(clean_metrics, "outputs/clean_engagement_metrics.csv", comments_format = "text")
+  write_metrics(clean_metrics, what = "engagement", path = "outputs/clean_engagement_metrics.csv", comments_format = "text")
   cat("Saved: outputs/clean_engagement_metrics.csv\n")
 }
 
 # Save the student summary
 if (exists("student_summary")) {
-  write_engagement_metrics(student_summary, "outputs/student_participation_summary.csv")
+  write_metrics(student_summary, what = "engagement", path = "outputs/student_participation_summary.csv")
   cat("Saved: outputs/student_participation_summary.csv\n")
 }
 
 # Save the name mappings
 if (exists("custom_mappings")) {
-  write_engagement_metrics(custom_mappings, "outputs/name_mappings.csv")
+  write_metrics(custom_mappings, what = "engagement", path = "outputs/name_mappings.csv")
   cat("Saved: outputs/name_mappings.csv\n")
 }
 
 cat("\nAnalysis files saved to outputs/ directory\n")
+cat("Reports and visualizations saved to reports/ directory\n")
 ```
 
 ## Best Practices and Tips
