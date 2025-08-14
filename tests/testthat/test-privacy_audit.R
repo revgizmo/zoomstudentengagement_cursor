@@ -5,6 +5,6 @@ test_that("privacy_audit reports masked estimates", {
   )
   masked <- ensure_privacy(df)
   audit <- privacy_audit(masked)
-  expect_true(all(c("column","values","non_empty","masked_estimate") %in% names(audit)))
+  expect_true(all(c("column", "values", "non_empty", "masked_estimate") %in% names(audit)))
   expect_true(any(audit$masked_estimate > 0))
 })

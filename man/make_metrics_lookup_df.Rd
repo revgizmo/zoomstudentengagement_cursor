@@ -37,6 +37,11 @@ metrics_lookup <- make_metrics_lookup_df()
 print(metrics_lookup)
 
 # Use in plotting functions
-plot_users_by_metric(data, metric = "session_ct", metrics_lookup_df = metrics_lookup)
+sample <- tibble::tibble(
+  section = c("A", "A"),
+  preferred_name = c("Alice", "Bob"),
+  session_ct = c(3, 5)
+)
+plot_users_by_metric(sample, metric = "session_ct", metrics_lookup_df = metrics_lookup)
 
 }

@@ -11,12 +11,11 @@
 #' @return Invisibly returns the written tibble (after privacy transformations and list conversions).
 #' @export
 write_metrics <- function(
-  data,
-  what = c("engagement", "summary", "session_summary"),
-  path = NULL,
-  comments_format = c("text", "count"),
-  privacy_level = getOption("zoomstudentengagement.privacy_level", "mask")
-) {
+    data,
+    what = c("engagement", "summary", "session_summary"),
+    path = NULL,
+    comments_format = c("text", "count"),
+    privacy_level = getOption("zoomstudentengagement.privacy_level", "mask")) {
   what <- match.arg(what)
   comments_format <- match.arg(comments_format)
 
@@ -31,12 +30,16 @@ write_metrics <- function(
   if ("comments" %in% names(export_data) && is.list(export_data$comments)) {
     if (comments_format == "text") {
       export_data$comments <- vapply(export_data$comments, function(x) {
-        if (is.null(x) || length(x) == 0) return("")
+        if (is.null(x) || length(x) == 0) {
+          return("")
+        }
         paste(unlist(x), collapse = "; ")
       }, FUN.VALUE = character(1))
     } else {
       export_data$comments <- vapply(export_data$comments, function(x) {
-        if (is.null(x)) return(0L)
+        if (is.null(x)) {
+          return(0L)
+        }
         length(unlist(x))
       }, FUN.VALUE = integer(1))
     }
@@ -48,7 +51,9 @@ write_metrics <- function(
     warning("Converting list columns to JSON strings: ", paste(list_col_names, collapse = ", "))
     for (col in list_col_names) {
       export_data[[col]] <- vapply(export_data[[col]], function(x) {
-        if (is.null(x) || length(x) == 0) return("")
+        if (is.null(x) || length(x) == 0) {
+          return("")
+        }
         jsonlite::toJSON(x, auto_unbox = TRUE)
       }, FUN.VALUE = character(1))
     }

@@ -7,9 +7,8 @@
 #' @return A tibble with columns: column, values, non_empty, masked_estimate.
 #' @export
 privacy_audit <- function(
-  data,
-  id_columns = c("preferred_name", "name", "first_last", "name_raw", "student_id", "email")
-) {
+    data,
+    id_columns = c("preferred_name", "name", "first_last", "name_raw", "student_id", "email")) {
   if (!tibble::is_tibble(data)) stop("`data` must be a tibble")
   present <- intersect(id_columns, names(data))
   if (length(present) == 0) {

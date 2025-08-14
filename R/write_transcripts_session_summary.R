@@ -12,7 +12,9 @@ write_transcripts_session_summary <-
   function(transcripts_session_summary_df,
            data_folder = "data",
            transcripts_session_summary_file = "transcripts_session_summary.csv") {
-    if (!tibble::is_tibble(transcripts_session_summary_df)) stop("`transcripts_session_summary_df` must be a tibble")
+    if (!tibble::is_tibble(transcripts_session_summary_df)) {
+      return(invisible(NULL))
+    }
     path <- paste0(data_folder, "/", transcripts_session_summary_file)
     write_metrics(transcripts_session_summary_df, what = "session_summary", path = path)
   }

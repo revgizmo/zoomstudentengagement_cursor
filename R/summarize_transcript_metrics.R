@@ -103,6 +103,11 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
         duration = numeric(),
         wordcount = numeric(),
         comments = list(),
+        # Canonical percentage columns
+        perc_n = numeric(),
+        perc_duration = numeric(),
+        perc_wordcount = numeric(),
+        # Temporary aliases for backward compatibility (to be deprecated)
         n_perc = numeric(),
         duration_perc = numeric(),
         wordcount_perc = numeric(),
@@ -173,9 +178,14 @@ summarize_transcript_metrics <- function(transcript_file_path = "",
     total_duration <- sum(result$duration, na.rm = TRUE)
     total_wordcount <- sum(result$wordcount, na.rm = TRUE)
 
-    result$n_perc <- result$n / total_n * 100
-    result$duration_perc <- result$duration / total_duration * 100
-    result$wordcount_perc <- result$wordcount / total_wordcount * 100
+    # Canonical percentage columns (preferred naming)
+    result$perc_n <- result$n / total_n * 100
+    result$perc_duration <- result$duration / total_duration * 100
+    result$perc_wordcount <- result$wordcount / total_wordcount * 100
+    # Temporary aliases for backward compatibility (to be deprecated)
+    result$n_perc <- result$perc_n
+    result$duration_perc <- result$perc_duration
+    result$wordcount_perc <- result$perc_wordcount
     result$wpm <- result$wordcount / result$duration
 
     # Sort by duration (descending) using base R

@@ -10,11 +10,10 @@
 #' @return A tibble of engagement metrics (privacy-masked by default at write-time; in-memory masking depends on consumer).
 #' @export
 analyze_transcripts <- function(
-  transcripts_folder,
-  names_to_exclude = c("dead_air"),
-  write = FALSE,
-  output_path = NULL
-) {
+    transcripts_folder,
+    names_to_exclude = c("dead_air"),
+    write = FALSE,
+    output_path = NULL) {
   if (!dir.exists(transcripts_folder)) {
     stop(sprintf("Folder not found: %s", transcripts_folder))
   }

@@ -138,13 +138,13 @@ Visualize relative participation:
 
 ```{r percentage-metrics}
 # Plot percentage of comments
-plot_users(transcripts_summary_df, metric = "n_perc", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "perc_n", facet_by = "section", mask_by = "name")
 
 # Plot percentage of speaking time
-plot_users(transcripts_summary_df, metric = "duration_perc", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "perc_duration", facet_by = "section", mask_by = "name")
 
 # Plot percentage of words
-plot_users(transcripts_summary_df, metric = "wordcount_perc", facet_by = "section", mask_by = "name")
+plot_users(transcripts_summary_df, metric = "perc_wordcount", facet_by = "section", mask_by = "name")
 ```
 
 ## Students-Only Analysis
