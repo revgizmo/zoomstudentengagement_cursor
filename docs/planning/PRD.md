@@ -6,8 +6,9 @@
 Align stakeholders on vision, scope, requirements, decisions, and success criteria for near-term releases (pre-CRAN and immediate post-CRAN), with explicit attention to privacy, ethics, and CRAN compliance.
 
 ### Status and Version
-- Status: Draft for review
-- Source of truth for project status: `PROJECT.md`
+- Status: Proposed for acceptance
+- Last updated: 2025-08-14
+- Source of truth for evolving status/roadmap: `PROJECT.md` (to avoid duplication; this PRD remains stable and high-level)
 - Related docs: `README.md`, `DOCUMENTATION.md`, `docs/development/CRAN_SUBMISSION.md`, `docs/development/CRAN_PREMORTEM_ACTION_PLAN.md`, `docs/development/ethical-issues-research/ETHICAL_ISSUES_ANALYSIS.md`, `docs/development/PRE_PR_VALIDATION.md`
 
 ---
@@ -79,9 +80,9 @@ An R package that loads Zoom `.transcript.vtt` files, computes engagement metric
 
 ### Representative Flows
 - Single-course analysis
-  1) Load transcripts directory → 2) Load roster → 3) `summarize_transcript_metrics()` → 4) `plot_users_by_metric()` → 5) (optional) writers
+  1) Load transcripts directory → 2) Load roster → 3) `summarize_transcript_metrics()` → 4) `plot_users()` → 5) (optional) `write_metrics()`
 - Multi-section/term analysis
-  1) Create session mapping → 2) Batch process with `summarize_transcript_files()` → 3) Masked plots and section summaries
+  1) Create session mapping → 2) Batch process with `summarize_transcript_files()` → 3) Masked plots and section summaries via `plot_users()`
 
 ### UX Principles
 - Privacy by default; explicit opt-out only with warnings
@@ -129,15 +130,30 @@ For each FR, include acceptance criteria (AC).
 
 ### FR-6 Visualization
 - Description: Privacy-conscious plotting of engagement metrics.
-- Functions: `plot_users_by_metric()`, `plot_users_masked_section_by_metric()`
+- Functions: `plot_users()`
 - AC:
   - Plots mask PII by default; legends and labels align with privacy level
 
 ### FR-7 Writers and Reports
 - Description: Export summaries and reports; ensure privacy enforcement at boundaries.
-- Functions: `write_engagement_metrics()`, `write_transcripts_summary()`, `write_transcripts_session_summary()`
+- Functions: `write_metrics()`
 - AC:
   - Writers refuse to output unmasked PII unless user explicitly sets privacy level to "none" and receives a warning
+
+### FR-10 Orchestration
+- Description: One-call folder → metrics flow.
+- Functions: `analyze_transcripts()`
+- AC:
+  - Given a directory containing one or more `.transcript.vtt` files, returns a tibble of engagement metrics
+  - Errors clearly on missing directory or no matching files
+  - Optional write-out via `write_metrics()`; respects privacy defaults
+
+### FR-11 Privacy Verification
+- Description: Verifiable privacy assurance in outputs.
+- Functions: `privacy_audit()`
+- AC:
+  - Given a tibble produced by user-facing functions, `privacy_audit()` reports identifier columns present and masked counts
+  - Example audit is included in docs/tests to demonstrate masking is effective by default
 
 ### FR-8 Privacy Controls (Default Safe)
 - Description: Global configuration and enforcement hooks.
@@ -168,10 +184,19 @@ For each FR, include acceptance criteria (AC).
 ### NFR-3 Reliability and Quality
 - Test coverage ≥ 90% for exported functions
 - Deterministic outputs; clear error messages; reproducible examples
+- Metrics naming standard: use `perc_n`, `perc_duration`, `perc_wordcount` across API and docs; temporary aliases may exist for backward compatibility
 
 ### NFR-4 CRAN Compliance
 - R CMD check clean: 0 errors, 0 warnings, ≤ 2 acceptable notes
 - `.Rbuildignore` excludes non-standard files; LICENSE and URLs valid
+
+### NFR-5 CI and Performance Budgets
+- CI matrix across Linux/macOS/Windows and multiple R versions
+- Benchmarks job enforces configurable performance budgets; regressions fail CI
+- Initial budgets (configurable via env):
+  - 1 file ≤ 10 seconds (`BUDGET_1`)
+  - 50 files ≤ 120 seconds (`BUDGET_50`)
+  - 500 files ≤ 1200 seconds (`BUDGET_500`)
 
 ---
 
@@ -181,12 +206,14 @@ For each FR, include acceptance criteria (AC).
 - Mapping: link transcripts to courses/sections/terms
 - Metrics: per-speaker/per-session aggregates (counts, durations)
 - Privacy fields masked by default: `preferred_name`, `name`, `first_last`, `name_raw`, `student_id`, `email`
+- Provenance attributes on outputs: `schema_version`, `source_files`, `processing_timestamp`, `privacy_level`
 
 ---
 
 ## 8) API and Backward Compatibility
 - Public surface: Exported functions in `R/` (see `NAMESPACE` and README key functions)
 - Stability: Aim to avoid breaking changes; if necessary, provide migration notes
+- Deprecations: legacy plotting/writer functions are soft-deprecated and will be removed on a future minor release; timeline recorded in NEWS and issues (see `#206`, `#207`, `#208`, `#209`, `#210`, `#211`)
 - Naming consistency: Track in issues ([#16], [#23]); avoid acronyms in user-facing APIs
 
 ---
@@ -234,7 +261,7 @@ Mark each as Accepted/Rejected during review and update scope accordingly.
 ---
 
 ## 13) Traceability and References
-- Issues: `#123`, `#125`–`#130`, `#83`, `#84`, `#90`, `#97`, `#110`, `#113`, `#115`, `#127`
+- Issues: `#123`, `#125`–`#130`, `#83`, `#84`, `#90`, `#97`, `#110`, `#113`, `#115`, `#127`, `#206`–`#211`
 - Key docs: `PROJECT.md`, `README.md`, `DOCUMENTATION.md`, FERPA/ethics analysis in `docs/development/ethical-issues-research/`
 
 ---
@@ -243,8 +270,8 @@ Mark each as Accepted/Rejected during review and update scope accordingly.
 - Glossary: PII, FERPA, CRAN, P95 (95th percentile processing time)
 - Example entry points:
   - `summarize_transcript_metrics()` for core metrics
-  - `plot_users_by_metric()` and `plot_users_masked_section_by_metric()` for visualization
-  - Writers: `write_engagement_metrics()`, `write_transcripts_summary()`
+  - Visualization: `plot_users()`
+  - Writers: `write_metrics()`
 
 Owner: Maintainers
 Reviewers: Maintainer team and ethics/compliance reviewers
