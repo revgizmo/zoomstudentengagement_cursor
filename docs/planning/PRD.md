@@ -140,7 +140,7 @@ For each FR, include acceptance criteria (AC).
 - AC:
   - Writers refuse to output unmasked PII unless user explicitly sets privacy level to "none" and receives a warning
 
-### FR-10 Orchestration
+### FR-8 Orchestration
 - Description: One-call folder → metrics flow.
 - Functions: `analyze_transcripts()`
 - AC:
@@ -148,7 +148,7 @@ For each FR, include acceptance criteria (AC).
   - Errors clearly on missing directory or no matching files
   - Optional write-out via `write_metrics()`; respects privacy defaults
 
-### FR-11 Privacy Verification
+### FR-9 Privacy Verification
 - Description: Verifiable privacy assurance in outputs.
 - Functions: `privacy_audit()`
 - AC:
@@ -164,14 +164,14 @@ For each FR, include acceptance criteria (AC).
   - Console guidance and diagnostics are guarded in tests (e.g., respect `Sys.getenv("TESTTHAT")`)
   - Parameter `unmatched_names_action` supports `"stop"` (default) or `"warn"` with explicit, actionable messages
 
-### FR-8 Privacy Controls (Default Safe)
+### FR-10 Privacy Controls (Default Safe)
 - Description: Global configuration and enforcement hooks.
 - Functions: `set_privacy_defaults()`, `ensure_privacy()`, `.onLoad()`
 - AC:
   - Package load sets `zoomstudentengagement.privacy_level = "mask"` unless user has set it
   - Tests cover masked default across summaries, plots, writers
 
-### FR-9 Documentation and Vignettes
+### FR-11 Documentation and Vignettes
 - Description: End-to-end vignettes and ethics/FERPA guidance.
 - AC:
   - “Getting Started,” transcript processing, roster cleaning, plotting, session mapping
@@ -185,6 +185,7 @@ For each FR, include acceptance criteria (AC).
 - Default masked outputs; explicit opt-out with warnings
 - FERPA guidance included; ethical risks documented with mitigations
 - No telemetry, no network I/O; all processing local by default
+ - See NEWS.md for deprecation dates and `docs/development/ethical-issues-research/ETHICAL_ISSUES_ANALYSIS.md` for threat modeling/mitigations
 
 ### NFR-2 Performance and Stability
 - Batch processing scales to ≥ 500 files and ≥ 1M utterances under typical laptop/server resources
