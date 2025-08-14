@@ -194,6 +194,29 @@ devtools::check()                    # Full package check
 devtools::build()                    # Create distributable package
 ```
 
+### Managing Issues from Markdown Plans
+
+We maintain a Markdown plan at `ISSUES/docs_overhaul_plan.md` and sync it to GitHub Issues.
+
+- Local usage:
+  - Dry run:
+    ```bash
+    DRY_RUN=1 bash scripts/create_issues_from_plan.sh ISSUES/docs_overhaul_plan.md
+    ```
+  - Create/update issues:
+    ```bash
+    export GH_TOKEN=YOUR_TOKEN
+    UPDATE_IF_EXISTS=1 bash scripts/create_issues_from_plan.sh ISSUES/docs_overhaul_plan.md
+    ```
+- GitHub Actions:
+  - Run workflow “Sync issues from plan” with inputs:
+    - `plan_path`: path to the plan (default: `ISSUES/docs_overhaul_plan.md`)
+    - `update`: `true` to update existing issues with matching titles
+
+Plan format:
+- Front matter: `milestone`, `tracking_issue_title`
+- Each `## Heading` becomes an issue; optional `Labels:` and `Assignees:` lines per section.
+
 ### Validation Requirements
 
 #### **Code Quality**
