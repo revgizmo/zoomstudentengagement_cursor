@@ -29,20 +29,13 @@ jobs:
 
       - name: Install dependencies
         run: |
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
           install.packages(c("remotes", "lintr"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Run lintr
         run: |
-          library(lintr)
-          lint_results <- lint_package()
-          
-          if (length(lint_results) > 0) {
-            print(lint_results)
-            cat("Found", length(lint_results), "linting issues\n")
-            # Don't fail the build, just report issues
-          } else {
-            cat("No linting issues found\n")
-          }
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          lintr::lint_package()
         shell: Rscript {0}

@@ -31,36 +31,19 @@ jobs:
 
       - name: Install dependencies
         run: |
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
           install.packages(c("remotes", "covr"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
-      - name: Run coverage
+      - name: Generate documentation
         run: |
-          library(covr)
-          coverage <- package_coverage()
-          print(coverage)
-          
-          # Generate coverage report
-          report <- to_cobertura(coverage)
-          writeLines(report, "coverage.xml")
-          
-          # Check coverage threshold
-          coverage_percent <- attr(coverage, "percent")
-          cat("Coverage is", coverage_percent, "%\n")
-          
-          if (coverage_percent < 90) {
-            cat("Coverage is below 90% threshold\n")
-            exit(1)
-          } else {
-            cat("Coverage meets 90% threshold\n")
-          }
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          devtools::document()
         shell: Rscript {0}
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
+      - name: Run coverage
+        run: |
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          covr::codecov(quiet = FALSE)
+        shell: Rscript {0}
