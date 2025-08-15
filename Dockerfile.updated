@@ -47,11 +47,24 @@ RUN apt-get update && \
     liblapack-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install R packages for development
-RUN R -q -e "install.packages(c('rcmdcheck','covr','lintr','roxygen2','testthat','withr','hms','tibble','readr','languageserver','styler','usethis','devtools','remotes','knitr','rmarkdown','digest','jsonlite','lubridate','magrittr','purrr','rlang','stringr','tidyr','tidyselect','ggplot2','data.table','dplyr'), repos='https://cloud.r-project.org')"
+# Install R packages for zoomstudentengagement
+# Core packages (required for functionality)
+RUN R -q -e "install.packages(c('data.table', 'digest', 'dplyr', 'ggplot2', 'hms', 'jsonlite', 'lubridate', 'magrittr', 'purrr', 'readr', 'rlang', 'stringr', 'tibble', 'tidyr', 'tidyselect'), repos='https://cloud.r-project.org')"
+
+# Development packages (testing/documentation)
+RUN R -q -e "install.packages(c('testthat', 'withr', 'covr', 'knitr', 'rmarkdown'), repos='https://cloud.r-project.org')"
+
+# Development tools (code quality/build)
+RUN R -q -e "install.packages(c('devtools', 'lintr', 'styler', 'usethis', 'remotes', 'rcmdcheck', 'languageserver'), repos='https://cloud.r-project.org')"
 
 # Set working directory
 WORKDIR /workspace
+
+# Copy package files
+COPY . /workspace/
+
+# Install the package in development mode
+RUN R -q -e "devtools::install_deps(dependencies = TRUE)"
 
 # Default command
 CMD ["R"]

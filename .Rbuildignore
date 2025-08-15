@@ -7,9 +7,14 @@
 ^\.cursor/
 ^\.github/
 ^\.lintr$
-^\.Rprofile$
 ^\.gitignore$
 ^\.cursorrules$
+
+# Docker and container development files
+^Dockerfile$
+^\.dockerignore$
+^\.devcontainer/
+^\.devcontainer_bak/
 
 # System files
 ^\.DS_Store$
@@ -23,6 +28,7 @@
 
 # Development documentation
 ^docs/
+^DEVELOPMENT_SETUP\.md$
 ^CONTEXT_SCRIPTS_ENHANCEMENT\.md$
 ^ISSUE_20_COVERAGE_TODO\.md$
 ^PROJECT\.md\.backup\..*$
@@ -113,4 +119,11 @@
 ^Rplots\.pdf$
 ^ISSUES/
 
-
+# Docker and container development files (Issue #221)
+^DEPENDENCY_ANALYSIS_SUMMARY\.md$
+^DOCKER_SETUP\.md$
+^Dockerfile\.complete$
+^Dockerfile\.updated$
+^Dockerfile\.backup$
+^ISSUE_218_COMPREHENSIVE_TEST_COVERAGE\.md$
+^ISSUE_220_TEST_OUTPUT_POLLUTION\.md$

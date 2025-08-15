@@ -96,6 +96,10 @@ rsconnect/
 .cursor.json
 example_test_results.rds
 
+# Docker and container development
+.cursor_backup/
+Dockerfile.backup
+
 # Auto-generated documentation files
 # doc/ directory contains only auto-generated HTML files from vignettes
 # Source files (.Rmd, .R) are now properly located in vignettes/
