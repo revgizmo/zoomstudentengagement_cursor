@@ -45,13 +45,31 @@ RUN apt-get update && \
     libreadline-dev \
     libblas-dev \
     liblapack-dev \
+    # Additional system dependencies for R packages
+    libssh2-1-dev \
+    libssl-dev \
+    libxml2-dev \
+    libcurl4-openssl-dev \
+    libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install R packages for development
-RUN R -q -e "install.packages(c('rcmdcheck','covr','lintr','roxygen2','testthat','withr','hms','tibble','readr','languageserver','styler','usethis','devtools','remotes','knitr','rmarkdown','digest','jsonlite','lubridate','magrittr','purrr','rlang','stringr','tidyr','tidyselect','ggplot2','data.table','dplyr'), repos='https://cloud.r-project.org')"
+# Install ALL R packages including transitive dependencies (136 total packages)
+RUN R -q -e "install.packages(c('askpass', 'backports', 'base64enc', 'bit', 'bit64', 'brew', 'brio', 'bslib', 'cachem', 'callr', 'cli', 'clipr', 'codetools', 'collections', 'commonmark', 'covr', 'cpp11', 'crayon', 'credentials', 'curl', 'data.table', 'desc', 'devtools', 'diffobj', 'digest', 'downlit', 'dplyr', 'ellipsis', 'evaluate', 'fansi', 'farver', 'fastmap', 'fontawesome', 'fs', 'generics', 'gert', 'ggplot2', 'gh', 'gitcreds', 'glue', 'gtable', 'highr', 'hms', 'htmltools', 'htmlwidgets', 'httpuv', 'httr', 'httr2', 'ini', 'isoband', 'jquerylib', 'jsonlite', 'knitr', 'labeling', 'languageserver', 'later', 'lattice', 'lazyeval', 'lifecycle', 'lintr', 'lubridate', 'magrittr', 'MASS', 'Matrix', 'memoise', 'mgcv', 'mime', 'miniUI', 'nlme', 'openssl', 'pillar', 'pkgbuild', 'pkgconfig', 'pkgdown', 'pkgload', 'praise', 'prettyunits', 'processx', 'profvis', 'progress', 'promises', 'ps', 'purrr', 'R.cache', 'R.methodsS3', 'R.oo', 'R.utils', 'R6', 'ragg', 'rappdirs', 'rcmdcheck', 'RColorBrewer', 'Rcpp', 'readr', 'remotes', 'rex', 'rlang', 'rmarkdown', 'roxygen2', 'rprojroot', 'rstudioapi', 'rversions', 'sass', 'scales', 'sessioninfo', 'shiny', 'sourcetools', 'stringi', 'stringr', 'styler', 'sys', 'systemfonts', 'testthat', 'textshaping', 'tibble', 'tidyr', 'tidyselect', 'timechange', 'tinytex', 'tzdb', 'urlchecker', 'usethis', 'utf8', 'vctrs', 'viridisLite', 'vroom', 'waldo', 'whisker', 'withr', 'xfun', 'xml2', 'xmlparsedata', 'xopen', 'xtable', 'yaml', 'zip'), repos='https://cloud.r-project.org')"
 
 # Set working directory
 WORKDIR /workspace
+
+# Copy package files
+COPY . /workspace/
+
+# Install the package in development mode
+RUN R -q -e "devtools::install_deps(dependencies = TRUE)"
 
 # Default command
 CMD ["R"]
