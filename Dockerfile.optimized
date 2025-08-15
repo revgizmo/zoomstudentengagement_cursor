@@ -1,0 +1,68 @@
+# Use the official R base image
+FROM rocker/r-ver:4.4.0
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Create a separate layer for system dependencies
+# This layer will be cached unless system dependencies change
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    # Core development tools
+    git \
+    curl \
+    wget \
+    pkg-config \
+    build-essential \
+    # Compression libraries
+    libbz2-dev \
+    liblzma-dev \
+    libz-dev \
+    # SSL and networking
+    libssl-dev \
+    libcurl4-openssl-dev \
+    # XML and data formats
+    libxml2-dev \
+    # Font and text rendering
+    libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    # Image formats
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    # Spatial data
+    libudunits2-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    # Git integration
+    libgit2-dev \
+    # Additional common dependencies
+    libcairo2-dev \
+    libpango1.0-dev \
+    libxt-dev \
+    libreadline-dev \
+    libblas-dev \
+    liblapack-dev \
+    # Additional system dependencies for R packages
+    libssh2-1-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a separate layer for R package installation
+# This layer will be cached unless R packages change
+COPY install_r_packages.R /tmp/
+RUN R -q -f /tmp/install_r_packages.R
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy package files (this layer changes most frequently)
+COPY . /workspace/
+
+# Install the package in development mode (separate layer)
+RUN R -q -e "devtools::install_deps(dependencies = TRUE)"
+
+# Default command
+CMD ["R"]
