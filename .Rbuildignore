@@ -119,4 +119,11 @@
 ^Rplots\.pdf$
 ^ISSUES/
 
-
+# Docker and container development files (Issue #221)
+^DEPENDENCY_ANALYSIS_SUMMARY\.md$
+^DOCKER_SETUP\.md$
+^Dockerfile\.complete$
+^Dockerfile\.updated$
+^Dockerfile\.backup$
+^ISSUE_218_COMPREHENSIVE_TEST_COVERAGE\.md$
+^ISSUE_220_TEST_OUTPUT_POLLUTION\.md$
