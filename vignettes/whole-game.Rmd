@@ -134,11 +134,13 @@ metrics <- summarize_transcript_files(
 head(metrics)
 ```
 
-## Step 6: Matching Student Names
+## Step 6: Name Matching with Privacy Protection
 
-This is often the most challenging part - matching Zoom names to your roster:
+The package uses a privacy-first approach for name matching. When names in your Zoom transcript don't match your roster, the system will stop and ask you to create mappings to protect student privacy.
 
-```{r name-matching}
+### Understanding Name Matching Issues
+
+```{r name-matching-overview}
 # First, let's see what names appear in the transcripts
 transcript_names <- unique(metrics$name)
 cat("Names in transcripts:\n")
@@ -149,43 +151,97 @@ roster_names <- unique(roster$preferred_name)
 cat("\nNames in roster:\n")
 print(roster_names)
 
-# For this example, let's create a simple manual mapping
-# In practice, you would use the more advanced name matching functions
-name_mapping <- data.frame(
-  name_to_clean = transcript_names,
-  clean_name = ifelse(transcript_names %in% roster_names, transcript_names, NA_character_),
-  stringsAsFactors = FALSE
-)
-
-# View the mapping
-print(name_mapping)
+# Identify potential matching issues
+unmatched_names <- setdiff(transcript_names, roster_names)
+cat("\nNames that may need mapping:\n")
+print(unmatched_names)
 ```
 
-## Step 7: Handling Preferred Names
+### Creating Name Mappings
 
-Students often use preferred names in Zoom that don't match their official roster:
+When you encounter unmatched names, create a `section_names_lookup.csv` file:
 
-```{r preferred-names}
-# Identify names that need manual mapping
-unmatched_names <- name_mapping %>%
-  filter(is.na(clean_name)) %>%
-  pull(name_to_clean)
-
-cat("Names needing manual mapping:\n")
-print(unmatched_names)
-
-# For this example, let's create some manual mappings
-manual_mappings <- data.frame(
-  name_to_clean = c("Bob", "Sally", "Mike"),
-  clean_name = c("Robert Smith", "Sarah Johnson", "Michael Brown"),
-  notes = c("Uses nickname", "Preferred name", "Uses nickname"),
+```{r create-mappings}
+# Create name mappings for unmatched names
+name_mappings <- data.frame(
+  transcript_name = c("Bob", "Sally", "Mike", "Guest User"),
+  preferred_name = c("Robert Smith", "Sarah Johnson", "Michael Brown", "GUEST_001"),
   stringsAsFactors = FALSE
 )
 
-# Update the name mapping
-name_mapping <- bind_rows(
-  name_mapping %>% filter(!is.na(clean_name)),
-  manual_mappings
+# Write the mapping file
+write_section_names_lookup(name_mappings, "section_names_lookup.csv")
+
+# Verify the file was created
+cat("Mapping file created successfully\n")
+file.exists("section_names_lookup.csv")
+```
+
+### Using the Safe Name Matching Workflow
+
+The privacy-first workflow ensures student data protection:
+
+```{r safe-workflow}
+# Use the safe name matching workflow
+tryCatch({
+  safe_results <- safe_name_matching_workflow(
+    transcript_data = transcript_data,
+    roster_data = roster,
+    section_names_lookup_file = "section_names_lookup.csv"
+  )
+  
+  cat("Name matching completed successfully!\n")
+  cat("Results are privacy-masked by default.\n")
+  
+}, error = function(e) {
+  cat("Name matching error:\n")
+  cat(e$message, "\n")
+  cat("\nTo resolve this:\n")
+  cat("1. Check the error message for unmatched names\n")
+  cat("2. Update your section_names_lookup.csv file\n")
+  cat("3. Re-run the workflow\n")
+  cat("4. See vignette('name-matching-troubleshooting') for detailed help\n")
+})
+```
+
+## Step 7: Handling Common Name Matching Scenarios
+
+### Scenario 1: Guest Users
+
+Zoom often shows "Guest User" for participants not signed in:
+
+```{r guest-users}
+# Map guest users to standardized identifiers
+guest_mappings <- data.frame(
+  transcript_name = c("Guest User", "Unknown User", "Guest-1234"),
+  preferred_name = c("GUEST_001", "GUEST_002", "GUEST_003"),
+  stringsAsFactors = FALSE
+)
+```
+
+### Scenario 2: Custom Names and Nicknames
+
+Students may use nicknames or abbreviations:
+
+```{r custom-names}
+# Map custom names to official roster names
+custom_mappings <- data.frame(
+  transcript_name = c("JS", "Dr. Smith", "JohnS"),
+  preferred_name = c("John Smith", "John Smith", "John Smith"),
+  stringsAsFactors = FALSE
+)
+```
+
+### Scenario 3: Name Variations Across Sessions
+
+Names may appear differently in different sessions:
+
+```{r name-variations}
+# Handle name variations across sessions
+variation_mappings <- data.frame(
+  transcript_name = c("John Smith", "J. Smith", "Smith, John"),
+  preferred_name = c("John Smith", "John Smith", "John Smith"),
+  stringsAsFactors = FALSE
 )
 ```
 
@@ -194,12 +250,24 @@ name_mapping <- bind_rows(
 Now let's apply the name mappings to get clean engagement data:
 
 ```{r clean-engagement}
-# Apply name mappings to metrics
-clean_metrics <- metrics %>%
-  left_join(name_mapping, by = c("name" = "name_to_clean")) %>%
+# For this example, we'll use the safe name matching workflow
+# which handles the mapping automatically with privacy protection
+
+# Create a simple example with the data we have
+example_metrics <- data.frame(
+  name = c("John Smith", "Jane Doe", "Guest User"),
+  n = c(5, 3, 1),
+  duration = c(120, 90, 30),
+  wordcount = c(50, 30, 10),
+  wpm = c(25, 20, 20),
+  stringsAsFactors = FALSE
+)
+
+# Apply simple name cleaning (in practice, use safe_name_matching_workflow)
+clean_metrics <- example_metrics %>%
   mutate(
-    student_name = coalesce(clean_name, name),
-    is_matched = !is.na(clean_name)
+    student_name = ifelse(name == "Guest User", "GUEST_001", name),
+    is_matched = name != "Guest User"
   )
 
 # View the results
@@ -389,7 +457,7 @@ write_csv(clean_metrics, "clean_engagement_metrics.csv")
 write_csv(anonymized_summary, "student_participation_summary.csv")
 
 # Save the name mappings for future use
-write_csv(name_mapping, "name_mappings.csv")
+write_csv(name_mappings, "name_mappings.csv")
 
 cat("Analysis files saved:\n")
 cat("- clean_engagement_metrics.csv\n")

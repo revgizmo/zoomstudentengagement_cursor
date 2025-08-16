@@ -1,0 +1,19 @@
+transcript_name,preferred_name
+Guest User,GUEST_001
+Unknown User,GUEST_002
+Guest-1234,GUEST_003
+Guest User (2),GUEST_004
+JS,John Smith
+Dr. Smith,John Smith
+JohnS,John Smith
+jsmith,John Smith
+JSmith,John Smith
+J. Smith,John Smith
+Smith, John,John Smith
+Smith J.,John Smith
+John S.,John Smith
+John A. Smith,John Smith
+Smith, John A.,John Smith
+J.A. Smith,John Smith
+John Smith Jr.,John Smith
+
