@@ -92,12 +92,74 @@ The typical workflow involves:
 6. **Validate**: Check FERPA compliance and anonymize data
 7. **Report**: Generate insights and reports
 
+## Troubleshooting Name Matching Issues
+
+When working with Zoom transcripts and student rosters, you may encounter name matching issues. The package uses a privacy-first approach that stops processing when names cannot be safely matched.
+
+### Common Issues and Solutions
+
+#### Issue: "Found unmatched names" Error
+
+This error occurs when names in your Zoom transcript don't match names in your student roster.
+
+**Solution**: Create a `section_names_lookup.csv` file to map transcript names to roster names.
+
+```{r name-matching-example}
+# Example: Create name mappings
+name_mappings <- data.frame(
+  transcript_name = c("JS", "Dr. Smith", "Guest User"),
+  preferred_name = c("John Smith", "John Smith", "GUEST_001"),
+  stringsAsFactors = FALSE
+)
+
+# Write the mapping file
+write_section_names_lookup(name_mappings, "section_names_lookup.csv")
+```
+
+#### Issue: Guest Users in Transcripts
+
+Zoom often shows "Guest User" or "Unknown User" for participants not signed in.
+
+**Solution**: Map guest users to standardized identifiers.
+
+```{r guest-users}
+# Map guest users to consistent identifiers
+guest_mappings <- data.frame(
+  transcript_name = c("Guest User", "Unknown User", "Guest-1234"),
+  preferred_name = c("GUEST_001", "GUEST_002", "GUEST_003"),
+  stringsAsFactors = FALSE
+)
+```
+
+#### Issue: Custom Names and Abbreviations
+
+Students may use nicknames or abbreviations in Zoom.
+
+**Solution**: Create mappings for all name variations.
+
+```{r custom-names}
+# Map custom names to official roster names
+custom_mappings <- data.frame(
+  transcript_name = c("JS", "JohnS", "jsmith"),
+  preferred_name = c("John Smith", "John Smith", "John Smith"),
+  stringsAsFactors = FALSE
+)
+```
+
+### Getting Help
+
+For detailed troubleshooting guidance:
+- **See the troubleshooting vignette**: `vignette("name-matching-troubleshooting")`
+- **Check the package documentation**: `?safe_name_matching_workflow`
+- **Review example files**: See `inst/extdata/example_section_names_lookup.csv`
+
 ## Next Steps
 
 - **For transcript processing**: See the [Transcript Processing](transcript-processing.html) vignette
 - **For roster management**: See the [Roster Cleaning](roster-cleaning.html) vignette  
 - **For visualization**: See the [Plotting and Analysis](plotting.html) vignette
 - **For advanced workflows**: See the [Session Mapping](session-mapping.html) vignette
+- **For name matching help**: See the [Name Matching Troubleshooting](name-matching-troubleshooting.html) vignette
 - **For FERPA compliance**: See the [FERPA Compliance & Ethical Use](ferpa-ethics.html) vignette
 
 ## Getting Help

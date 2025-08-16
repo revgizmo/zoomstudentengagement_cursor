@@ -113,6 +113,15 @@ safe_name_matching_workflow <- function(transcript_file_path,
     )
   }
 
+  # Enhanced empty roster validation
+  if (nrow(roster_data) == 0) {
+    stop(
+      "Roster data is empty. Please provide a valid roster with student information.\n",
+      "See vignette('roster-cleaning') for guidance on creating a proper roster.",
+      call. = FALSE
+    )
+  }
+
   # Stage 1: Load and process with real names in memory
   message("Stage 1: Loading transcript and performing name matching...")
 
@@ -134,6 +143,17 @@ safe_name_matching_workflow <- function(transcript_file_path,
         "Please verify the transcript format. Supported formats include ",
         "Zoom VTT and chat exports with participant names."
       ),
+      call. = FALSE
+    )
+  }
+
+  # Add column existence checks to prevent warnings
+  required_columns <- c("user_name", "message", "timestamp")
+  missing_cols <- setdiff(required_columns, names(transcript_data))
+  if (length(missing_cols) > 0) {
+    warning(
+      "Missing columns in transcript data: ", paste(missing_cols, collapse = ", "), "\n",
+      "This may affect processing. Expected columns: ", paste(required_columns, collapse = ", "),
       call. = FALSE
     )
   }
@@ -229,12 +249,15 @@ handle_unmatched_names <- function(unmatched_names,
     # Stop with error for maximum privacy protection
     stop(
       paste0(
-        "Unmatched names found. Stopping for user intervention.\n",
-        "Unmatched names: ", paste(unmatched_names, collapse = ", "), "\n",
-        "Action required: Update the lookup file and re-run.\n",
-        "Lookup path: ", file.path(data_folder, section_names_lookup_file), "\n",
-        "Guided option: Set unmatched_names_action = 'warn' to receive a ",
-        "template and instructions."
+        "Found unmatched names: ", paste(unmatched_names, collapse = ", "), "\n",
+        "Please update your section_names_lookup.csv file with these mappings.\n",
+        "See vignette('name-matching-troubleshooting') for detailed instructions.\n",
+        "Example mappings:\n",
+        paste(sapply(unmatched_names, function(name) {
+          paste0("  ", name, " -> [Your roster name]")
+        }), collapse = "\n"), "\n",
+        "Lookup file path: ", file.path(data_folder, section_names_lookup_file), "\n",
+        "For guided assistance, set unmatched_names_action = 'warn' to receive a template."
       ),
       call. = FALSE
     )

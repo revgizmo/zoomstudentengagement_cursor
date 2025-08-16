@@ -98,6 +98,9 @@ load_section_names_lookup <- function(data_folder = "data",
     data[[col]] <- as.character(data[[col]])
   }
 
+  # Validate lookup file format
+  validate_lookup_file_format(data)
+
   # Validate that key name columns are character and not purely numeric when values are present
   name_cols <- c("preferred_name", "formal_name", "transcript_name")
   for (col in name_cols) {
@@ -122,4 +125,45 @@ load_section_names_lookup <- function(data_folder = "data",
 
   # Return tibble (readr already returns a tibble)
   data
+}
+
+#' Validate Lookup File Format
+#'
+#' Internal function to validate the format of section names lookup files.
+#'
+#' @param lookup_data Data frame containing lookup information
+#'
+#' @return TRUE if valid, stops with error if invalid
+#' @keywords internal
+validate_lookup_file_format <- function(lookup_data) {
+  required_cols <- c("transcript_name", "preferred_name")
+  
+  if (!all(required_cols %in% names(lookup_data))) {
+    missing_cols <- setdiff(required_cols, names(lookup_data))
+    stop(
+      "Lookup file missing required columns: ", paste(missing_cols, collapse = ", "), "\n",
+      "Required columns: ", paste(required_cols, collapse = ", "), "\n",
+      "See vignette('name-matching-troubleshooting') for file format guidance."
+    )
+  }
+  
+  if (nrow(lookup_data) == 0) {
+    warning(
+      "Lookup file is empty - no name mappings provided.\n",
+      "This is normal for new files. Add mappings as needed.",
+      call. = FALSE
+    )
+  }
+  
+  # Check for duplicate transcript names
+  duplicates <- lookup_data$transcript_name[duplicated(lookup_data$transcript_name)]
+  if (length(duplicates) > 0) {
+    warning(
+      "Duplicate transcript names found: ", paste(unique(duplicates), collapse = ", "), "\n",
+      "Only the first mapping for each name will be used.",
+      call. = FALSE
+    )
+  }
+  
+  return(TRUE)
 }

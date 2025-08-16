@@ -325,7 +325,7 @@ test_that("handle_unmatched_names works correctly", {
       data_folder = "data",
       section_names_lookup_file = "test.csv"
     ),
-    "Unmatched names found"
+    "Found unmatched names"
   )
 
   # Test with warn action

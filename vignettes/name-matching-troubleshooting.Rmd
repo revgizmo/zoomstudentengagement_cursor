@@ -1,0 +1,332 @@
+---
+title: "Name Matching Troubleshooting Guide"
+author: "zoomstudentengagement package"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Name Matching Troubleshooting Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+# Name Matching Troubleshooting Guide
+
+This guide helps you resolve common name matching issues when working with Zoom transcripts and student rosters. The package uses a privacy-first approach, which means it will stop processing if it encounters names that cannot be safely matched.
+
+## Overview
+
+The name matching system works by:
+1. **Extracting names** from Zoom transcripts
+2. **Comparing names** against your student roster
+3. **Creating mappings** for unmatched names in `section_names_lookup.csv`
+4. **Processing with privacy protection** to ensure student data remains secure
+
+## Common Scenarios
+
+### Scenario 1: Guest User in Transcript, Not in Roster
+
+**Problem**: Zoom transcripts contain names like "Guest User" or "Unknown User" that don't match your roster.
+
+**Solution**: Map these names to a standard identifier or exclude them from analysis.
+
+```{r}
+# Example section_names_lookup.csv for guest users
+guest_mapping <- data.frame(
+  transcript_name = c("Guest User", "Unknown User", "Guest-1234"),
+  preferred_name = c("GUEST_001", "GUEST_002", "GUEST_003"),
+  stringsAsFactors = FALSE
+)
+
+# Write the mapping file
+write_section_names_lookup(guest_mapping, "section_names_lookup.csv")
+```
+
+### Scenario 2: Custom Names (JS → John Smith)
+
+**Problem**: Students use abbreviated or custom names in Zoom that don't match their official roster names.
+
+**Solution**: Create mappings from custom names to official roster names.
+
+```{r}
+# Example section_names_lookup.csv for custom names
+custom_mapping <- data.frame(
+  transcript_name = c("JS", "Dr. Smith", "JohnS", "jsmith"),
+  preferred_name = c("John Smith", "John Smith", "John Smith", "John Smith"),
+  stringsAsFactors = FALSE
+)
+
+# Write the mapping file
+write_section_names_lookup(custom_mapping, "section_names_lookup.csv")
+```
+
+### Scenario 3: Cross-Session Attendance Tracking
+
+**Problem**: Names appear differently across multiple Zoom sessions, making cross-session analysis difficult.
+
+**Solution**: Use consistent name mappings across all sessions.
+
+```{r}
+# Example section_names_lookup.csv for cross-session consistency
+cross_session_mapping <- data.frame(
+  transcript_name = c("John Smith", "J. Smith", "Smith, John", "JohnS"),
+  preferred_name = c("John Smith", "John Smith", "John Smith", "John Smith"),
+  stringsAsFactors = FALSE
+)
+
+# Write the mapping file
+write_section_names_lookup(cross_session_mapping, "section_names_lookup.csv")
+```
+
+### Scenario 4: Name Variations Across Sessions
+
+**Problem**: Students use different name formats in different sessions (e.g., "John Smith" vs "Smith, John").
+
+**Solution**: Create comprehensive mappings for all name variations.
+
+```{r}
+# Example section_names_lookup.csv for name variations
+variation_mapping <- data.frame(
+  transcript_name = c("John Smith", "Smith, John", "J. Smith", "John S.", "Smith"),
+  preferred_name = c("John Smith", "John Smith", "John Smith", "John Smith", "John Smith"),
+  stringsAsFactors = FALSE
+)
+
+# Write the mapping file
+write_section_names_lookup(variation_mapping, "section_names_lookup.csv")
+```
+
+## Step-by-Step Resolution Process
+
+### Step 1: Identify Unmatched Names
+
+When you encounter a name matching error, the system will show you exactly which names couldn't be matched:
+
+```{r}
+# Example error message
+# Error: Found unmatched names: Guest User, JS, Dr. Smith
+# Please update your section_names_lookup.csv file with these mappings.
+```
+
+### Step 2: Create or Update Your Mapping File
+
+Create a `section_names_lookup.csv` file with the following structure:
+
+```{r}
+# Required columns
+required_structure <- data.frame(
+  transcript_name = "Name from Zoom transcript",
+  preferred_name = "Name from your roster",
+  stringsAsFactors = FALSE
+)
+```
+
+### Step 3: Add Mappings for Unmatched Names
+
+For each unmatched name, add a row to your mapping file:
+
+```{r}
+# Example: Adding mappings for unmatched names
+new_mappings <- data.frame(
+  transcript_name = c("Guest User", "JS", "Dr. Smith"),
+  preferred_name = c("GUEST_001", "John Smith", "John Smith"),
+  stringsAsFactors = FALSE
+)
+
+# Append to existing file or create new one
+write_section_names_lookup(new_mappings, "section_names_lookup.csv")
+```
+
+### Step 4: Re-run Your Analysis
+
+After creating the mapping file, re-run your analysis:
+
+```{r}
+# Load your data (using example files for demonstration)
+transcript_file <- system.file(
+  "extdata/transcripts/GMT20240124-202901_Recording.transcript.vtt",
+  package = "zoomstudentengagement"
+)
+roster_data <- load_roster(
+  data_folder = system.file("extdata", package = "zoomstudentengagement"),
+  roster_file = "roster.csv"
+)
+
+# Run analysis with name matching (this will demonstrate the error handling)
+tryCatch({
+  results <- safe_name_matching_workflow(
+    transcript_file_path = transcript_file,
+    roster_data = roster_data,
+    section_names_lookup_file = "section_names_lookup.csv"
+  )
+  cat("Name matching completed successfully!\n")
+}, error = function(e) {
+  cat("Expected error encountered:\n")
+  cat(e$message, "\n")
+  cat("\nThis demonstrates the privacy-first approach in action.\n")
+})
+```
+
+## Privacy and Security Considerations
+
+### Privacy-First Design
+
+The package is designed with privacy as the top priority:
+
+- **Real names are never exposed** in final outputs
+- **All outputs are privacy-masked** by default
+- **Processing stops** if names cannot be safely matched
+- **Memory is cleaned** after processing sensitive data
+
+### FERPA Compliance
+
+When working with student data:
+
+- **Use consistent name mappings** across all sessions
+- **Avoid storing real names** in output files
+- **Use privacy-masked outputs** for analysis
+- **Clean up sensitive data** after processing
+
+### Best Practices
+
+1. **Start with a small test** using a few transcripts
+2. **Create comprehensive mappings** before full analysis
+3. **Use consistent naming conventions** in your roster
+4. **Review mappings regularly** as new names appear
+5. **Keep mapping files secure** and separate from outputs
+
+## Troubleshooting Common Issues
+
+### Issue: "File not found" Error
+
+**Cause**: The `section_names_lookup.csv` file doesn't exist or is in the wrong location.
+
+**Solution**: Create the file in your working directory or specify the full path.
+
+```{r}
+# Check if file exists
+file.exists("section_names_lookup.csv")
+
+# Create file if it doesn't exist
+if (!file.exists("section_names_lookup.csv")) {
+  empty_mapping <- data.frame(
+    transcript_name = character(0),
+    preferred_name = character(0),
+    stringsAsFactors = FALSE
+  )
+  write_section_names_lookup(empty_mapping, "section_names_lookup.csv")
+}
+```
+
+### Issue: "Invalid file format" Error
+
+**Cause**: The mapping file doesn't have the required columns.
+
+**Solution**: Ensure your file has exactly two columns: `transcript_name` and `preferred_name`.
+
+```{r}
+# Check file structure (example)
+mapping_data <- data.frame(
+  transcript_name = c("JS", "Dr. Smith"),
+  preferred_name = c("John Smith", "John Smith"),
+  stringsAsFactors = FALSE
+)
+names(mapping_data)
+
+# Should show: [1] "transcript_name" "preferred_name"
+```
+
+### Issue: "Empty roster" Error
+
+**Cause**: Your roster file is empty or contains no valid student data.
+
+**Solution**: Check your roster file and ensure it contains student information.
+
+```{r}
+# Check roster data (example)
+roster_data <- data.frame(
+  preferred_name = c("John Smith", "Jane Doe"),
+  stringsAsFactors = FALSE
+)
+nrow(roster_data)
+
+# Should be greater than 0
+```
+
+### Issue: "Missing columns" Warning
+
+**Cause**: Some transcript sessions are missing expected columns.
+
+**Solution**: This is usually harmless but can be resolved by ensuring all transcripts have consistent structure.
+
+```{r}
+# Check transcript structure (example)
+transcript_data <- data.frame(
+  user_name = c("John Smith", "Jane Doe"),
+  message = c("Hello", "Hi there"),
+  timestamp = Sys.time(),
+  stringsAsFactors = FALSE
+)
+names(transcript_data)
+
+# Expected columns: user_name, message, timestamp, etc.
+```
+
+## Advanced Configuration
+
+### Custom Privacy Settings
+
+You can adjust privacy settings for your analysis:
+
+```{r}
+# Set privacy level (default is "mask")
+set_privacy_defaults(privacy_level = "mask")
+
+# Available options:
+# - "mask": Names are hashed in outputs (recommended)
+# - "none": Names appear as-is (use with caution)
+```
+
+### Batch Processing Multiple Sessions
+
+For multiple sessions, create a comprehensive mapping file:
+
+```{r}
+# Load multiple transcripts (example)
+transcript_files <- list.files("transcripts/", pattern = "*.vtt", full.names = TRUE)
+
+# Process each file with the same mapping
+for (file in transcript_files) {
+  transcript_data <- load_zoom_transcript(file)
+  results <- safe_name_matching_workflow(
+    transcript_file_path = file,
+    roster_data = roster_data,
+    section_names_lookup_file = "section_names_lookup.csv"
+  )
+  # Process results...
+}
+```
+
+## Getting Help
+
+If you continue to have issues:
+
+1. **Check the error message** carefully - it usually tells you exactly what's wrong
+2. **Review your mapping file** - ensure it has the correct format
+3. **Test with a small dataset** first to isolate the issue
+4. **Check the package documentation** for function details
+5. **Create a reproducible example** if you need additional help
+
+## Summary
+
+The name matching system is designed to protect student privacy while enabling meaningful analysis. By following this guide and creating appropriate name mappings, you can successfully analyze Zoom transcripts while maintaining FERPA compliance and data security.
+
+Remember: When in doubt, choose the more privacy-protective option. The system will guide you through the process and ensure your analysis meets educational privacy standards.
