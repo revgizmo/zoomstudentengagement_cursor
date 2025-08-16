@@ -1,0 +1,53 @@
+# Multi-stage build for better performance
+# Stage 1: Build stage with all dependencies
+FROM rocker/r-ver:4.4.0 AS builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    git curl wget pkg-config build-essential \
+    libbz2-dev liblzma-dev libz-dev libssl-dev libcurl4-openssl-dev \
+    libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
+    libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
+    libudunits2-dev libgdal-dev libgeos-dev libproj-dev libgit2-dev \
+    libcairo2-dev libpango1.0-dev libxt-dev libreadline-dev \
+    libblas-dev liblapack-dev libssh2-1-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install R packages
+COPY install_r_packages.R /tmp/
+RUN R -q -f /tmp/install_r_packages.R
+
+# Stage 2: Runtime stage (smaller image)
+FROM rocker/r-ver:4.4.0 AS runtime
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install only runtime system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    git curl wget \
+    libssl3 libcurl4 libxml2 libfontconfig1 libharfbuzz0b libfribidi0 \
+    libfreetype6 libpng16-16 libtiff5 libjpeg62-turbo \
+    libudunits2-0 libgdal30 libgeos-c1v5 libproj22 \
+    libcairo2 libpango-1.0-0 libxt6 libreadline8 \
+    libblas3 liblapack3 libssh2-1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy R packages from builder stage
+COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
+COPY --from=builder /usr/local/lib/R/library /usr/local/lib/R/library
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy package files
+COPY . /workspace/
+
+# Install the package in development mode
+RUN R -q -e "devtools::install_deps(dependencies = TRUE)"
+
+# Default command
+CMD ["R"]

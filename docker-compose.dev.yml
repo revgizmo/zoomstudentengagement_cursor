@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  r-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.optimized
+      target: runtime
+    container_name: zoomstudentengagement-dev
+    volumes:
+      # Mount source code for live development
+      - .:/workspace:cached
+      # Cache R packages between runs
+      - r-packages:/usr/local/lib/R/site-library
+      - r-library:/usr/local/lib/R/library
+      # Cache system packages
+      - apt-cache:/var/cache/apt
+      - apt-lists:/var/lib/apt/lists
+    environment:
+      - R_ENVIRON_USER=/workspace/.Renviron
+      - R_PROFILE_USER=/workspace/.Rprofile
+    ports:
+      - "8787:8787"  # RStudio Server (if needed)
+    working_dir: /workspace
+    command: R
+    # Performance optimizations
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    # Use host networking for better performance
+    network_mode: host
+    # Restart policy
+    restart: unless-stopped
+
+volumes:
+  r-packages:
+    driver: local
+  r-library:
+    driver: local
+  apt-cache:
+    driver: local
+  apt-lists:
+    driver: local
