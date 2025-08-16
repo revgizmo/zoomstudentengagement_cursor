@@ -14,7 +14,7 @@
 #' @examples
 #' load_section_names_lookup()
 #'
-load_section_names_lookup <- function(data_folder = "data",
+load_section_names_lookup <- function(data_folder = ".",
                                       names_lookup_file = "section_names_lookup.csv",
                                       section_names_lookup_col_types = "ccccccccc") {
   preferred_name <- section <- student_id <- NULL

@@ -42,7 +42,7 @@ safe_name_matching_workflow <- function(transcript_file_path,
                                           "zoomstudentengagement.unmatched_names_action",
                                           "stop"
                                         ),
-                                        data_folder = "data",
+                                        data_folder = ".",
                                         section_names_lookup_file = "section_names_lookup.csv") {
   # Validate inputs
   if (!is.character(transcript_file_path) || length(transcript_file_path) != 1) {

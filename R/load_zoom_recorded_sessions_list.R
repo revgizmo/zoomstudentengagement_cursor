@@ -73,7 +73,7 @@
 #' )
 #' }
 load_zoom_recorded_sessions_list <-
-  function(data_folder = "data",
+  function(data_folder = ".",
            transcripts_folder = "transcripts",
            topic_split_pattern =
              paste0(

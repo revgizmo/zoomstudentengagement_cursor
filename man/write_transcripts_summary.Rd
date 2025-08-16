@@ -6,7 +6,7 @@
 \usage{
 write_transcripts_summary(
   transcripts_summary_df,
-  data_folder = "data",
+  data_folder = ".",
   transcripts_summary_file = "transcripts_summary.csv"
 )
 }

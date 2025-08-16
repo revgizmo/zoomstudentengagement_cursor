@@ -5,7 +5,7 @@
 \title{Load Section Names Lookup File}
 \usage{
 load_section_names_lookup(
-  data_folder = "data",
+  data_folder = ".",
   names_lookup_file = "section_names_lookup.csv",
   section_names_lookup_col_types = "ccccccccc"
 )

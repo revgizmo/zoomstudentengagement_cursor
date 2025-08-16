@@ -6,7 +6,7 @@
 \usage{
 summarize_transcript_files(
   transcript_file_names,
-  data_folder = "data",
+  data_folder = ".",
   transcripts_folder = "transcripts",
   names_to_exclude = NULL,
   deduplicate_content = FALSE,

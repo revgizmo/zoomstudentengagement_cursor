@@ -19,7 +19,7 @@
 #' @examples
 #' load_cancelled_classes()
 load_cancelled_classes <-
-  function(data_folder = "data",
+  function(data_folder = ".",
            cancelled_classes_file = "cancelled_classes.csv",
            cancelled_classes_col_types = "ccccccccnnnncTTcTTccci",
            write_blank_cancelled_classes = FALSE) {

@@ -6,7 +6,7 @@
 \usage{
 write_section_names_lookup(
   clean_names_df,
-  data_folder = "data",
+  data_folder = ".",
   section_names_lookup_file = "section_names_lookup.csv"
 )
 }

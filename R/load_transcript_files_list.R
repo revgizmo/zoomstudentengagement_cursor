@@ -41,7 +41,7 @@
 #' @examples
 #' load_transcript_files_list()
 load_transcript_files_list <-
-  function(data_folder = "data",
+  function(data_folder = ".",
            transcripts_folder = "transcripts",
            # zoom_recorded_sessions_csv_names_pattern =
            #   'zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv',

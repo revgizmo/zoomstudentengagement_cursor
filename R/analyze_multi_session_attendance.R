@@ -39,7 +39,7 @@
 analyze_multi_session_attendance <- function(
     transcript_files,
     roster_data,
-    data_folder = "data",
+    data_folder = ".",
     transcripts_folder = "transcripts",
     unmatched_names_action = c("stop", "warn"),
     privacy_level = c("ferpa_strict", "ferpa_standard", "mask", "none"),

@@ -5,7 +5,7 @@
 \title{Load Roster of Students from a CSV file}
 \usage{
 load_roster(
-  data_folder = "data",
+  data_folder = ".",
   roster_file = "roster.csv",
   strict_errors = FALSE
 )
@@ -33,6 +33,6 @@ in the class or classes
 roster <- load_roster()
 
 # Load roster from custom location
-roster <- load_roster(data_folder = "my_data", roster_file = "students.csv")
+roster <- load_roster(data_folder = ".", roster_file = "students.csv")
 }
 }
