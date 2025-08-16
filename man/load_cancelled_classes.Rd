@@ -5,7 +5,7 @@
 \title{Load Cancelled Classes csv file}
 \usage{
 load_cancelled_classes(
-  data_folder = "data",
+  data_folder = ".",
   cancelled_classes_file = "cancelled_classes.csv",
   cancelled_classes_col_types = "ccccccccnnnncTTcTTccci",
   write_blank_cancelled_classes = FALSE

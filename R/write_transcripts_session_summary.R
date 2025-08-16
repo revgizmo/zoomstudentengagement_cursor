@@ -10,7 +10,7 @@
 #' @export
 write_transcripts_session_summary <-
   function(transcripts_session_summary_df,
-           data_folder = "data",
+           data_folder = ".",
            transcripts_session_summary_file = "transcripts_session_summary.csv") {
     if (!tibble::is_tibble(transcripts_session_summary_df)) {
       return(invisible(NULL))

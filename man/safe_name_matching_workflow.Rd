@@ -10,7 +10,7 @@ safe_name_matching_workflow(
   privacy_level = getOption("zoomstudentengagement.privacy_level", "mask"),
   unmatched_names_action = getOption("zoomstudentengagement.unmatched_names_action",
     "stop"),
-  data_folder = "data",
+  data_folder = ".",
   section_names_lookup_file = "section_names_lookup.csv"
 )
 }

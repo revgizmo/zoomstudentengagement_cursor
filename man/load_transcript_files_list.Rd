@@ -5,7 +5,7 @@
 \title{Load Zoom Recording Transcript Files List}
 \usage{
 load_transcript_files_list(
-  data_folder = "data",
+  data_folder = ".",
   transcripts_folder = "transcripts",
   transcript_files_names_pattern = "GMT\\\\d{8}-\\\\d{6}_Recording",
   dt_extract_pattern = "(?<=GMT)\\\\d{8}",

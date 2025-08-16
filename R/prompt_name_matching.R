@@ -24,15 +24,15 @@
 #' # Create lookup file with custom settings
 #' prompt_name_matching(
 #'   unmatched_names = c("John Doe", "Jane Smith"),
-#'   data_folder = "my_data",
-#'   section_names_lookup_file = "custom_lookup.csv"
+#'   data_folder = ".",
+#'   section_names_lookup_file = "section_names_lookup.csv"
 #' )
 prompt_name_matching <- function(unmatched_names,
                                  privacy_level = getOption(
                                    "zoomstudentengagement.privacy_level",
                                    "mask"
                                  ),
-                                 data_folder = "data",
+                                 data_folder = ".",
                                  section_names_lookup_file = "section_names_lookup.csv",
                                  include_instructions = TRUE) {
   # Validate inputs

@@ -5,7 +5,7 @@
 \title{Load Zoom Recorded Sessions List}
 \usage{
 load_zoom_recorded_sessions_list(
-  data_folder = "data",
+  data_folder = ".",
   transcripts_folder = "transcripts",
   topic_split_pattern = paste0("^(?<dept>\\\\S+) (?<course_section>\\\\S+) - ",
     "(?<day>[A-Za-z]+) (?<time>\\\\S+\\\\s*\\\\S+) (?<instructor>\\\\(.*?\\\\))"),

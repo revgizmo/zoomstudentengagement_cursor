@@ -19,10 +19,10 @@
 #' roster <- load_roster()
 #'
 #' # Load roster from custom location
-#' roster <- load_roster(data_folder = "my_data", roster_file = "students.csv")
+#' roster <- load_roster(data_folder = ".", roster_file = "students.csv")
 #' }
 load_roster <- function(
-    data_folder = "data",
+    data_folder = ".",
     roster_file = "roster.csv",
     strict_errors = FALSE) {
   roster_file_path <- file.path(data_folder, roster_file)
