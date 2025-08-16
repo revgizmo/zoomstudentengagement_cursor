@@ -1,4 +1,4 @@
-# Test file for analyze_transcripts.R
+# Simplified test file for analyze_transcripts.R
 # Tests the high-level orchestration function for processing transcript files
 
 library(testthat)
@@ -7,10 +7,6 @@ library(zoomstudentengagement)
 # Helper function to create sample transcript files for testing
 create_sample_transcript_files <- function() {
   # Create a temporary directory structure that matches what analyze_transcripts expects
-  # analyze_transcripts calls summarize_transcript_files with data_folder = "." and transcripts_folder = transcripts_folder
-  # So it looks for files in ./transcripts_folder/
-  
-  # Create base directory (this will be the working directory)
   temp_base <- tempfile("test_data")
   dir.create(temp_base, recursive = TRUE)
   
@@ -79,6 +75,17 @@ cleanup_test_files <- function(test_data) {
   }
 }
 
+# Helper function to run tests with proper directory setup
+with_test_directory <- function(test_data, test_function) {
+  # Change to the base directory so that relative paths work correctly
+  old_wd <- getwd()
+  on.exit(setwd(old_wd), add = TRUE)
+  setwd(test_data$temp_base)
+  
+  # Run the test function
+  test_function()
+}
+
 # Test context
 test_that("analyze_transcripts basic functionality", {
   
@@ -87,21 +94,18 @@ test_that("analyze_transcripts basic functionality", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Test basic functionality - use relative path
-    result <- analyze_transcripts("transcripts")
-    
-    # Verify return value structure
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    expect_true("name" %in% names(result))
-    expect_true("n" %in% names(result))
-    expect_true("duration" %in% names(result))
-    expect_true("wordcount" %in% names(result))
+    with_test_directory(test_data, function() {
+      # Test basic functionality - use relative path
+      result <- analyze_transcripts("transcripts")
+      
+      # Verify return value structure
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      expect_true("name" %in% names(result))
+      expect_true("n" %in% names(result))
+      expect_true("duration" %in% names(result))
+      expect_true("wordcount" %in% names(result))
+    })
   })
   
   # Test 2: Parameter handling
@@ -109,24 +113,21 @@ test_that("analyze_transcripts basic functionality", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Test with custom names_to_exclude
-    result <- analyze_transcripts(
-      transcripts_folder = "transcripts",
-      names_to_exclude = c("dead_air", "unknown", "Professor")
-    )
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    
-    # Verify that excluded names are not in the result
-    if (nrow(result) > 0) {
-      expect_false(any(result$name == "Professor"))
-    }
+    with_test_directory(test_data, function() {
+      # Test with custom names_to_exclude
+      result <- analyze_transcripts(
+        transcripts_folder = "transcripts",
+        names_to_exclude = c("dead_air", "unknown", "Professor")
+      )
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      
+      # Verify that excluded names are not in the result
+      if (nrow(result) > 0) {
+        expect_false(any(result$name == "Professor"))
+      }
+    })
   })
   
   # Test 3: Write functionality
@@ -137,24 +138,21 @@ test_that("analyze_transcripts basic functionality", {
     output_file <- tempfile("test_output.csv")
     on.exit(unlink(output_file), add = TRUE)
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Test with write = TRUE
-    result <- analyze_transcripts(
-      transcripts_folder = "transcripts",
-      write = TRUE,
-      output_path = output_file
-    )
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(file.exists(output_file))
-    
-    # Verify the output file contains data
-    file_content <- readLines(output_file, warn = FALSE)
-    expect_true(length(file_content) > 1) # Header + at least one data row
+    with_test_directory(test_data, function() {
+      # Test with write = TRUE
+      result <- analyze_transcripts(
+        transcripts_folder = "transcripts",
+        write = TRUE,
+        output_path = output_file
+      )
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(file.exists(output_file))
+      
+      # Verify the output file contains data
+      file_content <- readLines(output_file, warn = FALSE)
+      expect_true(length(file_content) > 1) # Header + at least one data row
+    })
   })
   
   # Test 4: NULL output path handling
@@ -162,21 +160,18 @@ test_that("analyze_transcripts basic functionality", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Test with write = TRUE and NULL output_path
-    result <- analyze_transcripts(
-      transcripts_folder = "transcripts",
-      write = TRUE,
-      output_path = NULL
-    )
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(file.exists("engagement_metrics.csv"))
-    unlink("engagement_metrics.csv") # Clean up default file
+    with_test_directory(test_data, function() {
+      # Test with write = TRUE and NULL output_path
+      result <- analyze_transcripts(
+        transcripts_folder = "transcripts",
+        write = TRUE,
+        output_path = NULL
+      )
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(file.exists("engagement_metrics.csv"))
+      unlink("engagement_metrics.csv") # Clean up default file
+    })
   })
   
   # Test 5: Single transcript file
@@ -218,21 +213,18 @@ Student2: Hi there"
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    result <- analyze_transcripts("transcripts")
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    
-    # Check that international names are processed
-    if (nrow(result) > 0) {
-      # Should contain at least some names (may be masked for privacy)
-      expect_true("name" %in% names(result))
-    }
+    with_test_directory(test_data, function() {
+      result <- analyze_transcripts("transcripts")
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      
+      # Check that international names are processed
+      if (nrow(result) > 0) {
+        # Should contain at least some names (may be masked for privacy)
+        expect_true("name" %in% names(result))
+      }
+    })
   })
 })
 
@@ -300,44 +292,41 @@ test_that("analyze_transcripts integration", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Mock summarize_transcript_files to verify it's called correctly
-    with_mocked_bindings(
-      summarize_transcript_files = function(...) {
-        # Verify parameters are passed correctly
-        args <- list(...)
-        expect_true("transcript_file_names" %in% names(args))
-        expect_true("names_to_exclude" %in% names(args))
-        expect_true("data_folder" %in% names(args))
-        expect_true("transcripts_folder" %in% names(args))
-        expect_true("deduplicate_content" %in% names(args))
-        
-        # Return mock result
-        tibble::tibble(
-          name = c("Student1", "Student2"),
-          n = c(1, 1),
-          duration = c(5, 5),
-          wordcount = c(2, 3),
-          comments = list("Hello", "Hi there"),
-          n_perc = c(50, 50),
-          duration_perc = c(50, 50),
-          wordcount_perc = c(40, 60),
-          wpm = c(24, 36),
-          transcript_file = c("test1.transcript.vtt", "test2.transcript.vtt"),
-          transcript_path = c("test1.transcript.vtt", "test2.transcript.vtt"),
-          name_raw = c("Student1", "Student2")
-        )
-      },
-      {
-        result <- analyze_transcripts("transcripts")
-        expect_s3_class(result, "tbl_df")
-        expect_true(nrow(result) > 0)
-      }
-    )
+    with_test_directory(test_data, function() {
+      # Mock summarize_transcript_files to verify it's called correctly
+      with_mocked_bindings(
+        summarize_transcript_files = function(...) {
+          # Verify parameters are passed correctly
+          args <- list(...)
+          expect_true("transcript_file_names" %in% names(args))
+          expect_true("names_to_exclude" %in% names(args))
+          expect_true("data_folder" %in% names(args))
+          expect_true("transcripts_folder" %in% names(args))
+          expect_true("deduplicate_content" %in% names(args))
+          
+          # Return mock result
+          tibble::tibble(
+            name = c("Student1", "Student2"),
+            n = c(1, 1),
+            duration = c(5, 5),
+            wordcount = c(2, 3),
+            comments = list("Hello", "Hi there"),
+            n_perc = c(50, 50),
+            duration_perc = c(50, 50),
+            wordcount_perc = c(40, 60),
+            wpm = c(24, 36),
+            transcript_file = c("test1.transcript.vtt", "test2.transcript.vtt"),
+            transcript_path = c("test1.transcript.vtt", "test2.transcript.vtt"),
+            name_raw = c("Student1", "Student2")
+          )
+        },
+        {
+          result <- analyze_transcripts("transcripts")
+          expect_s3_class(result, "tbl_df")
+          expect_true(nrow(result) > 0)
+        }
+      )
+    })
   })
   
   # Test 2: Integration with write_metrics
@@ -348,28 +337,25 @@ test_that("analyze_transcripts integration", {
     output_file <- tempfile("test_output.csv")
     on.exit(unlink(output_file), add = TRUE)
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Mock write_metrics to verify it's called correctly
-    with_mocked_bindings(
-      write_metrics = function(metrics, what, path) {
-        expect_equal(what, "engagement")
-        expect_equal(path, output_file)
-        expect_s3_class(metrics, "tbl_df")
-        return(invisible(NULL))
-      },
-      {
-        result <- analyze_transcripts(
-          transcripts_folder = "transcripts",
-          write = TRUE,
-          output_path = output_file
-        )
-        expect_s3_class(result, "tbl_df")
-      }
-    )
+    with_test_directory(test_data, function() {
+      # Mock write_metrics to verify it's called correctly
+      with_mocked_bindings(
+        write_metrics = function(metrics, what, path) {
+          expect_equal(what, "engagement")
+          expect_equal(path, output_file)
+          expect_s3_class(metrics, "tbl_df")
+          return(invisible(NULL))
+        },
+        {
+          result <- analyze_transcripts(
+            transcripts_folder = "transcripts",
+            write = TRUE,
+            output_path = output_file
+          )
+          expect_s3_class(result, "tbl_df")
+        }
+      )
+    })
   })
   
   # Test 3: Privacy compliance validation
@@ -377,29 +363,25 @@ test_that("analyze_transcripts integration", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Test that the function works with privacy defaults
-    result <- analyze_transcripts("transcripts")
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    
-    # Verify that the result can be processed with privacy functions
-    if (nrow(result) > 0) {
-      # Test that the result has the expected structure for privacy processing
-      expect_true("name" %in% names(result))
-      expect_true("n" %in% names(result))
-      expect_true("duration" %in% names(result))
+    with_test_directory(test_data, function() {
+      # Test that the function works with privacy defaults
+      result <- analyze_transcripts("transcripts")
       
-      # Note: mask_user_names_by_metric expects 'preferred_name' column,
-      # but analyze_transcripts returns 'name' column. This is expected
-      # and the privacy function would need to be called with the correct
-      # column name or the data would need to be transformed first.
-    }
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      
+      # Verify that the result has the expected structure for privacy processing
+      if (nrow(result) > 0) {
+        expect_true("name" %in% names(result))
+        expect_true("n" %in% names(result))
+        expect_true("duration" %in% names(result))
+        
+        # Note: mask_user_names_by_metric expects 'preferred_name' column,
+        # but analyze_transcripts returns 'name' column. This is expected
+        # and the privacy function would need to be called with the correct
+        # column name or the data would need to be transformed first.
+      }
+    })
   })
 })
 
@@ -411,20 +393,17 @@ test_that("analyze_transcripts edge cases", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    result <- analyze_transcripts("transcripts")
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    
-    # Should have data from multiple files
-    if (nrow(result) > 0) {
-      expect_true("transcript_file" %in% names(result))
-    }
+    with_test_directory(test_data, function() {
+      result <- analyze_transcripts("transcripts")
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      
+      # Should have data from multiple files
+      if (nrow(result) > 0) {
+        expect_true("transcript_file" %in% names(result))
+      }
+    })
   })
   
   # Test 2: Custom names_to_exclude with various patterns
@@ -432,19 +411,16 @@ test_that("analyze_transcripts edge cases", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Test with multiple exclusion patterns
-    result <- analyze_transcripts(
-      transcripts_folder = "transcripts",
-      names_to_exclude = c("dead_air", "Professor", "unknown", "system")
-    )
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) >= 0) # May be empty if all names excluded
+    with_test_directory(test_data, function() {
+      # Test with multiple exclusion patterns
+      result <- analyze_transcripts(
+        transcripts_folder = "transcripts",
+        names_to_exclude = c("dead_air", "Professor", "unknown", "system")
+      )
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) >= 0) # May be empty if all names excluded
+    })
   })
   
   # Test 3: Write functionality with custom path
@@ -456,23 +432,20 @@ test_that("analyze_transcripts edge cases", {
     custom_output <- file.path(tempdir(), "custom_engagement_metrics.csv")
     on.exit(unlink(custom_output), add = TRUE)
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    result <- analyze_transcripts(
-      transcripts_folder = "transcripts",
-      write = TRUE,
-      output_path = custom_output
-    )
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(file.exists(custom_output))
-    
-    # Verify file content
-    file_content <- readLines(custom_output, warn = FALSE)
-    expect_true(length(file_content) > 1)
+    with_test_directory(test_data, function() {
+      result <- analyze_transcripts(
+        transcripts_folder = "transcripts",
+        write = TRUE,
+        output_path = custom_output
+      )
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(file.exists(custom_output))
+      
+      # Verify file content
+      file_content <- readLines(custom_output, warn = FALSE)
+      expect_true(length(file_content) > 1)
+    })
   })
   
   # Test 4: Performance with larger dataset simulation
@@ -480,14 +453,10 @@ test_that("analyze_transcripts edge cases", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Create additional files to simulate larger dataset
-    for (i in 4:10) {
-      sample_content <- sprintf("WEBVTT
+    with_test_directory(test_data, function() {
+      # Create additional files to simulate larger dataset
+      for (i in 4:10) {
+        sample_content <- sprintf("WEBVTT
 
 1
 00:00:00.000 --> 00:00:05.000
@@ -496,15 +465,16 @@ Student%d: Hello from file %d
 2
 00:00:05.000 --> 00:00:10.000
 Student%d: Response from file %d", i, i, i+1, i)
+        
+        writeLines(sample_content, file.path("transcripts", sprintf("test%d.transcript.vtt", i)))
+      }
       
-      writeLines(sample_content, file.path("transcripts", sprintf("test%d.transcript.vtt", i)))
-    }
-    
-    # Test processing
-    result <- analyze_transcripts("transcripts")
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
+      # Test processing
+      result <- analyze_transcripts("transcripts")
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+    })
   })
 })
 
@@ -604,23 +574,20 @@ test_that("analyze_transcripts performance characteristics", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Monitor memory usage
-    initial_memory <- gc()
-    
-    result <- analyze_transcripts("transcripts")
-    
-    final_memory <- gc()
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    
-    # Verify no excessive memory usage (basic check)
-    expect_true(is.data.frame(result))
+    with_test_directory(test_data, function() {
+      # Monitor memory usage
+      initial_memory <- gc()
+      
+      result <- analyze_transcripts("transcripts")
+      
+      final_memory <- gc()
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      
+      # Verify no excessive memory usage (basic check)
+      expect_true(is.data.frame(result))
+    })
   })
   
   # Test 2: Processing time for reasonable dataset
@@ -628,23 +595,20 @@ test_that("analyze_transcripts performance characteristics", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Time the processing
-    start_time <- Sys.time()
-    result <- analyze_transcripts("transcripts")
-    end_time <- Sys.time()
-    
-    processing_time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-    
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    
-    # Should complete in reasonable time (less than 30 seconds for small dataset)
-    expect_true(processing_time < 30)
+    with_test_directory(test_data, function() {
+      # Time the processing
+      start_time <- Sys.time()
+      result <- analyze_transcripts("transcripts")
+      end_time <- Sys.time()
+      
+      processing_time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+      
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      
+      # Should complete in reasonable time (less than 30 seconds for small dataset)
+      expect_true(processing_time < 30)
+    })
   })
 })
 
@@ -655,14 +619,11 @@ test_that("analyze_transcripts cleanup and validation", {
   test_that("analyze_transcripts cleans up temporary resources", {
     test_data <- create_sample_transcript_files()
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Process files
-    result <- analyze_transcripts("transcripts")
-    expect_s3_class(result, "tbl_df")
+    with_test_directory(test_data, function() {
+      # Process files
+      result <- analyze_transcripts("transcripts")
+      expect_s3_class(result, "tbl_df")
+    })
     
     # Clean up
     cleanup_test_files(test_data)
@@ -679,32 +640,29 @@ test_that("analyze_transcripts cleanup and validation", {
     test_data <- create_sample_transcript_files()
     on.exit(cleanup_test_files(test_data))
     
-    # Change to the base directory so that relative paths work correctly
-    old_wd <- getwd()
-    on.exit(setwd(old_wd), add = TRUE)
-    setwd(test_data$temp_base)
-    
-    # Test all major functionality
-    result <- analyze_transcripts(
-      transcripts_folder = "transcripts",
-      names_to_exclude = c("dead_air", "Professor"),
-      write = TRUE,
-      output_path = tempfile("final_test.csv")
-    )
-    
-    # Validate result
-    expect_s3_class(result, "tbl_df")
-    expect_true(nrow(result) > 0)
-    expect_true(all(c("name", "n", "duration", "wordcount") %in% names(result)))
-    
-    # Validate privacy compliance
-    expect_true("name" %in% names(result))
-    expect_true("n" %in% names(result))
-    expect_true("duration" %in% names(result))
-    
-    # Note: mask_user_names_by_metric expects 'preferred_name' column,
-    # but analyze_transcripts returns 'name' column. This is expected
-    # and the privacy function would need to be called with the correct
-    # column name or the data would need to be transformed first.
+    with_test_directory(test_data, function() {
+      # Test all major functionality
+      result <- analyze_transcripts(
+        transcripts_folder = "transcripts",
+        names_to_exclude = c("dead_air", "Professor"),
+        write = TRUE,
+        output_path = tempfile("final_test.csv")
+      )
+      
+      # Validate result
+      expect_s3_class(result, "tbl_df")
+      expect_true(nrow(result) > 0)
+      expect_true(all(c("name", "n", "duration", "wordcount") %in% names(result)))
+      
+      # Validate privacy compliance
+      expect_true("name" %in% names(result))
+      expect_true("n" %in% names(result))
+      expect_true("duration" %in% names(result))
+      
+      # Note: mask_user_names_by_metric expects 'preferred_name' column,
+      # but analyze_transcripts returns 'name' column. This is expected
+      # and the privacy function would need to be called with the correct
+      # column name or the data would need to be transformed first.
+    })
   })
 })
