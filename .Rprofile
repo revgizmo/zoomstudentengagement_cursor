@@ -19,7 +19,7 @@ if (interactive()) {
     library(devtools)
     library(testthat)
   })
-  
+
   # Set up development environment
   cat("🎯 zoomstudentengagement development environment ready!\n")
   cat("📦 Package development tools loaded\n")

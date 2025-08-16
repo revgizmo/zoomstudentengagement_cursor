@@ -137,7 +137,7 @@ load_section_names_lookup <- function(data_folder = "data",
 #' @keywords internal
 validate_lookup_file_format <- function(lookup_data) {
   required_cols <- c("transcript_name", "preferred_name")
-  
+
   if (!all(required_cols %in% names(lookup_data))) {
     missing_cols <- setdiff(required_cols, names(lookup_data))
     stop(
@@ -146,7 +146,7 @@ validate_lookup_file_format <- function(lookup_data) {
       "See vignette('name-matching-troubleshooting') for file format guidance."
     )
   }
-  
+
   if (nrow(lookup_data) == 0) {
     warning(
       "Lookup file is empty - no name mappings provided.\n",
@@ -154,7 +154,7 @@ validate_lookup_file_format <- function(lookup_data) {
       call. = FALSE
     )
   }
-  
+
   # Check for duplicate transcript names
   duplicates <- lookup_data$transcript_name[duplicated(lookup_data$transcript_name)]
   if (length(duplicates) > 0) {
@@ -164,6 +164,6 @@ validate_lookup_file_format <- function(lookup_data) {
       call. = FALSE
     )
   }
-  
+
   return(TRUE)
 }

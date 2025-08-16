@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r setup, include = FALSE}
+library(zoomstudentengagement)
+```
+
 # Name Matching Troubleshooting Guide
 
 This guide helps you resolve common name matching issues when working with Zoom transcripts and student rosters. The package uses a privacy-first approach, which means it will stop processing if it encounters names that cannot be safely matched.
@@ -161,18 +165,21 @@ roster_data <- load_roster(
 )
 
 # Run analysis with name matching (this will demonstrate the error handling)
-tryCatch({
-  results <- safe_name_matching_workflow(
-    transcript_file_path = transcript_file,
-    roster_data = roster_data,
-    section_names_lookup_file = "section_names_lookup.csv"
-  )
-  cat("Name matching completed successfully!\n")
-}, error = function(e) {
-  cat("Expected error encountered:\n")
-  cat(e$message, "\n")
-  cat("\nThis demonstrates the privacy-first approach in action.\n")
-})
+tryCatch(
+  {
+    results <- safe_name_matching_workflow(
+      transcript_file_path = transcript_file,
+      roster_data = roster_data,
+      section_names_lookup_file = "section_names_lookup.csv"
+    )
+    cat("Name matching completed successfully!\n")
+  },
+  error = function(e) {
+    cat("Expected error encountered:\n")
+    cat(e$message, "\n")
+    cat("\nThis demonstrates the privacy-first approach in action.\n")
+  }
+)
 ```
 
 ## Privacy and Security Considerations
