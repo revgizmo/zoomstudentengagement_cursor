@@ -1,4 +1,6 @@
-# Use the official R base image
+# Dockerfile for zoomstudentengagement R package
+# Optimized for development environment
+
 FROM rocker/r-ver:4.4.0
 
 # Set environment variables
@@ -45,18 +47,6 @@ RUN apt-get update && \
     libreadline-dev \
     libblas-dev \
     liblapack-dev \
-    # Additional system dependencies for R packages
-    libssh2-1-dev \
-    libssl-dev \
-    libxml2-dev \
-    libcurl4-openssl-dev \
-    libfontconfig1-dev \
-    libharfbuzz-dev \
-    libfribidi-dev \
-    libfreetype6-dev \
-    libpng-dev \
-    libtiff5-dev \
-    libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install ALL R packages including transitive dependencies (136 total packages)
@@ -70,6 +60,12 @@ COPY . /workspace/
 
 # Install the package in development mode
 RUN R -q -e "devtools::install_deps(dependencies = TRUE)"
+
+# Install the package
+RUN R CMD INSTALL .
+
+# Verify installation
+RUN R -e "library(zoomstudentengagement); cat('Package installed successfully\n')"
 
 # Default command
 CMD ["R"]

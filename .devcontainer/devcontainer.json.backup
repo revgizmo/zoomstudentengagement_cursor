@@ -1,0 +1,39 @@
+{
+    "name": "R 4.4 (rocker)",
+    "build": {
+        "dockerfile": "../Dockerfile"
+    },
+  
+    "postCreateCommand": "apt-get update && apt-get install -y --no-install-recommends git curl wget pkg-config build-essential libbz2-dev liblzma-dev libz-dev libssl-dev libcurl4-openssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev libgit2-dev libcairo2-dev libpango1.0-dev libxt-dev libreadline-dev libblas-dev liblapack-dev && R -q -e \"install.packages(c('rcmdcheck','covr','lintr','roxygen2','testthat','withr','hms','tibble','readr','languageserver','styler','usethis','devtools','remotes','knitr','rmarkdown','digest','jsonlite','lubridate','magrittr','purrr','rlang','stringr','tidyr','tidyselect','ggplot2','data.table','dplyr'), repos='https://cloud.r-project.org')\"",
+  
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "REditorSupport.r",
+          "Ikuyadeu.r", 
+          "reditorsupport.r-lsp",
+          "REditorSupport.r-debugger",
+          "ms-vscode.vscode-json"
+        ],
+        "settings": {
+          "r.lsp.enabled": true,
+          "r.lsp.diagnostics": true,
+          "r.rterm.option": ["--no-save", "--no-restore"],
+          "r.bracketedPaste": true,
+          "r.alwaysUseActiveTerminal": true,
+          "r.sessionWatcher": true
+        }
+      }
+    },
+
+    "features": {
+      "ghcr.io/devcontainers/features/git:1": {},
+      "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+
+    "mounts": [
+      "source=${localWorkspaceFolder}/.Rprofile,target=/home/rstudio/.Rprofile,type=bind"
+    ],
+
+    "remoteUser": "rstudio"
+}
