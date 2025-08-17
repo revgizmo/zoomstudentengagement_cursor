@@ -1,0 +1,36 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from test-timing.dockerfile
+#1 transferring dockerfile: 575B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/rocker/r-ver:4.4.0
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 191B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/rocker/r-ver:4.4.0
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 12.33kB 0.0s done
+#5 DONE 0.0s
+
+#6 [2/4] WORKDIR /workspace
+#6 CACHED
+
+#7 [3/4] COPY . /workspace/
+#7 CACHED
+
+#8 [4/4] RUN set -e;     echo "Testing timing...";     sleep 1;     groupadd -g 1000 ruser || echo "Group ruser may already exist";     sleep 1;     useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist";     sleep 1;     chown -R ruser:ruser /workspace || echo "Ownership set";     echo "Timing test completed"
+#8 0.244 Testing timing...
+#8 3.913 Timing test completed
+#8 DONE 3.9s
+
+#9 exporting to image
+#9 exporting layers 0.0s done
+#9 writing image sha256:02902bdd19427e45a17eb77ecb01f2fdce6860af0732b5305f827668462c00b3 done
+#9 naming to docker.io/library/test-timing done
+#9 DONE 0.1s

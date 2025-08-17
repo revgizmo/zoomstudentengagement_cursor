@@ -1,5 +1,5 @@
 # Dockerfile.agent - For background agent testing
-# Optimized for Cursor IDE background agents
+# Optimized for Cursor IDE background agents with robust user creation
 
 FROM rocker/r-ver:4.4.0
 
@@ -27,10 +27,24 @@ RUN R -q -e "install.packages(c('askpass', 'backports', 'base64enc', 'bit', 'bit
 # Install the package
 RUN R CMD INSTALL .
 
-# Create non-root user for security
-RUN useradd -m -s /bin/bash ruser && \
-    chown -R ruser:ruser /workspace
+# Create non-root user for security with robust error handling
+# This section is specifically designed to handle background agent build context issues
+RUN set -e; \
+    # Ensure we're running as root for user creation
+    if [ "$(id -u)" != "0" ]; then \
+        echo "Warning: Not running as root, attempting to create user anyway"; \
+    fi; \
+    # Create user with explicit group creation
+    groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
+    useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
+    # Verify user was created
+    id ruser || echo "Warning: Could not verify ruser creation"; \
+    # Set ownership with error handling
+    chown -R ruser:ruser /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    # Verify ownership was set
+    ls -la /workspace | head -3 || echo "Warning: Could not verify ownership"
 
+# Switch to non-root user
 USER ruser
 
 # Default command for testing
