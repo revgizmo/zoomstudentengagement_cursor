@@ -1,8 +1,8 @@
 {
   "name": "zoomstudentengagement-r-package",
   "user": "ruser",
-  "install": "echo 'Using pre-built image - no installation needed'",
-  "start": "echo 'R package environment ready - everything pre-installed'",
+  "install": "echo 'Building from Dockerfile - installation handled by build'",
+  "start": "echo 'R package environment ready'",
   "terminals": [
     {
       "name": "R Console",
@@ -19,7 +19,7 @@
       "port": 3838
     }
   ],
-  "image": "zoomstudentengagement:agent",
+  "dockerfile": "Dockerfile.agent",
   "context": ".",
   "buildArgs": {},
   "target": null
