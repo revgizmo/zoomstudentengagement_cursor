@@ -1,6 +1,6 @@
 {
   "name": "zoomstudentengagement-dev",
-  "dockerFile": "../Dockerfile.minimal",
+  "dockerFile": "../Dockerfile",
   "context": "..",
   "customizations": {
     "vscode": {
