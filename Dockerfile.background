@@ -1,0 +1,37 @@
+# Dockerfile.agent - For background agent testing
+# Optimized for Cursor IDE background agents
+
+FROM rocker/r-ver:4.4.0
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git curl wget pkg-config build-essential \
+    libcurl4-openssl-dev libssl-dev libxml2-dev \
+    libbz2-dev liblzma-dev libz-dev \
+    libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
+    libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
+    libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
+    libgit2-dev libcairo2-dev libpango1.0-dev libxt-dev \
+    libreadline-dev libblas-dev liblapack-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy package files
+COPY . /workspace/
+
+# Install ALL R packages including transitive dependencies (same as main Dockerfile)
+RUN R -q -e "install.packages(c('askpass', 'backports', 'base64enc', 'bit', 'bit64', 'brew', 'brio', 'bslib', 'cachem', 'callr', 'cli', 'clipr', 'codetools', 'collections', 'commonmark', 'covr', 'cpp11', 'crayon', 'credentials', 'curl', 'data.table', 'desc', 'devtools', 'diffobj', 'digest', 'downlit', 'dplyr', 'ellipsis', 'evaluate', 'fansi', 'farver', 'fastmap', 'fontawesome', 'fs', 'generics', 'gert', 'ggplot2', 'gh', 'gitcreds', 'glue', 'gtable', 'highr', 'hms', 'htmltools', 'htmlwidgets', 'httpuv', 'httr', 'httr2', 'ini', 'isoband', 'jquerylib', 'jsonlite', 'knitr', 'labeling', 'languageserver', 'later', 'lattice', 'lazyeval', 'lifecycle', 'lintr', 'lubridate', 'magrittr', 'MASS', 'Matrix', 'memoise', 'mgcv', 'mime', 'miniUI', 'nlme', 'openssl', 'pillar', 'pkgbuild', 'pkgconfig', 'pkgdown', 'pkgload', 'praise', 'prettyunits', 'processx', 'profvis', 'progress', 'promises', 'ps', 'purrr', 'R.cache', 'R.methodsS3', 'R.oo', 'R.utils', 'R6', 'ragg', 'rappdirs', 'rcmdcheck', 'RColorBrewer', 'Rcpp', 'readr', 'remotes', 'rex', 'rlang', 'rmarkdown', 'roxygen2', 'rprojroot', 'rstudioapi', 'rversions', 'sass', 'scales', 'sessioninfo', 'shiny', 'sourcetools', 'stringi', 'stringr', 'styler', 'sys', 'systemfonts', 'testthat', 'textshaping', 'tibble', 'tidyr', 'tidyselect', 'timechange', 'tinytex', 'tzdb', 'urlchecker', 'usethis', 'utf8', 'vctrs', 'viridisLite', 'vroom', 'waldo', 'whisker', 'withr', 'xfun', 'xml2', 'xmlparsedata', 'xopen', 'xtable', 'yaml', 'zip'), repos='https://cloud.r-project.org')"
+
+# Install the package
+RUN R CMD INSTALL .
+
+# Create non-root user for security
+RUN useradd -m -s /bin/bash ruser && \
+    chown -R ruser:ruser /workspace
+
+USER ruser
+
+# Default command for testing
+CMD ["R", "-e", "devtools::test()"]
