@@ -1,6 +1,6 @@
 {
   "name": "zoomstudentengagement-dev",
-  "dockerFile": "../Dockerfile",
+  "dockerFile": "../Dockerfile.agent",
   "context": "..",
   "customizations": {
     "vscode": {
@@ -11,6 +11,6 @@
     }
   },
   "postCreateCommand": "echo 'Container ready for development'",
-  "remoteUser": "rstudio"
+  "remoteUser": "ruser"
 }
   
