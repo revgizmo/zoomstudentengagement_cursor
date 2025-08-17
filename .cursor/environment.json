@@ -1,0 +1,26 @@
+{
+  "name": "zoomstudentengagement-r-package",
+  "user": "ruser",
+  "install": "echo 'Using pre-built image - no installation needed'",
+  "start": "echo 'R package environment ready - everything pre-installed'",
+  "terminals": [
+    {
+      "name": "R Console",
+      "command": "R"
+    },
+    {
+      "name": "Run Tests",
+      "command": "R -e \"devtools::test()\""
+    }
+  ],
+  "ports": [
+    {
+      "name": "R Shiny App",
+      "port": 3838
+    }
+  ],
+  "image": "zoomstudentengagement:agent",
+  "context": ".",
+  "buildArgs": {},
+  "target": null
+}

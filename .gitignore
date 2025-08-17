@@ -93,6 +93,7 @@ rsconnect/
 # Cursor AI
 .cursor/*
 !.cursor/context.md
+!.cursor/environment.json
 .cursor.json
 example_test_results.rds
 
