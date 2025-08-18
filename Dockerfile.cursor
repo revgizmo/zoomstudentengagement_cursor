@@ -53,7 +53,6 @@ RUN apt-get update && apt-get install -y \
     vim \
     nano \
     pandoc \
-    pandoc-citeproc \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
