@@ -1,0 +1,51 @@
+# Dockerfile.cursor-template - Optimized for Cursor Background Agents
+# Based on research from Issue #262 - Cursor Background Agent Docker Setup and Integration
+#
+# This template provides a minimal, working configuration for Cursor background agent
+# Docker integration. The key insight is using numeric IDs instead of user names
+# to avoid user namespace issues in background agent context.
+#
+# Usage:
+# 1. Copy this template to your project
+# 2. Customize for your specific application
+# 3. Test in both manual and background agent contexts
+# 4. Use as the foundation for your Docker configuration
+
+FROM your-base-image:version
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    your-required-packages \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy application files
+COPY . /workspace/
+
+# Install application dependencies
+RUN your-dependency-installation-command
+
+# Create non-root user for security with numeric IDs (CRITICAL FOR BACKGROUND AGENTS)
+# This approach uses numeric IDs instead of user names to avoid user namespace issues
+# Background agents have different user namespace handling than manual processes
+RUN set -e; \
+    # Create user and group with explicit numeric IDs
+    groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
+    useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
+    # Set ownership using numeric IDs (1000:1000) instead of user names (ruser:ruser)
+    # This avoids the "chown: invalid user: 'ruser:ruser'" error in Cursor background agent
+    chown -R 1000:1000 /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    # Verify the setup
+    id ruser || echo "Warning: Could not verify ruser creation"
+
+# Switch to non-root user using numeric ID
+USER 1000
+
+# Default command
+CMD ["your-default-command"]
+
+# Environment variables for background agent detection
+ENV CURSOR_AGENT_COMPATIBLE=1
+ENV DOCKER_USER_NAMESPACE_COMPATIBLE=1
