@@ -6,12 +6,8 @@
       "HOST_GID": "1000"
     }
   },
-  "install": {
-    "command": "echo 'R development environment ready'"
-  },
-  "start": {
-    "command": "R --vanilla"
-  },
+  "install": "echo 'R development environment ready'",
+  "start": "R --vanilla",
   "customizations": {
     "vscode": {
       "extensions": [
