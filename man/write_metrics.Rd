@@ -17,11 +17,11 @@ write_metrics(
 
 \item{what}{One of c("engagement", "summary", "session_summary"). Controls default filename.}
 
-\item{path}{Output file path. If missing, a default name is chosen based on `what` in the current dir.}
+\item{path}{Output file path. If missing, a default name is chosen based on \code{what} in the current dir.}
 
-\item{comments_format}{For list-like `comments` columns: one of c("text", "count"). Default: "text".}
+\item{comments_format}{For list-like \code{comments} columns: one of c("text", "count"). Default: "text".}
 
-\item{privacy_level}{Privacy level forwarded to `ensure_privacy()`. Default from option.}
+\item{privacy_level}{Privacy level forwarded to \code{ensure_privacy()}. Default from option.}
 }
 \value{
 Invisibly returns the written tibble (after privacy transformations and list conversions).

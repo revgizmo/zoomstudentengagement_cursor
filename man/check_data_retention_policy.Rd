@@ -15,7 +15,7 @@ check_data_retention_policy(
 \arguments{
 \item{data}{A data frame or tibble to check}
 
-\item{retention_period}{Retention period to check against. One of `c("academic_year", "semester", "quarter", "custom")`}
+\item{retention_period}{Retention period to check against. One of \code{c("academic_year", "semester", "quarter", "custom")}}
 
 \item{custom_retention_days}{Custom retention period in days (used when retention_period = "custom")}
 

@@ -18,8 +18,8 @@ A tibble listing the students enrolled in the class or classes, with rows for ea
 }
 \description{
 This function creates a tibble from a provided tibble students enrolled
-in the class or classes (`roster_small_df`) and a tibble of class sessions with corresponding transcript
-  files or placeholders for cancelled classes (`transcripts_list_df`).
+in the class or classes (\code{roster_small_df}) and a tibble of class sessions with corresponding transcript
+files or placeholders for cancelled classes (\code{transcripts_list_df}).
 }
 \examples{
 # Load a sample roster from the package's extdata directory

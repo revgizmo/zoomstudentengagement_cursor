@@ -9,13 +9,13 @@ abort_zse(message, class = character())
 \arguments{
 \item{message}{Character message describing the error}
 
-\item{class}{Additional error class(es) appended after `"zse_error"`}
+\item{class}{Additional error class(es) appended after \code{"zse_error"}}
 }
 \value{
 This function does not return; it signals an error.
 }
 \description{
-Provides a small wrapper around `rlang::abort()` to standardize
+Provides a small wrapper around \code{rlang::abort()} to standardize
 error classes within the package for precise testing and user handling.
 }
 \examples{

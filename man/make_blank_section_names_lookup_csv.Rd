@@ -8,17 +8,17 @@ make_blank_section_names_lookup_csv()
 }
 \value{
 An empty tibble with the following columns for section name mapping:
-  \describe{
-    \item{course_section}{Character. Course and section identifier (e.g., "101.A")}
-    \item{day}{Character. Day of the week or date}
-    \item{time}{Character. Class time}
-    \item{course}{Character. Course number}
-    \item{section}{Character. Section identifier}
-    \item{preferred_name}{Character. Student's preferred name}
-    \item{formal_name}{Character. Student's formal/legal name}
-    \item{transcript_name}{Character. Name as it appears in Zoom transcripts}
-    \item{student_id}{Character. Student identification number}
-  }
+\describe{
+\item{course_section}{Character. Course and section identifier (e.g., "101.A")}
+\item{day}{Character. Day of the week or date}
+\item{time}{Character. Class time}
+\item{course}{Character. Course number}
+\item{section}{Character. Section identifier}
+\item{preferred_name}{Character. Student's preferred name}
+\item{formal_name}{Character. Student's formal/legal name}
+\item{transcript_name}{Character. Name as it appears in Zoom transcripts}
+\item{student_id}{Character. Student identification number}
+}
 }
 \description{
 Creates an empty tibble template for customizing student names by section.

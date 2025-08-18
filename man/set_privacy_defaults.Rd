@@ -10,20 +10,20 @@ set_privacy_defaults(
 )
 }
 \arguments{
-\item{privacy_level}{One of `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
-Defaults to `"mask"`. Use `"ferpa_strict"` for maximum FERPA compliance.}
+\item{privacy_level}{One of \code{c("ferpa_strict", "ferpa_standard", "mask", "none")}.
+Defaults to \code{"mask"}. Use \code{"ferpa_strict"} for maximum FERPA compliance.}
 
 \item{unmatched_names_action}{Action to take when unmatched names are found.
-One of `c("stop", "warn")`. Defaults to `"stop"` for maximum privacy protection.
-Use `"warn"` for guided matching with user intervention.}
+One of \code{c("stop", "warn")}. Defaults to \code{"stop"} for maximum privacy protection.
+Use \code{"warn"} for guided matching with user intervention.}
 }
 \value{
 Invisibly returns a list with the chosen privacy level and unmatched names action.
 }
 \description{
 Configure global privacy behavior for the package. The default on package
-load is `mask`, which replaces personally identifiable fields with
-FERPA-safe placeholders. Set to `"none"` to disable masking (not
+load is \code{mask}, which replaces personally identifiable fields with
+FERPA-safe placeholders. Set to \code{"none"} to disable masking (not
 recommended).
 }
 \examples{
@@ -46,5 +46,9 @@ set_privacy_defaults(
 )
 }
 \seealso{
+<<<<<<< Current (Your changes)
 [ensure_privacy()], [safe_name_matching_workflow()]
+=======
+\code{\link[=ensure_privacy]{ensure_privacy()}}, \code{\link[=safe_name_matching_workflow]{safe_name_matching_workflow()}}
+>>>>>>> Incoming (Background Agent changes)
 }

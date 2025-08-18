@@ -6,10 +6,11 @@
 #'
 #' 1. Go to [https://www.zoom.us/recording](https://www.zoom.us/recording)
 #'
-#' 2. Export the Cloud Recordings 3. Copy the cloud recording csv (naming
-#' convention: 'zoomus_recordings__\\d{8}.csv') to 'data/transcripts/' (or
-#' whatever path you identify in the `data_folder` and `transcripts_folder`
-#' parameters).
+#' 2. Export the Cloud Recordings
+#' 3. Copy the cloud recording csv (naming convention:
+#'    `zoomus_recordings__\\d{8}\.csv`) to `data/transcripts/`
+#'    (or whatever path you identify in the `data_folder` and
+#'    `transcripts_folder` parameters).
 #'
 #' @note The function handles several legacy and edge cases:
 #' - Trailing commas in CSV headers (common in Zoom exports)
@@ -22,38 +23,39 @@
 #' @param transcripts_folder specific subfolder of the data folder where you
 #'   will store the cloud recording csvs
 #' @param topic_split_pattern REGEX pattern used to parse the `Topic` from the
-#'   csvs and extract useful columns. Defaults to `paste0("^(?<dept>\\S+)
-#'   (?<course_section>\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+)
-#'   (?<instructor>\\(.*?\\))")` (Note: this REGEX pattern is formatted here
-#'   as paste0() rather than a single string to stay beneath the 90 character
-#'   line limit in the code checker.  A single string works just as well as this
-#'   combined one). Note: The function now uses a generalized pattern that can
-#'   handle various course naming conventions including "DATASCI 201.006",
-#'   "LTF 101", and "MATH 250.001" formats.
+#'   csvs and extract useful columns. Defaults to
+#'   `paste0("^(?<dept>\\\\S+) (?<course_section>\\\\S+) - ",
+#'   "(?<day>[A-Za-z]+) (?<time>\\\\S+\\\\s*\\\\S+) (?<instructor>\\\\(.*?\\\\))")`
+#'   (Note: this REGEX pattern is formatted here as paste0() rather than a
+#'   single string to stay beneath the 90 character line limit in the code
+#'   checker. A single string works just as well as this combined one). Note:
+#'   The function now uses a generalized pattern that can handle various course
+#'   naming conventions including `DATASCI 201.006`, `LTF 101`, and
+#'   `MATH 250.001` formats.
 #' @param zoom_recorded_sessions_csv_names_pattern REGEX pattern used to parse
 #'   the csv file names from the cloud recording csvs and extract useful
 #'   columns. Defaults to
-#'   'zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv'
+#'   `zoomus_recordings__\\\\d{8}(?:\\\\s+copy\\\\s*\\\\d*)?\\\\.csv`
 #' @param zoom_recorded_sessions_csv_col_names Comma separated string of column
 #'   names in the cloud recording csvs. Zoom tends to save the file with an
-#'   extra ',' at the end of the header row, causing a null column to be
-#'   imported.  Defaults to 'Topic,ID,Start Time,File Size (MB),File Count,Total
-#'   Views,Total Downloads,Last Accessed'
+#'   extra `,` at the end of the header row, causing a null column to be
+#'   imported. Defaults to
+#'   `Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed`
 #' @param dept the school department associated with the recordings to keep.
 #'   Zoom often captures unwanted recordings, and this is used to filter only
-#'   the targeted ones.  This value is compared to the `dept` column extracted
-#'   from the `Topic` column extracted from cloud recording csvs.  Defaults to
-#'   'LTF'
-#' @param semester_start_mdy date of the first class in the semester.  Defaults
-#'   to 'Jan 01, 2024'
+#'   the targeted ones. This value is compared to the `dept` column extracted
+#'   from the `Topic` column extracted from cloud recording csvs. Defaults to
+#'   `LTF`
+#' @param semester_start_mdy date of the first class in the semester. Defaults
+#'   to `Jan 01, 2024`
 #' @param scheduled_session_length_hours scheduled length of each class session
-#'   in hours.  Defaults to 1.5
+#'   in hours. Defaults to `1.5`
 #'
 #' @return A tibble listing the session recordings loaded from the cloud
-#'   recording csvs. Returns NULL if the transcripts folder doesn't exist,
+#'   recording csvs. Returns `NULL` if the transcripts folder doesn't exist,
 #'   or an empty tibble with the correct column structure if no matching
 #'   files are found.
-
+#'
 #' @export
 #'
 #' @examples
@@ -202,63 +204,67 @@ load_zoom_recorded_sessions_list <-
     print("After summarise:")
     print(result)
 
-    # Use base R operations instead of dplyr to avoid segmentation fault
-    result$`File Size (MB)` <- suppressWarnings(as.numeric(result$`File Size (MB)`))
-    result$`Last Accessed` <- as.character(result$`Last Accessed`)
+    # Parse topic into components (dept, course, section, day, time, instructor)
+    # Convert named capture groups to plain groups for compatibility if needed
+    pattern_plain <- gsub("\\(\\?<[^>]+>", "(", topic_split_pattern, perl = TRUE)
+    topic_components <- tryCatch(
+      stringr::str_match(result$Topic, topic_split_pattern),
+      error = function(e) stringr::str_match(result$Topic, pattern_plain)
+    )
 
-    # Parse topic pattern using base R
-    topic_matches <- stringr::str_match(result$Topic, "^(\\S+)\\s+(\\d+\\.\\d+|\\d+)")
-    result$dept <- topic_matches[, 2]
-    result$course_section <- topic_matches[, 3]
-
-    # Filter by dept if needed using base R
-    if (!is.null(dept) && !is.na(dept) && dept != "") {
-      result <- result[!is.na(result$dept) & result$dept == dept, , drop = FALSE]
+    # Assign dept and course_section from either named or positional groups
+    if (!is.null(colnames(topic_components)) && any(colnames(topic_components) == "dept")) {
+      result$dept <- topic_components[, "dept"]
+      result$course_section <- topic_components[, "course_section"]
+    } else {
+      result$dept <- topic_components[, 2]
+      result$course_section <- topic_components[, 3]
     }
 
-    # Extract course and section using base R
-    result$course <- suppressWarnings(as.integer(stringr::str_extract(result$course_section, "^\\d+")))
-    result$section <- suppressWarnings(as.integer(stringr::str_extract(result$course_section, "(?<=\\.)\\d+")))
+    # Split course and section if course_section has a dot format (e.g., 201.006)
+    split_course_section <- strsplit(result$course_section, ".", fixed = TRUE)
+    result$course <- sapply(split_course_section, function(x) x[1])
+    result$section <- sapply(split_course_section, function(x) ifelse(length(x) > 1, x[2], NA))
 
-    # Optionally warn if section could not be extracted
-    if (any(is.na(result$section))) {
-      # Only show warnings if not in test environment
-      if (Sys.getenv("TESTTHAT") != "true") {
-        warning("Some Topic entries did not match the expected pattern and section could not be extracted.")
-      }
-    }
+    # Coerce course/section to integers where possible
+    result$course <- suppressWarnings(as.integer(result$course))
+    result$section <- suppressWarnings(as.integer(result$section))
 
-    # Debug print statements
     print("After topic parsing:")
     print(result)
 
-    # Debug print statements
+    # Extract start time values as strings
+    start_time_values <- result$`Start Time`
     print("Start Time values:")
-    print(result$`Start Time`)
+    print(start_time_values)
 
-    # Parse date with explicit format to handle Zoom's format using base R
-    result$match_start_time <- lubridate::parse_date_time(
-      result$`Start Time`,
-      orders = c("b d, Y I:M:S p", "b d, Y I:M p", "b d, Y H:M:S", "b d, Y H:M"),
-      tz = "America/Los_Angeles",
-      quiet = TRUE # Suppress warnings for failed parses
+    # Parse dates using multiple formats in America/Los_Angeles tz
+    parsed_dates <- lubridate::parse_date_time(
+      start_time_values,
+      orders = c("b d, Y I:M:S p", "b d, Y I:M p"),
+      tz = "America/Los_Angeles"
     )
-    # Calculate end time: session length + 0.5 hour buffer
-    session_end_time <- result$match_start_time + lubridate::hours(as.integer(scheduled_session_length_hours)) + lubridate::minutes(as.integer((scheduled_session_length_hours %% 1) * 60))
-    result$match_end_time <- session_end_time + lubridate::minutes(30) # Add 0.5 hour buffer (30 minutes)
+    result$`Start Time` <- start_time_values
 
-    # Debug print statements
+    result$match_start_time <- parsed_dates
+    # Add scheduled session length plus a 0.5 hour buffer, per tests
+    result$match_end_time <- result$match_start_time + lubridate::dhours(scheduled_session_length_hours) + lubridate::dminutes(30)
+
     print("After date parsing:")
     print(result)
 
-    # Filter by semester start date using base R
-    semester_start <- lubridate::mdy(semester_start_mdy)
-    result <- result[result$match_start_time >= semester_start, , drop = FALSE]
+    # Optionally filter rows to those matching department, if provided
+    if (!is.null(dept_var) && nzchar(dept_var)) {
+      result <- result[!is.na(result$dept) & result$dept == dept_var, ]
+    }
 
-    # Debug print statements
     print("Final result after filtering:")
     print(result)
 
+<<<<<<< Current (Your changes)
     # Convert to tibble to maintain expected return type
     return(tibble::as_tibble(result))
+=======
+    tibble::as_tibble(result)
+>>>>>>> Incoming (Background Agent changes)
   }

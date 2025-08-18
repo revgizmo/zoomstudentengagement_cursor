@@ -15,13 +15,13 @@ anonymize_educational_data(
 \arguments{
 \item{data}{A data frame or tibble to anonymize}
 
-\item{method}{Anonymization method. One of `c("mask", "hash", "pseudonymize", "aggregate")`}
+\item{method}{Anonymization method. One of \code{c("mask", "hash", "pseudonymize", "aggregate")}}
 
 \item{preserve_columns}{Character vector of column names to preserve unchanged}
 
 \item{hash_salt}{Salt for hash-based anonymization (optional)}
 
-\item{aggregation_level}{Level for aggregation. One of `c("individual", "section", "course", "institution")`}
+\item{aggregation_level}{Level for aggregation. One of \code{c("individual", "section", "course", "institution")}}
 }
 \value{
 The anonymized data frame with the same structure as input

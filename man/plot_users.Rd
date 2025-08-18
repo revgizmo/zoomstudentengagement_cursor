@@ -16,7 +16,7 @@ plot_users(
 }
 \arguments{
 \item{data}{A tibble with engagement metrics. Must contain the selected metric
-and a column representing student identity (default `preferred_name`).}
+and a column representing student identity (default \code{preferred_name}).}
 
 \item{metric}{Column name of the metric to plot. Default: "session_ct".}
 
@@ -26,16 +26,16 @@ and a column representing student identity (default `preferred_name`).}
 column is not present or set to "none", no faceting is applied. Default: "section".}
 
 \item{mask_by}{One of c("name", "rank"). If "rank", names are replaced with
-per-section rank labels using `mask_user_names_by_metric()`. Default: "name".}
+per-section rank labels using \code{mask_user_names_by_metric()}. Default: "name".}
 
-\item{privacy_level}{Privacy level passed to `ensure_privacy()` when `mask_by = "name"`.
-Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.}
+\item{privacy_level}{Privacy level passed to \code{ensure_privacy()} when \code{mask_by = "name"}.
+Defaults to \code{getOption("zoomstudentengagement.privacy_level", "mask")}.}
 
-\item{metrics_lookup_df}{Optional tibble with `metric` and `description` columns
-to annotate plots. Defaults to `make_metrics_lookup_df()` if available.}
+\item{metrics_lookup_df}{Optional tibble with \code{metric} and \code{description} columns
+to annotate plots. Defaults to \code{make_metrics_lookup_df()} if available.}
 }
 \value{
-A `ggplot` object.
+A \code{ggplot} object.
 }
 \description{
 Unified plotting function for engagement metrics with privacy-aware options.

@@ -23,7 +23,7 @@ A tibble of customized student names by section.
 }
 \description{
 This function creates a tibble from a provided file of customized student names by section.
-If the file does not exist, the function prints an error and creates an empty tibble using `make_blank_section_names_lookup_csv()`.
+If the file does not exist, the function prints an error and creates an empty tibble using \code{make_blank_section_names_lookup_csv()}.
 }
 \examples{
 load_section_names_lookup()

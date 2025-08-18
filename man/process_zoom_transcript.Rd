@@ -18,30 +18,30 @@ process_zoom_transcript(
 \item{transcript_file_path}{File path of a .transcript.vtt file of a Zoom recording
 transcript.}
 
-\item{consolidate_comments}{Set to `TRUE` to consolidate consecutive comments
-from the same speaker with gaps of less than `max_pause_sec`. `FALSE`
-returns the results from the raw transcript.  Defaults to `TRUE`}
+\item{consolidate_comments}{Set to \code{TRUE} to consolidate consecutive comments
+from the same speaker with gaps of less than \code{max_pause_sec}. \code{FALSE}
+returns the results from the raw transcript.  Defaults to \code{TRUE}}
 
 \item{max_pause_sec}{Maximum pause between comments to be consolidated.  If
 the raw comments from the Zoom recording transcript contain 2 consecutive
 comments from the same speaker, and the time between the end of the first
-comment and start of the second comment is less than `max_pause_sec`
+comment and start of the second comment is less than \code{max_pause_sec}
 seconds, then the comments will be consolidated.  If the time between the
 comments is larger, they will not be consolidated. Defaults to 1.}
 
-\item{add_dead_air}{Set to `TRUE` to adds rows for any time between
-transcribed comments, labeled with the `dead_air_name` provided (or the
+\item{add_dead_air}{Set to \code{TRUE} to adds rows for any time between
+transcribed comments, labeled with the \code{dead_air_name} provided (or the
 default value of 'dead_air').  The resulting tibble will have rows
 accounting for the time from the beginning of the first comment to the end
-of the last one. Defaults to `TRUE`.}
+of the last one. Defaults to \code{TRUE}.}
 
-\item{dead_air_name}{Character string to label the `name` column in any rows
+\item{dead_air_name}{Character string to label the \code{name} column in any rows
 added for dead air. Defaults to 'dead_air'.}
 
-\item{na_name}{Character string to label the `name` column in any rows where
-the transcript `name` is `NA`. Defaults to 'unknown'.}
+\item{na_name}{Character string to label the \code{name} column in any rows where
+the transcript \code{name} is \code{NA}. Defaults to 'unknown'.}
 
-\item{transcript_df}{Tibble containing the comments from a Zoom recording transcript (which is generally the result of calling `load_zoom_transcript()`.}
+\item{transcript_df}{Tibble containing the comments from a Zoom recording transcript (which is generally the result of calling \code{load_zoom_transcript()}.}
 }
 \value{
 A tibble containing the comments from a Zoom recording transcript
@@ -52,7 +52,7 @@ Process a Zoom recording transcript with given parameters and return tibble cont
 \details{
 Original code posted by Conor Healy:
 https://ucbischool.slack.com/archives/C02A36407K9/p1631855705002000 Addition
-of `wordcount`, `wordcount_perc`, and `wpm` by Brooks Ambrose:
+of \code{wordcount}, \code{wordcount_perc}, and \code{wpm} by Brooks Ambrose:
 https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246
 }
 \examples{

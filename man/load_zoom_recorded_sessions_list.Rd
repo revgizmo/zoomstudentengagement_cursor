@@ -25,65 +25,69 @@ load_zoom_recorded_sessions_list(
 \item{transcripts_folder}{specific subfolder of the data folder where you
 will store the cloud recording csvs}
 
-\item{topic_split_pattern}{REGEX pattern used to parse the `Topic` from the
-csvs and extract useful columns. Defaults to `paste0("^(?<dept>\\S+)
-(?<course_section>\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+)
-(?<instructor>\\(.*?\\))")` (Note: this REGEX pattern is formatted here
-as paste0() rather than a single string to stay beneath the 90 character
-line limit in the code checker.  A single string works just as well as this
-combined one). Note: The function now uses a generalized pattern that can
-handle various course naming conventions including "DATASCI 201.006",
-"LTF 101", and "MATH 250.001" formats.}
+\item{topic_split_pattern}{REGEX pattern used to parse the \code{Topic} from the
+csvs and extract useful columns. Defaults to
+\code{paste0("^(?<dept>\\\\\\\\S+) (?<course_section>\\\\\\\\S+) - ", "(?<day>[A-Za-z]+) (?<time>\\\\\\\\S+\\\\\\\\s*\\\\\\\\S+) (?<instructor>\\\\\\\\(.*?\\\\\\\\))")}
+(Note: this REGEX pattern is formatted here as paste0() rather than a
+single string to stay beneath the 90 character line limit in the code
+checker. A single string works just as well as this combined one). Note:
+The function now uses a generalized pattern that can handle various course
+naming conventions including \verb{DATASCI 201.006}, \verb{LTF 101}, and
+\verb{MATH 250.001} formats.}
 
 \item{zoom_recorded_sessions_csv_names_pattern}{REGEX pattern used to parse
 the csv file names from the cloud recording csvs and extract useful
 columns. Defaults to
-'zoomus_recordings__\\d{8}(?:\\s+copy\\s*\\d*)?\\.csv'}
+\verb{zoomus_recordings__\\\\\\\\d\{8\}(?:\\\\\\\\s+copy\\\\\\\\s*\\\\\\\\d*)?\\\\\\\\.csv}}
 
 \item{zoom_recorded_sessions_csv_col_names}{Comma separated string of column
 names in the cloud recording csvs. Zoom tends to save the file with an
-extra ',' at the end of the header row, causing a null column to be
-imported.  Defaults to 'Topic,ID,Start Time,File Size (MB),File Count,Total
-Views,Total Downloads,Last Accessed'}
+extra \verb{,} at the end of the header row, causing a null column to be
+imported. Defaults to
+\verb{Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed}}
 
 \item{dept}{the school department associated with the recordings to keep.
 Zoom often captures unwanted recordings, and this is used to filter only
-the targeted ones.  This value is compared to the `dept` column extracted
-from the `Topic` column extracted from cloud recording csvs.  Defaults to
-'LTF'}
+the targeted ones. This value is compared to the \code{dept} column extracted
+from the \code{Topic} column extracted from cloud recording csvs. Defaults to
+\code{LTF}}
 
-\item{semester_start_mdy}{date of the first class in the semester.  Defaults
-to 'Jan 01, 2024'}
+\item{semester_start_mdy}{date of the first class in the semester. Defaults
+to \verb{Jan 01, 2024}}
 
 \item{scheduled_session_length_hours}{scheduled length of each class session
-in hours.  Defaults to 1.5}
+in hours. Defaults to \code{1.5}}
 }
 \value{
 A tibble listing the session recordings loaded from the cloud
-  recording csvs. Returns NULL if the transcripts folder doesn't exist,
-  or an empty tibble with the correct column structure if no matching
-  files are found.
+recording csvs. Returns \code{NULL} if the transcripts folder doesn't exist,
+or an empty tibble with the correct column structure if no matching
+files are found.
 }
 \description{
 This function creates a tibble from a provided csv file of Zoom recordings.
 }
 \details{
-## Download Zoom csv file with list of recordings and transcripts
-
-1. Go to [https://www.zoom.us/recording](https://www.zoom.us/recording)
-
-2. Export the Cloud Recordings 3. Copy the cloud recording csv (naming
-convention: 'zoomus_recordings__\\d{8}.csv') to 'data/transcripts/' (or
-whatever path you identify in the `data_folder` and `transcripts_folder`
-parameters).
+\subsection{Download Zoom csv file with list of recordings and transcripts}{
+\enumerate{
+\item Go to \url{https://www.zoom.us/recording}
+\item Export the Cloud Recordings
+\item Copy the cloud recording csv (naming convention:
+\verb{zoomus_recordings__\\\\d\{8\}\\.csv}) to \verb{data/transcripts/}
+(or whatever path you identify in the \code{data_folder} and
+\code{transcripts_folder} parameters).
+}
+}
 }
 \note{
 The function handles several legacy and edge cases:
-- Trailing commas in CSV headers (common in Zoom exports)
-- Multiple recordings of the same session (takes the most recent)
-- Timezone handling for session start/end times
-- Department filtering for targeted recordings
-- Date format variations in Zoom exports
+\itemize{
+\item Trailing commas in CSV headers (common in Zoom exports)
+\item Multiple recordings of the same session (takes the most recent)
+\item Timezone handling for session start/end times
+\item Department filtering for targeted recordings
+\item Date format variations in Zoom exports
+}
 }
 \examples{
 # Show what happens when no data files exist (returns empty tibble)
