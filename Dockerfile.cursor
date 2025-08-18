@@ -11,24 +11,18 @@
 # 2. Use "Develop in Agent" workflow for R package development
 # 3. All R development tools and dependencies are pre-installed
 
-FROM ubuntu:22.04
+FROM rocker/r-ver:latest
 
 # Fix system time and repository issues
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
-# Install R and system dependencies
+# Update system and install minimal dependencies first
 RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    dirmngr \
-    wget \
-    curl \
-    git \
     build-essential \
-    && wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_debian_key.asc \
-    && echo "deb https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" | tee -a /etc/apt/sources.list.d/cran.list \
-    && apt-get update \
-    && apt-get install -y r-base r-base-dev \
+    git \
+    curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Build Arguments for User Matching (CRITICAL FOR BACKGROUND AGENTS) ---
