@@ -13,7 +13,15 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 ### **Current Docker Files in Main Branch**
 - `Dockerfile.cursor` - Active Docker configuration for Cursor background agents
 - `.cursor/environment.json` - Cursor background agent configuration
-- Docker-related documentation updates in `README.md`, `README.Rmd`, `PROJECT.md`
+- `Dockerfile.background` - Background agent Docker configuration
+- `Dockerfile.agent` - Agent-specific Docker configuration
+- `Dockerfile.minimal` - Minimal Docker configuration
+- `Dockerfile.complete` - Complete Docker configuration
+- `Dockerfile.updated` - Updated Docker configuration
+- `Dockerfile.backup` - Backup Docker configuration
+- `.devcontainer/` - Devcontainer configuration directory
+- `.devcontainer_bak/` - Backup devcontainer directory
+- Docker-related documentation updates in `README.md`, `README.Rmd`, `DEVELOPMENT_SETUP.md`
 
 ### **Related Issues Status**
 - **Issue #263**: R Package Development with Cursor Background Agents - COMPLETED
@@ -40,6 +48,14 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 1. **Remove active Docker files**
    - `Dockerfile.cursor` - Active Docker configuration
    - `.cursor/environment.json` - Cursor background agent config
+   - `Dockerfile.background` - Background agent Docker configuration
+   - `Dockerfile.agent` - Agent-specific Docker configuration
+   - `Dockerfile.minimal` - Minimal Docker configuration
+   - `Dockerfile.complete` - Complete Docker configuration
+   - `Dockerfile.updated` - Updated Docker configuration
+   - `Dockerfile.backup` - Backup Docker configuration
+   - `.devcontainer/` - Devcontainer configuration directory
+   - `.devcontainer_bak/` - Backup devcontainer directory
 
 2. **Preserve reference files**
    - `Dockerfile.cursor-template` - Keep as template for future work
@@ -47,7 +63,8 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 
 3. **Update documentation**
    - Remove Docker sections from `README.md` and `README.Rmd`
-   - Update `PROJECT.md` to reflect Docker work isolation
+   - Update `DEVELOPMENT_SETUP.md` to reflect standard R development
+   - Create `docker-removal-log.md` to document the removal process
 
 ### **Phase 3: Testing & Validation**
 1. **Test background agent functionality**
@@ -74,6 +91,14 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 ### **Files to Remove**
 - `Dockerfile.cursor` - Active Docker configuration
 - `.cursor/environment.json` - Cursor background agent config
+- `Dockerfile.background` - Background agent Docker configuration
+- `Dockerfile.agent` - Agent-specific Docker configuration
+- `Dockerfile.minimal` - Minimal Docker configuration
+- `Dockerfile.complete` - Complete Docker configuration
+- `Dockerfile.updated` - Updated Docker configuration
+- `Dockerfile.backup` - Backup Docker configuration
+- `.devcontainer/` - Devcontainer configuration directory
+- `.devcontainer_bak/` - Backup devcontainer directory
 
 ### **Files to Keep**
 - `Dockerfile.cursor-template` - Template for future reference
@@ -81,7 +106,8 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 
 ### **Documentation Updates Required**
 - Remove Docker sections from `README.md` and `README.Rmd`
-- Update `PROJECT.md` to reflect Docker work isolation
+- Update `DEVELOPMENT_SETUP.md` to reflect standard R development
+- Create `docker-removal-log.md` to document the removal process
 - Update any other documentation referencing Docker customization
 
 ## 🧪 **Testing Requirements**
