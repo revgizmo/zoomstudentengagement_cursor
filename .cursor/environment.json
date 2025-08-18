@@ -6,8 +6,8 @@
       "HOST_GID": "1000"
     }
   },
-  "install": "su - cursor -c 'echo \"R development environment ready\"'",
-  "start": "su - cursor -c 'R --vanilla'",
+  "install": "echo 'R development environment ready'",
+  "start": "R --vanilla",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -216,6 +216,5 @@
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "postCreateCommand": "echo 'R package development environment ready'",
-  "postStartCommand": "echo 'R session started'",
-  "remoteUser": "cursor"
+  "postStartCommand": "echo 'R session started'"
 }
