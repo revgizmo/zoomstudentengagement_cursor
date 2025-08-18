@@ -78,7 +78,9 @@ Complete workflow guide - **[Troubleshooting
 Guide](docs/development/CURSOR_BACKGROUND_AGENT_TROUBLESHOOTING.md)** -
 Common issues and solutions
 
-**Note**: Docker development work is isolated in feature branches. For Docker-specific development, see the Docker isolation framework in `docs/development/`.
+**Note**: Docker development work is isolated in feature branches. For
+Docker-specific development, see the Docker isolation framework in
+`docs/development/`.
 
 ### 5-minute whole-game example
 
