@@ -293,3 +293,4 @@ docker logs <container_id>
 - The solution uses local builds instead of pre-built images
 - If pre-built images are desired in the future, they would need to be pushed to a registry
 - This change aligns with the current Docker optimization strategy
+

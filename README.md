@@ -4,6 +4,9 @@
   - <a href="#-documentation" id="toc--documentation">📚 Documentation</a>
   - <a href="#-quick-start" id="toc--quick-start">🚀 Quick Start</a>
     - <a href="#installation" id="toc-installation">Installation</a>
+    - <a href="#development-with-cursor-background-agents"
+      id="toc-development-with-cursor-background-agents">Development with
+      Cursor Background Agents</a>
     - <a href="#5-minute-whole-game-example"
       id="toc-5-minute-whole-game-example">5-minute whole-game example</a>
     - <a href="#basic-example" id="toc-basic-example">Basic Example</a>
@@ -55,6 +58,35 @@ participation equity, from Zoom transcripts of recorded course sessions.
 ``` r
 devtools::install_github("revgizmo/zoomstudentengagement")
 ```
+
+### Development with Cursor Background Agents
+
+For developers using Cursor IDE with background agents:
+
+``` bash
+# 1. Clone the repository
+git clone https://github.com/revgizmo/zoomstudentengagement.git
+cd zoomstudentengagement
+
+# 2. Start Docker (if not running)
+# macOS: open -a Docker
+# Linux: sudo systemctl start docker
+
+# 3. Build the R development environment
+docker build -f Dockerfile.cursor \
+  --build-arg HOST_UID=$(id -u) \
+  --build-arg HOST_GID=$(id -g) \
+  -t zoomstudentengagement-r-dev .
+
+# 4. Use "Develop in Agent" workflow in Cursor
+# The .cursor/environment.json is pre-configured for R package development
+```
+
+**Development Documentation:** - **[R Package Development
+Guide](docs/development/CURSOR_BACKGROUND_AGENT_R_DEVELOPMENT.md)** -
+Complete workflow guide - **[Troubleshooting
+Guide](docs/development/CURSOR_BACKGROUND_AGENT_TROUBLESHOOTING.md)** -
+Common issues and solutions
 
 ### 5-minute whole-game example
 
