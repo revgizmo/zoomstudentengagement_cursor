@@ -1,0 +1,71 @@
+# Dockerfile Template for Cursor IDE Background Agents
+# File: Dockerfile.cursor-template
+#
+# This Dockerfile provides a minimal, best-practice template for creating
+# custom environments for the Cursor IDE background agent. It resolves the
+# common 'chown: invalid user' error by creating a non-root user with a
+# UID/GID that matches the host user.
+
+# --- Base Image ---
+# Choose a base image that suits your project needs.
+# For example: python:3.10-slim, node:18-bullseye, ubuntu:22.04
+FROM ubuntu:22.04
+
+# --- Build Arguments for User Matching ---
+# These arguments are used to pass the host user's UID and GID into the build.
+# This is crucial for avoiding file permission issues when the agent
+# mounts your local workspace into the container.
+ARG HOST_UID=1000
+ARG HOST_GID=1000
+
+# --- Environment Variables ---
+# Set DEBIAN_FRONTEND to noninteractive to prevent prompts during package installation.
+ENV DEBIAN_FRONTEND=noninteractive
+
+# --- System Dependencies & User Creation ---
+# Update package lists, install essential utilities, and create the user.
+# - 'sudo' is included so the user can elevate privileges if needed.
+# - 'git' and other development tools should be added here.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        sudo \
+        git \
+        curl \
+        openssh-client \
+    # Create a group with the host's GID
+    && groupadd -g ${HOST_GID} cursor \
+    # Create a user with the host's UID and the new group's GID
+    # The username 'cursor' is used here, but any name will work as long
+    # as the UID/GID are correct. Cursor's agent may refer to 'ruser', but
+    # it primarily relies on UID for permissions.
+    && useradd -u ${HOST_UID} -g cursor -m -s /bin/bash cursor \
+    # Add the new user to the sudo group to allow privilege escalation
+    && usermod -aG sudo cursor \
+    # Configure sudo to not require a password for the 'cursor' user.
+    # This is often necessary for automated scripts run by the agent.
+    && echo "cursor ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    # Clean up apt cache to reduce image size
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Application-Specific Dependencies ---
+# Install your project's language runtimes, libraries, and dependencies here.
+# For example:
+# RUN sudo apt-get install -y python3-pip
+# RUN pip3 install -r requirements.txt
+
+# --- Set the Default User ---
+# Switch to the non-root user created above. All subsequent commands
+# (CMD, ENTRYPOINT, RUN) will be executed as this user. This is a critical
+# security best practice and ensures the agent runs in the correct context.
+USER cursor
+
+# --- Set the Working Directory ---
+# Set the working directory inside the container. When the agent starts,
+# this is where it will typically mount your project code.
+WORKDIR /home/cursor/project
+
+# --- Default Command ---
+# This command keeps the container running, allowing the Cursor agent to connect.
+# `tail -f /dev/null` is a common way to keep a container alive indefinitely.
+CMD ["tail", "-f", "/dev/null"]
