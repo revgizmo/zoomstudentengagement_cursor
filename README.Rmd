@@ -49,23 +49,15 @@ For developers using Cursor IDE with background agents:
 git clone https://github.com/revgizmo/zoomstudentengagement.git
 cd zoomstudentengagement
 
-# 2. Start Docker (if not running)
-# macOS: open -a Docker
-# Linux: sudo systemctl start docker
-
-# 3. Build the R development environment
-docker build -f Dockerfile.cursor \
-  --build-arg HOST_UID=$(id -u) \
-  --build-arg HOST_GID=$(id -g) \
-  -t zoomstudentengagement-r-dev .
-
-# 4. Use "Develop in Agent" workflow in Cursor
-# The .cursor/environment.json is pre-configured for R package development
+# 2. Use "Develop in Agent" workflow in Cursor
+# The background agent will use the standard R development environment
 ```
 
 **Development Documentation:**
 - **[R Package Development Guide](docs/development/CURSOR_BACKGROUND_AGENT_R_DEVELOPMENT.md)** - Complete workflow guide
 - **[Troubleshooting Guide](docs/development/CURSOR_BACKGROUND_AGENT_TROUBLESHOOTING.md)** - Common issues and solutions
+
+**Note**: Docker development work is isolated in feature branches. For Docker-specific development, see the Docker isolation framework in `docs/development/`.
 
 ### 5-minute whole-game example
 
