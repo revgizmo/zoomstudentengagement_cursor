@@ -27,25 +27,20 @@ RUN R -q -e "install.packages(c('askpass', 'backports', 'base64enc', 'bit', 'bit
 # Install the package
 RUN R CMD INSTALL .
 
-# Create non-root user for security with robust error handling
-# This section is specifically designed to handle background agent build context issues
+# Create non-root user for security with numeric IDs (DEFINITIVE FIX)
+# This approach uses numeric IDs instead of user names to avoid user namespace issues
 RUN set -e; \
-    # Ensure we're running as root for user creation
-    if [ "$(id -u)" != "0" ]; then \
-        echo "Warning: Not running as root, attempting to create user anyway"; \
-    fi; \
-    # Create user with explicit group creation
+    # Create user and group with explicit numeric IDs
     groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
     useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
-    # Verify user was created
-    id ruser || echo "Warning: Could not verify ruser creation"; \
-    # Set ownership with error handling
-    chown -R ruser:ruser /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
-    # Verify ownership was set
-    ls -la /workspace | head -3 || echo "Warning: Could not verify ownership"
+    # Set ownership using numeric IDs (1000:1000) instead of user names (ruser:ruser)
+    # This avoids the "chown: invalid user: 'ruser:ruser'" error in Cursor background agent
+    chown -R 1000:1000 /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    # Verify the setup
+    id ruser || echo "Warning: Could not verify ruser creation"
 
-# Switch to non-root user
-USER ruser
+# Switch to non-root user using numeric ID
+USER 1000
 
 # Default command for testing
 CMD ["R", "-e", "devtools::test()"]

@@ -1,0 +1,41 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from test-numeric-ids.dockerfile
+#1 transferring dockerfile: 672B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/rocker/r-ver:4.4.0
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 191B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/rocker/r-ver:4.4.0
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 631.61kB 0.0s done
+#5 DONE 0.0s
+
+#6 [2/4] WORKDIR /workspace
+#6 CACHED
+
+#7 [3/4] COPY . /workspace/
+#7 CACHED
+
+#8 [4/4] RUN set -e;     echo "=== Numeric ID Approach ===" &&     echo "Creating user with numeric ID 1000..." &&     groupadd -g 1000 ruser || echo "Group creation failed" &&     useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User creation failed" &&     echo "Setting ownership with numeric IDs..." &&     chown -R 1000:1000 /workspace || echo "Numeric chown failed" &&     echo "Verifying ownership..." &&     ls -la | head -3 || echo "Verification failed"
+#8 0.101 === Numeric ID Approach ===
+#8 0.101 Creating user with numeric ID 1000...
+#8 0.129 Setting ownership with numeric IDs...
+#8 0.351 Verifying ownership...
+#8 0.352 total 76
+#8 0.352 drwxr-xr-x 1 ruser ruser 4096 Aug 17 22:51 .
+#8 0.352 drwxr-xr-x 1 root  root  4096 Aug 18 00:48 ..
+#8 DONE 0.4s
+
+#9 exporting to image
+#9 exporting layers 0.0s done
+#9 writing image sha256:bf77479a9e5f23f01c8a5cfa58ed36a783a83122740d2a467da67a4a811ae6f0 done
+#9 naming to docker.io/library/test-numeric-ids done
+#9 DONE 0.0s
