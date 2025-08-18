@@ -1,0 +1,70 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from test-cursor-background-agent.dockerfile
+#1 transferring dockerfile: 1.68kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/rocker/r-ver:4.4.0
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 191B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/rocker/r-ver:4.4.0
+#4 DONE 0.0s
+
+#5 [2/6] WORKDIR /workspace
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 2.68kB 0.0s done
+#6 DONE 0.0s
+
+#7 [3/6] COPY DESCRIPTION ./
+#7 DONE 0.0s
+
+#8 [4/6] COPY NAMESPACE ./
+#8 DONE 0.0s
+
+#9 [5/6] COPY R/ ./R/
+#9 DONE 0.0s
+
+#10 [6/6] RUN echo "=== Cursor Background Agent Simulation ===" &&     echo "Environment variables:" &&     env | grep -i cursor || echo "No Cursor variables" &&     echo "Current user: $(whoami)" &&     echo "Current user ID: $(id)" &&     echo "Working directory: $(pwd)" &&     echo "Directory contents:" &&     ls -la &&     echo "=== User Creation with Error Handling ===" &&     set -e;     echo "Step 1: Check if running as root" &&     if [ "$(id -u)" != "0" ]; then         echo "Warning: Not running as root (UID: $(id -u))";     else         echo "Running as root";     fi &&     echo "Step 2: Create group" &&     groupadd -g 1000 ruser 2>&1 || echo "Group creation result: $?" &&     echo "Step 3: Create user" &&     useradd -m -s /bin/bash -u 1000 -g 1000 ruser 2>&1 || echo "User creation result: $?" &&     echo "Step 4: Verify user" &&     id ruser 2>&1 || echo "User verification result: $?" &&     echo "Step 5: Attempt chown" &&     chown -R ruser:ruser /workspace 2>&1 || echo "Chown result: $?" &&     echo "Step 6: Verify ownership" &&     ls -la | head -3 || echo "Ownership verification result: $?" &&     echo "=== Final Status ===" &&     echo "Users in system:" &&     cat /etc/passwd | grep ruser || echo "ruser not in passwd" &&     echo "Groups in system:" &&     cat /etc/group | grep ruser || echo "ruser not in group"
+#10 0.113 === Cursor Background Agent Simulation ===
+#10 0.113 Environment variables:
+#10 0.124 No Cursor variables
+#10 0.128 Current user: root
+#10 0.132 Current user ID: uid=0(root) gid=0(root) groups=0(root)
+#10 0.133 Working directory: /workspace
+#10 0.133 Directory contents:
+#10 0.135 total 20
+#10 0.135 drwxr-xr-x 1 root root 4096 Aug 18 00:48 .
+#10 0.135 drwxr-xr-x 1 root root 4096 Aug 18 00:48 ..
+#10 0.135 -rw-r--r-- 1 root root  884 Aug 14 06:23 DESCRIPTION
+#10 0.135 -rw-r--r-- 1 root root 2018 Aug 14 06:23 NAMESPACE
+#10 0.135 drwxr-xr-x 2 root root 4096 Aug 16 23:11 R
+#10 0.135 === User Creation with Error Handling ===
+#10 0.135 Step 1: Check if running as root
+#10 0.135 Running as root
+#10 0.135 Step 2: Create group
+#10 0.148 Step 3: Create user
+#10 0.172 Step 4: Verify user
+#10 0.172 uid=1000(ruser) gid=1000(ruser) groups=1000(ruser)
+#10 0.172 Step 5: Attempt chown
+#10 0.236 Step 6: Verify ownership
+#10 0.238 total 28
+#10 0.238 drwxr-xr-x 1 ruser ruser 4096 Aug 18 00:48 .
+#10 0.238 drwxr-xr-x 1 root  root  4096 Aug 18 00:48 ..
+#10 0.238 === Final Status ===
+#10 0.238 Users in system:
+#10 0.239 ruser:x:1000:1000::/home/ruser:/bin/bash
+#10 0.239 Groups in system:
+#10 0.240 ruser:x:1000:
+#10 DONE 0.2s
+
+#11 exporting to image
+#11 exporting layers 0.0s done
+#11 writing image sha256:49a3b8c63a513dd49c32618c4360ce5178a7b5a8ce2601b6762306543dc3f318 done
+#11 naming to docker.io/library/test-cursor-agent done
+#11 DONE 0.0s
