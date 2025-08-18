@@ -98,9 +98,13 @@ Create a minimal Dockerfile that just provides the R environment without complex
 ### Root Cause Confirmed
 The error message "building with 'default' instance using docker driver" confirms that Cursor background agents default to using Docker and expect a `Dockerfile` in the root directory.
 
-### Solution: Minimal Dockerfile
-Created a minimal `Dockerfile` that satisfies the default condition:
+### Solution: Proper Background Agent Configuration
+Based on our documented research in `BACKGROUND_AGENT_DOCKER_FIX.md`, the solution requires:
 
+1. **Minimal Dockerfile**: A simple Dockerfile that provides the basic environment
+2. **Proper .cursor/environment.json**: The official Cursor configuration file that specifies which Dockerfile to use
+
+**Minimal Dockerfile**:
 ```dockerfile
 # Minimal Dockerfile for Cursor Background Agent Default Condition
 # This file satisfies the "default" condition that Cursor background agents expect
@@ -121,12 +125,26 @@ WORKDIR /workspace
 CMD ["tail", "-f", "/dev/null"]
 ```
 
+**Minimal .cursor/environment.json**:
+```json
+{
+  "name": "zoomstudentengagement-r-package",
+  "dockerfile": "Dockerfile",
+  "context": ".",
+  "buildArgs": {},
+  "install": "echo 'R package environment ready'",
+  "start": "echo 'Background agent environment started'"
+}
+```
+
 ### Benefits of This Solution
-1. **Satisfies Default Condition**: Provides the `Dockerfile` that Cursor expects
-2. **Minimal Footprint**: Simple, lightweight Docker configuration
-3. **No Complex Setup**: Avoids the complex Docker configuration we removed in Issue #267
-4. **Maintains Goals**: Keeps main branch clean while allowing background agents to work
-5. **Preserves Functionality**: All package functionality remains intact
+1. **Follows Official Documentation**: Uses the proper `.cursor/environment.json` configuration format
+2. **Satisfies Default Condition**: Provides the `Dockerfile` that Cursor expects
+3. **Minimal Footprint**: Simple, lightweight Docker configuration
+4. **No Complex Setup**: Avoids the complex Docker configuration we removed in Issue #267
+5. **Maintains Goals**: Keeps main branch clean while allowing background agents to work
+6. **Preserves Functionality**: All package functionality remains intact
+7. **Based on Research**: Leverages our existing documented research from Issue #262
 
 ### Testing Results
 - ✅ **Package loads successfully**: `devtools::load_all()` works perfectly
