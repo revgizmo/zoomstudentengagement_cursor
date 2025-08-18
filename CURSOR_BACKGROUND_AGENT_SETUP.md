@@ -14,10 +14,10 @@ This guide provides comprehensive instructions for setting up Docker integration
 Cursor background agents have different user namespace handling than manual Docker builds, which can cause "chown: invalid user" errors and other Docker integration issues.
 
 ### **The Solution**
-Use numeric IDs instead of user names for all Docker operations to ensure compatibility across different build contexts.
+Use build arguments to match host user UID/GID and configure the environment properly through `.cursor/environment.json`.
 
 ### **Key Insight**
-Background agents run in isolated environments with restricted user namespace access, requiring specific Docker configuration approaches.
+Background agents run in isolated environments with restricted user namespace access, requiring specific Docker configuration approaches with proper UID/GID matching.
 
 ## 🔍 **Background Agent Environment**
 
@@ -40,10 +40,10 @@ fi
 ## 🛠️ **Essential Requirements**
 
 ### **1. User Management Requirements**
-- **Numeric IDs**: Use numeric UID/GID instead of user names
+- **Dynamic UID/GID Matching**: Use build arguments to match host user UID/GID
 - **Robust Creation**: Handle user/group creation failures gracefully
-- **Ownership Setting**: Use numeric IDs for ownership operations
-- **User Switching**: Use numeric UID for USER directive
+- **Ownership Setting**: Use matched UID/GID for ownership operations
+- **User Switching**: Use matched UID for USER directive
 
 ### **2. File System Requirements**
 - **Permission Handling**: Ensure proper file permissions
@@ -59,15 +59,33 @@ fi
 
 ## 📝 **Step-by-Step Setup Instructions**
 
-### **Step 1: Create Dockerfile Template**
+### **Step 1: Find Your Host UID/GID**
 
-Create a `Dockerfile.cursor-template` with the following content:
+First, determine your host user's UID and GID:
+
+```bash
+# Get your UID and GID
+id -u && id -g
+```
+
+This will output two numbers (e.g., `1000` and `1000`). **Take note of these values.**
+
+### **Step 2: Create Dockerfile Template**
+
+Create a `Dockerfile.cursor` with the following content:
 
 ```dockerfile
-# Dockerfile.cursor-template - Optimized for Cursor Background Agents
+# Dockerfile.cursor - Optimized for Cursor Background Agents
 # Based on research from Issue #262 - Cursor Background Agent Docker Setup and Integration
 
 FROM your-base-image:version
+
+# --- Build Arguments for User Matching (CRITICAL FOR BACKGROUND AGENTS) ---
+# These arguments are used to pass the host user's UID and GID into the build.
+# This is crucial for avoiding file permission issues when the agent
+# mounts your local workspace into the container.
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -83,28 +101,59 @@ COPY . /workspace/
 # Install application dependencies
 RUN your-dependency-installation-command
 
-# Create non-root user for security with numeric IDs (CRITICAL FOR BACKGROUND AGENTS)
-# This approach uses numeric IDs instead of user names to avoid user namespace issues
+# Create non-root user for security with dynamic UID/GID matching (ENHANCED APPROACH)
+# This approach uses build arguments to match host user UID/GID, preventing
+# permission issues when the agent mounts the workspace into the container.
 RUN set -e; \
-    # Create user and group with explicit numeric IDs
-    groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
-    useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
-    # Set ownership using numeric IDs (1000:1000) instead of user names (ruser:ruser)
-    # This avoids the "chown: invalid user: 'ruser:ruser'" error in Cursor background agent
-    chown -R 1000:1000 /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    # Create a group with the host's GID
+    groupadd -g ${HOST_GID} cursor || echo "Group cursor may already exist"; \
+    # Create a user with the host's UID and the new group's GID
+    useradd -u ${HOST_UID} -g cursor -m -s /bin/bash cursor || echo "User cursor may already exist"; \
+    # Add the new user to the sudo group to allow privilege escalation
+    usermod -aG sudo cursor || echo "Could not add to sudo group"; \
+    # Configure sudo to not require a password for the cursor user
+    echo "cursor ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers || echo "Could not configure sudo"; \
+    # Set ownership using the matched UID/GID
+    chown -R ${HOST_UID}:${HOST_GID} /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
     # Verify the setup
-    id ruser || echo "Warning: Could not verify ruser creation"
+    id cursor || echo "Warning: Could not verify cursor creation"
 
-# Switch to non-root user using numeric ID
-USER 1000
+# Switch to non-root user using the matched UID
+USER ${HOST_UID}
 
 # Default command
 CMD ["your-default-command"]
 ```
 
-### **Step 2: Customize for Your Application**
+### **Step 3: Configure .cursor/environment.json**
 
-Replace the placeholder values in the template:
+Create the `.cursor` directory and `environment.json` file:
+
+```bash
+mkdir -p .cursor
+```
+
+Add the following configuration to `.cursor/environment.json`:
+
+```json
+{
+  "build": {
+    "dockerfile": "Dockerfile.cursor",
+    "args": {
+      "HOST_UID": "1000",
+      "HOST_GID": "1000"
+    }
+  },
+  "install": "echo 'Dependencies can be installed here.'",
+  "start": "tail -f /dev/null"
+}
+```
+
+**Important**: Replace the `"1000"` values with your actual UID and GID from Step 1.
+
+### **Step 4: Customize for Your Application**
+
+Replace the placeholder values in the Dockerfile:
 
 ```dockerfile
 # Replace with your base image
@@ -122,57 +171,37 @@ RUN your-dependency-installation-command
 CMD ["your-default-command"]
 ```
 
-### **Step 3: Test the Configuration**
+### **Step 5: Test the Configuration**
 
 Test your Dockerfile in both contexts:
 
 ```bash
 # Test manual Docker build
-docker build -f Dockerfile.cursor-template -t test-manual .
+docker build -f Dockerfile.cursor -t test-manual .
 
 # Test background agent build (if possible)
 # This will be tested when Cursor background agent runs the build
 ```
 
-### **Step 4: Verify Setup**
+### **Step 6: Launch the Background Agent**
 
-Create a verification script to check your setup:
-
-```bash
-#!/bin/bash
-# verify-setup.sh
-
-echo "🔍 Verifying Cursor Background Agent Docker Setup..."
-
-# Check if running in background agent context
-if [ "$CURSOR_AGENT" = "1" ]; then
-    echo "✅ Running in Cursor background agent context"
-    echo "   CURSOR_TRACE_ID: $CURSOR_TRACE_ID"
-    echo "   CURSOR_WORKSPACE: $CURSOR_WORKSPACE"
-else
-    echo "ℹ️  Running in manual context"
-fi
-
-# Check user setup
-echo "🔍 Checking user setup..."
-id ruser || echo "❌ User ruser not found"
-whoami || echo "❌ Could not determine current user"
-
-# Check workspace permissions
-echo "🔍 Checking workspace permissions..."
-ls -la /workspace || echo "❌ Could not access workspace"
-
-echo "✅ Setup verification complete"
-```
+1. Open your project in Cursor
+2. Open the Command Palette (`Cmd/Ctrl + K`)
+3. Type "Setup Background Agent" and select the option
+4. Cursor will detect your `.cursor/environment.json` file and begin the Docker build process
 
 ## 📋 **Configuration Examples**
 
 ### **Example 1: R Package Development**
 
 ```dockerfile
-# Dockerfile.r-package - For R package development with Cursor background agents
+# Dockerfile.cursor - For R package development with Cursor background agents
 
 FROM rocker/r-ver:4.4.0
+
+# Build arguments for user matching
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -192,15 +221,17 @@ RUN R -q -e "install.packages(c('devtools', 'testthat', 'roxygen2'), repos='http
 # Install the package
 RUN R CMD INSTALL .
 
-# Create non-root user for security with numeric IDs
+# Create non-root user for security with dynamic UID/GID matching
 RUN set -e; \
-    groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
-    useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
-    chown -R 1000:1000 /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
-    id ruser || echo "Warning: Could not verify ruser creation"
+    groupadd -g ${HOST_GID} cursor || echo "Group cursor may already exist"; \
+    useradd -u ${HOST_UID} -g cursor -m -s /bin/bash cursor || echo "User cursor may already exist"; \
+    usermod -aG sudo cursor || echo "Could not add to sudo group"; \
+    echo "cursor ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers || echo "Could not configure sudo"; \
+    chown -R ${HOST_UID}:${HOST_GID} /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    id cursor || echo "Warning: Could not verify cursor creation"
 
-# Switch to non-root user using numeric ID
-USER 1000
+# Switch to non-root user using the matched UID
+USER ${HOST_UID}
 
 # Default command for testing
 CMD ["R", "-e", "devtools::test()"]
@@ -209,9 +240,13 @@ CMD ["R", "-e", "devtools::test()"]
 ### **Example 2: Python Application**
 
 ```dockerfile
-# Dockerfile.python - For Python applications with Cursor background agents
+# Dockerfile.cursor - For Python applications with Cursor background agents
 
 FROM python:3.11-slim
+
+# Build arguments for user matching
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -227,15 +262,17 @@ COPY . /workspace/
 # Install Python dependencies
 RUN pip install -r requirements.txt
 
-# Create non-root user for security with numeric IDs
+# Create non-root user for security with dynamic UID/GID matching
 RUN set -e; \
-    groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
-    useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
-    chown -R 1000:1000 /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
-    id ruser || echo "Warning: Could not verify ruser creation"
+    groupadd -g ${HOST_GID} cursor || echo "Group cursor may already exist"; \
+    useradd -u ${HOST_UID} -g cursor -m -s /bin/bash cursor || echo "User cursor may already exist"; \
+    usermod -aG sudo cursor || echo "Could not add to sudo group"; \
+    echo "cursor ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers || echo "Could not configure sudo"; \
+    chown -R ${HOST_UID}:${HOST_GID} /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    id cursor || echo "Warning: Could not verify cursor creation"
 
-# Switch to non-root user using numeric ID
-USER 1000
+# Switch to non-root user using the matched UID
+USER ${HOST_UID}
 
 # Default command
 CMD ["python", "app.py"]
@@ -244,9 +281,13 @@ CMD ["python", "app.py"]
 ### **Example 3: Node.js Application**
 
 ```dockerfile
-# Dockerfile.nodejs - For Node.js applications with Cursor background agents
+# Dockerfile.cursor - For Node.js applications with Cursor background agents
 
 FROM node:18-slim
+
+# Build arguments for user matching
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -262,15 +303,17 @@ COPY . /workspace/
 # Install Node.js dependencies
 RUN npm install
 
-# Create non-root user for security with numeric IDs
+# Create non-root user for security with dynamic UID/GID matching
 RUN set -e; \
-    groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
-    useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
-    chown -R 1000:1000 /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
-    id ruser || echo "Warning: Could not verify ruser creation"
+    groupadd -g ${HOST_GID} cursor || echo "Group cursor may already exist"; \
+    useradd -u ${HOST_UID} -g cursor -m -s /bin/bash cursor || echo "User cursor may already exist"; \
+    usermod -aG sudo cursor || echo "Could not add to sudo group"; \
+    echo "cursor ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers || echo "Could not configure sudo"; \
+    chown -R ${HOST_UID}:${HOST_GID} /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    id cursor || echo "Warning: Could not verify cursor creation"
 
-# Switch to non-root user using numeric ID
-USER 1000
+# Switch to non-root user using the matched UID
+USER ${HOST_UID}
 
 # Default command
 CMD ["npm", "start"]
@@ -279,10 +322,10 @@ CMD ["npm", "start"]
 ## 🔧 **Best Practices**
 
 ### **1. User Management**
-- **Always use numeric IDs**: Use `1000:1000` instead of `ruser:ruser`
+- **Always use build arguments**: Use `HOST_UID` and `HOST_GID` for dynamic matching
 - **Handle creation failures**: Use `|| echo "message"` for graceful failure handling
 - **Verify setup**: Include verification steps in your Dockerfile
-- **Document approach**: Add comments explaining the numeric ID approach
+- **Document approach**: Add comments explaining the UID/GID matching approach
 
 ### **2. Error Handling**
 - **Graceful failures**: Handle failures without stopping the build
@@ -308,39 +351,41 @@ CMD ["npm", "start"]
 
 #### **Issue 1: "chown: invalid user" Error**
 **Symptoms**: Docker build fails with "chown: invalid user: 'username:username'"
-**Cause**: User name resolution fails in background agent context
-**Solution**: Use numeric IDs (`1000:1000`) instead of user names (`username:username`)
+**Cause**: UID/GID mismatch between host and container
+**Solution**: Ensure `HOST_UID` and `HOST_GID` in `environment.json` match your host user
 
-```dockerfile
-# ❌ This will fail in background agent context
-RUN chown -R username:username /workspace
-
-# ✅ This works in all contexts
-RUN chown -R 1000:1000 /workspace
+```json
+{
+  "build": {
+    "args": {
+      "HOST_UID": "1000",  // Must match your host UID
+      "HOST_GID": "1000"   // Must match your host GID
+    }
+  }
+}
 ```
 
-#### **Issue 2: User Creation Fails**
+#### **Issue 2: Permission Denied Errors**
+**Symptoms**: Permission denied errors when accessing files
+**Cause**: UID/GID mismatch between host and container
+**Solution**: Verify UID/GID matching and rebuild
+
+```bash
+# Check your host UID/GID
+id -u && id -g
+
+# Update environment.json with correct values
+# Rebuild the background agent
+```
+
+#### **Issue 3: User Creation Fails**
 **Symptoms**: User creation commands fail during Docker build
 **Cause**: User/group may already exist or creation fails in background agent context
 **Solution**: Use robust user creation with error handling
 
 ```dockerfile
-# ❌ This may fail
-RUN useradd -m -s /bin/bash ruser
-
 # ✅ This handles failures gracefully
-RUN useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"
-```
-
-#### **Issue 3: Permission Denied Errors**
-**Symptoms**: Permission denied errors when accessing files
-**Cause**: Incorrect ownership or permissions
-**Solution**: Ensure proper ownership and permissions
-
-```dockerfile
-# ✅ Set ownership and permissions correctly
-RUN chown -R 1000:1000 /workspace && \
-    chmod -R 755 /workspace
+RUN useradd -u ${HOST_UID} -g cursor -m -s /bin/bash cursor || echo "User cursor may already exist"
 ```
 
 #### **Issue 4: Background Agent Context Detection**
@@ -372,7 +417,7 @@ whoami
 ls -la /workspace
 
 # Check Docker build context
-docker build --progress=plain -f Dockerfile.cursor-template .
+docker build --progress=plain -f Dockerfile.cursor .
 ```
 
 ## 📚 **Additional Resources**
@@ -408,10 +453,11 @@ docker build --progress=plain -f Dockerfile.cursor-template .
 
 ## 📝 **Conclusion**
 
-This guide provides comprehensive setup instructions for Cursor background agent Docker integration. The key insight is that background agents have different user namespace handling than manual processes, requiring the use of numeric IDs instead of user names.
+This guide provides comprehensive setup instructions for Cursor background agent Docker integration. The key insight is that background agents require proper UID/GID matching between host and container to avoid permission issues.
 
 **Key Takeaways**:
-- Use numeric IDs (`1000:1000`) for all user operations
+- Use build arguments (`HOST_UID`, `HOST_GID`) for dynamic user matching
+- Configure `.cursor/environment.json` with proper UID/GID values
 - Include robust error handling for user creation
 - Test configurations in both manual and background agent contexts
 - Document the approach and rationale

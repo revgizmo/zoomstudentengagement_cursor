@@ -2,16 +2,23 @@
 # Based on research from Issue #262 - Cursor Background Agent Docker Setup and Integration
 #
 # This template provides a minimal, working configuration for Cursor background agent
-# Docker integration. The key insight is using numeric IDs instead of user names
+# Docker integration. The key insight is using build arguments for UID/GID matching
 # to avoid user namespace issues in background agent context.
 #
 # Usage:
-# 1. Copy this template to your project
-# 2. Customize for your specific application
-# 3. Test in both manual and background agent contexts
-# 4. Use as the foundation for your Docker configuration
+# 1. Copy this template to your project as Dockerfile.cursor
+# 2. Configure .cursor/environment.json with your HOST_UID and HOST_GID
+# 3. Customize for your specific application
+# 4. Test in both manual and background agent contexts
 
 FROM your-base-image:version
+
+# --- Build Arguments for User Matching (CRITICAL FOR BACKGROUND AGENTS) ---
+# These arguments are used to pass the host user's UID and GID into the build.
+# This is crucial for avoiding file permission issues when the agent
+# mounts your local workspace into the container.
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -27,21 +34,25 @@ COPY . /workspace/
 # Install application dependencies
 RUN your-dependency-installation-command
 
-# Create non-root user for security with numeric IDs (CRITICAL FOR BACKGROUND AGENTS)
-# This approach uses numeric IDs instead of user names to avoid user namespace issues
-# Background agents have different user namespace handling than manual processes
+# Create non-root user for security with dynamic UID/GID matching (ENHANCED APPROACH)
+# This approach uses build arguments to match host user UID/GID, preventing
+# permission issues when the agent mounts the workspace into the container.
 RUN set -e; \
-    # Create user and group with explicit numeric IDs
-    groupadd -g 1000 ruser || echo "Group ruser may already exist"; \
-    useradd -m -s /bin/bash -u 1000 -g 1000 ruser || echo "User ruser may already exist"; \
-    # Set ownership using numeric IDs (1000:1000) instead of user names (ruser:ruser)
-    # This avoids the "chown: invalid user: 'ruser:ruser'" error in Cursor background agent
-    chown -R 1000:1000 /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
+    # Create a group with the host's GID
+    groupadd -g ${HOST_GID} cursor || echo "Group cursor may already exist"; \
+    # Create a user with the host's UID and the new group's GID
+    useradd -u ${HOST_UID} -g cursor -m -s /bin/bash cursor || echo "User cursor may already exist"; \
+    # Add the new user to the sudo group to allow privilege escalation
+    usermod -aG sudo cursor || echo "Could not add to sudo group"; \
+    # Configure sudo to not require a password for the cursor user
+    echo "cursor ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers || echo "Could not configure sudo"; \
+    # Set ownership using the matched UID/GID
+    chown -R ${HOST_UID}:${HOST_GID} /workspace || echo "Warning: Could not set ownership, continuing anyway"; \
     # Verify the setup
-    id ruser || echo "Warning: Could not verify ruser creation"
+    id cursor || echo "Warning: Could not verify cursor creation"
 
-# Switch to non-root user using numeric ID
-USER 1000
+# Switch to non-root user using the matched UID
+USER ${HOST_UID}
 
 # Default command
 CMD ["your-default-command"]
