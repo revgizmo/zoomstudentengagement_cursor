@@ -316,3 +316,17 @@ lintr::lint_package()
 ---
 
 **See Also**: [CONTRIBUTING.md](../../CONTRIBUTING.md) for general development guidelines 
+
+---
+
+## 🔎 Recent Findings (Aug 2025)
+
+Refer to Issue [#277](https://github.com/revgizmo/zoomstudentengagement/issues/277) for the tracked follow-ups from a recent pre-PR validation run:
+
+- R CMD check NOTES: Non-standard top-level files included in build and a stray `section_names_lookup.csv` artifact during checks. Actions: expand `.Rbuildignore`; ensure tests write to temp paths and clean up.
+- Diagnostic output: Gate `message()`, `cat()`, and `print()` behind `options(zoomstudentengagement.verbose)` and avoid emitting in tests (`Sys.getenv("TESTTHAT") != "true"`).
+- Shell scripts: Add trailing newline to `scripts/create-issues-batch.sh`, `scripts/create-spinoff-issues.sh`, `scripts/pre-commit.sh`.
+- README links: Ensure links point to the canonical repo `revgizmo/zoomstudentengagement`.
+- NEWS accuracy: Only claim "0 errors / 0 warnings / 0 notes" once achieved.
+
+These items should be verified with the automated script (`Rscript scripts/pre-pr-validation.R`) before PR merge to maintain the target of 0 errors, 0 warnings, 0 notes and >90% coverage.
