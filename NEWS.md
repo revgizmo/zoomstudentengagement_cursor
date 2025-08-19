@@ -10,7 +10,7 @@
 - **Code Quality**: Consistent styling, error handling, and API design throughout
 - **Infrastructure**: Enhanced CI/CD pipeline with comprehensive workflows and validation
 
-### Patch: docs/metadata and parsing hardening (unreleased)
+## 1.0.1 (Unreleased)
 - **Documentation fixes**: Resolved Rd “lost braces” by formatting regex/file patterns with code fencing in roxygen; regenerated man pages.
 - **LICENSE**: Kept CRAN-compliant stub in `LICENSE` and added full MIT text in `LICENSE.md` for GitHub readability.
 - **Parsing hardening**: Stabilized `load_zoom_recorded_sessions_list()` to support named/unnamed regex capture groups; corrected timezone parsing and session end buffer; added tests.

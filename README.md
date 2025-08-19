@@ -241,8 +241,8 @@ for details.
 
 ## 📄 License
 
-This package is licensed under the MIT License. See [LICENSE](LICENSE)
-for details.
+This package is licensed under the MIT License. See the CRAN stub in
+[LICENSE](LICENSE) and the full text in [LICENSE.md](LICENSE.md).
 
 ## 🔗 Links
 
