@@ -17,14 +17,14 @@
 #' @export
 #'
 #' @examples
-#' # Prompt for name matching (privacy-safe)
+#' # Prompt for name matching (privacy-safe). Write artifacts to tempdir().
 #' unmatched <- c("Dr. Smith", "Tom", "Guest1")
-#' prompt_name_matching(unmatched)
+#' prompt_name_matching(unmatched, data_folder = tempdir())
 #'
 #' # Create lookup file with custom settings
 #' prompt_name_matching(
 #'   unmatched_names = c("John Doe", "Jane Smith"),
-#'   data_folder = ".",
+#'   data_folder = tempdir(),
 #'   section_names_lookup_file = "section_names_lookup.csv"
 #' )
 prompt_name_matching <- function(unmatched_names,
@@ -62,14 +62,14 @@ prompt_name_matching <- function(unmatched_names,
 
   # If no unmatched names, return early
   if (length(unmatched_names) == 0) {
-    message("No unmatched names found. Name matching is complete.")
+    diag_message("No unmatched names found. Name matching is complete.")
     return(invisible(NULL))
   }
 
   # Create data folder if it doesn't exist
   if (!dir.exists(data_folder)) {
     dir.create(data_folder, recursive = TRUE)
-    message("Created data folder: ", data_folder)
+    diag_message("Created data folder: ", data_folder)
   }
 
   # Generate privacy-safe guidance
@@ -79,8 +79,8 @@ prompt_name_matching <- function(unmatched_names,
     include_instructions
   )
 
-  # Display guidance to user
-  cat("\n", guidance, "\n", sep = "")
+  # Display guidance to user (quiet by default)
+  diag_cat("\n", guidance, "\n", sep = "")
 
   # Create the lookup file using existing function
   lookup_file_path <- file.path(data_folder, section_names_lookup_file)
@@ -91,8 +91,8 @@ prompt_name_matching <- function(unmatched_names,
   # Save the template to the specified file
   readr::write_csv(lookup_template, lookup_file_path)
 
-  message("\nCreated lookup file: ", lookup_file_path)
-  message("Please edit this file to map the unmatched names, then re-run your analysis.")
+  diag_message("\nCreated lookup file: ", lookup_file_path)
+  diag_message("Please edit this file to map the unmatched names, then re-run your analysis.")
 
   # Return the file path invisibly
   invisible(lookup_file_path)

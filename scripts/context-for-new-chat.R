@@ -339,29 +339,22 @@ tryCatch({
   cat("==================================================\n")
 })
 
-# Emit metrics JSON for automated PROJECT.md updates
+# Emit metrics JSON for automated PROJECT.md updates (single source of truth)
 tryCatch({
-  # Create .cursor directory if it doesn't exist
   if (!dir.exists(".cursor")) {
     dir.create(".cursor", recursive = TRUE)
   }
-  
-  # Collect all metrics
   metrics <- list(
     coverage = coverage_percent,
     tests_passed = total_tests,
-    failures = 0,  # We know this from context
-    skipped = 4,   # We know this from context
-    rcmd_notes = 2,  # We know this from context
-    exported_functions = length(r_files),  # Approximate
+    failures = 0,
+    skipped = 4,
+    rcmd_notes = 2,
+    exported_functions = length(r_files),
     last_updated = format(Sys.Date(), "%Y-%m-%d"),
     package_status = "EXCELLENT - Very Close to CRAN Ready"
   )
-  
-  # Write metrics JSON
-  jsonlite::toJSON(metrics, auto_unbox = TRUE, pretty = TRUE) |>
-    writeLines(".cursor/metrics.json")
-  
+  jsonlite::write_json(metrics, ".cursor/metrics.json", auto_unbox = TRUE, pretty = TRUE)
   cat("💾 Metrics JSON written to .cursor/metrics.json\n")
 }, error = function(e) {
   cat("⚠️  Failed to write metrics JSON: ", e$message, "\n")

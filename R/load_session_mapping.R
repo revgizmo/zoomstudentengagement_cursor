@@ -75,9 +75,11 @@ load_session_mapping <- function(
       # Only show warnings if not in test environment
       if (Sys.getenv("TESTTHAT") != "true") {
         warning("Found ", nrow(unmapped), " unmapped recordings in session mapping file")
-        cat("Unmapped recordings:\n")
+        diag_cat("Unmapped recordings:\n")
         # Use base R subsetting instead of dplyr::select
-        print(unmapped[, c("zoom_recording_id", "topic", "notes")])
+        if (is_verbose()) {
+          print(unmapped[, c("zoom_recording_id", "topic", "notes")])
+        }
       }
     }
   }
