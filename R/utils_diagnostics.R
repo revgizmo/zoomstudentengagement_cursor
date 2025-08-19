@@ -4,6 +4,7 @@
 #' are suppressed. Users can enable verbose diagnostics by setting the option
 #' `options(zoomstudentengagement.verbose = TRUE)`.
 #'
+#' @name zse_diagnostics
 #' @keywords internal
 NULL
 
