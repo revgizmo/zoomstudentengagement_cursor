@@ -30,10 +30,11 @@ update_project_sections() {
         return 1
     fi
     
-    # Create backup
+    # Create backup under .cursor/backups to avoid repo noise
     echo "💾 Creating backup..."
-    cp PROJECT.md PROJECT.md.backup.$(date '+%Y%m%d_%H%M%S')
-    echo "✅ Backup created"
+    mkdir -p .cursor/backups
+    cp PROJECT.md .cursor/backups/PROJECT.md.backup.$(date '+%Y%m%d_%H%M%S')
+    echo "✅ Backup created (.cursor/backups)"
     
     # Create unique temp files to avoid race conditions
     TIMESTAMP=$(date '+%Y%m%d_%H%M%S')_$$
@@ -213,8 +214,9 @@ update_project_metrics() {
     # Create backup if fixing
     if [ "$action" = "fix" ]; then
         echo "💾 Creating backup..."
-        cp PROJECT.md PROJECT.md.backup.$(date '+%Y%m%d_%H%M%S')
-        echo "✅ Backup created"
+        mkdir -p .cursor/backups
+        cp PROJECT.md .cursor/backups/PROJECT.md.backup.$(date '+%Y%m%d_%H%M%S')
+        echo "✅ Backup created (.cursor/backups)"
     fi
     
     # Create temporary updated file

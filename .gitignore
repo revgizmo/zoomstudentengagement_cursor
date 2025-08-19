@@ -101,6 +101,9 @@ example_test_results.rds
 .cursor_backup/
 Dockerfile.backup
 
+# Legacy project backups created by older scripts
+PROJECT.md.backup.*
+
 # Auto-generated documentation files
 # doc/ directory contains only auto-generated HTML files from vignettes
 # Source files (.Rmd, .R) are now properly located in vignettes/
