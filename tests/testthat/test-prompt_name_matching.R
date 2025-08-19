@@ -52,14 +52,15 @@ test_that("prompt_name_matching works correctly", {
       )
     },
     {
-      expect_output({
-        tf <- tempdir()
-        prompt_name_matching(
-          unmatched_names = c("John Doe"),
-          data_folder = tf,
-          section_names_lookup_file = "test_lookup.csv"
-        )
-      },
+      expect_output(
+        {
+          tf <- tempdir()
+          prompt_name_matching(
+            unmatched_names = c("John Doe"),
+            data_folder = tf,
+            section_names_lookup_file = "test_lookup.csv"
+          )
+        },
         "Found 1 unmatched name"
       )
     }

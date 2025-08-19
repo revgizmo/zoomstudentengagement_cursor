@@ -13,5 +13,3 @@ test_that("tests do not leave artifacts in working directory", {
   }
   expect_false(file.exists("engagement_metrics.csv"))
 })
-
-
