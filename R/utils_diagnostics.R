@@ -28,5 +28,3 @@ diag_cat <- function(...) {
   }
   invisible(NULL)
 }
-
-
