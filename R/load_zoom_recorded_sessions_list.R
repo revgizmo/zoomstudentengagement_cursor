@@ -145,9 +145,12 @@ load_zoom_recorded_sessions_list <-
       ))
     }
 
-    # Debug print statements
-    print("CSV files to process:")
-    print(zoom_recorded_sessions_csv_names)
+    # Optional debug output (controlled by option zoomstudentengagement.verbose)
+    .verbose <- isTRUE(getOption("zoomstudentengagement.verbose", FALSE))
+    if (.verbose) {
+      message("CSV files to process:")
+      message(paste(zoom_recorded_sessions_csv_names, collapse = "\n"))
+    }
 
     result <- zoom_recorded_sessions_csv_names %>%
       paste0(transcripts_folder_path, .) %>%
@@ -169,9 +172,10 @@ load_zoom_recorded_sessions_list <-
         show_col_types = FALSE
       )
 
-    # Debug print statements
-    print("After reading CSV:")
-    print(result)
+    if (.verbose) {
+      message("After reading CSV:")
+      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+    }
 
     # Use base R operations instead of dplyr to avoid segmentation fault
     # Group by the specified columns and take max values
@@ -200,9 +204,10 @@ load_zoom_recorded_sessions_list <-
     result <- merge(group_data, aggregated_data, by = "group_id", all.x = TRUE)
     result$group_id <- NULL # Remove the temporary group_id column
 
-    # Debug print statements
-    print("After summarise:")
-    print(result)
+    if (.verbose) {
+      message("After summarise:")
+      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+    }
 
     # Parse topic into components (dept, course, section, day, time, instructor)
     # Convert named capture groups to plain groups for compatibility if needed
@@ -230,13 +235,17 @@ load_zoom_recorded_sessions_list <-
     result$course <- suppressWarnings(as.integer(result$course))
     result$section <- suppressWarnings(as.integer(result$section))
 
-    print("After topic parsing:")
-    print(result)
+    if (.verbose) {
+      message("After topic parsing:")
+      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+    }
 
     # Extract start time values as strings
     start_time_values <- result$`Start Time`
-    print("Start Time values:")
-    print(start_time_values)
+    if (.verbose) {
+      message("Start Time values:")
+      message(paste(start_time_values, collapse = "\n"))
+    }
 
     # Parse dates using multiple formats in America/Los_Angeles tz
     parsed_dates <- lubridate::parse_date_time(
@@ -250,21 +259,20 @@ load_zoom_recorded_sessions_list <-
     # Add scheduled session length plus a 0.5 hour buffer, per tests
     result$match_end_time <- result$match_start_time + lubridate::dhours(scheduled_session_length_hours) + lubridate::dminutes(30)
 
-    print("After date parsing:")
-    print(result)
+    if (.verbose) {
+      message("After date parsing:")
+      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+    }
 
     # Optionally filter rows to those matching department, if provided
     if (!is.null(dept_var) && nzchar(dept_var)) {
       result <- result[!is.na(result$dept) & result$dept == dept_var, ]
     }
 
-    print("Final result after filtering:")
-    print(result)
+    if (.verbose) {
+      message("Final result after filtering:")
+      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+    }
 
-<<<<<<< Current (Your changes)
-    # Convert to tibble to maintain expected return type
-    return(tibble::as_tibble(result))
-=======
     tibble::as_tibble(result)
->>>>>>> Incoming (Background Agent changes)
   }
