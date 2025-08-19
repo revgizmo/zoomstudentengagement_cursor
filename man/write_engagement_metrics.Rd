@@ -11,7 +11,7 @@ write_engagement_metrics(
 )
 }
 \arguments{
-\item{metrics_data}{A tibble containing engagement metrics (typically from `summarize_transcript_files`)}
+\item{metrics_data}{A tibble containing engagement metrics (typically from \code{summarize_transcript_files})}
 
 \item{file_path}{Path where the CSV file should be saved}
 
@@ -21,5 +21,5 @@ write_engagement_metrics(
 Invisibly returns the processed data that was written
 }
 \description{
-Deprecated: use `write_metrics(data, what = 'engagement', path = ...)` instead.
+Deprecated: use \code{write_metrics(data, what = 'engagement', path = ...)} instead.
 }

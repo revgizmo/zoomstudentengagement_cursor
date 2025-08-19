@@ -18,6 +18,8 @@
     - <a href="#data-management" id="toc-data-management">Data Management</a>
     - <a href="#analysis-and-visualization"
       id="toc-analysis-and-visualization">Analysis and Visualization</a>
+    - <a href="#diagnostics--verbosity"
+      id="toc-diagnostics--verbosity">Diagnostics &amp; Verbosity</a>
   - <a href="#-typical-workflow" id="toc--typical-workflow">📊 Typical
     Workflow</a>
   - <a href="#-privacy-defaults" id="toc--privacy-defaults">🔒 Privacy
@@ -188,6 +190,20 @@ currently supported but may be added in future versions.
   available)
 - `make_transcripts_summary_df()` - Generate summary statistics
 
+### Diagnostics & Verbosity
+
+Most functions run quietly by default. You can enable additional debug
+output in some helpers (e.g., `load_zoom_recorded_sessions_list()`) via:
+
+``` r
+options(zoomstudentengagement.verbose = TRUE)
+# ... run your calls ...
+options(zoomstudentengagement.verbose = FALSE)
+```
+
+This keeps normal usage and CI logs clean while still supporting
+troubleshooting when needed.
+
 ## 📊 Typical Workflow
 
 1.  **Setup**: Configure analysis parameters
@@ -225,8 +241,8 @@ for details.
 
 ## 📄 License
 
-This package is licensed under the MIT License. See [LICENSE](LICENSE)
-for details.
+This package is licensed under the MIT License. See the CRAN stub in
+[LICENSE](LICENSE) and the full text in [LICENSE.md](LICENSE.md).
 
 ## 🔗 Links
 

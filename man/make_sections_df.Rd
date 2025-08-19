@@ -9,16 +9,20 @@ make_sections_df(roster_df)
 \arguments{
 \item{roster_df}{A tibble listing the students enrolled in the class or classes.
 Must contain the following columns:
-- dept: character
-- course: character
-- section: character}
+\itemize{
+\item dept: character
+\item course: character
+\item section: character
+}}
 }
 \value{
 A tibble with the following columns:
-  - dept: character
-  - course: character
-  - section: character
-  - n: integer (count of students in each section)
+\itemize{
+\item dept: character
+\item course: character
+\item section: character
+\item n: integer (count of students in each section)
+}
 }
 \description{
 This function creates a tibble that includes rows for each section (grouped by dept and course number) and student count in each.

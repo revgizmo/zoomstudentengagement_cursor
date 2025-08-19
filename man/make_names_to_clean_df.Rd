@@ -13,7 +13,7 @@ including customized student names.}
 }
 \value{
 A tibble containing session details and summary metrics
-  by speaker students with transcript recordings but no matching
+by speaker students with transcript recordings but no matching
 student id.
 }
 \description{
@@ -25,10 +25,11 @@ student id.
 }
 \details{
 If any names except "dead_air", "unknown", or the instructor's name are listed, resolve them.
-
-  + Update students with their formal name from the roster in your `section_names_lookup.csv`
-  + If appropriate, update `section_names_lookup.csv` with a corresponding `preferred_name`
-  + Any guest students, label them as "Guests"
+\itemize{
+\item Update students with their formal name from the roster in your \code{section_names_lookup.csv}
+\item If appropriate, update \code{section_names_lookup.csv} with a corresponding \code{preferred_name}
+\item Any guest students, label them as "Guests"
+}
 }
 \examples{
 # Create sample clean_names_df with unmatched students

@@ -23,16 +23,16 @@ student names by section Defaults to 'section_names_lookup.csv'}
 }
 \value{
 A tibble corresponding to the csv file saved, which is a sorted subset
-  of the provided tibble containing session details and summary metrics by
-  speaker for all class sessions (and placeholders for missing sections),
-  including customized student names.
+of the provided tibble containing session details and summary metrics by
+speaker for all class sessions (and placeholders for missing sections),
+including customized student names.
 }
 \description{
 This function takes a tibble containing session details and summary metrics
 by speaker for all class sessions (and placeholders for missing sections),
-including customized student names (`clean_names_df`) and saves a subset as a
-csv file with the specified file name (`section_names_lookup_file`) to the
-specified data folder (`data_folder`).
+including customized student names (\code{clean_names_df}) and saves a subset as a
+csv file with the specified file name (\code{section_names_lookup_file}) to the
+specified data folder (\code{data_folder}).
 }
 \examples{
 # Create sample data

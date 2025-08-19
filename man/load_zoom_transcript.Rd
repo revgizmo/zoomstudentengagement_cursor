@@ -12,7 +12,7 @@ transcript.}
 }
 \value{
 A tibble containing the comments from a Zoom recording
-  transcript, or NULL if the file is empty
+transcript, or NULL if the file is empty
 }
 \description{
 Load a Zoom recording transcript and return tibble containing the comments from a Zoom recording transcript
@@ -20,7 +20,7 @@ Load a Zoom recording transcript and return tibble containing the comments from 
 \details{
 Original code posted by Conor Healy:
 https://ucbischool.slack.com/archives/C02A36407K9/p1631855705002000 Addition
-of `wordcount` by Brooks Ambrose:
+of \code{wordcount} by Brooks Ambrose:
 https://gist.github.com/brooksambrose/1a8a673eb3bf884c1868ad4d80f08246
 }
 \examples{

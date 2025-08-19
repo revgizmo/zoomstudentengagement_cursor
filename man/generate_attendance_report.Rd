@@ -11,7 +11,7 @@ generate_attendance_report(
 )
 }
 \arguments{
-\item{analysis_results}{Results from `analyze_multi_session_attendance()`}
+\item{analysis_results}{Results from \code{analyze_multi_session_attendance()}}
 
 \item{output_file}{Path to save the report (optional)}
 

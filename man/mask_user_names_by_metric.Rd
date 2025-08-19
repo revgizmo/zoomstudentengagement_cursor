@@ -9,7 +9,7 @@ mask_user_names_by_metric(df, metric = "session_ct", target_student = "")
 \arguments{
 \item{df}{a tibble that summarizes results at the level of the class section
 and student.  This tibble will have the student names replaced by the
-ranking of the student.  If a `target_student` preferred name is provided,
+ranking of the student.  If a \code{target_student} preferred name is provided,
 that student's name will be bolded using markdown syntax and not masked.}
 
 \item{metric}{Label of the metric to use to order the students. Defaults to
@@ -20,7 +20,7 @@ will be bolded using markdown syntax and not masked. Defaults to ''.}
 }
 \value{
 a tibble that summarizes results at the level of the class section
-  and student, with student names masked by the ranking of the student.
+and student, with student names masked by the ranking of the student.
 }
 \description{
 Mask User Names by Metric

@@ -19,8 +19,8 @@ detect_unmatched_names(
 \item{name_mappings}{Data frame containing existing name mappings}
 
 \item{privacy_level}{Privacy level for the session. One of
-`c("ferpa_strict", "ferpa_standard", "mask", "none")`.
-Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.}
+\code{c("ferpa_strict", "ferpa_standard", "mask", "none")}.
+Defaults to \code{getOption("zoomstudentengagement.privacy_level", "mask")}.}
 }
 \value{
 Character vector of unmatched names (real names only if privacy = "none")

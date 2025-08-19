@@ -20,9 +20,11 @@ Defaults to c("dead_air") to ignore silence periods and system-generated entries
 }
 \value{
 Similarity score between 0 and 1, where:
-  - 1 indicates identical content
-  - 0 indicates completely different content
-  - Values in between represent partial similarity
+\itemize{
+\item 1 indicates identical content
+\item 0 indicates completely different content
+\item Values in between represent partial similarity
+}
 }
 \description{
 Calculates similarity between two transcript data frames based on multiple metrics

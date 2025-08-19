@@ -37,19 +37,21 @@ create_course_info(
 }
 \value{
 A tibble with course information containing:
-  - dept: Department code
-  - course: Course number
-  - section: Section number
-  - instructor: Instructor name
-  - session_length_hours: Length of each session
-  - semester_start: Semester start date
-  - semester_end: Semester end date
-  - session_days: Days of the week for sessions
-  - session_times: Times for sessions
+\itemize{
+\item dept: Department code
+\item course: Course number
+\item section: Section number
+\item instructor: Instructor name
+\item session_length_hours: Length of each session
+\item semester_start: Semester start date
+\item semester_end: Semester end date
+\item session_days: Days of the week for sessions
+\item session_times: Times for sessions
+}
 }
 \description{
 This function creates a tibble containing course information that can be used
-with `create_session_mapping()` to map Zoom recordings to specific courses.
+with \code{create_session_mapping()} to map Zoom recordings to specific courses.
 }
 \examples{
 # Single course with multiple sections

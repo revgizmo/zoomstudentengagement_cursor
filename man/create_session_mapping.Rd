@@ -19,7 +19,7 @@ create_session_mapping(
 columns: ID, Topic, Start Time}
 
 \item{course_info_df}{A tibble containing course information created by
-`create_course_info()` with columns: dept, course, section, instructor,
+\code{create_course_info()} with columns: dept, course, section, instructor,
 session_length_hours}
 
 \item{output_file}{Optional file path to save the mapping CSV file}

@@ -155,3 +155,58 @@ test_that("load_zoom_recorded_sessions_list handles generalized course formats",
   unlink(csv_path)
   unlink(transcripts_dir, recursive = TRUE)
 })
+
+test_that("load_zoom_recorded_sessions_list supports named and unnamed regex groups", {
+  temp_dir <- tempdir()
+  transcripts_dir <- file.path(temp_dir, "transcripts")
+  dir.create(transcripts_dir, showWarnings = FALSE)
+  csv_name <- "zoomus_recordings__20240612.csv"
+  csv_path <- file.path(transcripts_dir, csv_name)
+
+  csv_content <- paste(
+    "Topic,ID,Start Time,File Size (MB),File Count,Total Views,Total Downloads,Last Accessed",
+    paste(
+      '"MATH 250.001 - Mon 10:00 (Dr. Smith)"',
+      "12347",
+      '"Jan 17, 2024 10:00:00 AM"',
+      "100",
+      "1",
+      "10",
+      "5",
+      '"Jan 17, 2024 11:00:00 AM"',
+      sep = ","
+    ),
+    sep = "\n"
+  )
+  writeLines(csv_content, csv_path)
+
+  # Named groups
+  named_pattern <- paste0(
+    "^(?<dept>\\S+) (?<course_section>\\S+) - ",
+    "(?<day>[A-Za-z]+) (?<time>\\S+\\s*\\S+) (?<instructor>\\(.*?\\))"
+  )
+  res_named <- load_zoom_recorded_sessions_list(
+    data_folder = temp_dir,
+    transcripts_folder = "transcripts",
+    topic_split_pattern = named_pattern,
+    dept = NULL
+  )
+  expect_true("dept" %in% names(res_named))
+  expect_true("course_section" %in% names(res_named))
+  expect_equal(res_named$dept, "MATH")
+  expect_equal(res_named$course_section, "250.001")
+
+  # Unnamed groups (positional)
+  unnamed_pattern <- "^(\\S+) (\\S+) - ([A-Za-z]+) (\\S+\\s*\\S+) (\\(.*?\\))"
+  res_unnamed <- load_zoom_recorded_sessions_list(
+    data_folder = temp_dir,
+    transcripts_folder = "transcripts",
+    topic_split_pattern = unnamed_pattern,
+    dept = NULL
+  )
+  expect_equal(res_unnamed$dept, "MATH")
+  expect_equal(res_unnamed$course_section, "250.001")
+
+  unlink(csv_path)
+  unlink(transcripts_dir, recursive = TRUE)
+})

@@ -98,11 +98,13 @@ create_analysis_config(
 }
 \value{
 A list containing the configuration organized into logical groups:
-  - course: Course-specific information
-  - paths: File and folder paths
-  - patterns: Regex patterns for file matching and parsing
-  - reports: Report generation settings
-  - analysis: Analysis-specific parameters
+\itemize{
+\item course: Course-specific information
+\item paths: File and folder paths
+\item patterns: Regex patterns for file matching and parsing
+\item reports: Report generation settings
+\item analysis: Analysis-specific parameters
+}
 }
 \description{
 This function creates a validated configuration object for the zoomstudentengagement

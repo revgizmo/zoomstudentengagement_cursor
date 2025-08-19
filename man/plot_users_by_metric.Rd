@@ -19,7 +19,7 @@ the class section and preferred student name. Must contain the specified metric 
 Defaults to 'session_ct' (session count)}
 
 \item{metrics_lookup_df}{A tibble including metric labels and metric descriptions.
-Defaults to the result of `make_metrics_lookup_df()`}
+Defaults to the result of \code{make_metrics_lookup_df()}}
 
 \item{student_col_name}{Column name from which to get student names.
 Defaults to 'preferred_name'}
@@ -28,6 +28,6 @@ Defaults to 'preferred_name'}
 A ggplot object
 }
 \description{
-Deprecated: use `plot_users()` instead. This function delegates to `plot_users()`
+Deprecated: use \code{plot_users()} instead. This function delegates to \code{plot_users()}
 to preserve backward compatibility.
 }

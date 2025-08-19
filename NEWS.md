@@ -10,6 +10,13 @@
 - **Code Quality**: Consistent styling, error handling, and API design throughout
 - **Infrastructure**: Enhanced CI/CD pipeline with comprehensive workflows and validation
 
+## 1.0.1 (Unreleased)
+- **Documentation fixes**: Resolved Rd “lost braces” by formatting regex/file patterns with code fencing in roxygen; regenerated man pages.
+- **LICENSE**: Kept CRAN-compliant stub in `LICENSE` and added full MIT text in `LICENSE.md` for GitHub readability.
+- **Parsing hardening**: Stabilized `load_zoom_recorded_sessions_list()` to support named/unnamed regex capture groups; corrected timezone parsing and session end buffer; added tests.
+- **Quiet logs**: Gated verbose diagnostics in `load_zoom_recorded_sessions_list()` behind `options(zoomstudentengagement.verbose)` (default FALSE).
+- **Quality gates**: All tests pass; R CMD check: 0 errors / 0 warnings / 0 notes.
+
 ## 0.2.0 (Unreleased)
 - Project-wide refactor for consistency, safety, and velocity
 - CI streamlined with caching and lint/coverage
