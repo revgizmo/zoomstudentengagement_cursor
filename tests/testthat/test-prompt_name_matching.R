@@ -2,6 +2,11 @@ test_that("prompt_name_matching works correctly", {
   # Test with unmatched names
   unmatched <- c("Dr. Smith", "Tom", "Guest1")
 
+  # Enable verbose diagnostics to capture output
+  old_opt <- getOption("zoomstudentengagement.verbose", NULL)
+  on.exit(options(zoomstudentengagement.verbose = old_opt), add = TRUE)
+  options(zoomstudentengagement.verbose = TRUE)
+
   # Mock the make_blank_section_names_lookup_csv function
   with_mocked_bindings(
     make_blank_section_names_lookup_csv = function(...) {
@@ -19,7 +24,7 @@ test_that("prompt_name_matching works correctly", {
     },
     {
       expect_output(
-        prompt_name_matching(unmatched),
+        prompt_name_matching(unmatched, data_folder = tempdir()),
         "Found 3 unmatched names that need manual mapping"
       )
     }
@@ -47,12 +52,14 @@ test_that("prompt_name_matching works correctly", {
       )
     },
     {
-      expect_output(
+      expect_output({
+        tf <- tempdir()
         prompt_name_matching(
           unmatched_names = c("John Doe"),
-          data_folder = "test_data",
+          data_folder = tf,
           section_names_lookup_file = "test_lookup.csv"
-        ),
+        )
+      },
         "Found 1 unmatched name"
       )
     }

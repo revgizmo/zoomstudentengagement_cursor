@@ -3,19 +3,16 @@ test_that("diag helpers are quiet by default and verbose when enabled", {
   on.exit(options(zoomstudentengagement.verbose = old_opt), add = TRUE)
 
   options(zoomstudentengagement.verbose = FALSE)
-  quiet_out <- capture.output({
-    diag_message("hello")
-    diag_cat("world\n")
-  })
-  expect_length(quiet_out, 0)
+  quiet_out_std <- capture.output({ diag_cat("world\n") })
+  quiet_out_msg <- capture.output({ diag_message("hello") }, type = "message")
+  expect_length(quiet_out_std, 0)
+  expect_length(quiet_out_msg, 0)
 
   options(zoomstudentengagement.verbose = TRUE)
-  verbose_out <- capture.output({
-    diag_message("hello")
-    diag_cat("world\n")
-  })
-  expect_true(any(grepl("hello", verbose_out)))
-  expect_true(any(grepl("world", verbose_out)))
+  verbose_out_msg <- capture.output({ diag_message("hello") }, type = "message")
+  verbose_out_std <- capture.output({ diag_cat("world\n") })
+  expect_true(any(grepl("hello", verbose_out_msg)))
+  expect_true(any(grepl("world", verbose_out_std)))
 })
 
 
