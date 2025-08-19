@@ -12,6 +12,44 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - Improve documentation and usability
 - Ensure robust testing and error handling
 
+## Milestones and Definition of Done
+
+### Milestones
+- Code Quality & Style
+- Documentation Complete
+- Testing & Coverage (>90%)
+- CI/QA Green
+- CRAN Preflight (rhub/win-builder)
+- Release 0.1.0
+
+### Definition of Done (applies to all issues/PRs)
+- Code styled; no `lintr` warnings
+- Tests added/updated; coverage unchanged or improved (target >90%)
+- `devtools::document()` run; examples runnable
+- CI green on all jobs; `devtools::check()` 0 errors, 0 warnings
+- User-facing change reflected in `README.Rmd`/vignettes/`NEWS.md`
+
+### Labels and Scoping
+- Type: `type: bug`, `type: feat`, `type: docs`, `type: test`, `type: refactor`, `type: chore`, `type: perf`, `type: security`, `epic`
+- Area: `area: ingestion`, `area: metrics`, `area: privacy`, `area: viz`, `area: docs`, `area: ci`, `area: infra`
+- Priority: `P0`, `P1`, `P2`
+- Size: `S` (≤0.5d), `M` (≤1d), `L` (≤2d)
+- Status: `blocked`, `needs-decision`, `needs-info`, `good-first-issue`, `help-wanted`
+
+### Triage and Board
+- Weekly triage to label, size, assign, and attach to milestone
+- Board: Backlog → Ready → In Progress → In Review → In QA → Done
+- PRs auto-link to issues; use conventional commits and “Closes #X”
+
+### Setup scripts
+Run once with GitHub CLI configured:
+
+```bash
+bash scripts/setup_labels.sh
+bash scripts/setup_milestones.sh
+bash scripts/seed_issues.sh
+```
+
 ## Current Status (Updated: 2025-08-18)
 **Package Status: EXCELLENT - Very Close to CRAN Ready**
 
