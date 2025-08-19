@@ -215,7 +215,10 @@ test_that("FERPA privacy levels work correctly", {
 })
 
 test_that("set_privacy_defaults works with new FERPA levels", {
-  # Test ferpa_strict
+  # Test ferpa_strict (diagnostics now gated; enable verbose for message checks)
+  old_opt <- getOption("zoomstudentengagement.verbose", NULL)
+  on.exit(options(zoomstudentengagement.verbose = old_opt), add = TRUE)
+  options(zoomstudentengagement.verbose = TRUE)
   expect_message(set_privacy_defaults("ferpa_strict"), "FERPA strict mode enabled")
   expect_equal(getOption("zoomstudentengagement.privacy_level"), "ferpa_strict")
 

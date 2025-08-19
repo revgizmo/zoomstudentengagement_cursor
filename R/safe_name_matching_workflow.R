@@ -122,8 +122,8 @@ safe_name_matching_workflow <- function(transcript_file_path,
     )
   }
 
-  # Stage 1: Load and process with real names in memory
-  message("Stage 1: Loading transcript and performing name matching...")
+  # Stage 1: Load and process with real names in memory (quiet by default)
+  diag_message("Stage 1: Loading transcript and performing name matching...")
 
   # Load transcript (real names in memory only)
   transcript_data <- load_zoom_transcript(transcript_file_path)
@@ -198,8 +198,8 @@ safe_name_matching_workflow <- function(transcript_file_path,
     )
   }
 
-  # Stage 2: Apply privacy masking to outputs
-  message("Stage 2: Applying privacy masking to outputs...")
+  # Stage 2: Apply privacy masking to outputs (quiet by default)
+  diag_message("Stage 2: Applying privacy masking to outputs...")
 
   # Process transcript with privacy-aware matching
   processed_data <- process_transcript_with_privacy(
@@ -222,7 +222,7 @@ safe_name_matching_workflow <- function(transcript_file_path,
   # Explicitly clear real names from memory
   rm(transcript_data, name_mappings, unmatched_names)
 
-  message("Name matching workflow completed successfully.")
+  diag_message("Name matching workflow completed successfully.")
 
   # Return processed data
   processed_data
