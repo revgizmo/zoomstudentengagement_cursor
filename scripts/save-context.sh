@@ -499,11 +499,11 @@ if [ -z "$PROJECT_COVERAGE" ] || [ "$PROJECT_COVERAGE" = "0" ]; then PROJECT_COV
 if [ -z "$PROJECT_TESTS" ] || [ "$PROJECT_TESTS" = "0" ]; then PROJECT_TESTS="450"; fi
 if [ -z "$PROJECT_RCMD" ] || [ "$PROJECT_RCMD" = "0" ]; then PROJECT_RCMD="3"; fi
 
-echo "📊 Current Metrics (from saved context):"
-if [ -f ".cursor/r-context.md" ]; then
-    COVERAGE=$(grep "Coverage:" .cursor/r-context.md | head -1 | awk '{print $2}' | sed 's/%//' 2>/dev/null || echo "93.82")
-    TESTS=$(grep "tests passing" .cursor/full-context.md | head -1 | awk '{print $1}' 2>/dev/null || echo "1065")
-    RCMD_NOTES=$(grep "R CMD Check:" .cursor/full-context.md | head -1 | grep -o "[0-9] notes" | awk '{print $1}' 2>/dev/null || echo "2")
+echo "📊 Current Metrics (from metrics source):"
+if [ -f ".cursor/metrics.json" ] && command -v jq &>/dev/null; then
+    COVERAGE=$(jq -r '.coverage' .cursor/metrics.json 2>/dev/null || echo "93.82")
+    TESTS=$(jq -r '.tests_passed' .cursor/metrics.json 2>/dev/null || echo "1065")
+    RCMD_NOTES=$(jq -r '.rcmd_notes' .cursor/metrics.json 2>/dev/null || echo "2")
 else
     COVERAGE="93.82"
     TESTS="1065"

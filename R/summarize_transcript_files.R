@@ -71,13 +71,13 @@ summarize_transcript_files <-
               "Consider reviewing and removing duplicates before processing."
             ))
 
-            # Print recommendations
-            cat("\nDuplicate detection results:\n")
-            cat("============================\n")
+            # Print recommendations (quiet by default)
+            diag_cat("\nDuplicate detection results:\n")
+            diag_cat("============================\n")
             for (i in seq_along(duplicates$recommendations)) {
-              cat(paste("Group", i, ":", duplicates$recommendations[i], "\n"))
+              diag_cat(paste("Group", i, ":", duplicates$recommendations[i], "\n"))
             }
-            cat("\n")
+            diag_cat("\n")
           }
         }
       }
@@ -140,7 +140,9 @@ summarize_transcript_files <-
                 "Found", nrow(mismatches), "rows where transcript_file from summarize_transcript_metrics",
                 "doesn't match the input file_name. This may indicate an issue in the processing pipeline."
               ))
-              print(mismatches[, c("file_name", "transcript_file")])
+              if (is_verbose()) {
+                print(mismatches[, c("file_name", "transcript_file")])
+              }
             }
           }
 
