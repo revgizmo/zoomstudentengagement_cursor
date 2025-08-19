@@ -46,9 +46,5 @@ set_privacy_defaults(
 )
 }
 \seealso{
-<<<<<<< Current (Your changes)
-[ensure_privacy()], [safe_name_matching_workflow()]
-=======
 \code{\link[=ensure_privacy]{ensure_privacy()}}, \code{\link[=safe_name_matching_workflow]{safe_name_matching_workflow()}}
->>>>>>> Incoming (Background Agent changes)
 }

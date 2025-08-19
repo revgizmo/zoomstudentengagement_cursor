@@ -21,9 +21,5 @@ write_transcripts_summary(
 Invisibly returns the written tibble
 }
 \description{
-<<<<<<< Current (Your changes)
-Deprecated: use `write_metrics(data, what = 'summary', path = ...)` instead.
-=======
 Deprecated: use \code{write_metrics(data, what = 'summary', path = ...)} instead.
->>>>>>> Incoming (Background Agent changes)
 }

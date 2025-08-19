@@ -174,7 +174,9 @@ load_zoom_recorded_sessions_list <-
 
     if (.verbose) {
       message("After reading CSV:")
-      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+      utils::capture.output(print(result)) |>
+        paste(collapse = "\n") |>
+        message()
     }
 
     # Use base R operations instead of dplyr to avoid segmentation fault
@@ -206,7 +208,9 @@ load_zoom_recorded_sessions_list <-
 
     if (.verbose) {
       message("After summarise:")
-      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+      utils::capture.output(print(result)) |>
+        paste(collapse = "\n") |>
+        message()
     }
 
     # Parse topic into components (dept, course, section, day, time, instructor)
@@ -237,7 +241,9 @@ load_zoom_recorded_sessions_list <-
 
     if (.verbose) {
       message("After topic parsing:")
-      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+      utils::capture.output(print(result)) |>
+        paste(collapse = "\n") |>
+        message()
     }
 
     # Extract start time values as strings
@@ -261,7 +267,9 @@ load_zoom_recorded_sessions_list <-
 
     if (.verbose) {
       message("After date parsing:")
-      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+      utils::capture.output(print(result)) |>
+        paste(collapse = "\n") |>
+        message()
     }
 
     # Optionally filter rows to those matching department, if provided
@@ -271,7 +279,9 @@ load_zoom_recorded_sessions_list <-
 
     if (.verbose) {
       message("Final result after filtering:")
-      utils::capture.output(print(result)) |> paste(collapse = "\n") |> message()
+      utils::capture.output(print(result)) |>
+        paste(collapse = "\n") |>
+        message()
     }
 
     tibble::as_tibble(result)

@@ -21,9 +21,5 @@ write_engagement_metrics(
 Invisibly returns the processed data that was written
 }
 \description{
-<<<<<<< Current (Your changes)
-Deprecated: use `write_metrics(data, what = 'engagement', path = ...)` instead.
-=======
 Deprecated: use \code{write_metrics(data, what = 'engagement', path = ...)} instead.
->>>>>>> Incoming (Background Agent changes)
 }

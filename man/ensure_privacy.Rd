@@ -45,9 +45,5 @@ df <- tibble::tibble(
 ensure_privacy(df)
 }
 \seealso{
-<<<<<<< Current (Your changes)
-[set_privacy_defaults()]
-=======
 \code{\link[=set_privacy_defaults]{set_privacy_defaults()}}
->>>>>>> Incoming (Background Agent changes)
 }
