@@ -25,9 +25,8 @@ make_new_analysis_template <-
     # copy the files to the new folder
     success <- file.copy(template_file, new_template_file_name, overwrite = TRUE)
     if (success) {
-      if (isTRUE(verbose) || is_verbose()) {
-        diag_message(paste(new_template_file_name, "created"))
-      }
+      # Emit a friendly creation message when verbose is TRUE or in interactive sessions
+      diag_message_if(verbose, paste(new_template_file_name, "created"))
       return(TRUE)
     } else {
       return(FALSE)
