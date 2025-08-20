@@ -4,16 +4,110 @@
 \name{zoomstudentengagement}
 \alias{zoomstudentengagement-package}
 \alias{zoomstudentengagement}
-\title{Zoom Student Engagement}
+\title{Analyze Student Engagement from Zoom Transcripts}
 \description{
-Takes Zoom transcripts and student rosters, converts them for analysis, and analyzes the results for student engagement, with a particular focus on participation equity.
+A comprehensive R package for analyzing student engagement and participation equity from Zoom meeting transcripts. This package provides tools for processing Zoom transcript files, matching student names with rosters, calculating engagement metrics, and generating privacy-aware visualizations and reports.
 }
-\seealso{
-Useful links:
+\details{
+Zoom Student Engagement Analysis Package
+
+The zoomstudentengagement package is designed for educational researchers and instructors who want to analyze student participation patterns in online learning environments. The package prioritizes privacy and ethical considerations, with built-in data anonymization features and FERPA compliance tools.
+\subsection{Key Features}{
+
+\strong{Data Processing:}
 \itemize{
-  \item \url{https://github.com/revgizmo/zoomstudentengagement}
-  \item Report bugs at \url{https://github.com/revgizmo/zoomstudentengagement/issues}
+\item Load and process Zoom transcript files (VTT, TXT formats)
+\item Match student names with institutional rosters
+\item Handle name variations and privacy masking
+\item Consolidate multiple session transcripts
 }
 
+\strong{Engagement Analysis:}
+\itemize{
+\item Calculate participation metrics (duration, word count, frequency)
+\item Analyze participation equity across student groups
+\item Generate session and multi-session summaries
+\item Identify participation patterns and trends
+}
+
+\strong{Privacy & Compliance:}
+\itemize{
+\item Built-in data anonymization with \code{ensure_privacy()}
+\item FERPA compliance validation tools
+\item Privacy-first defaults for all outputs
+\item Secure data handling practices
+}
+
+\strong{Visualization & Reporting:}
+\itemize{
+\item Create privacy-aware visualizations
+\item Generate engagement reports and metrics
+\item Export data in various formats
+\item Customizable plotting options
+}
+}
+
+\subsection{Getting Started}{
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Load the package
+library(zoomstudentengagement)
+
+# Set privacy defaults (recommended)
+set_privacy_defaults(privacy_level = "mask")
+
+# Load and process a transcript
+transcript_data <- load_zoom_transcript("path/to/transcript.vtt")
+
+# Analyze engagement
+results <- analyze_transcripts(transcript_data)
+
+# Create privacy-aware visualizations
+plot_users(results)
+}\if{html}{\out{</div>}}
+}
+
+\subsection{Privacy-First Design}{
+
+This package is designed with privacy and ethical considerations at its core:
+\itemize{
+\item \strong{Default Privacy}: All functions default to masked outputs
+\item \strong{FERPA Compliance}: Built-in tools for educational data protection
+\item \strong{Data Anonymization}: Automatic name masking and data protection
+\item \strong{Ethical Focus}: Emphasis on participation equity, not surveillance
+}
+}
+
+\subsection{Educational Use Cases}{
+\itemize{
+\item \strong{Participation Equity Analysis}: Identify and address participation gaps
+\item \strong{Engagement Tracking}: Monitor student engagement over time
+\item \strong{Intervention Planning}: Use data to inform teaching strategies
+\item \strong{Research Studies}: Support educational research with privacy protection
+}
+}
+}
+\examples{
+# Basic workflow example
+\dontrun{
+# Load and process transcript
+transcript <- load_zoom_transcript("session_transcript.vtt")
+
+# Analyze with privacy protection
+results <- analyze_transcripts(transcript)
+
+# Create privacy-aware visualization
+plot_users(results)
+
+# Export results
+write_metrics(results, "engagement_report.csv")
+}
+
+}
+\seealso{
+\code{\link{analyze_transcripts}} for main analysis workflow
+\code{\link{load_zoom_transcript}} for loading transcript data
+\code{\link{ensure_privacy}} for privacy protection features
+\code{\link{plot_users}} for creating visualizations
+\code{\link{write_metrics}} for exporting results
 }
 \keyword{internal}
