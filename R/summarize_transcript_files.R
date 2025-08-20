@@ -141,7 +141,10 @@ summarize_transcript_files <-
                 "doesn't match the input file_name. This may indicate an issue in the processing pipeline."
               ))
               if (is_verbose()) {
-                print(mismatches[, c("file_name", "transcript_file")])
+                diag_message(paste(
+                  utils::capture.output(str(mismatches[, c("file_name", "transcript_file")])),
+                  collapse = "\n"
+                ))
               }
             }
           }

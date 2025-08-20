@@ -12,6 +12,9 @@
 #' @param semester_start_mdy Semester start date in "MMM DD, YYYY" format
 #' @param auto_assign_patterns List of patterns for automatic assignment
 #' @param interactive Whether to enable interactive assignment for unmatched recordings
+#'   (prompts only shown in interactive sessions). In non-interactive sessions,
+#'   a quiet fallback is used. Default is FALSE.
+#' @param verbose Logical flag to enable diagnostic output. Defaults to FALSE.
 #'
 #' @return A tibble with session mapping information
 #' @export
@@ -52,7 +55,8 @@ create_session_mapping <- function(
       "MATH 250" = "MATH.*250",
       "LTF 201" = "LTF.*201"
     ),
-    interactive = FALSE) {
+    interactive = FALSE,
+    verbose = FALSE) {
   # Declare global variables to avoid R CMD check warnings
   ID <- Topic <- `Start Time` <- start_time <- session_date <- zoom_recording_id <-
     topic <- session_time <- notes <- NULL
@@ -126,31 +130,31 @@ create_session_mapping <- function(
     }
   }
 
-  # Interactive assignment for unmatched recordings using base R instead of dplyr
-  if (interactive) {
+  # Interactive assignment (only in interactive sessions when enabled)
+  if (isTRUE(interactive) && interactive()) {
     # Use base R subsetting instead of dplyr::filter to avoid segmentation fault
     unmatched_indices <- which(is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section))
     unmatched <- mapping_df[unmatched_indices, , drop = FALSE]
 
     if (nrow(unmatched) > 0) {
-      cat("Found", nrow(unmatched), "unmatched recordings:\n")
+      diag_cat("Found", nrow(unmatched), "unmatched recordings:\n")
 
       for (i in seq_len(nrow(unmatched))) {
         recording <- unmatched[i, ]
-        cat("\nRecording", i, "of", nrow(unmatched), ":\n")
-        cat("ID:", recording$zoom_recording_id, "\n")
-        cat("Topic:", recording$topic, "\n")
-        cat("Date:", as.character(recording$session_date), "\n")
+        diag_cat("\nRecording", i, "of", nrow(unmatched), ":\n")
+        diag_cat("ID:", recording$zoom_recording_id, "\n")
+        diag_cat("Topic:", recording$topic, "\n")
+        diag_cat("Date:", as.character(recording$session_date), "\n")
 
         # Show available courses
-        cat("\nAvailable courses:\n")
+        diag_cat("\nAvailable courses:\n")
         for (j in seq_len(nrow(course_info_df))) {
           course <- course_info_df[j, ]
-          cat(j, ":", course$dept, course$course, "Section", course$section, "\n")
+          diag_cat(j, ":", course$dept, course$course, "Section", course$section, "\n")
         }
 
         # Get user input
-        cat("\nEnter course number (or 0 to skip): ")
+        diag_cat("\nEnter course number (or 0 to skip): ")
         course_choice <- as.integer(readline())
 
         if (course_choice > 0 && course_choice <= nrow(course_info_df)) {
@@ -161,6 +165,16 @@ create_session_mapping <- function(
           mapping_df$instructor[mapping_df$zoom_recording_id == recording$zoom_recording_id] <- selected_course$instructor
         }
       }
+    }
+  } else if (isTRUE(verbose) || is_verbose()) {
+    # Non-interactive fallback: emit a diagnostic summary if requested
+    unmatched_indices <- which(is.na(mapping_df$dept) | is.na(mapping_df$course) | is.na(mapping_df$section))
+    if (length(unmatched_indices) > 0) {
+      diag_message(paste0(
+        "Non-interactive mode: ",
+        length(unmatched_indices),
+        " unmatched recordings detected. Skipping prompts."
+      ))
     }
   }
 

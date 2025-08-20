@@ -16,7 +16,8 @@ load_zoom_recorded_sessions_list(
     sep = ","),
   dept = "LTF",
   semester_start_mdy = "Jan 01, 2024",
-  scheduled_session_length_hours = 1.5
+  scheduled_session_length_hours = 1.5,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -57,6 +58,8 @@ to \verb{Jan 01, 2024}}
 
 \item{scheduled_session_length_hours}{scheduled length of each class session
 in hours. Defaults to \code{1.5}}
+
+\item{verbose}{Logical flag to enable diagnostic output. Defaults to FALSE.}
 }
 \value{
 A tibble listing the session recordings loaded from the cloud
