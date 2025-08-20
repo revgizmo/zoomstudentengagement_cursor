@@ -12,6 +12,18 @@ A package to analyze and visualize student engagement from Zoom transcripts, aim
 - Improve documentation and usability
 - Ensure robust testing and error handling
 
+## Lean issue/branch workflow (no Projects board)
+
+Decision: manage work directly via Issues, Milestones, Labels, and PRs. No Projects board automation.
+
+- Labels: keep small, consistent set (priority:high/medium/low; area:*; documentation; refactor; test; privacy; status:blocked/in-progress/needs-review)
+- Milestones: CRAN-aligned only (Code Quality & Style, Documentation Complete, Testing & Coverage (>90%), CI/QA Green, CRAN Preflight, Release 0.1.0)
+- Definition of Done: unchanged; enforce via PR template and CI
+- Process:
+  - Create/triage issues weekly; label, assign, attach milestone
+  - Each PR links an issue (Closes #X); PR template checklist must pass
+  - Use saved issue filters instead of a board (e.g., `is:open label:"priority:high" -label:"status:blocked"`)
+
 ## Current Status (Updated: 2025-08-19)
 **Package Status: EXCELLENT - Very Close to CRAN Ready**
 
