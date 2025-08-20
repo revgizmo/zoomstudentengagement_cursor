@@ -26,26 +26,32 @@ test_that("load_zoom_recorded_sessions_list emits diagnostics when global verbos
   old_opt <- getOption("zoomstudentengagement.verbose", NULL)
   on.exit(options(zoomstudentengagement.verbose = old_opt), add = TRUE)
   options(zoomstudentengagement.verbose = FALSE)
-  quiet_msgs <- capture.output({
-    invisible(load_zoom_recorded_sessions_list(
-      data_folder = temp_dir,
-      transcripts_folder = "transcripts",
-      dept = NULL,
-      verbose = FALSE
-    ))
-  }, type = "message")
+  quiet_msgs <- capture.output(
+    {
+      invisible(load_zoom_recorded_sessions_list(
+        data_folder = temp_dir,
+        transcripts_folder = "transcripts",
+        dept = NULL,
+        verbose = FALSE
+      ))
+    },
+    type = "message"
+  )
   expect_length(quiet_msgs, 0)
 
   # Global verbose emits diagnostics via diag_message()
   options(zoomstudentengagement.verbose = TRUE)
-  verbose_msgs <- capture.output({
-    invisible(load_zoom_recorded_sessions_list(
-      data_folder = temp_dir,
-      transcripts_folder = "transcripts",
-      dept = NULL,
-      verbose = FALSE
-    ))
-  }, type = "message")
+  verbose_msgs <- capture.output(
+    {
+      invisible(load_zoom_recorded_sessions_list(
+        data_folder = temp_dir,
+        transcripts_folder = "transcripts",
+        dept = NULL,
+        verbose = FALSE
+      ))
+    },
+    type = "message"
+  )
 
   expect_true(any(grepl("CSV files to process:", verbose_msgs)))
   expect_true(any(grepl("After reading CSV:", verbose_msgs)))
@@ -73,20 +79,21 @@ test_that("create_session_mapping emits non-interactive fallback diagnostic when
   old_opt <- getOption("zoomstudentengagement.verbose", NULL)
   on.exit(options(zoomstudentengagement.verbose = old_opt), add = TRUE)
   options(zoomstudentengagement.verbose = TRUE)
-  msgs <- capture.output({
-    invisible(create_session_mapping(
-      zoom_recordings_df = zoom_recordings,
-      course_info_df = course_info,
-      auto_assign_patterns = list(
-        "CS 101" = "CS.*101"
-      ),
-      interactive = FALSE,
-      verbose = FALSE,
-      output_file = NULL
-    ))
-  }, type = "message")
+  msgs <- capture.output(
+    {
+      invisible(create_session_mapping(
+        zoom_recordings_df = zoom_recordings,
+        course_info_df = course_info,
+        auto_assign_patterns = list(
+          "CS 101" = "CS.*101"
+        ),
+        interactive = FALSE,
+        verbose = FALSE,
+        output_file = NULL
+      ))
+    },
+    type = "message"
+  )
 
   expect_true(any(grepl("Non-interactive mode: ", msgs)))
 })
-
-
