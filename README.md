@@ -18,8 +18,9 @@
     - <a href="#data-management" id="toc-data-management">Data Management</a>
     - <a href="#analysis-and-visualization"
       id="toc-analysis-and-visualization">Analysis and Visualization</a>
-    - <a href="#diagnostics--verbosity"
-      id="toc-diagnostics--verbosity">Diagnostics &amp; Verbosity</a>
+    - <a href="#diagnostics-and-interactive-prompts"
+      id="toc-diagnostics-and-interactive-prompts">Diagnostics and interactive
+      prompts</a>
   - <a href="#-typical-workflow" id="toc--typical-workflow">📊 Typical
     Workflow</a>
   - <a href="#-privacy-defaults" id="toc--privacy-defaults">🔒 Privacy
@@ -190,19 +191,32 @@ currently supported but may be added in future versions.
   available)
 - `make_transcripts_summary_df()` - Generate summary statistics
 
-### Diagnostics & Verbosity
+### Diagnostics and interactive prompts
 
-Most functions run quietly by default. You can enable additional debug
-output in some helpers (e.g., `load_zoom_recorded_sessions_list()`) via:
+Most functions are quiet by default to keep examples/tests clean. You
+can enable optional diagnostics:
 
 ``` r
+# Enable package-wide diagnostics
 options(zoomstudentengagement.verbose = TRUE)
-# ... run your calls ...
+
+# Or enable per-call diagnostics where supported
+load_zoom_recorded_sessions_list(
+  data_folder = ".",
+  transcripts_folder = "transcripts",
+  verbose = TRUE
+)
+
+# Turn diagnostics back off
 options(zoomstudentengagement.verbose = FALSE)
 ```
 
-This keeps normal usage and CI logs clean while still supporting
-troubleshooting when needed.
+Interactive prompts (e.g., in `create_session_mapping()` when assigning
+unmatched recordings) are only shown in interactive sessions. In
+non-interactive runs (e.g., CI), prompts are suppressed and a quiet
+fallback is used.
+
+See also: `CONTRIBUTING.md` Diagnostic Output Policy.
 
 ## 📊 Typical Workflow
 
