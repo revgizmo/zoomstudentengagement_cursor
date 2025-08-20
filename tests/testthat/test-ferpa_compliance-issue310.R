@@ -48,13 +48,16 @@ test_that("generate_ferpa_report produces JSON, HTML, and text reports", {
     session_date = as.Date(c("2024-01-15", "2024-02-20"))
   )
 
-  tmp_json <- tempfile(fileext = ".json"); on.exit(unlink(tmp_json), add = TRUE)
-  tmp_html <- tempfile(fileext = ".html"); on.exit(unlink(tmp_html), add = TRUE)
-  tmp_txt  <- tempfile(fileext = ".txt");  on.exit(unlink(tmp_txt), add = TRUE)
+  tmp_json <- tempfile(fileext = ".json")
+  on.exit(unlink(tmp_json), add = TRUE)
+  tmp_html <- tempfile(fileext = ".html")
+  on.exit(unlink(tmp_html), add = TRUE)
+  tmp_txt <- tempfile(fileext = ".txt")
+  on.exit(unlink(tmp_txt), add = TRUE)
 
   rep1 <- generate_ferpa_report(df, output_file = tmp_json, report_format = "json")
   rep2 <- generate_ferpa_report(df, output_file = tmp_html, report_format = "html")
-  rep3 <- generate_ferpa_report(df, output_file = tmp_txt,  report_format = "text")
+  rep3 <- generate_ferpa_report(df, output_file = tmp_txt, report_format = "text")
 
   expect_true(file.exists(tmp_json))
   expect_true(file.exists(tmp_html))
@@ -86,5 +89,3 @@ test_that("anonymize_educational_data supports mask, hash, pseudonymize, and agg
   agg <- anonymize_educational_data(df, method = "aggregate", aggregation_level = "individual")
   expect_s3_class(agg, "tbl_df")
 })
-
-

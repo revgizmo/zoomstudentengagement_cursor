@@ -9,12 +9,16 @@ test_that("write_metrics handles comments count and list column JSON conversion"
     extras = list(list(flag = TRUE), list())
   )
 
-  tmp <- tempfile(fileext = ".csv"); on.exit(unlink(tmp), add = TRUE)
+  tmp <- tempfile(fileext = ".csv")
+  on.exit(unlink(tmp), add = TRUE)
 
   # Expect warning for non-comments list column JSON conversion
-  expect_warning({
-    out <- write_metrics(df, what = "engagement", path = tmp, comments_format = "count")
-  }, "Converting list columns to JSON strings:")
+  expect_warning(
+    {
+      out <- write_metrics(df, what = "engagement", path = tmp, comments_format = "count")
+    },
+    "Converting list columns to JSON strings:"
+  )
 
   expect_true(file.exists(tmp))
   expect_s3_class(out, "tbl_df")
@@ -25,5 +29,3 @@ test_that("write_metrics handles comments count and list column JSON conversion"
   # Validate that extras became JSON strings
   expect_type(out_read$extras, "character")
 })
-
-

@@ -8,5 +8,3 @@ test_that("privacy_audit validates input types and empty columns", {
   expect_s3_class(res, "tbl_df")
   expect_equal(nrow(res), 0)
 })
-
-

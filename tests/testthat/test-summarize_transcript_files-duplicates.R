@@ -32,5 +32,3 @@ test_that("summarize_transcript_files triggers duplicate diagnostics path (quiet
 
   unlink("test_transcripts", recursive = TRUE)
 })
-
-
