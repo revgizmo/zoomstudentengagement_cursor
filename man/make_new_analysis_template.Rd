@@ -7,7 +7,8 @@
 make_new_analysis_template(
   new_template_file_name = "new_analysis.Rmd",
   template_file = system.file("new_analysis_template.Rmd", package =
-    "zoomstudentengagement")
+    "zoomstudentengagement"),
+  verbose = FALSE
 )
 }
 \arguments{
@@ -15,6 +16,8 @@ make_new_analysis_template(
 
 \item{template_file}{The file name of the template file. This defaults to the
 \code{new_analysis_template.Rmd} file in the \code{zoomstudentengagement} package.}
+
+\item{verbose}{Logical flag to enable diagnostic output. Defaults to FALSE.}
 }
 \value{
 TRUE if the file was copied, FALSE otherwise.

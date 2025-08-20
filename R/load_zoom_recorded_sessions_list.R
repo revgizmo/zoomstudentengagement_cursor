@@ -50,6 +50,7 @@
 #'   to `Jan 01, 2024`
 #' @param scheduled_session_length_hours scheduled length of each class session
 #'   in hours. Defaults to `1.5`
+#' @param verbose Logical flag to enable diagnostic output. Defaults to FALSE.
 #'
 #' @return A tibble listing the session recordings loaded from the cloud
 #'   recording csvs. Returns `NULL` if the transcripts folder doesn't exist,
@@ -97,7 +98,8 @@ load_zoom_recorded_sessions_list <-
            ),
            dept = "LTF",
            semester_start_mdy = "Jan 01, 2024",
-           scheduled_session_length_hours = 1.5) {
+           scheduled_session_length_hours = 1.5,
+           verbose = FALSE) {
     . <-
       `Topic` <-
       `ID` <-
@@ -145,11 +147,11 @@ load_zoom_recorded_sessions_list <-
       ))
     }
 
-    # Optional debug output (controlled by option zoomstudentengagement.verbose)
-    .verbose <- isTRUE(getOption("zoomstudentengagement.verbose", FALSE))
+    # Optional diagnostics
+    .verbose <- isTRUE(verbose) || is_verbose()
     if (.verbose) {
-      message("CSV files to process:")
-      message(paste(zoom_recorded_sessions_csv_names, collapse = "\n"))
+      diag_message("CSV files to process:")
+      diag_message(paste(zoom_recorded_sessions_csv_names, collapse = "\n"))
     }
 
     result <- zoom_recorded_sessions_csv_names %>%
@@ -173,10 +175,8 @@ load_zoom_recorded_sessions_list <-
       )
 
     if (.verbose) {
-      message("After reading CSV:")
-      utils::capture.output(print(result)) |>
-        paste(collapse = "\n") |>
-        message()
+      diag_message("After reading CSV:")
+      diag_message(paste(utils::capture.output(str(result)), collapse = "\n"))
     }
 
     # Use base R operations instead of dplyr to avoid segmentation fault
@@ -207,10 +207,8 @@ load_zoom_recorded_sessions_list <-
     result$group_id <- NULL # Remove the temporary group_id column
 
     if (.verbose) {
-      message("After summarise:")
-      utils::capture.output(print(result)) |>
-        paste(collapse = "\n") |>
-        message()
+      diag_message("After summarise:")
+      diag_message(paste(utils::capture.output(str(result)), collapse = "\n"))
     }
 
     # Parse topic into components (dept, course, section, day, time, instructor)
@@ -240,17 +238,15 @@ load_zoom_recorded_sessions_list <-
     result$section <- suppressWarnings(as.integer(result$section))
 
     if (.verbose) {
-      message("After topic parsing:")
-      utils::capture.output(print(result)) |>
-        paste(collapse = "\n") |>
-        message()
+      diag_message("After topic parsing:")
+      diag_message(paste(utils::capture.output(str(result)), collapse = "\n"))
     }
 
     # Extract start time values as strings
     start_time_values <- result$`Start Time`
     if (.verbose) {
-      message("Start Time values:")
-      message(paste(start_time_values, collapse = "\n"))
+      diag_message("Start Time values:")
+      diag_message(paste(start_time_values, collapse = "\n"))
     }
 
     # Parse dates using multiple formats in America/Los_Angeles tz
@@ -266,10 +262,8 @@ load_zoom_recorded_sessions_list <-
     result$match_end_time <- result$match_start_time + lubridate::dhours(scheduled_session_length_hours) + lubridate::dminutes(30)
 
     if (.verbose) {
-      message("After date parsing:")
-      utils::capture.output(print(result)) |>
-        paste(collapse = "\n") |>
-        message()
+      diag_message("After date parsing:")
+      diag_message(paste(utils::capture.output(str(result)), collapse = "\n"))
     }
 
     # Optionally filter rows to those matching department, if provided
@@ -278,10 +272,8 @@ load_zoom_recorded_sessions_list <-
     }
 
     if (.verbose) {
-      message("Final result after filtering:")
-      utils::capture.output(print(result)) |>
-        paste(collapse = "\n") |>
-        message()
+      diag_message("Final result after filtering:")
+      diag_message(paste(utils::capture.output(str(result)), collapse = "\n"))
     }
 
     tibble::as_tibble(result)

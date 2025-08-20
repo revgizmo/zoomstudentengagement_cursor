@@ -11,7 +11,8 @@ create_session_mapping(
   semester_start_mdy = "Jan 01, 2024",
   auto_assign_patterns = list(`CS 101` = "CS.*101", `MATH 250` = "MATH.*250", `LTF 201` =
     "LTF.*201"),
-  interactive = FALSE
+  interactive = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -28,7 +29,11 @@ session_length_hours}
 
 \item{auto_assign_patterns}{List of patterns for automatic assignment}
 
-\item{interactive}{Whether to enable interactive assignment for unmatched recordings}
+\item{interactive}{Whether to enable interactive assignment for unmatched recordings
+(prompts only shown in interactive sessions). In non-interactive sessions,
+a quiet fallback is used. Default is FALSE.}
+
+\item{verbose}{Logical flag to enable diagnostic output. Defaults to FALSE.}
 }
 \value{
 A tibble with session mapping information

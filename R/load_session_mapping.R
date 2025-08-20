@@ -78,7 +78,10 @@ load_session_mapping <- function(
         diag_cat("Unmapped recordings:\n")
         # Use base R subsetting instead of dplyr::select
         if (is_verbose()) {
-          print(unmapped[, c("zoom_recording_id", "topic", "notes")])
+          diag_message(paste(
+            utils::capture.output(str(unmapped[, c("zoom_recording_id", "topic", "notes")])),
+            collapse = "\n"
+          ))
         }
       }
     }

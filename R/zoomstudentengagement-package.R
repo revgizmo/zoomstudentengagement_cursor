@@ -95,4 +95,8 @@ NULL
   if (is.null(current)) {
     options(zoomstudentengagement.privacy_level = "mask")
   }
+  # Ensure verbose option is initialized to FALSE if not set
+  if (is.null(getOption("zoomstudentengagement.verbose", default = NULL))) {
+    options(zoomstudentengagement.verbose = FALSE)
+  }
 }

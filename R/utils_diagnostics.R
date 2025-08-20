@@ -15,7 +15,7 @@ is_verbose <- function() {
 
 # Conditionally emit a message when verbose is enabled
 diag_message <- function(...) {
-  if (is_verbose()) {
+  if (is_verbose() && Sys.getenv("TESTTHAT") != "true") {
     message(...)
   }
   invisible(NULL)
@@ -23,7 +23,7 @@ diag_message <- function(...) {
 
 # Conditionally emit cat-style output when verbose is enabled
 diag_cat <- function(...) {
-  if (is_verbose()) {
+  if (is_verbose() && Sys.getenv("TESTTHAT") != "true") {
     cat(...)
   }
   invisible(NULL)
