@@ -194,6 +194,26 @@ devtools::check()                    # Full package check
 devtools::build()                    # Create distributable package
 ```
 
+### Diagnostic Output Policy
+
+- Default to quiet output. Provide a `verbose = FALSE` argument for functions that may emit diagnostics.
+- Gate any `print()`, `message()`, or `cat()` calls behind both the verbose flag and the test guard, for example:
+  ```r
+  if (isTRUE(verbose) && Sys.getenv("TESTTHAT") != "true") {
+    message("detailed status...")
+  }
+  ```
+- Guard interactive prompts with `interactive()` and provide non-interactive fallbacks:
+  ```r
+  if (interactive()) {
+    # prompt user
+  } else {
+    # fallback path without prompting
+  }
+  ```
+- Keep examples runnable and quiet by default; avoid stray diagnostics in examples and tests.
+- The pre-PR validator enforces this policy; ensure it reports "All diagnostic output properly conditional" before opening a PR.
+
 ### Managing Issues from Markdown Plans
 
 We maintain a Markdown plan at `ISSUES/docs_overhaul_plan.md` and sync it to GitHub Issues.
