@@ -38,6 +38,8 @@
 # zoomstudentengagement
 
 <!-- badges: start -->
+
+[![coverage](https://img.shields.io/github/actions/workflow/status/revgizmo/zoomstudentengagement/coverage.yaml?branch=main&label=coverage)](https://github.com/revgizmo/zoomstudentengagement/actions/workflows/coverage.yaml)
 <!-- badges: end -->
 
 The goal of `zoomstudentengagement` is to allow instructors to gain
