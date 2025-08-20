@@ -1,0 +1,53 @@
+name: Epic
+description: Large body of work composed of multiple issues with a milestone
+title: "epic: <area> — <concise outcome>"
+labels: ["epic"]
+assignees: []
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Problem statement and desired outcome; success criteria
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What’s in and out; boundaries and assumptions
+      value: |
+        In:
+        - 
+        Out:
+        - 
+  - type: textarea
+    id: success
+    attributes:
+      label: Success Metrics
+      description: How we’ll measure success (e.g., coverage > 90%, 0E/0W)
+  - type: textarea
+    id: plan
+    attributes:
+      label: Plan / Work Breakdown
+      description: Link or list child issues and phases
+      value: |
+        Child issues:
+        - #
+        - #
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / Blockers
+      description: Known risks, dependencies, and mitigations
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: DRI for the epic
+  - type: input
+    id: milestone
+    attributes:
+      label: Milestone
+      description: Target milestone name
+

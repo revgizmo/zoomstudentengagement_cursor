@@ -1,1 +1,8 @@
-blank_issues_enabled: false 
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Support
+    url: https://github.com/revgizmo/zoomstudentengagement_cursor/discussions
+    about: Please ask and answer questions here.
+  - name: CRAN Policies
+    url: https://cran.r-project.org/web/packages/policies.html
+    about: Review CRAN policies before proposing changes that affect submission.
