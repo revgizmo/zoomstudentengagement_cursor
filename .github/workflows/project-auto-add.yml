@@ -1,0 +1,80 @@
+name: Project auto-add
+
+on:
+  issues:
+    types: [opened, reopened]
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  projects: write
+
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add item to project and set Status=Backlog
+        uses: actions/github-script@v7
+        env:
+          ORG: ${{ vars.PROJECTS_ORG || github.repository_owner }}
+          PROJECT_NUMBER: ${{ vars.PROJECTS_NUMBER || '' }}
+          PROJECT_TITLE: ${{ vars.PROJECTS_TITLE || 'CRAN Readiness' }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const ORG = process.env.ORG;
+            const PROJECT_NUMBER = process.env.PROJECT_NUMBER;
+            const PROJECT_TITLE = process.env.PROJECT_TITLE;
+            const isIssue = !!context.payload.issue;
+            const nodeId = isIssue ? context.payload.issue.node_id : context.payload.pull_request.node_id;
+            if (!nodeId) { core.info('No content node id; exiting'); return; }
+
+            async function getProjectByNumber(org, number){
+              if (!number) return null;
+              try {
+                const res = await github.graphql(`
+                  query($org:String!,$number:Int!){
+                    organization(login:$org){
+                      projectV2(number:$number){ id title fields(first:50){ nodes{ __typename ... on ProjectV2FieldCommon { id name } ... on ProjectV2SingleSelectField { id name options { id name } } } } }
+                    }
+                  }
+                `, { org, number: parseInt(number, 10) });
+                return res.organization.projectV2;
+              } catch (e) { core.warning(`project by number failed: ${e}`); return null; }
+            }
+
+            async function getProjectByTitle(org, title){
+              const res = await github.graphql(`
+                query($org:String!){
+                  organization(login:$org){
+                    projectsV2(first:20){ nodes{ id title fields(first:50){ nodes{ __typename ... on ProjectV2FieldCommon { id name } ... on ProjectV2SingleSelectField { id name options { id name } } } } } }
+                  }
+                }
+              `, { org });
+              const nodes = res.organization.projectsV2.nodes;
+              return nodes.find(p => p.title === title) || null;
+            }
+
+            const project = (await getProjectByNumber(ORG, PROJECT_NUMBER)) || (await getProjectByTitle(ORG, PROJECT_TITLE));
+            if (!project) { core.setFailed(`Project not found. Set repo variables PROJECTS_NUMBER or PROJECTS_TITLE.`); return; }
+
+            const statusField = project.fields.nodes.find(f => f.name === 'Status');
+            if (!statusField || !statusField.options) { core.setFailed('Status field not found on project'); return; }
+            const backlog = statusField.options.find(o => o.name === 'Backlog');
+            if (!backlog) { core.setFailed('Backlog option missing on Status field'); return; }
+
+            const addRes = await github.graphql(`
+              mutation($project:ID!,$contentId:ID!){ addProjectV2ItemById(input:{projectId:$project, contentId:$contentId}){ item { id } } }
+            `, { project: project.id, contentId: nodeId });
+            const itemId = addRes.addProjectV2ItemById.item.id;
+
+            await github.graphql(`
+              mutation($project:ID!,$item:ID!,$field:ID!,$option:String!){
+                updateProjectV2ItemFieldValue(input:{ projectId:$project, itemId:$item, fieldId:$field, value:{ singleSelectOptionId:$option } }){ projectV2Item { id } }
+              }
+            `, { project: project.id, item: itemId, field: statusField.id, option: backlog.id });
+            core.info('Added to project with Status=Backlog');
+
