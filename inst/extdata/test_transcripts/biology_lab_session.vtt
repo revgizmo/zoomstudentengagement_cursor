@@ -1,0 +1,331 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.000
+<v Dr. Chen>Good morning everyone! Welcome to Biology 201 Lab.
+
+00:00:04.000 --> 00:00:08.000
+<v Dr. Chen>Today we'll be working with DNA extraction and gel electrophoresis.
+
+00:00:08.000 --> 00:00:12.000
+<v Dr. Chen>Please make sure you have your lab coats and safety goggles on.
+
+00:00:12.000 --> 00:00:16.000
+<v Student Q>Do we need gloves for this experiment?
+
+00:00:16.000 --> 00:00:20.000
+<v Dr. Chen>Yes, absolutely! DNA can be degraded by enzymes on your skin.
+
+00:00:20.000 --> 00:00:24.000
+<v Dr. Chen>Everyone should have nitrile gloves at their stations.
+
+00:00:24.000 --> 00:00:28.000
+<v Student R>I don't see any gloves at my station.
+
+00:00:28.000 --> 00:00:32.000
+<v Dr. Chen>Check the drawer under your bench. They should be there.
+
+00:00:32.000 --> 00:00:36.000
+<v Student S>Found them! What size should I use?
+
+00:00:36.000 --> 00:00:40.000
+<v Dr. Chen>Use whatever fits comfortably. Medium is usually good for most people.
+
+00:00:40.000 --> 00:00:44.000
+<v Dr. Chen>Now, let's go over the safety procedures.
+
+00:00:44.000 --> 00:00:48.000
+<v Dr. Chen>We'll be using ethidium bromide, which is a mutagen.
+
+00:00:48.000 --> 00:00:52.000
+<v Student T>What does that mean?
+
+00:00:52.000 --> 00:00:56.000
+<v Dr. Chen>It means it can cause mutations in DNA, so we need to be very careful.
+
+00:00:56.000 --> 00:01:00.000
+<v Dr. Chen>Never touch it with bare hands, and dispose of it properly.
+
+00:01:00.000 --> 00:01:04.000
+<v Student Q>How do we dispose of it?
+
+00:01:04.000 --> 00:01:08.000
+<v Dr. Chen>There are special waste containers marked with biohazard symbols.
+
+00:01:08.000 --> 00:01:12.000
+<v Dr. Chen>I'll show you where they are when we get to that step.
+
+00:01:12.000 --> 00:01:16.000
+<v Dr. Chen>Now, let's start with DNA extraction from strawberries.
+
+00:01:16.000 --> 00:01:20.000
+<v Student R>Why strawberries?
+
+00:01:20.000 --> 00:01:24.000
+<v Dr. Chen>Great question! Strawberries are octoploid, meaning they have 8 copies of each chromosome.
+
+00:01:24.000 --> 00:01:28.000
+<v Dr. Chen>This makes them an excellent source of DNA for extraction.
+
+00:01:28.000 --> 00:01:32.000
+<v Student S>How many strawberries do we need?
+
+00:01:32.000 --> 00:01:36.000
+<v Dr. Chen>One strawberry per group should be sufficient.
+
+00:01:36.000 --> 00:01:40.000
+<v Dr. Chen>First, we need to break down the cell walls and membranes.
+
+00:01:40.000 --> 00:01:44.000
+<v Dr. Chen>We'll use a buffer solution with detergent and salt.
+
+00:01:44.000 --> 00:01:48.000
+<v Student T>What does the detergent do?
+
+00:01:48.000 --> 00:01:52.000
+<v Dr. Chen>The detergent breaks down the lipid bilayer of cell membranes.
+
+00:01:52.000 --> 00:01:56.000
+<v Dr. Chen>This releases the cellular contents, including DNA.
+
+00:01:56.000 --> 00:02:00.000
+<v Student Q>And the salt?
+
+00:02:00.000 --> 00:02:04.000
+<v Dr. Chen>The salt helps precipitate the DNA and separate it from other cellular components.
+
+00:02:04.000 --> 00:02:08.000
+<v Dr. Chen>Now, let's start the extraction process.
+
+00:02:08.000 --> 00:02:12.000
+<v Dr. Chen>Place your strawberry in the plastic bag and add 10 mL of extraction buffer.
+
+00:02:12.000 --> 00:02:16.000
+<v Student R>Should we mash the strawberry first?
+
+00:02:16.000 --> 00:02:20.000
+<v Dr. Chen>No, add the buffer first, then seal the bag and mash gently.
+
+00:02:20.000 --> 00:02:24.000
+<v Dr. Chen>We want to break up the tissue without creating too many bubbles.
+
+00:02:24.000 --> 00:02:28.000
+<v Student S>How long should we mash it?
+
+00:02:28.000 --> 00:02:32.000
+<v Dr. Chen>About 2-3 minutes should be sufficient.
+
+00:02:32.000 --> 00:02:36.000
+<v Dr. Chen>You should see the mixture turn pink and become more liquid.
+
+00:02:36.000 --> 00:02:40.000
+<v Student T>Mine is getting foamy. Is that okay?
+
+00:02:40.000 --> 00:02:44.000
+<v Dr. Chen>That's fine, but try to be a bit gentler with the mashing.
+
+00:02:44.000 --> 00:02:48.000
+<v Dr. Chen>Too much foam can make the next steps more difficult.
+
+00:02:48.000 --> 00:02:52.000
+<v Student Q>What's the next step?
+
+00:02:52.000 --> 00:02:56.000
+<v Dr. Chen>We need to filter the mixture to remove large cellular debris.
+
+00:02:56.000 --> 00:03:00.000
+<v Dr. Chen>Use the coffee filter and funnel provided.
+
+00:03:00.000 --> 00:03:04.000
+<v Student R>How much should we filter?
+
+00:03:04.000 --> 00:03:08.000
+<v Dr. Chen>Filter about 5 mL into a clean test tube.
+
+00:03:08.000 --> 00:03:12.000
+<v Dr. Chen>The filtered solution should be clear with a slight pink tint.
+
+00:03:12.000 --> 00:03:16.000
+<v Student S>Mine is still pretty cloudy. Should I filter it again?
+
+00:03:16.000 --> 00:03:20.000
+<v Dr. Chen>Yes, you can try filtering it through a fresh filter.
+
+00:03:20.000 --> 00:03:24.000
+<v Dr. Chen>Sometimes the first filter gets clogged with debris.
+
+00:03:24.000 --> 00:03:28.000
+<v Student T>Now what do we do with the filtered solution?
+
+00:03:28.000 --> 00:03:32.000
+<v Dr. Chen>Now we add cold ethanol to precipitate the DNA.
+
+00:03:32.000 --> 00:03:36.000
+<v Dr. Chen>Add 5 mL of cold ethanol slowly down the side of the test tube.
+
+00:03:36.000 --> 00:03:40.000
+<v Student Q>Why does it need to be cold?
+
+00:03:40.000 --> 00:03:44.000
+<v Dr. Chen>Cold ethanol helps the DNA precipitate more efficiently.
+
+00:03:44.000 --> 00:03:48.000
+<v Dr. Chen>You should see white, stringy material forming at the interface.
+
+00:03:48.000 --> 00:03:52.000
+<v Student R>I can see something white forming! Is that the DNA?
+
+00:03:52.000 --> 00:03:56.000
+<v Dr. Chen>Yes! That's your extracted DNA. It should look like white threads or cotton.
+
+00:03:56.000 --> 00:04:00.000
+<v Student S>Can we touch it?
+
+00:04:00.000 --> 00:04:04.000
+<v Dr. Chen>You can use a glass rod to gently spool it out.
+
+00:04:04.000 --> 00:04:08.000
+<v Dr. Chen>But remember to wear gloves and be very gentle.
+
+00:04:08.000 --> 00:04:12.000
+<v Student T>What do we do with it once we have it?
+
+00:04:12.000 --> 00:04:16.000
+<v Dr. Chen>We'll dissolve it in a small amount of water for the gel electrophoresis.
+
+00:04:16.000 --> 00:04:20.000
+<v Dr. Chen>But first, let's make sure everyone has successfully extracted their DNA.
+
+00:04:20.000 --> 00:04:24.000
+<v Student Q>How do we know if it worked?
+
+00:04:24.000 --> 00:04:28.000
+<v Dr. Chen>You should see white, stringy material that you can spool with a glass rod.
+
+00:04:28.000 --> 00:04:32.000
+<v Dr. Chen>If you don't see anything, we can troubleshoot.
+
+00:04:32.000 --> 00:04:36.000
+<v Student R>I think I got some! It's really stringy.
+
+00:04:36.000 --> 00:04:40.000
+<v Dr. Chen>Excellent! That's exactly what we want to see.
+
+00:04:40.000 --> 00:04:44.000
+<v Dr. Chen>Now let's move on to preparing the agarose gel.
+
+00:04:44.000 --> 00:04:48.000
+<v Student S>What's agarose?
+
+00:04:48.000 --> 00:04:52.000
+<v Dr. Chen>Agarose is a polysaccharide that forms a gel matrix.
+
+00:04:52.000 --> 00:04:56.000
+<v Dr. Chen>It creates pores that allow DNA fragments to migrate through.
+
+00:04:56.000 --> 00:05:00.000
+<v Student T>How do we make the gel?
+
+00:05:00.000 --> 00:05:04.000
+<v Dr. Chen>We'll use pre-made gels today to save time.
+
+00:05:04.000 --> 00:05:08.000
+<v Dr. Chen>But I'll explain how they're made: agarose powder dissolved in buffer.
+
+00:05:08.000 --> 00:05:12.000
+<v Student Q>What concentration should we use?
+
+00:05:12.000 --> 00:05:16.000
+<v Dr. Chen>For DNA fragments of this size, 1% agarose is ideal.
+
+00:05:16.000 --> 00:05:20.000
+<v Dr. Chen>Higher concentrations separate smaller fragments better.
+
+00:05:20.000 --> 00:05:24.000
+<v Dr. Chen>Now, let's load our DNA samples into the gel.
+
+00:05:24.000 --> 00:05:28.000
+<v Student R>How do we do that?
+
+00:05:28.000 --> 00:05:32.000
+<v Dr. Chen>We'll use micropipettes to load the samples into the wells.
+
+00:05:32.000 --> 00:05:36.000
+<v Dr. Chen>Each group should load 10 microliters of their DNA solution.
+
+00:05:36.000 --> 00:05:40.000
+<v Student S>What if we don't have enough DNA?
+
+00:05:40.000 --> 00:05:44.000
+<v Dr. Chen>We can dilute it with water, but let's see what you have first.
+
+00:05:44.000 --> 00:05:48.000
+<v Dr. Chen>Once everyone has loaded their samples, we'll run the gel.
+
+00:05:48.000 --> 00:05:52.000
+<v Student T>How long does it take to run?
+
+00:05:52.000 --> 00:05:56.000
+<v Dr. Chen>About 30-45 minutes at 100 volts.
+
+00:05:56.000 --> 00:06:00.000
+<v Dr. Chen>While it's running, I'll explain what we expect to see.
+
+00:06:00.000 --> 00:06:04.000
+<v Student Q>What should we see in the gel?
+
+00:06:04.000 --> 00:06:08.000
+<v Dr. Chen>You should see bands of DNA that have migrated through the gel.
+
+00:06:08.000 --> 00:06:12.000
+<v Dr. Chen>The smaller fragments will travel further than larger ones.
+
+00:06:12.000 --> 00:06:16.000
+<v Dr. Chen>After staining with ethidium bromide, they'll fluoresce under UV light.
+
+00:06:16.000 --> 00:06:20.000
+<v Student R>That sounds really cool!
+
+00:06:20.000 --> 00:06:24.000
+<v Dr. Chen>It is! DNA electrophoresis is a fundamental technique in molecular biology.
+
+00:06:24.000 --> 00:06:28.000
+<v Dr. Chen>It's used in DNA fingerprinting, genetic testing, and research.
+
+00:06:28.000 --> 00:06:32.000
+<v Student S>Can we take pictures of our results?
+
+00:06:32.000 --> 00:06:36.000
+<v Dr. Chen>Yes, but only after the gel has been properly stained and documented.
+
+00:06:36.000 --> 00:06:40.000
+<v Dr. Chen>Remember to include your gel in your lab report.
+
+00:06:40.000 --> 00:06:44.000
+<v Student T>When is the lab report due?
+
+00:06:44.000 --> 00:06:48.000
+<v Dr. Chen>Next Friday at 5 PM. I'll post the guidelines online.
+
+00:06:48.000 --> 00:06:52.000
+<v Dr. Chen>Make sure to include your gel image and explain your results.
+
+00:06:52.000 --> 00:06:56.000
+<v Student Q>Any questions about the procedure or the lab report?
+
+00:06:56.000 --> 00:07:00.000
+<v Student R>I think I understand what we're doing.
+
+00:07:00.000 --> 00:07:04.000
+<v Student S>Me too. The extraction was really interesting.
+
+00:07:04.000 --> 00:07:08.000
+<v Dr. Chen>Great! Next week we'll be working with PCR amplification.
+
+00:07:08.000 --> 00:07:12.000
+<v Dr. Chen>That's where things get even more exciting.
+
+00:07:12.000 --> 00:07:16.000
+<v Dr. Chen>Have a great week everyone, and don't forget to clean up your stations!
+
+00:07:16.000 --> 00:07:18.000
+<v Dr. Chen>Lab dismissed.
