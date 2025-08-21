@@ -363,141 +363,37 @@ if (!is.null(mask_metrics)) {
 **Important**: Before running the main workflow, it's recommended to configure instructor names in the `section_names_lookup.csv` file. This prevents expected exceptions and makes the process smoother.
 
 ```{r configure-instructors}
-# Function to create instructor entries
-create_instructor_entries <- function(name) {
-  # Only use the exact instructor name provided
-  # Users can add variations manually after seeing what appears in transcripts
-  data.frame(
-    transcript_name = name,
-    preferred_name = name,
-    formal_name = name,
-    participant_type = "instructor",
-    student_id = "INSTRUCTOR",
-    notes = "Primary instructor name - add variations manually if needed",
-    stringsAsFactors = FALSE
-  )
-}
+# Safe, read-only by default instructor configuration using package utilities
+library(zoomstudentengagement)
 
-# Function to safely update lookup file with backup
-safe_update_lookup_file <- function(new_data, file_path) {
-  # Create backup if file exists
-  if (file.exists(file_path)) {
-    backup_path <- paste0(file_path, ".backup.", format(Sys.time(), "%Y%m%d_%H%M%S"))
-    file.copy(file_path, backup_path)
-    cat("📁 Backup created:", basename(backup_path), "\n")
-  }
-  
-  # Write new data
-  write.csv(new_data, file_path, row.names = FALSE)
-}
-
-# Get instructor information from YAML parameters
+lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
+allow_lookup_write <- isTRUE(params$allow_lookup_write)
 instructor_name <- params$instructor_name
 
-cat("=== Instructor Configuration ===\n")
+cat("=== Instructor Configuration (Safe) ===\n")
 cat("Instructor Name:", instructor_name, "\n")
 
-# Check if section_names_lookup.csv exists
-lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
+existing_lookup <- read_lookup_safely(lookup_file)
+updated_lookup <- ensure_instructor_rows(existing_lookup, instructor_name)
 
-if (file.exists(lookup_file)) {
-  cat("\n=== Existing Name Lookup Configuration ===\n")
-  existing_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
-  cat("Found existing lookup file with", nrow(existing_lookup), "entries\n")
-  
-  # Check for instructor entries
-  if ("participant_type" %in% names(existing_lookup)) {
-    instructor_entries <- existing_lookup[existing_lookup$participant_type == "instructor", ]
-    if (nrow(instructor_entries) > 0) {
-      cat("✅ Instructors already configured:\n")
-      knitr::kable(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")], 
-                  caption = "Configured Instructors")
-      
-      # Check if current instructor is already configured
-      current_instructor_configured <- any(instructor_entries$preferred_name == instructor_name)
-      if (!current_instructor_configured) {
-        cat("⚠️  Current instructor not found in existing configuration.\n")
-        cat("Adding current instructor to configuration...\n")
-        
-        # Add current instructor to existing configuration (preserve existing entries)
-        new_instructor_entries <- create_instructor_entries(instructor_name)
-        updated_lookup <- rbind(existing_lookup, new_instructor_entries)
-        safe_update_lookup_file(updated_lookup, lookup_file)
-        cat("✅ Updated instructor configuration (preserved existing entries).\n")
-      }
-    } else {
-      cat("⚠️  No instructors configured in lookup file\n")
-      cat("Adding current instructor to configuration (preserving existing entries)...\n")
-      
-      # Add instructor entries to existing configuration (don't overwrite)
-      instructor_lookup <- create_instructor_entries(instructor_name)
-      updated_lookup <- rbind(existing_lookup, instructor_lookup)
-      safe_update_lookup_file(updated_lookup, lookup_file)
-      cat("✅ Instructor configuration added (preserved existing entries).\n")
-    }
+if (nrow(existing_lookup) != nrow(updated_lookup)) {
+  cat("Will add instructor row to lookup (preserving existing entries).\n")
+  if (allow_lookup_write) {
+    conditionally_write_lookup(updated_lookup, lookup_file, allow_write = TRUE)
+    cat("✅ Instructor configuration written transactionally with backup.\n")
   } else {
-    cat("⚠️  Lookup file missing participant_type column.\n")
-    
-    # Check if the file is empty
-    if (nrow(existing_lookup) == 0) {
-      cat("File is empty. Creating new lookup file with instructor configuration...\n")
-      instructor_lookup <- create_instructor_entries(instructor_name)
-      safe_update_lookup_file(instructor_lookup, lookup_file)
-      cat("✅ Created new lookup file with instructor configuration.\n")
-    } else {
-      cat("Adding participant_type column and instructor configuration (preserving existing entries)...\n")
-      
-      # Add participant_type column to existing entries and add instructor
-      existing_lookup$participant_type <- "enrolled_student"  # Default for existing entries
-      instructor_lookup <- create_instructor_entries(instructor_name)
-      updated_lookup <- rbind(existing_lookup, instructor_lookup)
-      safe_update_lookup_file(updated_lookup, lookup_file)
-      cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
-    }
+    cat("⏩ Read-only mode: preview only; no file changes made.\n")
   }
 } else {
-  cat("\n=== Creating Instructor Configuration ===\n")
-  cat("No section_names_lookup.csv found. Creating one with instructor configuration.\n")
-  
-  # Create instructor entries and save
-  instructor_lookup <- create_instructor_entries(instructor_name)
-  safe_update_lookup_file(instructor_lookup, lookup_file)
-  cat("✅ Instructor configuration created:", lookup_file, "\n")
-cat("This file maps Zoom transcript names to your instructor's preferred name.\n")
-cat("Edit this file to add more instructor name variations or other participants.\n")
-cat("💡 Note: Automatic backups are created when the file is updated.\n")
+  cat("✅ Instructor already configured in lookup file.\n")
 }
 
-cat("\n=== Instructor Configuration Instructions ===\n")
-cat("The section_names_lookup.csv file contains:\n")
-cat("- transcript_name: Names as they appear in Zoom transcripts\n")
-cat("- preferred_name: How you want them displayed in reports\n")
-cat("- participant_type: 'instructor' for instructors, 'enrolled_student' for students\n")
-cat("- student_id: Student ID or 'INSTRUCTOR' for instructors\n")
-cat("- notes: Any additional information\n")
-cat("\nCurrent instructor configuration:\n")
-if (exists("instructor_lookup")) {
-  knitr::kable(instructor_lookup[, c("transcript_name", "preferred_name", "participant_type")], 
-              caption = "Current Instructor Configuration")
-} else if (file.exists(lookup_file)) {
-  current_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
-  instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
-  if (nrow(instructor_entries) > 0) {
-    knitr::kable(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")], 
-                caption = "Current Instructor Configuration")
-  }
+# Preview instructor configuration
+instructor_entries <- updated_lookup[updated_lookup$participant_type == "instructor", , drop = FALSE]
+if (nrow(instructor_entries) > 0) {
+  knitr::kable(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")],
+               caption = "Configured Instructors")
 }
-
-cat("\n=== Adding Instructor Name Variations ===\n")
-cat("After processing transcripts, you may need to add variations of the instructor name.\n")
-cat("Common reasons to add variations:\n")
-cat("- Zoom shows 'Dr. Healy' instead of 'Conor Healy'\n")
-cat("- Zoom shows 'Instructor' or 'Host' for the instructor\n")
-cat("- Different sessions show different name formats\n")
-cat("\nTo add variations, edit data/metadata/section_names_lookup.csv and add new rows with:\n")
-cat("- transcript_name: The name as it appears in Zoom\n")
-cat("- preferred_name: The instructor's preferred name\n")
-cat("- participant_type: 'instructor'\n")
 ```
 
 ## Step 3: Loading Your Student Roster
@@ -712,144 +608,70 @@ if (file.exists(lookup_file)) {
 Now let's use the new privacy-aware name matching workflow. This is the recommended approach that maintains privacy while helping you match names:
 
 ```{r privacy-aware-name-matching}
-# Use the safe name matching workflow for privacy-aware matching
-if (exists("transcript_data") && exists("roster")) {
-  cat("\n=== Privacy-Aware Name Matching ===\n")
-  # Read-only by default: prevent accidental overwrites of section_names_lookup.csv
+# Privacy-aware participant identification (pure, default read-only)
+if (exists("roster")) {
+  cat("\n=== Privacy-Aware Participant Identification ===\n")
+
   allow_lookup_write <- isTRUE(params$allow_lookup_write)
   if (!allow_lookup_write) {
     cat("(Read-only mode) Will not modify data/metadata/section_names_lookup.csv.\n")
     cat("Set params: allow_lookup_write = TRUE to enable updates.\n")
   }
-  
-  # Get the first transcript file for processing
-  transcript_files <- list.files(
-    "data/transcripts",
-    pattern = "\\.transcript\\.vtt$",
-    full.names = TRUE,
-    recursive = TRUE
-  )
-  
-  if (length(transcript_files) > 0) {
-    transcript_file <- transcript_files[1]
-    cat("Processing transcript:", basename(transcript_file), "\n")
-    
-    # Set up privacy defaults for name matching
-    set_privacy_defaults(
-      privacy_level = "ferpa_standard",  # Standard privacy for matching
-      unmatched_names_action = "warn"    # Warn about unmatched names
+
+  # Ensure we have transcript_data
+  if (!exists("transcript_data")) {
+    transcript_files <- list.files(
+      "data/transcripts",
+      pattern = "\\.transcript\\.vtt$",
+      full.names = TRUE,
+      recursive = TRUE
     )
-    
-    # Run the safe name matching workflow
-    tryCatch({
-      cat("Running privacy-aware name matching workflow...\n")
-      
-      # First, try with default settings (stops on unmatched names)
-      result <- safe_name_matching_workflow(
-        transcript_file_path = transcript_file,
-        roster_data = roster,
-        privacy_level = "ferpa_standard",
-        unmatched_names_action = "warn",  # This will warn and guide through matching
-        data_folder = "data/metadata"  # Use the same directory as instructor configuration
-      )
-      
-      cat("✅ Name matching workflow completed successfully!\n")
-      
-      # Show matching results
-      if (!is.null(result) && nrow(result) > 0) {
-        cat("\nName Matching Results:\n")
-        cat("Total participants:", nrow(result), "\n")
-        
-        # Count by participant type
-        if ("participant_type" %in% names(result)) {
-          type_counts <- table(result$participant_type)
-          cat("Participant types:\n")
-          for (type in names(type_counts)) {
-            cat("  ", type, ":", type_counts[type], "\n")
-          }
-        }
-        
-        # Show matched vs unmatched
-        if ("is_matched" %in% names(result)) {
-          matched_count <- sum(result$is_matched, na.rm = TRUE)
-          unmatched_count <- sum(!result$is_matched, na.rm = TRUE)
-          cat("Matched names:", matched_count, "\n")
-          cat("Unmatched names:", unmatched_count, "\n")
-        }
-        
-        # Store the result for later use
-        clean_metrics <- result
-        
-      } else {
-        cat("⚠️  No results returned from name matching workflow\n")
-      }
-      
-    }, error = function(e) {
-      cat("❌ Error in name matching workflow:", e$message, "\n")
-      cat("This may indicate unmatched names that need manual resolution.\n")
-      
-      # Try to provide guidance for manual matching
-      cat("\n=== Manual Name Matching Guidance ===\n")
-      cat("If you have unmatched names, you can:\n")
-      cat("1. Use prompt_name_matching() to create a lookup template\n")
-      cat("2. Edit the template manually with correct name mappings\n")
-      cat("3. Re-run the workflow with the updated mappings\n")
-    })
-    
-    # Ensure instructor is always in the lookup file
-    if (file.exists(lookup_file)) {
-      cat("\n=== Ensuring Instructor Configuration ===\n")
-      current_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
-      
-      # Check if instructor is already configured
-      if ("participant_type" %in% names(current_lookup)) {
-        instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
-        if (nrow(instructor_entries) == 0) {
-          cat("Adding instructor configuration to lookup file (preserving existing entries)...\n")
-          instructor_entry <- create_instructor_entries(instructor_name)
-          updated_lookup <- rbind(current_lookup, instructor_entry)
-          if (allow_lookup_write) {
-            safe_update_lookup_file(updated_lookup, lookup_file)
-            cat("✅ Instructor configuration added to lookup file (preserved existing entries).\n")
-          } else {
-            cat("⏩ Skipped writing (read-only). Preview only; no file changes made.\n")
-          }
-        } else {
-          cat("✅ Instructor already configured in lookup file.\n")
-        }
-      } else {
-        cat("⚠️  Lookup file missing participant_type column.\n")
-        
-        # Check if the file is empty
-        if (nrow(current_lookup) == 0) {
-          cat("File is empty. Creating new lookup file with instructor configuration...\n")
-          instructor_entry <- create_instructor_entries(instructor_name)
-          if (allow_lookup_write) {
-            safe_update_lookup_file(instructor_entry, lookup_file)
-            cat("✅ Created new lookup file with instructor configuration.\n")
-          } else {
-            cat("⏩ Skipped writing (read-only). Preview only; no file changes made.\n")
-          }
-        } else {
-          cat("Adding participant_type and instructor configuration (preserving existing entries)...\n")
-          current_lookup$participant_type <- "enrolled_student"  # Default for existing entries
-          instructor_entry <- create_instructor_entries(instructor_name)
-          updated_lookup <- rbind(current_lookup, instructor_entry)
-          if (allow_lookup_write) {
-            safe_update_lookup_file(updated_lookup, lookup_file)
-            cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
-          } else {
-            cat("⏩ Skipped writing (read-only). Preview only; no file changes made.\n")
-          }
-        }
+    if (length(transcript_files) > 0) {
+      transcript_file <- transcript_files[1]
+      cat("Processing transcript:", basename(transcript_file), "\n")
+      transcript_data <- load_zoom_transcript(transcript_file)
+    } else {
+      cat("⚠️  No transcript files found for identification\n")
+    }
+  }
+
+  if (exists("transcript_data")) {
+    # Read and optionally update lookup with instructor
+    lookup_file <- file.path("data/metadata", "section_names_lookup.csv")
+    existing_lookup <- read_lookup_safely(lookup_file)
+    updated_lookup <- ensure_instructor_rows(existing_lookup, params$instructor_name)
+    if (nrow(existing_lookup) != nrow(updated_lookup) && allow_lookup_write) {
+      conditionally_write_lookup(updated_lookup, lookup_file, allow_write = TRUE)
+      cat("✅ Lookup updated with instructor (transactional with backup).\n")
+    }
+
+    # Classify participants with FERPA-safe defaults
+    set_privacy_defaults(privacy_level = "ferpa_standard")
+    clean_metrics <- classify_participants(
+      transcript_df = transcript_data,
+      roster_df = roster,
+      lookup_df = updated_lookup,
+      privacy_level = "ferpa_standard"
+    )
+
+    # Summarize classification
+    cat("Total utterances:", nrow(clean_metrics), "\n")
+    if ("participant_type" %in% names(clean_metrics)) {
+      type_counts <- table(clean_metrics$participant_type)
+      cat("Participant types:\n")
+      for (type in names(type_counts)) {
+        cat("  ", type, ":", type_counts[type], "\n")
       }
     }
-    
-  } else {
-    cat("⚠️  No transcript files found for name matching\n")
+    if ("is_matched" %in% names(clean_metrics)) {
+      matched_count <- sum(clean_metrics$is_matched, na.rm = TRUE)
+      unmatched_count <- sum(!clean_metrics$is_matched, na.rm = TRUE)
+      cat("Matched names:", matched_count, "\n")
+      cat("Unmatched names:", unmatched_count, "\n")
+    }
   }
 } else {
-  cat("⚠️  Cannot perform name matching - missing transcript data or roster\n")
+  cat("⚠️  Cannot perform identification - missing roster\n")
 }
 ```
 

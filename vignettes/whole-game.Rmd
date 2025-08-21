@@ -134,9 +134,9 @@ metrics <- summarize_transcript_files(
 head(metrics)
 ```
 
-## Step 6: Name Matching with Privacy Protection
+## Step 6: Participant Identification (Before Metrics)
 
-The package uses a privacy-first approach for name matching. When names in your Zoom transcript don't match your roster, the system will stop and ask you to create mappings to protect student privacy.
+Identify participants with a pure, privacy-aware classifier before computing metrics. This makes the process clear, testable, and FERPA-safe by default.
 
 ### Understanding Name Matching Issues
 
@@ -182,28 +182,18 @@ file.exists("section_names_lookup.csv")
 The privacy-first workflow ensures student data protection:
 
 ```{r safe-workflow}
-# Use the safe name matching workflow
-tryCatch(
-  {
-    safe_results <- safe_name_matching_workflow(
-      transcript_data = transcript_data,
-      roster_data = roster,
-      section_names_lookup_file = "section_names_lookup.csv"
-    )
-
-    cat("Name matching completed successfully!\n")
-    cat("Results are privacy-masked by default.\n")
-  },
-  error = function(e) {
-    cat("Name matching error:\n")
-    cat(e$message, "\n")
-    cat("\nTo resolve this:\n")
-    cat("1. Check the error message for unmatched names\n")
-    cat("2. Update your section_names_lookup.csv file\n")
-    cat("3. Re-run the workflow\n")
-    cat("4. See vignette('name-matching-troubleshooting') for detailed help\n")
-  }
+# Pure participant classification prior to metrics
+lookup_path <- "section_names_lookup.csv"
+lookup_df <- read_lookup_safely(lookup_path)
+set_privacy_defaults(privacy_level = "ferpa_standard")
+classified <- classify_participants(
+  transcript_df = transcript_data,
+  roster_df = roster,
+  lookup_df = lookup_df,
+  privacy_level = "ferpa_standard"
 )
+
+cat("Classification completed. Records:", nrow(classified), "\n")
 ```
 
 ## Step 7: Handling Common Name Matching Scenarios

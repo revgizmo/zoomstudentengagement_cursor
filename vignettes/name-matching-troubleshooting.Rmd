@@ -50,8 +50,11 @@ guest_mapping <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Write the mapping file
-write_section_names_lookup(guest_mapping, "section_names_lookup.csv")
+# Write the mapping file (safe transactional helper)
+write_lookup_transactional(
+  df = read_lookup_safely("section_names_lookup.csv") |> merge_lookup_preserve(guest_mapping),
+  path = "section_names_lookup.csv"
+)
 ```
 
 ### Scenario 2: Custom Names (JS → John Smith)
@@ -68,8 +71,11 @@ custom_mapping <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Write the mapping file
-write_section_names_lookup(custom_mapping, "section_names_lookup.csv")
+# Write the mapping file (safe transactional helper)
+write_lookup_transactional(
+  df = read_lookup_safely("section_names_lookup.csv") |> merge_lookup_preserve(custom_mapping),
+  path = "section_names_lookup.csv"
+)
 ```
 
 ### Scenario 3: Cross-Session Attendance Tracking
@@ -86,8 +92,11 @@ cross_session_mapping <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Write the mapping file
-write_section_names_lookup(cross_session_mapping, "section_names_lookup.csv")
+# Write the mapping file (safe transactional helper)
+write_lookup_transactional(
+  df = read_lookup_safely("section_names_lookup.csv") |> merge_lookup_preserve(cross_session_mapping),
+  path = "section_names_lookup.csv"
+)
 ```
 
 ### Scenario 4: Name Variations Across Sessions
@@ -104,8 +113,11 @@ variation_mapping <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Write the mapping file
-write_section_names_lookup(variation_mapping, "section_names_lookup.csv")
+# Write the mapping file (safe transactional helper)
+write_lookup_transactional(
+  df = read_lookup_safely("section_names_lookup.csv") |> merge_lookup_preserve(variation_mapping),
+  path = "section_names_lookup.csv"
+)
 ```
 
 ## Step-by-Step Resolution Process
