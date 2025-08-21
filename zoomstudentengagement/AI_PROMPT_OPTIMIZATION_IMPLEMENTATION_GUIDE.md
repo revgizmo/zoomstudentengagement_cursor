@@ -58,3 +58,25 @@ Implement a repeatable process to audit, standardize, evaluate, and continuously
 ### Reference
 - `docs/development/AI_PROMPT_STRATEGY_PLAN.md`
 
+### Phased Roadmap
+
+#### Phase 1: Foundation (1-2 weeks)
+- Audit and categorize existing prompts
+- Create or update the strategy plan and this guide
+- Establish directory and naming standards
+
+#### Phase 2: Optimization (2-3 weeks)
+- Migrate prompts to standardized template
+- Implement evaluation rubric and feedback collection
+- Begin A/B testing for high-usage prompts
+
+#### Phase 3: Enhancement (1-2 weeks)
+- Add prompt inventory automation and validation checks
+- Integrate checks into pre-PR validation workflow
+- Create training snippets and examples
+
+#### Phase 4: Maintenance (Ongoing)
+- Quarterly review and versioning
+- Monitor performance metrics and iterate
+- Retire or archive obsolete prompts
+
