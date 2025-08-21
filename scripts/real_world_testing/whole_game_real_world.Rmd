@@ -2,19 +2,32 @@
 title: "Whole Game: Real-World Workflow for Instructors"
 author: "zoomstudentengagement package"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_document
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+    theme: cosmo
+    highlight: tango
+    df_print: paged
+    encoding: UTF-8
 params:
   instructor_name: "Conor Healy"
 ---
 
 ```{r setup, include = FALSE}
+# Set encoding for R Markdown
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
+options(encoding = "UTF-8")
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width = 8,
   fig.height = 6,
   warning = FALSE,
-  message = FALSE
+  message = FALSE,
+  echo = TRUE
 )
 ```
 
@@ -187,9 +200,12 @@ test_privacy_level <- function(level, description) {
     
     # Debug: Show ALL names to see what we're missing
     cat("All unique names:\n")
-    for (i in seq_along(unique_names)) {
-      cat(sprintf("  %2d: '%s'\n", i, unique_names[i]))
-    }
+    name_df <- data.frame(
+      Index = seq_along(unique_names),
+      Name = unique_names,
+      stringsAsFactors = FALSE
+    )
+    print(name_df)
     
     # Check for real names vs masked names
     real_name_pattern <- "^[A-Z][a-z]+(\\s+[A-Z][a-z]+)*$"
@@ -361,6 +377,19 @@ create_instructor_entries <- function(name) {
   )
 }
 
+# Function to safely update lookup file with backup
+safe_update_lookup_file <- function(new_data, file_path) {
+  # Create backup if file exists
+  if (file.exists(file_path)) {
+    backup_path <- paste0(file_path, ".backup.", format(Sys.time(), "%Y%m%d_%H%M%S"))
+    file.copy(file_path, backup_path)
+    cat("📁 Backup created:", basename(backup_path), "\n")
+  }
+  
+  # Write new data
+  write.csv(new_data, file_path, row.names = FALSE)
+}
+
 # Get instructor information from YAML parameters
 instructor_name <- params$instructor_name
 
@@ -380,7 +409,8 @@ if (file.exists(lookup_file)) {
     instructor_entries <- existing_lookup[existing_lookup$participant_type == "instructor", ]
     if (nrow(instructor_entries) > 0) {
       cat("✅ Instructors already configured:\n")
-      print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+      knitr::kable(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")], 
+                  caption = "Configured Instructors")
       
       # Check if current instructor is already configured
       current_instructor_configured <- any(instructor_entries$preferred_name == instructor_name)
@@ -388,29 +418,32 @@ if (file.exists(lookup_file)) {
         cat("⚠️  Current instructor not found in existing configuration.\n")
         cat("Adding current instructor to configuration...\n")
         
-        # Add current instructor to existing configuration
+        # Add current instructor to existing configuration (preserve existing entries)
         new_instructor_entries <- create_instructor_entries(instructor_name)
         updated_lookup <- rbind(existing_lookup, new_instructor_entries)
-        write.csv(updated_lookup, lookup_file, row.names = FALSE)
-        cat("✅ Updated instructor configuration.\n")
+        safe_update_lookup_file(updated_lookup, lookup_file)
+        cat("✅ Updated instructor configuration (preserved existing entries).\n")
       }
     } else {
       cat("⚠️  No instructors configured in lookup file\n")
-      cat("Adding current instructor to configuration...\n")
+      cat("Adding current instructor to configuration (preserving existing entries)...\n")
       
-      # Create instructor entries and save
+      # Add instructor entries to existing configuration (don't overwrite)
       instructor_lookup <- create_instructor_entries(instructor_name)
-      write.csv(instructor_lookup, lookup_file, row.names = FALSE)
-      cat("✅ Instructor configuration created.\n")
+      updated_lookup <- rbind(existing_lookup, instructor_lookup)
+      safe_update_lookup_file(updated_lookup, lookup_file)
+      cat("✅ Instructor configuration added (preserved existing entries).\n")
     }
   } else {
     cat("⚠️  Lookup file missing participant_type column.\n")
-    cat("Creating new lookup file with instructor configuration...\n")
+    cat("Adding participant_type column and instructor configuration (preserving existing entries)...\n")
     
-    # Create new lookup file with instructor entries
+    # Add participant_type column to existing entries and add instructor
+    existing_lookup$participant_type <- "enrolled_student"  # Default for existing entries
     instructor_lookup <- create_instructor_entries(instructor_name)
-    write.csv(instructor_lookup, lookup_file, row.names = FALSE)
-    cat("✅ Instructor configuration created.\n")
+    updated_lookup <- rbind(existing_lookup, instructor_lookup)
+    safe_update_lookup_file(updated_lookup, lookup_file)
+    cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
   }
 } else {
   cat("\n=== Creating Instructor Configuration ===\n")
@@ -418,10 +451,11 @@ if (file.exists(lookup_file)) {
   
   # Create instructor entries and save
   instructor_lookup <- create_instructor_entries(instructor_name)
-  write.csv(instructor_lookup, lookup_file, row.names = FALSE)
+  safe_update_lookup_file(instructor_lookup, lookup_file)
   cat("✅ Instructor configuration created:", lookup_file, "\n")
-  cat("This file maps Zoom transcript names to your instructor's preferred name.\n")
-  cat("Edit this file to add more instructor name variations or other participants.\n")
+cat("This file maps Zoom transcript names to your instructor's preferred name.\n")
+cat("Edit this file to add more instructor name variations or other participants.\n")
+cat("💡 Note: Automatic backups are created when the file is updated.\n")
 }
 
 cat("\n=== Instructor Configuration Instructions ===\n")
@@ -433,12 +467,14 @@ cat("- student_id: Student ID or 'INSTRUCTOR' for instructors\n")
 cat("- notes: Any additional information\n")
 cat("\nCurrent instructor configuration:\n")
 if (exists("instructor_lookup")) {
-  print(instructor_lookup[, c("transcript_name", "preferred_name", "participant_type")])
+  knitr::kable(instructor_lookup[, c("transcript_name", "preferred_name", "participant_type")], 
+              caption = "Current Instructor Configuration")
 } else if (file.exists(lookup_file)) {
   current_lookup <- read.csv(lookup_file, stringsAsFactors = FALSE)
   instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
   if (nrow(instructor_entries) > 0) {
-    print(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")])
+    knitr::kable(instructor_entries[, c("transcript_name", "preferred_name", "participant_type")], 
+                caption = "Current Instructor Configuration")
   }
 }
 
@@ -468,7 +504,7 @@ if (file.exists(roster_path)) {
     roster <- load_roster(data_folder = "data/metadata", roster_file = roster_file)
     
     # View the roster structure
-    head(roster)
+    knitr::kable(head(roster), caption = "Roster Preview")
     cat("\nRoster dimensions:", nrow(roster), "students\n")
     cat("Roster columns:", paste(names(roster), collapse = ", "), "\n")
     
@@ -524,10 +560,10 @@ if (length(transcript_files) > 0) {
   # Load and process the transcript
   transcript_data <- load_zoom_transcript(transcript_file)
   
-  # View the structure
-  head(transcript_data)
-  cat("\nTranscript dimensions:", nrow(transcript_data), "utterances\n")
-  cat("Transcript columns:", paste(names(transcript_data), collapse = ", "), "\n")
+      # View the structure
+    knitr::kable(head(transcript_data), caption = "Transcript Preview")
+    cat("\nTranscript dimensions:", nrow(transcript_data), "utterances\n")
+    cat("Transcript columns:", paste(names(transcript_data), collapse = ", "), "\n")
 } else {
   cat("⚠️  No transcript files found in data/transcripts/\n")
   cat("Please add your Zoom transcript files to data/transcripts/\n")
@@ -602,7 +638,7 @@ if (length(transcript_files) > 0) {
   )
   
   # View the metrics
-  head(metrics)
+  knitr::kable(head(metrics), caption = "Metrics Preview")
   cat("\nMetrics dimensions:", nrow(metrics), "participants\n")
   cat("Metrics columns:", paste(names(metrics), collapse = ", "), "\n")
 } else {
@@ -753,20 +789,21 @@ if (exists("transcript_data") && exists("roster")) {
       if ("participant_type" %in% names(current_lookup)) {
         instructor_entries <- current_lookup[current_lookup$participant_type == "instructor", ]
         if (nrow(instructor_entries) == 0) {
-          cat("Adding instructor configuration to lookup file...\n")
+          cat("Adding instructor configuration to lookup file (preserving existing entries)...\n")
           instructor_entry <- create_instructor_entries(instructor_name)
           updated_lookup <- rbind(current_lookup, instructor_entry)
-          write.csv(updated_lookup, lookup_file, row.names = FALSE)
-          cat("✅ Instructor configuration added to lookup file.\n")
+          safe_update_lookup_file(updated_lookup, lookup_file)
+          cat("✅ Instructor configuration added to lookup file (preserved existing entries).\n")
         } else {
           cat("✅ Instructor already configured in lookup file.\n")
         }
       } else {
-        cat("⚠️  Lookup file missing participant_type column. Adding instructor configuration...\n")
+        cat("⚠️  Lookup file missing participant_type column. Adding participant_type and instructor configuration (preserving existing entries)...\n")
+        current_lookup$participant_type <- "enrolled_student"  # Default for existing entries
         instructor_entry <- create_instructor_entries(instructor_name)
         updated_lookup <- rbind(current_lookup, instructor_entry)
-        write.csv(updated_lookup, lookup_file, row.names = FALSE)
-        cat("✅ Instructor configuration added to lookup file.\n")
+        safe_update_lookup_file(updated_lookup, lookup_file)
+        cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
       }
     }
     
@@ -885,7 +922,7 @@ if (exists("clean_metrics") && nrow(clean_metrics) > 0) {
   }
   
   # View the summary
-  head(student_summary, 10)
+  knitr::kable(head(student_summary, 10), caption = "Student Participation Summary")
   
   # Basic statistics
   cat("\nParticipation Statistics:\n")
@@ -904,7 +941,7 @@ if (exists("clean_metrics") && nrow(clean_metrics) > 0) {
         median_utterances = median(utterance_count, na.rm = TRUE)
       )
   }
-  print(participation_stats)
+  knitr::kable(participation_stats, caption = "Participation Statistics")
 } else {
   cat("⚠️  Cannot analyze participation patterns - missing clean metrics data\n")
 }
@@ -990,9 +1027,11 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
   
   cat("Students with below-median participation:\n")
   if ("total_duration" %in% names(low_participation)) {
-    print(low_participation[, c(name_col, "utterance_count", "total_duration")])
+    knitr::kable(low_participation[, c(name_col, "utterance_count", "total_duration")], 
+                caption = "Students with Below-Median Participation")
   } else {
-    print(low_participation[, c(name_col, "utterance_count")])
+    knitr::kable(low_participation[, c(name_col, "utterance_count")], 
+                caption = "Students with Below-Median Participation")
   }
   
   # Create participation categories
@@ -1028,7 +1067,7 @@ if (exists("student_summary") && nrow(student_summary) > 0) {
     )
   
   cat("\nParticipation Level Distribution:\n")
-  print(level_summary)
+  knitr::kable(level_summary, caption = "Participation Level Distribution")
 } else {
   cat("⚠️  Cannot identify participation gaps - missing student summary data\n")
 }
