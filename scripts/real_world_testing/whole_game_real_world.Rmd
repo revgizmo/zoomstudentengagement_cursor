@@ -13,6 +13,7 @@ output:
     encoding: UTF-8
 params:
   instructor_name: "Conor Healy"
+  allow_lookup_write: false
 ---
 
 ```{r setup, include = FALSE}
@@ -714,6 +715,12 @@ Now let's use the new privacy-aware name matching workflow. This is the recommen
 # Use the safe name matching workflow for privacy-aware matching
 if (exists("transcript_data") && exists("roster")) {
   cat("\n=== Privacy-Aware Name Matching ===\n")
+  # Read-only by default: prevent accidental overwrites of section_names_lookup.csv
+  allow_lookup_write <- isTRUE(params$allow_lookup_write)
+  if (!allow_lookup_write) {
+    cat("(Read-only mode) Will not modify data/metadata/section_names_lookup.csv.\n")
+    cat("Set params: allow_lookup_write = TRUE to enable updates.\n")
+  }
   
   # Get the first transcript file for processing
   transcript_files <- list.files(
@@ -801,8 +808,12 @@ if (exists("transcript_data") && exists("roster")) {
           cat("Adding instructor configuration to lookup file (preserving existing entries)...\n")
           instructor_entry <- create_instructor_entries(instructor_name)
           updated_lookup <- rbind(current_lookup, instructor_entry)
-          safe_update_lookup_file(updated_lookup, lookup_file)
-          cat("✅ Instructor configuration added to lookup file (preserved existing entries).\n")
+          if (allow_lookup_write) {
+            safe_update_lookup_file(updated_lookup, lookup_file)
+            cat("✅ Instructor configuration added to lookup file (preserved existing entries).\n")
+          } else {
+            cat("⏩ Skipped writing (read-only). Preview only; no file changes made.\n")
+          }
         } else {
           cat("✅ Instructor already configured in lookup file.\n")
         }
@@ -813,15 +824,23 @@ if (exists("transcript_data") && exists("roster")) {
         if (nrow(current_lookup) == 0) {
           cat("File is empty. Creating new lookup file with instructor configuration...\n")
           instructor_entry <- create_instructor_entries(instructor_name)
-          safe_update_lookup_file(instructor_entry, lookup_file)
-          cat("✅ Created new lookup file with instructor configuration.\n")
+          if (allow_lookup_write) {
+            safe_update_lookup_file(instructor_entry, lookup_file)
+            cat("✅ Created new lookup file with instructor configuration.\n")
+          } else {
+            cat("⏩ Skipped writing (read-only). Preview only; no file changes made.\n")
+          }
         } else {
           cat("Adding participant_type and instructor configuration (preserving existing entries)...\n")
           current_lookup$participant_type <- "enrolled_student"  # Default for existing entries
           instructor_entry <- create_instructor_entries(instructor_name)
           updated_lookup <- rbind(current_lookup, instructor_entry)
-          safe_update_lookup_file(updated_lookup, lookup_file)
-          cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
+          if (allow_lookup_write) {
+            safe_update_lookup_file(updated_lookup, lookup_file)
+            cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
+          } else {
+            cat("⏩ Skipped writing (read-only). Preview only; no file changes made.\n")
+          }
         }
       }
     }
