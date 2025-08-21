@@ -6,8 +6,8 @@ test_that("read_lookup_safely returns empty normalized DF when file missing", {
   expect_true(is.data.frame(df))
   expect_equal(nrow(df), 0)
   expect_true(all(c(
-    "transcript_name","preferred_name","formal_name",
-    "participant_type","student_id","notes"
+    "transcript_name", "preferred_name", "formal_name",
+    "participant_type", "student_id", "notes"
   ) %in% names(df)))
 })
 
@@ -130,5 +130,3 @@ test_that("conditionally_write_lookup gates writes in read-only mode", {
   expect_true(wrote2)
   expect_true(file.exists(path))
 })
-
-

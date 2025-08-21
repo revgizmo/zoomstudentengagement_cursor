@@ -164,5 +164,3 @@ classify_participants <- function(transcript_df,
   }
   result
 }
-
-

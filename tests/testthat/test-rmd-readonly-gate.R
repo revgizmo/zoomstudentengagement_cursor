@@ -1,6 +1,8 @@
 test_that("real-world Rmd identification chunk respects read-only gate", {
-  tmpdir <- tempfile(); dir.create(tmpdir, recursive = TRUE)
-  md <- file.path(tmpdir, "data/metadata"); dir.create(md, recursive = TRUE)
+  tmpdir <- tempfile()
+  dir.create(tmpdir, recursive = TRUE)
+  md <- file.path(tmpdir, "data/metadata")
+  dir.create(md, recursive = TRUE)
   # No lookup file initially
   lookup_path <- file.path(md, "section_names_lookup.csv")
   expect_false(file.exists(lookup_path))
@@ -19,5 +21,3 @@ test_that("real-world Rmd identification chunk respects read-only gate", {
   expect_false(wrote)
   expect_false(file.exists(lookup_path))
 })
-
-

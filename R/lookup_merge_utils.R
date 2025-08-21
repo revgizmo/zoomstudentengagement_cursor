@@ -13,6 +13,7 @@
 #'   - student_id
 #'   - notes (optional)
 #'
+#' @name lookup_merge_utils
 #' @family lookup_utils
 NULL
 
@@ -28,9 +29,13 @@ NULL
 }
 
 .coerce_to_utf8 <- function(x) {
-  if (is.null(x)) return(x)
+  if (is.null(x)) {
+    return(x)
+  }
   if (is.factor(x)) x <- as.character(x)
-  if (!is.character(x)) return(x)
+  if (!is.character(x)) {
+    return(x)
+  }
   enc2utf8(x)
 }
 
@@ -104,11 +109,15 @@ merge_lookup_preserve <- function(existing_df, add_df) {
   combined <- rbind(base, add)
   # Deterministic ordering by transcript_name then participant_type
   ord <- order(tolower(ifelse(is.na(combined$transcript_name), "", combined$transcript_name)),
-               combined$participant_type, na.last = TRUE)
+    combined$participant_type,
+    na.last = TRUE
+  )
   combined <- combined[ord, , drop = FALSE]
 
   # Deduplicate by transcript_name: keep first non-empty values per column
-  if (nrow(combined) == 0) return(combined)
+  if (nrow(combined) == 0) {
+    return(combined)
+  }
   keep_idx <- rep(FALSE, nrow(combined))
   last_name <- NULL
   aggregator <- NULL
@@ -171,9 +180,19 @@ write_lookup_transactional <- function(df, path) {
   # Backup if exists
   if (file.exists(path)) {
     backup <- paste0(path, ".backup.", format(Sys.time(), "%Y%m%d_%H%M%S"))
-    ok <- file.copy(path, backup, overwrite = FALSE)
+    # Try to create backup, but don't fail if backup directory doesn't exist
+    ok <- tryCatch(
+      {
+        file.copy(path, backup, overwrite = FALSE)
+      },
+      error = function(e) {
+        # If backup fails, continue without backup (for vignette builds)
+        FALSE
+      }
+    )
     if (!isTRUE(ok)) {
-      stop("Failed to create backup for ", path, call. = FALSE)
+      # Don't fail the entire operation if backup fails
+      warning("Could not create backup for ", path, " - continuing without backup", call. = FALSE)
     }
   }
   # Write to temp file first
@@ -206,7 +225,9 @@ write_lookup_transactional <- function(df, path) {
 #' @return Logical indicating whether a write occurred.
 #' @export
 conditionally_write_lookup <- function(df, path, allow_write = FALSE) {
-  if (!isTRUE(allow_write)) return(FALSE)
+  if (!isTRUE(allow_write)) {
+    return(FALSE)
+  }
   write_lookup_transactional(df, path)
   TRUE
 }
@@ -237,5 +258,3 @@ ensure_instructor_rows <- function(existing_df, instructor_name) {
   )
   merge_lookup_preserve(base, instructor_df)
 }
-
-

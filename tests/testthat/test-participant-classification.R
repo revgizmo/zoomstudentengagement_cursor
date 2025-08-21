@@ -65,7 +65,8 @@ test_that("UTF-8 survives classification", {
 })
 
 test_that("read-only gating is honored by helper", {
-  tmpdir <- tempfile(); dir.create(tmpdir)
+  tmpdir <- tempfile()
+  dir.create(tmpdir)
   path <- file.path(tmpdir, "section_names_lookup.csv")
   df <- data.frame(
     transcript_name = "A",
@@ -80,5 +81,3 @@ test_that("read-only gating is honored by helper", {
   expect_false(wrote)
   expect_false(file.exists(path))
 })
-
-
