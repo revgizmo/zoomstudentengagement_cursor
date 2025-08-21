@@ -436,14 +436,23 @@ if (file.exists(lookup_file)) {
     }
   } else {
     cat("⚠️  Lookup file missing participant_type column.\n")
-    cat("Adding participant_type column and instructor configuration (preserving existing entries)...\n")
     
-    # Add participant_type column to existing entries and add instructor
-    existing_lookup$participant_type <- "enrolled_student"  # Default for existing entries
-    instructor_lookup <- create_instructor_entries(instructor_name)
-    updated_lookup <- rbind(existing_lookup, instructor_lookup)
-    safe_update_lookup_file(updated_lookup, lookup_file)
-    cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
+    # Check if the file is empty
+    if (nrow(existing_lookup) == 0) {
+      cat("File is empty. Creating new lookup file with instructor configuration...\n")
+      instructor_lookup <- create_instructor_entries(instructor_name)
+      safe_update_lookup_file(instructor_lookup, lookup_file)
+      cat("✅ Created new lookup file with instructor configuration.\n")
+    } else {
+      cat("Adding participant_type column and instructor configuration (preserving existing entries)...\n")
+      
+      # Add participant_type column to existing entries and add instructor
+      existing_lookup$participant_type <- "enrolled_student"  # Default for existing entries
+      instructor_lookup <- create_instructor_entries(instructor_name)
+      updated_lookup <- rbind(existing_lookup, instructor_lookup)
+      safe_update_lookup_file(updated_lookup, lookup_file)
+      cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
+    }
   }
 } else {
   cat("\n=== Creating Instructor Configuration ===\n")
@@ -798,12 +807,22 @@ if (exists("transcript_data") && exists("roster")) {
           cat("✅ Instructor already configured in lookup file.\n")
         }
       } else {
-        cat("⚠️  Lookup file missing participant_type column. Adding participant_type and instructor configuration (preserving existing entries)...\n")
-        current_lookup$participant_type <- "enrolled_student"  # Default for existing entries
-        instructor_entry <- create_instructor_entries(instructor_name)
-        updated_lookup <- rbind(current_lookup, instructor_entry)
-        safe_update_lookup_file(updated_lookup, lookup_file)
-        cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
+        cat("⚠️  Lookup file missing participant_type column.\n")
+        
+        # Check if the file is empty
+        if (nrow(current_lookup) == 0) {
+          cat("File is empty. Creating new lookup file with instructor configuration...\n")
+          instructor_entry <- create_instructor_entries(instructor_name)
+          safe_update_lookup_file(instructor_entry, lookup_file)
+          cat("✅ Created new lookup file with instructor configuration.\n")
+        } else {
+          cat("Adding participant_type and instructor configuration (preserving existing entries)...\n")
+          current_lookup$participant_type <- "enrolled_student"  # Default for existing entries
+          instructor_entry <- create_instructor_entries(instructor_name)
+          updated_lookup <- rbind(current_lookup, instructor_entry)
+          safe_update_lookup_file(updated_lookup, lookup_file)
+          cat("✅ Added participant_type column and instructor configuration (preserved existing entries).\n")
+        }
       }
     }
     
