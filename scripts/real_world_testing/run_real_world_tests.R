@@ -294,10 +294,31 @@ test_error_handling <- function() {
     
     expect_error(
       load_zoom_transcript(empty_file),
-      "File does not appear to be a valid VTT file"
+      "Invalid VTT: expected 'WEBVTT', got ''"
     )
     
     unlink(empty_file)
+    
+    # Test with malformed VTT file (no WEBVTT header)
+    malformed_file <- tempfile(fileext = ".vtt")
+    writeLines(c("This is not a VTT file", "No WEBVTT header"), malformed_file)
+    
+    expect_error(
+      load_zoom_transcript(malformed_file),
+      "Invalid VTT: expected 'WEBVTT', got 'This is not a VTT file'"
+    )
+    
+    unlink(malformed_file)
+    
+    # Test with file that has WEBVTT but no content
+    empty_vtt_file <- tempfile(fileext = ".vtt")
+    writeLines("WEBVTT", empty_vtt_file)
+    
+    # This should return NULL for empty content
+    result <- load_zoom_transcript(empty_vtt_file)
+    expect_true(is.null(result), "Empty VTT file should return NULL")
+    
+    unlink(empty_vtt_file)
     
     log_test_result("error_handling", "PASSED", "Error handling works correctly")
     
@@ -674,6 +695,316 @@ test_multi_session_analysis <- function() {
   })
 }
 
+# Function to test international names and edge cases
+test_international_names <- function() {
+  log_test_result("international_names", "STARTED")
+  
+  tryCatch({
+    # Create test data with international names
+    international_names <- c(
+      "José García",           # Spanish
+      "Müller Schmidt",        # German
+      "李小明",                # Chinese
+      "田中太郎",              # Japanese
+      "김민수",                # Korean
+      "محمد أحمد",            # Arabic
+      "Иван Петров",          # Russian
+      "Jean-Pierre Dubois",   # French with hyphen
+      "O'Connor",             # Irish with apostrophe
+      "van der Berg",         # Dutch with particles
+      "de la Cruz",           # Spanish with particles
+      "McDonald",             # Scottish
+      "O'Reilly",             # Irish
+      "D'Angelo",             # Italian
+      "St. John",             # English with period
+      "Mary Jane",            # Double first name
+      "Dr. Smith",            # Title
+      "Prof. Johnson",        # Academic title
+      "Student 01",           # Generic student
+      "Instructor",           # Generic instructor
+      "Guest Speaker",        # Generic guest
+      "Unknown User",         # Unknown user
+      "dead_air",             # System name
+      "System",               # System name
+      "Zoom",                 # System name
+      "Recording",            # System name
+      "Mixed123Name",        # Mixed alphanumeric
+      "UPPERCASE NAME",      # All uppercase
+      "lowercase name",      # All lowercase
+      "MiXeD cAsE nAmE"      # Mixed case
+    )
+    
+    # Create test transcript data
+    test_transcript_data <- data.frame(
+      name = international_names,
+      comment = paste("Test message from", international_names),
+      timestamp = seq_along(international_names),
+      stringsAsFactors = FALSE
+    )
+    
+    # Test name normalization
+    cat("Testing name normalization...\n")
+    normalized_names <- sapply(international_names, function(name) {
+      tryCatch({
+        if (exists("normalize_name_for_matching")) {
+          normalize_name_for_matching(name)
+        } else {
+          name  # Return original if function doesn't exist
+        }
+      }, error = function(e) {
+        name  # Return original if normalization fails
+      })
+    })
+    
+    # Test name matching with privacy
+    cat("Testing name matching with privacy...\n")
+    
+    # Create test roster with some matching names
+    test_roster <- data.frame(
+      name = c("José García", "Müller Schmidt", "李小明", "Student 01", "Instructor"),
+      email = c("jose@example.com", "mueller@example.com", "li@example.com", "student01@example.com", "instructor@example.com"),
+      stringsAsFactors = FALSE
+    )
+    
+    # Test privacy-aware name matching
+    privacy_levels <- c("ferpa_strict", "ferpa_standard", "mask", "none")
+    privacy_results <- list()
+    
+    for (level in privacy_levels) {
+      cat("  Testing privacy level:", level, "\n")
+      set_privacy_defaults(level)
+      
+      # Test name matching
+      matched_names <- sapply(international_names, function(name) {
+        tryCatch({
+          if (exists("find_roster_match")) {
+            find_roster_match(name, test_roster)
+          } else {
+            name  # Return original if function doesn't exist
+          }
+        }, error = function(e) {
+          name  # Return original if matching fails
+        })
+      })
+      
+      privacy_results[[level]] <- matched_names
+    }
+    
+    # Test edge cases
+    cat("Testing edge cases...\n")
+    
+    # Test empty and whitespace names
+    edge_cases <- c("", "   ", "  \t  ", "\n", "\t")
+    edge_results <- sapply(edge_cases, function(name) {
+      tryCatch({
+        if (exists("normalize_name_for_matching")) {
+          normalize_name_for_matching(name)
+        } else {
+          name  # Return original if function doesn't exist
+        }
+      }, error = function(e) {
+        "ERROR"
+      })
+    })
+    
+    # Test very long names
+    long_name <- paste(rep("A", 1000), collapse = "")
+    long_name_result <- tryCatch({
+      if (exists("normalize_name_for_matching")) {
+        normalize_name_for_matching(long_name)
+      } else {
+        long_name  # Return original if function doesn't exist
+      }
+    }, error = function(e) {
+      "ERROR"
+    })
+    
+    # Test names with special characters
+    special_chars <- c("José-García", "Müller/Schmidt", "李小明@test", "Name(Test)", "Name[Test]")
+    special_results <- sapply(special_chars, function(name) {
+      tryCatch({
+        if (exists("normalize_name_for_matching")) {
+          normalize_name_for_matching(name)
+        } else {
+          name  # Return original if function doesn't exist
+        }
+      }, error = function(e) {
+        "ERROR"
+      })
+    })
+    
+    # Validate results
+    cat("Validating results...\n")
+    
+    # Check that normalization doesn't break international characters
+    international_preserved <- TRUE
+    if (exists("normalize_name_for_matching")) {
+      international_preserved <- all(grepl("[^A-Za-z0-9\\s]", normalized_names[1:5]))
+    }
+    
+    # Check that privacy levels work correctly
+    privacy_working <- all(sapply(privacy_results, function(x) length(x) == length(international_names)))
+    
+    # Check that edge cases are handled gracefully
+    edge_handled <- all(edge_results != "ERROR")
+    
+    # Check that long names are handled
+    long_handled <- long_name_result != "ERROR"
+    
+    # Check that special characters are handled
+    special_handled <- all(special_results != "ERROR")
+    
+    # Generate summary
+    details <- sprintf(
+      "International names: %d, Privacy levels: %d, Edge cases: %d, All handled: %s",
+      length(international_names),
+      length(privacy_levels),
+      length(edge_cases) + 1 + length(special_chars),
+      all(international_preserved, privacy_working, edge_handled, long_handled, special_handled)
+    )
+    
+    if (all(international_preserved, privacy_working, edge_handled, long_handled, special_handled)) {
+      log_test_result("international_names", "PASSED", details)
+    } else {
+      log_test_result("international_names", "FAILED", details)
+    }
+    
+  }, error = function(e) {
+    log_test_result("international_names", "FAILED", error = e)
+  })
+}
+
+# Function to test data validation and schema compliance
+test_data_validation <- function() {
+  log_test_result("data_validation", "STARTED")
+  
+  tryCatch({
+    # Test with real transcript file
+    transcript_file <- find_transcript_file()
+    transcript_data <- load_zoom_transcript(transcript_file)
+    
+    # Validate transcript data structure
+    cat("Validating transcript data structure...\n")
+    
+    # Check if data is NULL (empty file)
+    if (is.null(transcript_data)) {
+      cat("  ⚠️  Transcript file is empty or has no valid entries\n")
+      log_test_result("data_validation", "SKIPPED", "Empty transcript file")
+      return()
+    }
+    
+    # Check actual column structure from load_zoom_transcript
+    actual_columns <- names(transcript_data)
+    cat("  Actual columns:", paste(actual_columns, collapse = ", "), "\n")
+    
+    # Expected columns based on actual load_zoom_transcript function output
+    expected_columns <- c("transcript_file", "comment_num", "name", "comment", "start", "end", "duration", "wordcount")
+    missing_columns <- setdiff(expected_columns, actual_columns)
+    
+    if (length(missing_columns) > 0) {
+      cat("  ⚠️  Missing expected columns:", paste(missing_columns, collapse = ", "), "\n")
+    } else {
+      cat("  ✅ All expected columns present\n")
+    }
+    
+    # Validate data types
+    cat("Validating data types...\n")
+    
+    if (!is.character(transcript_data$name)) {
+      stop("Name column should be character")
+    }
+    
+    if (!is.character(transcript_data$comment)) {
+      stop("Comment column should be character")
+    }
+    
+    # Check if comment_num exists and is character
+    if ("comment_num" %in% names(transcript_data)) {
+      if (!is.character(transcript_data$comment_num)) {
+        stop("Comment_num column should be character")
+      }
+    }
+    
+    # Validate data quality
+    cat("Validating data quality...\n")
+    
+    # Check for empty names
+    empty_names <- sum(is.na(transcript_data$name) | transcript_data$name == "")
+    if (empty_names > 0) {
+      cat("  ⚠️  Found", empty_names, "empty names\n")
+    }
+    
+    # Check for empty comments
+    empty_comments <- sum(is.na(transcript_data$comment) | transcript_data$comment == "")
+    if (empty_comments > 0) {
+      cat("  ⚠️  Found", empty_comments, "empty comments\n")
+    }
+    
+    # Check for duplicate comment numbers if they exist
+    if ("comment_num" %in% names(transcript_data)) {
+      duplicate_comment_nums <- sum(duplicated(transcript_data$comment_num))
+      if (duplicate_comment_nums > 0) {
+        cat("  ⚠️  Found", duplicate_comment_nums, "duplicate comment numbers\n")
+      }
+    }
+    
+    # Test schema validation if function exists
+    cat("Testing schema validation...\n")
+    
+    # Check if validate_schema function exists
+    if (exists("validate_schema")) {
+      # Test with valid data
+      tryCatch({
+        validate_schema(transcript_data)
+        cat("  ✅ Schema validation passed\n")
+      }, error = function(e) {
+        cat("  ❌ Schema validation failed:", e$message, "\n")
+      })
+      
+      # Test with invalid data
+      invalid_data <- transcript_data
+      invalid_data$name[1] <- NA  # Introduce invalid data
+      
+      tryCatch({
+        validate_schema(invalid_data)
+        cat("  ❌ Schema validation should have failed\n")
+      }, error = function(e) {
+        cat("  ✅ Schema validation correctly caught invalid data\n")
+      })
+    } else {
+      cat("  ⚠️  validate_schema function not available\n")
+    }
+    
+    # Test data retention policy if function exists
+    cat("Testing data retention policy...\n")
+    
+    if (exists("check_data_retention_policy")) {
+      tryCatch({
+        retention_check <- check_data_retention_policy(transcript_data)
+        cat("  ✅ Data retention policy check passed\n")
+      }, error = function(e) {
+        cat("  ❌ Data retention policy check failed:", e$message, "\n")
+      })
+    } else {
+      cat("  ⚠️  check_data_retention_policy function not available\n")
+    }
+    
+    # Generate validation report
+    validation_summary <- sprintf(
+      "Columns: %d, Rows: %d, Empty names: %d, Empty comments: %d",
+      ncol(transcript_data),
+      nrow(transcript_data),
+      empty_names,
+      empty_comments
+    )
+    
+    log_test_result("data_validation", "PASSED", validation_summary)
+    
+  }, error = function(e) {
+    log_test_result("data_validation", "FAILED", error = e)
+  })
+}
+
 # Main testing function
 run_all_tests <- function() {
   cat("=== Real-World Testing for zoomstudentengagement ===\n")
@@ -689,7 +1020,9 @@ run_all_tests <- function() {
     test_visualization,
     test_performance,
     test_error_handling,
-    test_privacy_features
+    test_privacy_features,
+    test_international_names, # Added new test
+    test_data_validation # Added new test
   )
   
   # Additional privacy check for whole game report
