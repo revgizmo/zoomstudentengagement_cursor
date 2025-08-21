@@ -113,8 +113,6 @@ find_transcript_file <- function() {
 
 # Function to safely test transcript processing
 test_transcript_processing <- function() {
-  log_test_result("transcript_processing", "STARTED")
-  
   tryCatch({
     # Test with real transcript file
     transcript_file <- find_transcript_file()
@@ -152,8 +150,6 @@ test_transcript_processing <- function() {
 
 # Function to test name matching with real roster
 test_name_matching <- function() {
-  log_test_result("name_matching", "STARTED")
-  
   tryCatch({
     # Load roster data
     roster_file_path <- file.path(data_dir, "metadata", "roster.csv")
@@ -193,8 +189,6 @@ test_name_matching <- function() {
 
 # Function to test visualization functions
 test_visualization <- function() {
-  log_test_result("visualization", "STARTED")
-  
   tryCatch({
     # Load test data
     transcript_file <- find_transcript_file()
@@ -238,8 +232,6 @@ test_visualization <- function() {
 
 # Function to test performance with larger datasets
 test_performance <- function() {
-  log_test_result("performance", "STARTED")
-  
   tryCatch({
     # Test with multiple files if available
     transcript_dir <- file.path(data_dir, "transcripts")
@@ -279,8 +271,6 @@ test_performance <- function() {
 
 # Function to test error handling
 test_error_handling <- function() {
-  log_test_result("error_handling", "STARTED")
-  
   tryCatch({
     # Test with non-existent file
     expect_error(
@@ -329,8 +319,6 @@ test_error_handling <- function() {
 
 # Function to test privacy features
 test_privacy_features <- function() {
-  log_test_result("privacy_features", "STARTED")
-  
   tryCatch({
     # Load test data
     transcript_file <- find_transcript_file()
@@ -697,8 +685,6 @@ test_multi_session_analysis <- function() {
 
 # Function to test international names and edge cases
 test_international_names <- function() {
-  log_test_result("international_names", "STARTED")
-  
   tryCatch({
     # Create test data with international names
     international_names <- c(
@@ -876,8 +862,6 @@ test_international_names <- function() {
 
 # Function to test data validation and schema compliance
 test_data_validation <- function() {
-  log_test_result("data_validation", "STARTED")
-  
   tryCatch({
     # Test with real transcript file
     transcript_file <- find_transcript_file()
