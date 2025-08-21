@@ -117,3 +117,14 @@ zoom_real_world_testing/
 .vscode/
 data/
 my_data/
+
+# Rmd render artifacts
+scripts/real_world_testing/*.html
+scripts/real_world_testing/*_files/
+scripts/real_world_testing/*_cache/
+scripts/real_world_testing/reports/*.png
+scripts/real_world_testing/reports/*.csv
+scripts/real_world_testing/reports/*.rds
+scripts/real_world_testing/outputs/
+scripts/real_world_testing/test_reports/
+scripts/real_world_testing/.DS_Store
