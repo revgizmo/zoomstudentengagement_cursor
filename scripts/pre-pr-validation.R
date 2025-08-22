@@ -247,13 +247,18 @@ cat("\n7.5. Test Output Validation:\n")
 tryCatch({
   # Check for diagnostic output pollution in R files
   r_files <- list.files("R", pattern = "\\.R$", full.names = TRUE)
+  # Whitelist helper files that intentionally wrap diagnostics
+  whitelist_files <- c("utils_diagnostics.R")
   output_issues <- list()
   
   for (r_file in r_files) {
+    if (basename(r_file) %in% whitelist_files) next
     content <- readLines(r_file)
     # Look for print(), cat(), message() outside of TESTTHAT checks
     for (i in seq_along(content)) {
       line <- content[i]
+      # Skip commented lines (including roxygen)
+      if (grepl("^\\s*#", line)) next
       
       # Check for output functions
       if (grepl("\\b(print|cat|message)\\s*\\(", line)) {

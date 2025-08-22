@@ -1,0 +1,18 @@
+# Cursor Background Agent Dockerfile Template
+
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y git curl wget build-essential && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -r ruser && useradd -m -r -g ruser ruser && \
+    mkdir -p /workspace && chown -R ruser:ruser /workspace
+
+WORKDIR /workspace
+
+USER ruser
+
+ENV HOME=/home/ruser
+
+CMD ["/bin/bash"]

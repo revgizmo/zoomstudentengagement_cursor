@@ -15,6 +15,6 @@ plot_users_masked_section_by_metric(df, metric = "session_ct")
 A ggplot object.
 }
 \description{
-Deprecated: use `plot_users(mask_by = 'rank')` instead. Delegates to `plot_users()`
+Deprecated: use \code{plot_users(mask_by = 'rank')} instead. Delegates to \code{plot_users()}
 for backward compatibility.
 }

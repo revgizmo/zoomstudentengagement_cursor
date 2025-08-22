@@ -16,8 +16,8 @@ prompt_name_matching(
 \item{unmatched_names}{Character vector of unmatched names that need mapping}
 
 \item{privacy_level}{Privacy level for the session. One of
-`c("ferpa_strict", "ferpa_standard", "mask", "none")`.
-Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.}
+\code{c("ferpa_strict", "ferpa_standard", "mask", "none")}.
+Defaults to \code{getOption("zoomstudentengagement.privacy_level", "mask")}.}
 
 \item{data_folder}{Data folder path for saving the lookup file}
 
@@ -31,18 +31,18 @@ Invisibly returns the path to the created lookup file
 }
 \description{
 Provides safe user guidance for name matching when unmatched names are detected.
-This function maintains privacy by using the existing `make_blank_section_names_lookup_csv()`
+This function maintains privacy by using the existing \code{make_blank_section_names_lookup_csv()}
 function and provides clear instructions for manual name mapping.
 }
 \examples{
-# Prompt for name matching (privacy-safe)
+# Prompt for name matching (privacy-safe). Write artifacts to tempdir().
 unmatched <- c("Dr. Smith", "Tom", "Guest1")
-prompt_name_matching(unmatched)
+prompt_name_matching(unmatched, data_folder = tempdir())
 
 # Create lookup file with custom settings
 prompt_name_matching(
   unmatched_names = c("John Doe", "Jane Smith"),
-  data_folder = ".",
+  data_folder = tempdir(),
   section_names_lookup_file = "section_names_lookup.csv"
 )
 }

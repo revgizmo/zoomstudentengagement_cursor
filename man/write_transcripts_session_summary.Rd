@@ -21,5 +21,5 @@ write_transcripts_session_summary(
 Invisibly returns the written tibble
 }
 \description{
-Deprecated: use `write_metrics(data, what = 'session_summary', path = ...)` instead.
+Deprecated: use \code{write_metrics(data, what = 'session_summary', path = ...)} instead.
 }

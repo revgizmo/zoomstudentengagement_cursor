@@ -12,18 +12,18 @@ ensure_privacy(
 )
 }
 \arguments{
-\item{x}{An object to make privacy-safe. Currently supports `data.frame` or
-`tibble`. Other object types are returned unchanged.}
+\item{x}{An object to make privacy-safe. Currently supports \code{data.frame} or
+\code{tibble}. Other object types are returned unchanged.}
 
-\item{privacy_level}{Privacy level to apply. One of `c("ferpa_strict", "ferpa_standard", "mask", "none")`.
-Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.}
+\item{privacy_level}{Privacy level to apply. One of \code{c("ferpa_strict", "ferpa_standard", "mask", "none")}.
+Defaults to \code{getOption("zoomstudentengagement.privacy_level", "mask")}.}
 
 \item{id_columns}{Character vector of column names to treat as identifiers.
 Defaults to common name/identifier columns.}
 }
 \value{
 The object with privacy rules applied. For data frames, the same
-  structure is preserved with identifying fields masked when appropriate.
+structure is preserved with identifying fields masked when appropriate.
 }
 \description{
 Applies privacy rules to objects before they are returned, written, or
@@ -32,8 +32,8 @@ data to FERPA-safe placeholders.
 }
 \details{
 The default behavior is controlled by the global option
-`zoomstudentengagement.privacy_level`, which is set to "mask" on package
-load. Use `set_privacy_defaults()` to change at runtime.
+\code{zoomstudentengagement.privacy_level}, which is set to "mask" on package
+load. Use \code{set_privacy_defaults()} to change at runtime.
 }
 \examples{
 # Data frame masking example
@@ -45,5 +45,5 @@ df <- tibble::tibble(
 ensure_privacy(df)
 }
 \seealso{
-[set_privacy_defaults()]
+\code{\link[=set_privacy_defaults]{set_privacy_defaults()}}
 }

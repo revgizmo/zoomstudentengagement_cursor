@@ -3,36 +3,37 @@
 #' This function creates a data.table from a provided folder including
 #' transcript files of Zoom recordings.
 #'
-#' ## Download Transcripts 1. Go to
-#' [https://www.zoom.us/recording](https://www.zoom.us/recording) 2. Click on
-#' each individual record to go to the page for that recording 3. Download the
-#' Audio Transcript and Chat File for each + Chat:
-#' 'GMT\\d{8}-\\d{6}_Recording.cc.vtt' + Transcript:
-#' 'GMT\\d{8}-\\d{6}_Recording.transcript.vtt' 4. Copy the Audio Transcript and
-#' Chat Files to 'data/transcripts/' (or whatever path you identify in the
-#' `data_folder` and `transcripts_folder` parameters).
+#' ## Download Transcripts
+#' 1. Go to [https://www.zoom.us/recording](https://www.zoom.us/recording)
+#' 2. Click on each individual record to go to the page for that recording
+#' 3. Download the Audio Transcript and Chat File for each
+#'    - Chat: `GMT\\d{8}-\\d{6}_Recording.cc.vtt`
+#'    - Transcript: `GMT\\d{8}-\\d{6}_Recording.transcript.vtt`
+#' 4. Copy the Audio Transcript and Chat Files to `data/transcripts/`
+#'    (or whatever path you identify in the `data_folder` and
+#'    `transcripts_folder` parameters).
 #'
 #' @param data_folder Overall data folder for your recordings and data. Defaults
-#'   to 'data'
+#'   to `data`
 #' @param transcripts_folder specific subfolder of the data folder where you
 #'   will store the cloud recording csvs and transcripts
 #' @param transcript_files_names_pattern REGEX pattern used to match the
-#'   transcript file names. Defaults to 'GMT\\d{8}-\\d{6}_Recording'
+#'   transcript file names. Defaults to `GMT\\d{8}-\\d{6}_Recording`
 #' @param dt_extract_pattern REGEX pattern used to extract the date of the
-#'   transcript from the transcript file name. Defaults to '(?<=GMT)\\d{8}'
+#'   transcript from the transcript file name. Defaults to `(?<=GMT)\\d{8}`
 #' @param transcript_file_extension_pattern REGEX pattern used to identify
 #'   transcript files (as opposed to chat or closed caption files). Defaults to
-#'   '.transcript'
+#'   `.transcript`
 #' @param closed_caption_file_extension_pattern  REGEX pattern used to identify
 #'   closed caption files (as opposed to chat or transcript files). Defaults to
-#'   '.cc'
+#'   `.cc`
 #' @param recording_start_pattern REGEX pattern used to extract the recording
 #'   start time of the transcript from the transcript file name. Defaults to
-#'   '(?<=GMT)\\d{8}-\\d{6}'
+#'   `(?<=GMT)\\d{8}-\\d{6}`
 #' @param recording_start_format Pattern used to parse the format of the
-#'   recording start time of the transcript. Defaults to '\%Y\%m\%d-\%H\%M\%S'
+#'   recording start time of the transcript. Defaults to `\%Y\%m\%d-\%H\%M\%S`
 #' @param start_time_local_tzone Local time zone of the recording start time of
-#'   the transcript. Defaults to 'America/Los_Angeles'
+#'   the transcript. Defaults to `America/Los_Angeles`
 #'
 #' @return A data.frame listing the transcript files from the zoom recordings
 #'   loaded from the cloud recording csvs and transcripts.

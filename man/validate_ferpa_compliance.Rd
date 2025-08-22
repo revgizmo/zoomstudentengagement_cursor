@@ -15,21 +15,23 @@ validate_ferpa_compliance(
 \arguments{
 \item{data}{A data frame or tibble to validate}
 
-\item{institution_type}{Type of institution. One of `c("educational", "research", "mixed")`}
+\item{institution_type}{Type of institution. One of \code{c("educational", "research", "mixed")}}
 
 \item{check_retention}{Whether to check data retention policies}
 
-\item{retention_period}{Retention period to check against. One of `c("academic_year", "semester", "quarter", "custom")`}
+\item{retention_period}{Retention period to check against. One of \code{c("academic_year", "semester", "quarter", "custom")}}
 
 \item{custom_retention_days}{Custom retention period in days (used when retention_period = "custom")}
 }
 \value{
 A list containing compliance validation results with the following elements:
-  - `compliant`: Logical indicating overall compliance
-  - `pii_detected`: Character vector of detected PII fields
-  - `recommendations`: Character vector of compliance recommendations
-  - `retention_check`: Data retention validation results (if requested)
-  - `institution_guidance`: Institution-specific recommendations
+\itemize{
+\item \code{compliant}: Logical indicating overall compliance
+\item \code{pii_detected}: Character vector of detected PII fields
+\item \code{recommendations}: Character vector of compliance recommendations
+\item \code{retention_check}: Data retention validation results (if requested)
+\item \code{institution_guidance}: Institution-specific recommendations
+}
 }
 \description{
 Validates data for FERPA compliance by checking for personally identifiable

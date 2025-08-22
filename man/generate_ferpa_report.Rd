@@ -17,7 +17,7 @@ generate_ferpa_report(
 
 \item{output_file}{Optional file path to save the report}
 
-\item{report_format}{Report format. One of `c("text", "html", "json")`}
+\item{report_format}{Report format. One of \code{c("text", "html", "json")}}
 
 \item{include_audit_trail}{Whether to include audit trail information}
 

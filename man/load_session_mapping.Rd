@@ -21,7 +21,7 @@ load_session_mapping(
 A tibble with the session mapping merged with Zoom recordings data
 }
 \description{
-This function loads a session mapping file created by `create_session_mapping()`
+This function loads a session mapping file created by \code{create_session_mapping()}
 and integrates it with the Zoom recordings data to provide reliable course
 information for analysis.
 }

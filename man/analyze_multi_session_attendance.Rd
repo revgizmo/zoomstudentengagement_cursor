@@ -31,11 +31,13 @@ analyze_multi_session_attendance(
 }
 \value{
 A list containing:
-  - `attendance_matrix`: Data frame with participants as rows and sessions as columns
-  - `attendance_summary`: Summary statistics for each participant
-  - `session_summary`: Summary statistics for each session
-  - `participation_patterns`: Analysis of participation patterns
-  - `privacy_compliant`: Boolean indicating if all outputs maintain privacy
+\itemize{
+\item \code{attendance_matrix}: Data frame with participants as rows and sessions as columns
+\item \code{attendance_summary}: Summary statistics for each participant
+\item \code{session_summary}: Summary statistics for each session
+\item \code{participation_patterns}: Analysis of participation patterns
+\item \code{privacy_compliant}: Boolean indicating if all outputs maintain privacy
+}
 }
 \description{
 Analyzes attendance patterns across multiple Zoom sessions, tracking who attended

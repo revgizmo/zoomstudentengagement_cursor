@@ -22,7 +22,7 @@ Defaults to 14.}
 }
 \value{
 A tibble including number of units, with class start time, end time,
-  and duration.
+and duration.
 }
 \description{
 This function creates a tibble for the units in the semester that correspond

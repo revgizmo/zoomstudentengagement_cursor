@@ -26,8 +26,11 @@ print_status <- function(status, message) {
   )
 }
 
+# Get the script directory to ensure correct paths
+script_dir <- getwd()  # Use current working directory since we change to it in the shell script
+
 # Validate transcript files
-validate_transcripts <- function(transcript_dir = "data/transcripts") {
+validate_transcripts <- function(transcript_dir = file.path(script_dir, "data/transcripts")) {
   print_status("info", "Validating transcript files...")
   
   if (!dir_exists(transcript_dir)) {
@@ -80,14 +83,14 @@ validate_transcripts <- function(transcript_dir = "data/transcripts") {
 }
 
 # Validate roster data
-validate_roster <- function(metadata_dir = "data/metadata") {
+validate_roster <- function(metadata_dir = file.path(script_dir, "data/metadata")) {
   print_status("info", "Validating roster data...")
   
   roster_file <- file.path(metadata_dir, "roster.csv")
   
   if (!file_exists(roster_file)) {
     print_status("error", "roster.csv not found")
-    print_status("info", "Expected location: data/metadata/roster.csv")
+    print_status("info", paste("Expected location:", roster_file))
     return(FALSE)
   }
   
@@ -144,7 +147,7 @@ validate_roster <- function(metadata_dir = "data/metadata") {
 }
 
 # Validate session metadata
-validate_session_metadata <- function(metadata_dir = "data/metadata") {
+validate_session_metadata <- function(metadata_dir = file.path(script_dir, "data/metadata")) {
   print_status("info", "Validating session metadata...")
   
   session_files <- list.files(
@@ -187,7 +190,7 @@ validate_session_metadata <- function(metadata_dir = "data/metadata") {
 }
 
 # Check data privacy
-check_data_privacy <- function(transcript_dir = "data/transcripts", metadata_dir = "data/metadata") {
+check_data_privacy <- function(transcript_dir = file.path(script_dir, "data/transcripts"), metadata_dir = file.path(script_dir, "data/metadata")) {
   print_status("info", "Checking data privacy...")
   
   privacy_issues <- 0

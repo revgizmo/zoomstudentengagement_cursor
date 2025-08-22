@@ -2,7 +2,25 @@
 
 This log tracks findings, decisions, and progress during the 2024-06 codebase audit for the zoomstudentengagement R package.
 
-## Recent Updates (July 2025)
+## Recent Updates (August 2025)
+
+### Transcript Examples Search (Completed)
+- **Date:** August 2025
+- **Branch:** `cursor/find-and-organize-zoom-vtt-transcript-examples-0736`
+- **Issue:** #335 - Documentation: Transcript examples search and findings
+- **Action:** Searched for publicly available Zoom transcript files for testing
+- **Findings:**
+  - **GitHub Repository Searches**: Found 1,500+ repos mentioning "zoom transcript" in READMEs
+  - **Key Finding**: Most repositories are tools/libraries for working with Zoom, not actual transcript files
+  - **Privacy/Licensing Barriers**: Most educational institutions don't publish raw Zoom transcripts
+  - **Format Specificity**: Need Zoom's native format, not converted captions
+  - **Public Availability**: Most Zoom meetings are private or internal
+- **Decision:** Use existing synthetic data for package development (already sufficient)
+- **Infrastructure Created:**
+  - `inst/extdata/public_transcripts/` directory structure
+  - `FINDING_REAL_ZOOM_TRANSCRIPTS.md` with comprehensive search strategy
+  - Download scripts and documentation for public course sources
+- **Status:** ✅ COMPLETED - Branch to be closed, findings documented
 
 ### Issue Cleanup and Organization (Completed)
 - **Date:** July 2025
@@ -475,6 +493,43 @@ The package has significant technical debt that needs addressing before CRAN sub
 **Priority**: HIGH - These issues prevent CRAN submission
 
 ---
+
+### [2025-08-20] Pre-PR validation summary and remediation plan
+
+**Status**: Tests pass; R CMD check clean (1 NOTE: future timestamps); coverage 87.9%
+
+**Key Findings**
+- Diagnostic output in runtime code not gated behind TESTTHAT/interactive guards
+- Minor shell script hygiene: missing trailing newline at EOF in 3 scripts
+- Coverage below target (>90%) at 87.9%
+- Context helper prints a false-positive "PROJECT.md update required" banner when up to date
+
+**Issues Created**
+- #307 docs(plan): document validation results and remediation plan
+- #308 chore(test-output): gate diagnostic output in runtime code
+- #309 chore(scripts): add trailing newline at EOF in 3 scripts
+- #310 test(coverage): raise coverage to ≥90%
+- #311 chore(context): fix PROJECT.md “update required” false-positive
+
+**Planned Remediation (docs-first PR before code changes)**
+1. Add Diagnostic Output Policy to CONTRIBUTING.md clarifying:
+   - Prefer `verbose = FALSE` defaults; gate `print()`, `message()`, `cat()` with `if (verbose && Sys.getenv("TESTTHAT") != "true")`
+   - Guard interactive prompts with `interactive()` and provide non-interactive fallbacks
+   - Avoid stray diagnostic output in examples/tests; keep examples runnable and quiet by default
+2. Implement gating in `R/create_session_mapping.R`, `R/load_zoom_recorded_sessions_list.R`, `R/make_new_analysis_template.R`, `R/utils_diagnostics.R`
+3. Add trailing newlines to `scripts/create-issues-batch.sh`, `scripts/create-spinoff-issues.sh`, `scripts/pre-commit.sh`
+4. Add targeted tests to lift coverage to ≥90%
+5. Fix save-context PROJECT.md sync false-positive
+
+**Acceptance Criteria**
+- Pre-PR validator reports: "All diagnostic output properly conditional"
+- No EOF newline warnings
+- `covr::package_coverage()` ≥ 90%
+- Context helper emits no update banner when PROJECT.md is in sync
+
+**Next Steps**
+- Merge docs-only PR (Closes #307), then proceed with focused fix branches for #308–#311 and coverage uplift
+
 
 Refer to the [Master Tracking Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15) for the audit checklist and sub-issues. 
 

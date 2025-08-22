@@ -4,6 +4,9 @@
   - <a href="#-documentation" id="toc--documentation">📚 Documentation</a>
   - <a href="#-quick-start" id="toc--quick-start">🚀 Quick Start</a>
     - <a href="#installation" id="toc-installation">Installation</a>
+    - <a href="#development-with-cursor-background-agents"
+      id="toc-development-with-cursor-background-agents">Development with
+      Cursor Background Agents</a>
     - <a href="#5-minute-whole-game-example"
       id="toc-5-minute-whole-game-example">5-minute whole-game example</a>
     - <a href="#basic-example" id="toc-basic-example">Basic Example</a>
@@ -15,6 +18,9 @@
     - <a href="#data-management" id="toc-data-management">Data Management</a>
     - <a href="#analysis-and-visualization"
       id="toc-analysis-and-visualization">Analysis and Visualization</a>
+    - <a href="#diagnostics-and-interactive-prompts"
+      id="toc-diagnostics-and-interactive-prompts">Diagnostics and interactive
+      prompts</a>
   - <a href="#-typical-workflow" id="toc--typical-workflow">📊 Typical
     Workflow</a>
   - <a href="#-privacy-defaults" id="toc--privacy-defaults">🔒 Privacy
@@ -32,6 +38,8 @@
 # zoomstudentengagement
 
 <!-- badges: start -->
+
+[![coverage](https://img.shields.io/github/actions/workflow/status/revgizmo/zoomstudentengagement/coverage.yaml?branch=main&label=coverage)](https://github.com/revgizmo/zoomstudentengagement/actions/workflows/coverage.yaml)
 <!-- badges: end -->
 
 The goal of `zoomstudentengagement` is to allow instructors to gain
@@ -55,6 +63,29 @@ participation equity, from Zoom transcripts of recorded course sessions.
 ``` r
 devtools::install_github("revgizmo/zoomstudentengagement")
 ```
+
+### Development with Cursor Background Agents
+
+For developers using Cursor IDE with background agents:
+
+``` bash
+# 1. Clone the repository
+git clone https://github.com/revgizmo/zoomstudentengagement.git
+cd zoomstudentengagement
+
+# 2. Use "Develop in Agent" workflow in Cursor
+# The background agent will use the standard R development environment
+```
+
+**Development Documentation:** - **[R Package Development
+Guide](docs/development/CURSOR_BACKGROUND_AGENT_R_DEVELOPMENT.md)** -
+Complete workflow guide - **[Troubleshooting
+Guide](docs/development/CURSOR_BACKGROUND_AGENT_TROUBLESHOOTING.md)** -
+Common issues and solutions
+
+**Note**: Docker development work is isolated in feature branches. For
+Docker-specific development, see the Docker isolation framework in
+`docs/development/`.
 
 ### 5-minute whole-game example
 
@@ -162,6 +193,33 @@ currently supported but may be added in future versions.
   available)
 - `make_transcripts_summary_df()` - Generate summary statistics
 
+### Diagnostics and interactive prompts
+
+Most functions are quiet by default to keep examples/tests clean. You
+can enable optional diagnostics:
+
+``` r
+# Enable package-wide diagnostics
+options(zoomstudentengagement.verbose = TRUE)
+
+# Or enable per-call diagnostics where supported
+load_zoom_recorded_sessions_list(
+  data_folder = ".",
+  transcripts_folder = "transcripts",
+  verbose = TRUE
+)
+
+# Turn diagnostics back off
+options(zoomstudentengagement.verbose = FALSE)
+```
+
+Interactive prompts (e.g., in `create_session_mapping()` when assigning
+unmatched recordings) are only shown in interactive sessions. In
+non-interactive runs (e.g., CI), prompts are suppressed and a quiet
+fallback is used.
+
+See also: `CONTRIBUTING.md` Diagnostic Output Policy.
+
 ## 📊 Typical Workflow
 
 1.  **Setup**: Configure analysis parameters
@@ -199,8 +257,8 @@ for details.
 
 ## 📄 License
 
-This package is licensed under the MIT License. See [LICENSE](LICENSE)
-for details.
+This package is licensed under the MIT License. See the CRAN stub in
+[LICENSE](LICENSE) and the full text in [LICENSE.md](LICENSE.md).
 
 ## 🔗 Links
 

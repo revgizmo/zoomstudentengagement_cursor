@@ -1,0 +1,8 @@
+{
+  "name": "zoomstudentengagement-r-package",
+  "dockerfile": "Dockerfile",
+  "context": ".",
+  "buildArgs": {},
+  "install": "echo 'R package environment ready'",
+  "start": "echo 'Background agent environment started'"
+}

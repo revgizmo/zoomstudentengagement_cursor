@@ -20,11 +20,11 @@ safe_name_matching_workflow(
 \item{roster_data}{Data frame containing roster information}
 
 \item{privacy_level}{Privacy level for processing. One of
-`c("ferpa_strict", "ferpa_standard", "mask", "none")`.
-Defaults to `getOption("zoomstudentengagement.privacy_level", "mask")`.}
+\code{c("ferpa_strict", "ferpa_standard", "mask", "none")}.
+Defaults to \code{getOption("zoomstudentengagement.privacy_level", "mask")}.}
 
 \item{unmatched_names_action}{Action to take when unmatched names are found.
-One of `c("stop", "warn")`. Defaults to `getOption("zoomstudentengagement.unmatched_names_action", "stop")`.}
+One of \code{c("stop", "warn")}. Defaults to \code{getOption("zoomstudentengagement.unmatched_names_action", "stop")}.}
 
 \item{data_folder}{Data folder for saving lookup files}
 

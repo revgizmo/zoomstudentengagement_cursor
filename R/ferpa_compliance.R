@@ -204,7 +204,7 @@ anonymize_educational_data <- function(data,
   columns_to_anonymize <- setdiff(columns_to_anonymize, columns_to_preserve)
 
   if (length(columns_to_anonymize) == 0) {
-    message("No PII columns found to anonymize")
+    diag_message("No PII columns found to anonymize")
     return(data)
   }
 

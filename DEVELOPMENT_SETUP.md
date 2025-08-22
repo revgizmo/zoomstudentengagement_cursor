@@ -2,15 +2,13 @@
 
 ## Overview
 
-This project uses Docker containers for consistent development environments. The setup ensures all developers have the same R environment, dependencies, and tools.
+This project uses standard R development environments with Cursor IDE background agents. Docker development work is isolated in feature branches to maintain main branch stability.
 
-## Container Configuration
+## Development Configuration
 
 ### Files Included in Git (Development Only)
-- `.devcontainer/devcontainer.json` - Container configuration
 - `.Rprofile` - R environment setup for development
-- `Dockerfile` - Alternative container definition
-- `.dockerignore` - Docker build exclusions
+- `Dockerfile.cursor-template` - Reference template for Docker development (feature branches only)
 
 ### Files Excluded from R Package Build
 - All Docker/container files (`.Rbuildignore`)
@@ -20,14 +18,14 @@ This project uses Docker containers for consistent development environments. The
 
 ### Files Excluded from Git
 - Container backups (`.cursor_backup/`)
-- Docker build artifacts (`Dockerfile.backup`)
+- Docker build artifacts (feature branches only)
 - Temporary files and caches
 
-## Container Features
+## Development Environment
 
 ### R Environment
 - **R 4.4.0** (stable version)
-- **All package dependencies** pre-installed
+- **All package dependencies** installed via DESCRIPTION
 - **Development tools**: styler, lintr, covr, roxygen2
 - **Documentation tools**: knitr, rmarkdown
 
@@ -48,7 +46,7 @@ The `.Rprofile` file configures:
 
 ### Starting Development
 1. Open project in Cursor
-2. Container builds automatically
+2. Background agent uses standard R environment
 3. R environment is ready with all tools
 
 ### Package Development
@@ -68,33 +66,34 @@ The `.Rprofile` file configures:
 - **Check**: `devtools::check()`
 - **Build**: `devtools::build()`
 
-## Container Management
+## Environment Management
 
-### Rebuilding Container
-- **When**: After changing `.devcontainer/devcontainer.json`
-- **How**: Cmd+Shift+P → "Dev Containers: Rebuild Container"
+### Docker Development (Feature Branches Only)
+- **When**: For Docker-specific development work
+- **How**: Use `Dockerfile.cursor-template` as reference
+- **Location**: Isolated in feature branches
 
 ### Updating Dependencies
-- Edit `postCreateCommand` in `.devcontainer/devcontainer.json`
-- Rebuild container to apply changes
+- Edit `DESCRIPTION` file for package dependencies
+- Run `devtools::install_deps()` to update
 
 ### Troubleshooting
-- **Container won't start**: Check Docker is running
-- **R packages missing**: Rebuild container
-- **Git issues**: Check container has Git installed
+- **R packages missing**: Run `devtools::install_deps()`
+- **Background agent issues**: Check Cursor IDE settings
+- **Git issues**: Check Git installation
 
 ## Best Practices
 
 ### Development
-- Always work in the container environment
+- Use standard R development environment
 - Use `devtools::` functions for package operations
 - Run tests before committing changes
 - Keep `.Rprofile` minimal and focused
 
 ### Version Control
-- Commit `.devcontainer/` and `.Rprofile` changes
-- Don't commit container build artifacts
-- Document container changes in commit messages
+- Commit `.Rprofile` changes
+- Don't commit Docker build artifacts (feature branches only)
+- Document environment changes in commit messages
 
 ### Package Building
 - Use `devtools::check()` before releases

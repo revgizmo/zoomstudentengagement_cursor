@@ -47,8 +47,12 @@ jobs:
           roxygen2::roxygenise()
         shell: Rscript {0}
 
-      - name: Run coverage
+      - name: Run coverage and enforce threshold
+        id: coverage
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
-          covr::codecov(quiet = FALSE)
+          cov <- covr::package_coverage()
+          pct <- covr::percent_coverage(cov)
+          cat(sprintf("coverage=%.2f\n", pct))
+          if (pct < 90) quit(status = 1)
         shell: Rscript {0}

@@ -7,22 +7,25 @@
 make_new_analysis_template(
   new_template_file_name = "new_analysis.Rmd",
   template_file = system.file("new_analysis_template.Rmd", package =
-    "zoomstudentengagement")
+    "zoomstudentengagement"),
+  verbose = FALSE
 )
 }
 \arguments{
 \item{new_template_file_name}{The file name of the created report template.}
 
 \item{template_file}{The file name of the template file. This defaults to the
-`new_analysis_template.Rmd` file in the `zoomstudentengagement` package.}
+\code{new_analysis_template.Rmd} file in the \code{zoomstudentengagement} package.}
+
+\item{verbose}{Logical flag to enable diagnostic output. Defaults to FALSE.}
 }
 \value{
 TRUE if the file was copied, FALSE otherwise.
 }
 \description{
-This function copies a template R Markdown file (the `new_analysis_template.Rmd` file
-from the `zoomstudentengagement` package) and saves it as a new .Rmd file that can be
-used as a starting point for running analyses with the `zoomstudentengagement` library.
+This function copies a template R Markdown file (the \code{new_analysis_template.Rmd} file
+from the \code{zoomstudentengagement} package) and saves it as a new .Rmd file that can be
+used as a starting point for running analyses with the \code{zoomstudentengagement} library.
 }
 \examples{
 \dontrun{

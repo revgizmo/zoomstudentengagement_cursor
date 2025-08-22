@@ -1,0 +1,62 @@
+name: Task
+description: Small, well-scoped task (≤ 1–2 days) with clear acceptance criteria
+title: "task: <concise description>"
+labels: ["type: chore"]
+assignees: []
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: Why this task is needed. Context, goals, and constraints.
+      placeholder: e.g., Align with CRAN readiness; improve error messaging for parsing failures.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is in scope and out of scope.
+      value: |
+        In:
+        - 
+        Out:
+        - 
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Explicit pass/fail criteria for completion
+      options:
+        - label: All code styled; no `lintr` warnings
+        - label: Tests added/updated; coverage unchanged or improved
+        - label: `devtools::document()` run; examples runnable
+        - label: CI green; `devtools::check()` 0 errors, 0 warnings
+        - label: User-facing change reflected in `README.Rmd`/vignettes/`NEWS.md`
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test Plan
+      description: Unit tests, examples, and manual steps to verify
+      value: |
+        - Unit tests in `tests/testthat/`
+        - Example runs clean in `@examples`
+        - Edge cases and negative tests included
+  - type: textarea
+    id: docs_impact
+    attributes:
+      label: Docs Impact
+      description: Which docs need to be updated
+      value: |
+        - `README.Rmd`
+        - Vignette(s)
+        - Function docs via roxygen2
+  - type: input
+    id: links
+    attributes:
+      label: Links
+      description: Related issues/PRs (e.g., Closes #123)
+      placeholder: Closes #
+

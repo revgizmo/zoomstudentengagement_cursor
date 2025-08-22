@@ -17,7 +17,7 @@ A tibble that summarizes results at the level of the class section and preferred
 }
 \description{
 This function creates a tibble from summary metrics by student and class
-session (`transcripts_session_summary_df`) and summarizes results at the
+session (\code{transcripts_session_summary_df}) and summarizes results at the
 level of the class section and preferred student name.
 }
 \examples{
