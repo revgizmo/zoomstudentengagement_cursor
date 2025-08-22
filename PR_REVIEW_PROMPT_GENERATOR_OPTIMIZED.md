@@ -111,6 +111,9 @@ Start with the PR assessment and follow the evaluation process.
 - Check reliability
 - Ensure project patterns
 - Check for parallel testing
+- CI checks may be pending (acceptable for test data)
+- Admin override appropriate for non-critical infrastructure
+- Focus on data quality and documentation
 
 ## 📋 **Template Variables**
 
@@ -124,6 +127,26 @@ Start with the PR assessment and follow the evaluation process.
 - **Merge Conflicts**: Resolution steps and testing required
 - **Branch Protection**: Admin override guidance and documentation
 - **Post-Merge**: Validation checklist and monitoring plan
+- **CI Status**: Handle pending/failing checks appropriately
+- **Draft PRs**: Convert to ready for review when appropriate
+
+## 🔍 **CI Status Handling**
+- **CI Passing**: Standard merge process
+- **CI Pending**: Evaluate if critical for change type (e.g., test data vs. code changes)
+- **CI Failing**: Require fixes before merge
+- **CI Blocked**: Use admin override only for non-critical infrastructure
+
+## 🔄 **Draft PR Process**
+- **Convert to Ready**: `gh pr ready [NUMBER]` when appropriate
+- **Then Merge**: Proceed with standard merge process
+- **Document**: Note conversion in merge decision
+
+## 🔍 **Post-Merge Validation**
+- **Test Data**: Verify accessibility and functionality
+- **Documentation**: Confirm examples work
+- **Integration**: Check for any unexpected issues
+- **CI Status**: Monitor post-merge checks
+- **Rollback Plan**: Document if issues arise
 
 ## ⏱️ **Time Estimation**
 **Expected review time**: 20-30 minutes
