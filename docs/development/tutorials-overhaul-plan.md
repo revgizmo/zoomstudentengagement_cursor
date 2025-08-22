@@ -36,10 +36,9 @@ Success metrics:
    - Acceptance: pkgdown builds; grouped navigation visible; next-step links present
 
 3) Pre-PR validation integration for vignettes [P0]
-   - Build vignettes and run `devtools::check_examples()` in pre-PR scripts
-   - Capture per-vignette runtime; flag >30s chunks
-   - Use `scripts/pre-pr-validation-background-agent.R` and `scripts/save-context.sh`
-   - Acceptance: CI/pre-PR outputs timing and flags; examples pass locally
+   - Add vignette build and `devtools::check_examples()` to existing pre-PR scripts
+   - Capture runtime per vignette; flag chunks >30s
+   - Acceptance: Examples pass locally; runtime metrics captured
 
 4) Getting Started vignette revamp [P0]
    - 10-minute onboarding: load → process → summarize → masked plot → next steps
@@ -162,7 +161,10 @@ plot_users_by_metric(metrics, metric = "spokenSeconds", top_n = 15)
 - Pre-PR checks: styler, lintr, roxygen, build vignettes, check examples
 - Run `scripts/pre-pr-validation-background-agent.R` and `scripts/save-context.sh`
 - CRAN rules: run with `system.file()` data; guard long chunks with `\donttest{}`; target 0E/0W
+- Integration: Follow existing project patterns in `docs/development/` and `scripts/`
 
 ### Retrospective and learnings
 - Capture runtime budgets, pain points, and user feedback
 - Update `tutorial-pattern.md` with improvements and guidance for reuse by other packages
+- Validate efficiency: Each vignette should provide clear value within <30s runtime
+- Measure success: Track user completion rates and support ticket reduction
