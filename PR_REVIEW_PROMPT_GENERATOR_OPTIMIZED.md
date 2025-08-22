@@ -97,6 +97,11 @@ Start with the PR assessment and follow the evaluation process.
 - Check for broken links
 - Ensure consistency
 - Check for parallel documentation
+- **Documentation Quality Checklist**:
+  - [ ] Proper markdown formatting and structure
+  - [ ] Clear technical analysis and findings
+  - [ ] Appropriate linking to related issues
+  - [ ] No sensitive information exposure
 
 **For [CHANGE_TYPE] = "infrastructure":**
 - Review correctness and security
@@ -130,6 +135,12 @@ Start with the PR assessment and follow the evaluation process.
 - **CI Status**: Handle pending/failing checks appropriately
 - **Draft PRs**: Convert to ready for review when appropriate
 
+## 🔧 **Merge Strategy Requirements**
+- **If PR is BEHIND main**: Rebase required before merge
+- **If mergeable but BLOCKED**: Use --admin flag for branch protection override
+- **Always verify CI status** before proceeding with merge
+- **Clean up feature branches** after successful merge
+
 ## 🔍 **CI Status Handling**
 - **CI Passing**: Standard merge process
 - **CI Pending**: Evaluate if critical for change type (e.g., test data vs. code changes)
@@ -147,6 +158,12 @@ Start with the PR assessment and follow the evaluation process.
 - **Integration**: Check for any unexpected issues
 - **CI Status**: Monitor post-merge checks
 - **Rollback Plan**: Document if issues arise
+
+## 🔍 **Post-Merge Validation Steps**
+- **Verify file integration**: `ls -la <new_files>`
+- **Test documentation accessibility**
+- **Confirm links to related issues work**
+- **Clean up feature branches**
 
 ## ⏱️ **Time Estimation**
 **Expected review time**: 20-30 minutes
