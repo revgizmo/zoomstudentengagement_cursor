@@ -1,0 +1,202 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.000
+<v Professor Smith>Welcome back everyone! How did the first assignment go?
+
+00:00:03.000 --> 00:00:07.000
+<v Student A>I found it challenging but I think I got it.
+
+00:00:07.000 --> 00:00:11.000
+<v Student D>I had some trouble with the R code, to be honest.
+
+00:00:11.000 --> 00:00:15.000
+<v Student B>I thought it was pretty straightforward once I got the hang of it.
+
+00:00:15.000 --> 00:00:19.000
+<v Professor Smith>That's normal! R takes some getting used to.
+
+00:00:19.000 --> 00:00:23.000
+<v Professor Smith>Today we're moving into probability theory.
+
+00:00:23.000 --> 00:00:27.000
+<v Professor Smith>This is the foundation for everything else we'll do.
+
+00:00:27.000 --> 00:00:31.000
+<v Student C>I'm a bit nervous about this part.
+
+00:00:31.000 --> 00:00:35.000
+<v Professor Smith>Don't be! We'll start with simple examples.
+
+00:00:35.000 --> 00:00:39.000
+<v Professor Smith>Let's think about flipping a coin. What's the probability of heads?
+
+00:00:39.000 --> 00:00:43.000
+<v Student A>Fifty percent?
+
+00:00:43.000 --> 00:00:47.000
+<v Professor Smith>Exactly! 0.5 or 50%. Now what about rolling a die?
+
+00:00:47.000 --> 00:00:51.000
+<v Student B>One sixth for each number?
+
+00:00:51.000 --> 00:00:55.000
+<v Professor Smith>Perfect! You're already thinking like statisticians.
+
+00:00:55.000 --> 00:00:59.000
+<v Professor Smith>Now let's talk about probability distributions.
+
+00:00:59.000 --> 00:01:03.000
+<v Professor Smith>The most important one is the normal distribution.
+
+00:01:03.000 --> 00:01:07.000
+<v Student D>Is that the bell curve we saw last week?
+
+00:01:07.000 --> 00:01:11.000
+<v Professor Smith>Exactly! The bell curve is the normal distribution.
+
+00:01:11.000 --> 00:01:15.000
+<v Professor Smith>It's also called the Gaussian distribution.
+
+00:01:15.000 --> 00:01:19.000
+<v Professor Smith>Let me show you some properties of the normal distribution.
+
+00:01:19.000 --> 00:01:23.000
+<v Student C>What makes it so special?
+
+00:01:23.000 --> 00:01:27.000
+<v Professor Smith>Great question! Many natural phenomena follow this pattern.
+
+00:01:27.000 --> 00:01:31.000
+<v Professor Smith>Height, weight, test scores, measurement errors.
+
+00:01:31.000 --> 00:01:35.000
+<v Professor Smith>Plus, it has some amazing mathematical properties.
+
+00:01:35.000 --> 00:01:39.000
+<v Student A>Like what?
+
+00:01:39.000 --> 00:01:43.000
+<v Professor Smith>Well, about 68% of the data falls within one standard deviation.
+
+00:01:43.000 --> 00:01:47.000
+<v Professor Smith>And about 95% falls within two standard deviations.
+
+00:01:47.000 --> 00:01:51.000
+<v Student B>That's the 68-95-99.7 rule, right?
+
+00:01:51.000 --> 00:01:55.000
+<v Professor Smith>Exactly! You've been doing your reading. Good job!
+
+00:01:55.000 --> 00:01:59.000
+<v Professor Smith>Now let's work with some real data.
+
+00:01:59.000 --> 00:02:03.000
+<v Professor Smith>I'll show you how to check if data is normally distributed.
+
+00:02:03.000 --> 00:02:07.000
+<v Student D>How do we do that?
+
+00:02:07.000 --> 00:02:11.000
+<v Professor Smith>We can use visual methods like Q-Q plots.
+
+00:02:11.000 --> 00:02:15.000
+<v Professor Smith>Or statistical tests like the Shapiro-Wilk test.
+
+00:02:15.000 --> 00:02:19.000
+<v Student C>Which one is better?
+
+00:02:19.000 --> 00:02:23.000
+<v Professor Smith>It depends on your sample size and what you're looking for.
+
+00:02:23.000 --> 00:02:27.000
+<v Professor Smith>Visual methods are great for understanding the data.
+
+00:02:27.000 --> 00:02:31.000
+<v Professor Smith>Statistical tests give you a p-value to make decisions.
+
+00:02:31.000 --> 00:02:35.000
+<v Student A>Can you show us both?
+
+00:02:35.000 --> 00:02:39.000
+<v Professor Smith>Absolutely! Let me pull up some data and demonstrate.
+
+00:02:39.000 --> 00:02:43.000
+<v Professor Smith>This dataset contains heights of 1000 people.
+
+00:02:43.000 --> 00:02:47.000
+<v Professor Smith>Let's first look at the histogram.
+
+00:02:47.000 --> 00:02:51.000
+<v Student B>It looks pretty bell-shaped to me.
+
+00:02:51.000 --> 00:02:55.000
+<v Professor Smith>Good observation! Now let's create a Q-Q plot.
+
+00:02:55.000 --> 00:02:59.000
+<v Professor Smith>If the points fall on a straight line, it's normal.
+
+00:02:59.000 --> 00:03:03.000
+<v Student D>They're pretty close to the line, but not perfect.
+
+00:03:03.000 --> 00:03:07.000
+<v Professor Smith>Exactly! Real data is rarely perfectly normal.
+
+00:03:07.000 --> 00:03:11.000
+<v Professor Smith>Now let's run the Shapiro-Wilk test.
+
+00:03:11.000 --> 00:03:15.000
+<v Professor Smith>The p-value is 0.23, which is greater than 0.05.
+
+00:03:15.000 --> 00:03:19.000
+<v Student C>What does that mean?
+
+00:03:19.000 --> 00:03:23.000
+<v Professor Smith>It means we fail to reject the null hypothesis.
+
+00:03:23.000 --> 00:03:27.000
+<v Professor Smith>In other words, we can't say the data is NOT normal.
+
+00:03:27.000 --> 00:03:31.000
+<v Student A>So it's probably normal?
+
+00:03:31.000 --> 00:03:35.000
+<v Professor Smith>Yes, we can reasonably assume it's approximately normal.
+
+00:03:35.000 --> 00:03:39.000
+<v Professor Smith>Now let's talk about your next assignment.
+
+00:03:39.000 --> 00:03:43.000
+<v Professor Smith>You'll be working with a dataset and testing for normality.
+
+00:03:43.000 --> 00:03:47.000
+<v Student B>Will we need to use R for this?
+
+00:03:47.000 --> 00:03:51.000
+<v Professor Smith>Yes, but I'll provide you with the code templates.
+
+00:03:51.000 --> 00:03:55.000
+<v Professor Smith>And there will be office hours this week if you need help.
+
+00:03:55.000 --> 00:03:59.000
+<v Student D>That's helpful, thanks.
+
+00:03:59.000 --> 00:04:03.000
+<v Professor Smith>Any other questions about probability or normal distributions?
+
+00:04:03.000 --> 00:04:07.000
+<v Student C>I think I understand the basics now.
+
+00:04:07.000 --> 00:04:11.000
+<v Student A>Me too. The examples really helped.
+
+00:04:11.000 --> 00:04:15.000
+<v Professor Smith>Great! Next week we'll move into hypothesis testing.
+
+00:04:15.000 --> 00:04:19.000
+<v Professor Smith>That's where things get really interesting.
+
+00:04:19.000 --> 00:04:23.000
+<v Professor Smith>Have a great week everyone!
+
+00:04:23.000 --> 00:04:25.000
+<v Professor Smith>Class dismissed.

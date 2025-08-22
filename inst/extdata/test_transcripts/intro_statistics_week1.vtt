@@ -1,0 +1,169 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.000
+<v Professor Smith>Good morning everyone, welcome to Introduction to Statistics.
+
+00:00:02.000 --> 00:00:05.000
+<v Professor Smith>Today we'll be covering basic concepts of data analysis.
+
+00:00:05.000 --> 00:00:08.000
+<v Professor Smith>Let me start by asking, who here has worked with data before?
+
+00:00:08.000 --> 00:00:12.000
+<v Student A>I've used Excel for some basic calculations.
+
+00:00:12.000 --> 00:00:15.000
+<v Student B>I've done some data entry in my previous job.
+
+00:00:15.000 --> 00:00:18.000
+<v Student C>I'm completely new to this, to be honest.
+
+00:00:18.000 --> 00:00:22.000
+<v Professor Smith>That's perfectly fine! We'll start from the basics.
+
+00:00:22.000 --> 00:00:26.000
+<v Professor Smith>Let me share my screen to show you some examples.
+
+00:00:26.000 --> 00:00:30.000
+<v Professor Smith>Here we have a dataset showing student test scores.
+
+00:00:30.000 --> 00:00:35.000
+<v Professor Smith>The first thing we want to do is understand our data.
+
+00:00:35.000 --> 00:00:38.000
+<v Student A>What does that mean, understand our data?
+
+00:00:38.000 --> 00:00:42.000
+<v Professor Smith>Great question! Understanding data means looking at its structure.
+
+00:00:42.000 --> 00:00:46.000
+<v Professor Smith>How many observations do we have? What variables are present?
+
+00:00:46.000 --> 00:00:50.000
+<v Professor Smith>Are there any missing values or outliers?
+
+00:00:50.000 --> 00:00:54.000
+<v Student B>I see some empty cells in the spreadsheet.
+
+00:00:54.000 --> 00:00:58.000
+<v Professor Smith>Exactly! Those are missing values, and we need to handle them.
+
+00:00:58.000 --> 00:01:02.000
+<v Professor Smith>Let's talk about different ways to handle missing data.
+
+00:01:02.000 --> 00:01:06.000
+<v Student C>Can we just delete those rows?
+
+00:01:06.000 --> 00:01:10.000
+<v Professor Smith>Sometimes, but not always. It depends on the situation.
+
+00:01:10.000 --> 00:01:14.000
+<v Professor Smith>If we have a lot of data, deleting a few rows might be okay.
+
+00:01:14.000 --> 00:01:18.000
+<v Professor Smith>But if we have limited data, we might need other strategies.
+
+00:01:18.000 --> 00:01:22.000
+<v Student A>What other strategies are there?
+
+00:01:22.000 --> 00:01:26.000
+<v Professor Smith>We can use mean imputation, median imputation, or more advanced methods.
+
+00:01:26.000 --> 00:01:30.000
+<v Professor Smith>But let's not get ahead of ourselves. First, let's explore our data.
+
+00:01:30.000 --> 00:01:34.000
+<v Professor Smith>I'll show you how to create some basic visualizations.
+
+00:01:34.000 --> 00:01:38.000
+<v Student B>Will we be using R or Python for this?
+
+00:01:38.000 --> 00:01:42.000
+<v Professor Smith>We'll start with Excel to build intuition, then move to R.
+
+00:01:42.000 --> 00:01:46.000
+<v Professor Smith>R is great for statistical analysis and visualization.
+
+00:01:46.000 --> 00:01:50.000
+<v Student C>I've never used R before. Is it hard to learn?
+
+00:01:50.000 --> 00:01:54.000
+<v Professor Smith>It has a learning curve, but we'll take it step by step.
+
+00:01:54.000 --> 00:01:58.000
+<v Professor Smith>Let me create a histogram of our test scores.
+
+00:01:58.000 --> 00:02:02.000
+<v Professor Smith>This will show us the distribution of scores.
+
+00:02:02.000 --> 00:02:06.000
+<v Student A>I can see most scores are in the middle range.
+
+00:02:06.000 --> 00:02:10.000
+<v Professor Smith>Exactly! That's a normal distribution pattern.
+
+00:02:10.000 --> 00:02:14.000
+<v Professor Smith>Now let's calculate some summary statistics.
+
+00:02:14.000 --> 00:02:18.000
+<v Professor Smith>The mean, median, and standard deviation.
+
+00:02:18.000 --> 00:02:22.000
+<v Student B>What's the difference between mean and median?
+
+00:02:22.000 --> 00:02:26.000
+<v Professor Smith>Great question! The mean is the average, the median is the middle value.
+
+00:02:26.000 --> 00:02:30.000
+<v Professor Smith>When data is normally distributed, they're usually close.
+
+00:02:30.000 --> 00:02:34.000
+<v Professor Smith>But with skewed data, they can be quite different.
+
+00:02:34.000 --> 00:02:38.000
+<v Student C>Can you show us an example of skewed data?
+
+00:02:38.000 --> 00:02:42.000
+<v Professor Smith>Absolutely! Let me switch to a different dataset.
+
+00:02:42.000 --> 00:02:46.000
+<v Professor Smith>This shows household income data, which is typically right-skewed.
+
+00:02:46.000 --> 00:02:50.000
+<v Professor Smith>Notice how the tail extends to the right?
+
+00:02:50.000 --> 00:02:54.000
+<v Student A>Yes, I can see that! The mean would be higher than the median.
+
+00:02:54.000 --> 00:02:58.000
+<v Professor Smith>Exactly right! You're getting it.
+
+00:02:58.000 --> 00:03:02.000
+<v Professor Smith>Now, let's talk about your first assignment.
+
+00:03:02.000 --> 00:03:06.000
+<v Professor Smith>You'll be working with a real dataset and creating visualizations.
+
+00:03:06.000 --> 00:03:10.000
+<v Student B>When is it due?
+
+00:03:10.000 --> 00:03:14.000
+<v Professor Smith>Next Friday at midnight. I'll post the details on Canvas.
+
+00:03:14.000 --> 00:03:18.000
+<v Professor Smith>Any questions about what we covered today?
+
+00:03:18.000 --> 00:03:22.000
+<v Student C>I think I understand the basics now.
+
+00:03:22.000 --> 00:03:26.000
+<v Student A>Me too. The visualizations really helped.
+
+00:03:26.000 --> 00:03:30.000
+<v Professor Smith>Excellent! Next week we'll dive deeper into probability.
+
+00:03:30.000 --> 00:03:34.000
+<v Professor Smith>Have a great week everyone, and don't forget to do the readings!
+
+00:03:34.000 --> 00:03:36.000
+<v Professor Smith>Class dismissed.

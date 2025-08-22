@@ -1,0 +1,238 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.000
+<v Dr. Johnson>Welcome to Computer Science 101! I'm Dr. Johnson.
+
+00:00:03.000 --> 00:00:07.000
+<v Dr. Johnson>Today we'll be introducing programming concepts.
+
+00:00:07.000 --> 00:00:11.000
+<v Dr. Johnson>Let me start by asking, what do you think programming is?
+
+00:00:11.000 --> 00:00:15.000
+<v Student X>Writing code to make computers do things?
+
+00:00:15.000 --> 00:00:19.000
+<v Student Y>Solving problems using algorithms?
+
+00:00:19.000 --> 00:00:23.000
+<v Student Z>I'm not really sure, to be honest.
+
+00:00:23.000 --> 00:00:27.000
+<v Dr. Johnson>All good answers! Programming is essentially giving instructions to computers.
+
+00:00:27.000 --> 00:00:31.000
+<v Dr. Johnson>We'll be using Python this semester, which is a great first language.
+
+00:00:31.000 --> 00:00:35.000
+<v Student X>I've heard Python is popular. Why is that?
+
+00:00:35.000 --> 00:00:39.000
+<v Dr. Johnson>Great question! Python is readable, versatile, and has excellent libraries.
+
+00:00:39.000 --> 00:00:43.000
+<v Dr. Johnson>It's used in data science, web development, AI, and more.
+
+00:00:43.000 --> 00:00:47.000
+<v Student Y>What about other languages like Java or C++?
+
+00:00:47.000 --> 00:00:51.000
+<v Dr. Johnson>Those are great languages too! We'll touch on them later.
+
+00:00:51.000 --> 00:00:55.000
+<v Dr. Johnson>But Python is perfect for learning fundamental concepts.
+
+00:00:55.000 --> 00:00:59.000
+<v Dr. Johnson>Let's start with our first program - Hello World!
+
+00:00:59.000 --> 00:01:03.000
+<v Student Z>What's Hello World?
+
+00:01:03.000 --> 00:01:07.000
+<v Dr. Johnson>It's a traditional first program that simply prints "Hello, World!"
+
+00:01:07.000 --> 00:01:11.000
+<v Dr. Johnson>It's a way to verify your programming environment is working.
+
+00:01:11.000 --> 00:01:15.000
+<v Dr. Johnson>Let me show you how to write it in Python.
+
+00:01:15.000 --> 00:01:19.000
+<v Dr. Johnson>We start with: print("Hello, World!")
+
+00:01:19.000 --> 00:01:23.000
+<v Student X>That's it? That's a program?
+
+00:01:23.000 --> 00:01:27.000
+<v Dr. Johnson>Yes! It's simple but it's a complete program.
+
+00:01:27.000 --> 00:01:31.000
+<v Dr. Johnson>Let me show you how to run it.
+
+00:01:31.000 --> 00:01:35.000
+<v Dr. Johnson>I'll open my terminal and type: python hello.py
+
+00:01:35.000 --> 00:01:39.000
+<v Dr. Johnson>And there it is! "Hello, World!" printed to the screen.
+
+00:01:39.000 --> 00:01:43.000
+<v Student Y>That's pretty cool! Can we make it do more?
+
+00:01:43.000 --> 00:01:47.000
+<v Dr. Johnson>Absolutely! Let's add some variables and user input.
+
+00:01:47.000 --> 00:01:51.000
+<v Dr. Johnson>We can ask for the user's name and greet them personally.
+
+00:01:51.000 --> 00:01:55.000
+<v Dr. Johnson>Here's how: name = input("What's your name? ")
+
+00:01:55.000 --> 00:01:59.000
+<v Dr. Johnson>Then: print("Hello, " + name + "!")
+
+00:01:59.000 --> 00:02:03.000
+<v Student Z>What does the plus sign do?
+
+00:02:03.000 --> 00:02:07.000
+<v Dr. Johnson>Good question! The plus sign concatenates strings.
+
+00:02:07.000 --> 00:02:11.000
+<v Dr. Johnson>It joins the pieces of text together.
+
+00:02:11.000 --> 00:02:15.000
+<v Student X>So if I type "Alice", it would print "Hello, Alice!"?
+
+00:02:15.000 --> 00:02:19.000
+<v Dr. Johnson>Exactly! Let me demonstrate.
+
+00:02:19.000 --> 00:02:23.000
+<v Dr. Johnson>I'll run the program and type "Alice" when prompted.
+
+00:02:23.000 --> 00:02:27.000
+<v Dr. Johnson>See? "Hello, Alice!" appears on the screen.
+
+00:02:27.000 --> 00:02:31.000
+<v Student Y>That's really neat! What else can we do?
+
+00:02:31.000 --> 00:02:35.000
+<v Dr. Johnson>We can do calculations, make decisions, repeat actions.
+
+00:02:35.000 --> 00:02:39.000
+<v Dr. Johnson>Let's try a simple calculator.
+
+00:02:39.000 --> 00:02:43.000
+<v Dr. Johnson>We can add two numbers: num1 = int(input("Enter first number: "))
+
+00:02:43.000 --> 00:02:47.000
+<v Dr. Johnson>num2 = int(input("Enter second number: "))
+
+00:02:47.000 --> 00:02:51.000
+<v Dr. Johnson>result = num1 + num2
+
+00:02:51.000 --> 00:02:55.000
+<v Dr. Johnson>print("The sum is:", result)
+
+00:02:55.000 --> 00:02:59.000
+<v Student Z>What's int() for?
+
+00:02:59.000 --> 00:03:03.000
+<v Dr. Johnson>Great question! int() converts the input to an integer.
+
+00:03:03.000 --> 00:03:07.000
+<v Dr. Johnson>input() always returns a string, even for numbers.
+
+00:03:07.000 --> 00:03:11.000
+<v Dr. Johnson>So we need to convert it to do math.
+
+00:03:11.000 --> 00:03:15.000
+<v Student X>What happens if we don't convert it?
+
+00:03:15.000 --> 00:03:19.000
+<v Dr. Johnson>Good thinking! Let me show you.
+
+00:03:19.000 --> 00:03:23.000
+<v Dr. Johnson>If we enter 5 and 3 without int(), we get "53" instead of 8.
+
+00:03:23.000 --> 00:03:27.000
+<v Dr. Johnson>That's because "5" + "3" concatenates the strings.
+
+00:03:27.000 --> 00:03:31.000
+<v Student Y>Ah, that makes sense! What about other operations?
+
+00:03:31.000 --> 00:03:35.000
+<v Dr. Johnson>We can use -, *, / for subtraction, multiplication, division.
+
+00:03:35.000 --> 00:03:39.000
+<v Dr. Johnson>And ** for exponentiation, % for remainder.
+
+00:03:39.000 --> 00:03:43.000
+<v Dr. Johnson>Let's try a more complex example.
+
+00:03:43.000 --> 00:03:47.000
+<v Dr. Johnson>We can calculate the area of a circle.
+
+00:03:47.000 --> 00:03:51.000
+<v Dr. Johnson>radius = float(input("Enter radius: "))
+
+00:03:51.000 --> 00:03:55.000
+<v Dr. Johnson>area = 3.14159 * radius ** 2
+
+00:03:55.000 --> 00:03:59.000
+<v Dr. Johnson>print("Area:", area)
+
+00:03:59.000 --> 00:04:03.000
+<v Student Z>Why float() instead of int()?
+
+00:04:03.000 --> 00:04:07.000
+<v Dr. Johnson>Because radius can be a decimal number, like 2.5.
+
+00:04:07.000 --> 00:04:11.000
+<v Dr. Johnson>float() handles both integers and decimals.
+
+00:04:11.000 --> 00:04:15.000
+<v Student X>This is getting more interesting!
+
+00:04:15.000 --> 00:04:19.000
+<v Dr. Johnson>It is! Programming is all about solving problems step by step.
+
+00:04:19.000 --> 00:04:23.000
+<v Dr. Johnson>Now let's talk about your first assignment.
+
+00:04:23.000 --> 00:04:27.000
+<v Dr. Johnson>You'll write a program that calculates the volume of a sphere.
+
+00:04:27.000 --> 00:04:31.000
+<v Student Y>What's the formula for that?
+
+00:04:31.000 --> 00:04:35.000
+<v Dr. Johnson>It's (4/3) * π * radius³. I'll give you the formula.
+
+00:04:35.000 --> 00:04:39.000
+<v Dr. Johnson>You'll need to use input(), float(), and print().
+
+00:04:39.000 --> 00:04:43.000
+<v Student Z>When is it due?
+
+00:04:43.000 --> 00:04:47.000
+<v Dr. Johnson>Next Wednesday at midnight. I'll post the details online.
+
+00:04:47.000 --> 00:04:51.000
+<v Dr. Johnson>Any questions about what we covered today?
+
+00:04:51.000 --> 00:04:55.000
+<v Student X>I think I understand the basics now.
+
+00:04:55.000 --> 00:04:59.000
+<v Student Y>Me too. The examples really helped.
+
+00:04:59.000 --> 00:05:03.000
+<v Dr. Johnson>Excellent! Next week we'll learn about conditional statements.
+
+00:05:03.000 --> 00:05:07.000
+<v Dr. Johnson>That's where we can make our programs make decisions.
+
+00:05:07.000 --> 00:05:11.000
+<v Dr. Johnson>Have a great week everyone!
+
+00:05:11.000 --> 00:05:13.000
+<v Dr. Johnson>Class dismissed.

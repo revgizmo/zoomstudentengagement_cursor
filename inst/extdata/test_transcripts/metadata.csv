@@ -1,0 +1,6 @@
+filename,course_type,instructor,students,duration_minutes,topics,engagement_level,participation_pattern
+intro_statistics_week1.vtt,Statistics,Professor Smith,"Student A, Student B, Student C",3.6,"Basic data analysis, missing values, visualizations",Medium,"Balanced with some students more active"
+intro_statistics_week2.vtt,Statistics,Professor Smith,"Student A, Student B, Student C, Student D",4.4,"Probability theory, normal distribution, Q-Q plots",High,"More balanced participation, new student added"
+computer_science_101_week1.vtt,Computer Science,Dr. Johnson,"Student X, Student Y, Student Z",5.2,"Python programming, Hello World, variables, calculations",High,"All students actively participating"
+english_literature_discussion.vtt,English Literature,Professor Williams,"Student M, Student N, Student O, Student P",5.0,"Shakespeare Hamlet, soliloquy analysis, literary interpretation",High,"Deep discussion with multiple perspectives"
+biology_lab_session.vtt,Biology Lab,Dr. Chen,"Student Q, Student R, Student S, Student T",7.3,"DNA extraction, gel electrophoresis, lab safety",Medium,"Technical focus with safety emphasis"
