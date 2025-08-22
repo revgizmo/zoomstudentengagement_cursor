@@ -571,6 +571,34 @@ apply_name_matching <- function(transcript_data, name_lookup, roster_data) {
     }
   }
 
+  # Ensure lookup has required columns with proper initialization
+  if (!"preferred_name" %in% names(name_lookup)) {
+    name_lookup$preferred_name <- ifelse(is.na(name_lookup$transcript_name), NA_character_, name_lookup$transcript_name)
+  }
+  if (!"formal_name" %in% names(name_lookup)) {
+    name_lookup$formal_name <- ifelse(is.na(name_lookup$transcript_name), NA_character_, name_lookup$transcript_name)
+  }
+  if (!"participant_type" %in% names(name_lookup)) {
+    name_lookup$participant_type <- rep("unknown", nrow(name_lookup))
+  }
+  if (!"student_id" %in% names(name_lookup)) {
+    name_lookup$student_id <- rep(NA_character_, nrow(name_lookup))
+  }
+
+  # Ensure result has required columns before the loop
+  if (!"preferred_name" %in% names(result)) {
+    result$preferred_name <- rep(NA_character_, nrow(result))
+  }
+  if (!"formal_name" %in% names(result)) {
+    result$formal_name <- rep(NA_character_, nrow(result))
+  }
+  if (!"participant_type" %in% names(result)) {
+    result$participant_type <- rep("unknown", nrow(result))
+  }
+  if (!"student_id" %in% names(result)) {
+    result$student_id <- rep(NA_character_, nrow(result))
+  }
+
   # Apply name matching
   for (i in seq_len(nrow(result))) {
     transcript_name <- result$transcript_name[i]
@@ -580,7 +608,7 @@ apply_name_matching <- function(transcript_data, name_lookup, roster_data) {
     if (length(lookup_idx) > 0) {
       lookup <- name_lookup[lookup_idx[1], ]
 
-      # Add matched name columns
+      # Assign the values
       result$preferred_name[i] <- lookup$preferred_name
       result$formal_name[i] <- lookup$formal_name
       result$participant_type[i] <- lookup$participant_type
