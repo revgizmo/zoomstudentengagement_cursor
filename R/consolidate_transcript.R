@@ -3,10 +3,8 @@
 #' Take a tibble containing the comments from a Zoom recording transcript and return a tibble that consolidates all consecutive comments from the same speaker where the time between the end of the first comment and start of the second comment is less than `max_pause_sec` seconds.  This function addresses an issue with the Zoom transcript where the speaker is speaking a continuous sentence, but the Zoom transcript will cut the comment into two lines.
 #' For example, a comment of "This should be a single sentence." is often split into "This should be" and "a single sentence".  This function stitches those together into "This should be a single sentence." where the `start` time of the consolidated comment will be the beginning of the first row and the `end` time of the consolidated comment will be the ending of the last row.
 #'
-
-
-
-
+#' @importFrom stats aggregate setNames
+#'
 #' @param df A tibble containing the comments from a Zoom recording transcript.
 #' @param max_pause_sec Maximum pause between comments to be consolidated.  If
 #'   the raw comments from the Zoom recording transcript contain 2 consecutive
@@ -37,6 +35,21 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
     time_flag <- timestamp <- wordcount <- prior_speaker <- transcript_file <- NULL
 
   if (tibble::is_tibble(df)) {
+    # Handle empty data case
+    if (nrow(df) == 0) {
+      # Return empty tibble with correct structure
+      result_cols <- c("name", "comment", "start", "end", "duration", "wordcount")
+      if ("transcript_file" %in% names(df)) {
+        result_cols <- c("transcript_file", result_cols)
+      }
+      
+      empty_result <- setNames(
+        lapply(result_cols, function(x) if (x %in% c("duration", "wordcount")) numeric(0) else character(0)),
+        result_cols
+      )
+      return(tibble::as_tibble(empty_result))
+    }
+    
     # Ensure time columns are of type hms (replacing lubridate::period to avoid segfaults)
     # Use base R operations to avoid dplyr segfaults
     df$start <- hms::as_hms(df$start)
@@ -56,34 +69,91 @@ consolidate_transcript <- function(df, max_pause_sec = 1) {
     df$time_flag <- df$prior_dead_air > max_pause_sec
     df$comment_num <- cumsum(df$name_flag | df$time_flag)
 
-    # Group and summarize using base R - simplified approach
-    # Use split and lapply for aggregation based on comment_num
-    split_data <- split(df, df$comment_num)
-
-    result_list <- lapply(split_data, function(group_df) {
-      # Create base result with required columns
-      result_row <- data.frame(
-        name = group_df$name[1],
-        comment = paste(group_df$comment, collapse = " "),
-        start = group_df$start[1],
-        end = group_df$end[nrow(group_df)],
+    # Highly optimized aggregation using vectorized operations
+    # Use aggregate() for efficient grouping operations
+    if ("transcript_file" %in% names(df)) {
+      # Group by both transcript_file and comment_num
+      agg_result <- aggregate(
+        list(
+          name = df$name,
+          comment = df$comment,
+          start = df$start,
+          end = df$end
+        ),
+        by = list(
+          transcript_file = df$transcript_file,
+          comment_num = df$comment_num
+        ),
+        FUN = function(x) {
+          if (length(x) == 1) return(x)
+          # For comments, paste them together
+          if (is.character(x) && all(sapply(x, is.character))) {
+            return(paste(x, collapse = " "))
+          }
+          # For other columns, take first/last as appropriate
+          if (is.character(x) || is.numeric(x)) {
+            return(x[1])  # Take first for name, start
+          }
+          # For end times, take the last one
+          return(x[length(x)])
+        },
+        simplify = FALSE
+      )
+      
+      # Extract the aggregated values
+      result <- data.frame(
+        transcript_file = agg_result$transcript_file,
+        name = unlist(agg_result$name),
+        comment = unlist(agg_result$comment),
+        start = unlist(agg_result$start),
+        end = unlist(agg_result$end),
         stringsAsFactors = FALSE
       )
-
-      # Calculate duration and wordcount
-      result_row$duration <- as.numeric(result_row$end - result_row$start)
-      result_row$wordcount <- sapply(strsplit(result_row$comment, "\\s+"), function(x) length(x[x != ""]))
-
-      # Add transcript_file column if it exists in the input
-      if ("transcript_file" %in% names(group_df)) {
-        result_row$transcript_file <- group_df$transcript_file[1]
-      }
-
-      return(result_row)
-    })
-
-    # Combine results
-    result <- do.call(rbind, result_list)
+    } else {
+      # Group by comment_num only
+      agg_result <- aggregate(
+        list(
+          name = df$name,
+          comment = df$comment,
+          start = df$start,
+          end = df$end
+        ),
+        by = list(comment_num = df$comment_num),
+        FUN = function(x) {
+          if (length(x) == 1) return(x)
+          # For comments, paste them together
+          if (is.character(x) && all(sapply(x, is.character))) {
+            return(paste(x, collapse = " "))
+          }
+          # For other columns, take first/last as appropriate
+          if (is.character(x) || is.numeric(x)) {
+            return(x[1])  # Take first for name, start
+          }
+          # For end times, take the last one
+          return(x[length(x)])
+        },
+        simplify = FALSE
+      )
+      
+      # Extract the aggregated values
+      result <- data.frame(
+        name = unlist(agg_result$name),
+        comment = unlist(agg_result$comment),
+        start = unlist(agg_result$start),
+        end = unlist(agg_result$end),
+        stringsAsFactors = FALSE
+      )
+    }
+    
+    # Calculate duration and wordcount efficiently
+    result$duration <- as.numeric(result$end - result$start)
+    
+    # Vectorized wordcount calculation
+    result$wordcount <- vapply(
+      strsplit(result$comment, "\\s+"), 
+      function(x) length(x[x != ""]), 
+      integer(1)
+    )
 
     # Convert to tibble to maintain expected return type
     return(tibble::as_tibble(result))
