@@ -196,6 +196,13 @@ Masked by default: `preferred_name`, `name`, `first_last`, `name_raw`, `student_
 
 See the vignette "Ethical & FERPA Guide" for details.
 
+## 🛠️ Development
+
+### Pull Request Review
+This project uses a lightweight PR review process focused on CRAN submission readiness and privacy compliance. See [CONTRIBUTING.md](CONTRIBUTING.md) for the review checklist and criteria.
+
+For complex PRs or detailed evaluation, the project includes an AI-assisted PR review system (see `PR_REVIEW_PROMPT_GENERATOR_OPTIMIZED.md`).
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
