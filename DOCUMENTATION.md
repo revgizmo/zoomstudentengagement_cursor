@@ -15,6 +15,11 @@
 - **[README.md](README.md)** - Main package documentation, installation, and usage
 - **[CRAN_CHECKLIST.md](CRAN_CHECKLIST.md)** - CRAN submission requirements and checklist
 
+### Feature Documentation
+- **[docs/features/README.md](docs/features/README.md)** - Feature documentation overview and navigation
+- **[docs/features/feature-index.md](docs/features/feature-index.md)** - Complete index of all package features
+- **[docs/features/SUMMARY.md](docs/features/SUMMARY.md)** - Comprehensive feature documentation summary
+
 ### For Contributors
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
 - **[ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick guide for issue management
@@ -78,12 +83,14 @@
 ### **Package User**
 1. Start with [README.md](README.md)
 2. Check [CRAN_CHECKLIST.md](CRAN_CHECKLIST.md) for installation status
+3. Explore [docs/features/feature-index.md](docs/features/feature-index.md) for detailed feature documentation
 
 ### **Developer**
 1. Review [PROJECT.md](PROJECT.md) for current status
 2. Check [ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
 3. Start with [docs/development/README.md](docs/development/README.md) for development guidelines
 4. Reference [docs/development/AI_ASSISTED_DEVELOPMENT.md](docs/development/AI_ASSISTED_DEVELOPMENT.md) for AI collaboration
+5. Use [docs/features/template.md](docs/features/template.md) for documenting new features
 
 ### **Maintainer**
 1. Monitor [PROJECT.md](PROJECT.md) for status updates
