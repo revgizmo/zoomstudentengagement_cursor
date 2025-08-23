@@ -69,6 +69,33 @@ docs(readme): update installation instructions
 6. Link to relevant issues using `Fixes #X` or `Closes #X`
 7. Request review from maintainers
 
+## Pull Request Review
+
+### Quick Review Checklist
+- [ ] **CRAN Compliance**: No submission blockers, examples work
+- [ ] **Privacy-First**: FERPA compliance, data protection
+- [ ] **Quality Standards**: Code quality, testing, documentation
+- [ ] **Merge Readiness**: Conflicts resolved, CI passing
+- [ ] **Project Alignment**: Supports CRAN submission goals
+
+### Decision Criteria
+- **APPROVE**: Meets all criteria, ready for merge
+- **REVISE**: Has merit but needs specific improvements
+- **REJECT**: Doesn't meet standards or conflicts with priorities
+
+### Common Scenarios
+- **Clean Merge**: Standard process, no conflicts
+- **Merge Conflicts**: Rebase required before merge
+- **Branch Protection**: Use admin override when appropriate
+- **CI Pending**: Acceptable for documentation, require fixes for code changes
+
+### Time Estimates
+- **Low**: <10 files, documentation (10-15 min)
+- **Medium**: 10-50 files, code changes (15-25 min)
+- **High**: >50 files, infrastructure (25-40 min)
+
+*Note: For complex PRs or team reviews, see PR_REVIEW_PROMPT_GENERATOR_OPTIMIZED.md for detailed guidance.*
+
 ## Development Guidelines
 
 ### Code Quality Standards

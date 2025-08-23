@@ -541,6 +541,18 @@ source("scripts/real_world_testing/run_real_world_tests.R")
 - **Normal merge**: When PR passes all checks and reviews
 - **Bypass merge**: When confident in changes and all local checks pass (see bypass guidelines below)
 
+### PR Review Process
+- **Lightweight Review**: Use quick checklist in CONTRIBUTING.md
+- **Complex PRs**: Reference PR_REVIEW_PROMPT_GENERATOR_OPTIMIZED.md
+- **AI Assistance**: Local AI provides immediate context and evaluation
+- **Decision Making**: Developer makes final decision based on criteria
+
+### Quality Standards
+- CRAN compliance maintained
+- Privacy-first approach
+- Comprehensive testing
+- Clear documentation
+
 ### PR Creation and Merge Process
 
 #### Command-Line PR Creation and Merge

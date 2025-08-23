@@ -25,6 +25,9 @@
     Workflow</a>
   - <a href="#-privacy-defaults" id="toc--privacy-defaults">🔒 Privacy
     Defaults</a>
+  - <a href="#️-development" id="toc-️-development">🛠️ Development</a>
+    - <a href="#pull-request-review" id="toc-pull-request-review">Pull Request
+      Review</a>
   - <a href="#-contributing" id="toc--contributing">🤝 Contributing</a>
   - <a href="#-license" id="toc--license">📄 License</a>
   - <a href="#-links" id="toc--links">🔗 Links</a>
@@ -251,6 +254,19 @@ Masked by default: `preferred_name`, `name`, `first_last`, `name_raw`,
 `student_id`, `email`.
 
 See the vignette “Ethical & FERPA Guide” for details.
+
+## 🛠️ Development
+
+### Pull Request Review
+
+This project uses a lightweight PR review process focused on CRAN
+submission readiness and privacy compliance. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the review checklist and
+criteria.
+
+For complex PRs or detailed evaluation, the project includes an
+AI-assisted PR review system (see
+`PR_REVIEW_PROMPT_GENERATOR_OPTIMIZED.md`).
 
 ## 🤝 Contributing
 
