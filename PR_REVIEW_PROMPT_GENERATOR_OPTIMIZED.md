@@ -1,4 +1,6 @@
-# PR Review Prompt Generator - Optimized Version
+# AI-Assisted PR Review System (Optimized)
+
+> **Usage Note**: This system is available for complex PRs or team reviews. For most PRs, use the lightweight review process documented in [CONTRIBUTING.md](CONTRIBUTING.md#pull-request-review).
 
 **This document guides AI agents to create focused PR review prompts that balance evaluation with project goals (CRAN readiness, privacy-first, quality standards).**
 
