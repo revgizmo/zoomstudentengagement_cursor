@@ -17,7 +17,8 @@ write_metrics(
 
 \item{what}{One of c("engagement", "summary", "session_summary"). Controls default filename.}
 
-\item{path}{Output file path. If missing, a default name is chosen based on \code{what} in the current dir.}
+\item{path}{Output file path. If missing, a default name is chosen based on \code{what} in the current dir.
+Parent directories are created if they do not exist.}
 
 \item{comments_format}{For list-like \code{comments} columns: one of c("text", "count"). Default: "text".}
 
