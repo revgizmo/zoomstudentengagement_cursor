@@ -13,11 +13,16 @@ NULL
 #' Validates data for FERPA compliance by checking for personally identifiable
 #' information (PII) and validating data handling procedures.
 #'
+#' **CRITICAL ETHICAL COMPLIANCE**: This function is essential for ensuring
+#' educational data protection and FERPA compliance. It helps institutions
+#' maintain legal compliance while using student data for educational improvement.
+#'
 #' @param data A data frame or tibble to validate
 #' @param institution_type Type of institution. One of `c("educational", "research", "mixed")`
 #' @param check_retention Whether to check data retention policies
 #' @param retention_period Retention period to check against. One of `c("academic_year", "semester", "quarter", "custom")`
 #' @param custom_retention_days Custom retention period in days (used when retention_period = "custom")
+#' @param audit_log Whether to log compliance checks for institutional review
 #'
 #' @return A list containing compliance validation results with the following elements:
 #'   - `compliant`: Logical indicating overall compliance
@@ -44,7 +49,8 @@ validate_ferpa_compliance <- function(data,
                                       institution_type = c("educational", "research", "mixed"),
                                       check_retention = TRUE,
                                       retention_period = c("academic_year", "semester", "quarter", "custom"),
-                                      custom_retention_days = NULL) {
+                                      custom_retention_days = NULL,
+                                      audit_log = TRUE) {
   institution_type <- match.arg(institution_type)
   retention_period <- match.arg(retention_period)
 
@@ -90,6 +96,16 @@ validate_ferpa_compliance <- function(data,
       "Consider using ensure_privacy() to mask identifiable data",
       "Review institutional FERPA policies for data handling",
       "Ensure data access is limited to authorized personnel"
+    )
+  }
+
+  # Log FERPA compliance check for audit purposes
+  if (audit_log) {
+    log_ferpa_compliance_check(
+      compliant = result$compliant,
+      pii_detected = length(result$pii_detected),
+      institution_type = institution_type,
+      timestamp = Sys.time()
     )
   }
 
@@ -467,4 +483,53 @@ check_data_retention_policy <- function(data,
   )
 
   result
+}
+
+#' Log FERPA Compliance Check
+#'
+#' Internal function to log FERPA compliance checks for audit and institutional
+#' review purposes.
+#'
+#' @param compliant Whether the data is FERPA compliant
+#' @param pii_detected Number of PII fields detected
+#' @param institution_type Type of institution
+#' @param timestamp When the check was performed
+#'
+#' @keywords internal
+log_ferpa_compliance_check <- function(compliant,
+                                       pii_detected,
+                                       institution_type,
+                                       timestamp = Sys.time()) {
+  # Create log entry
+  log_entry <- list(
+    timestamp = timestamp,
+    compliant = compliant,
+    pii_detected = pii_detected,
+    institution_type = institution_type,
+    session_id = Sys.getpid()
+  )
+
+  # Store in global environment for session tracking
+  log_key <- paste0("zse_ferpa_log_", format(timestamp, "%Y%m%d_%H%M%S"))
+  assign(log_key, log_entry, envir = .GlobalEnv)
+
+  # Optionally write to file if logging is enabled
+  log_file <- getOption("zoomstudentengagement.ferpa_log_file", NULL)
+  if (!is.null(log_file) && is.character(log_file)) {
+    tryCatch({
+      log_line <- paste(
+        format(timestamp, "%Y-%m-%d %H:%M:%S"),
+        ifelse(compliant, "COMPLIANT", "NON_COMPLIANT"),
+        pii_detected,
+        institution_type,
+        sep = "\t"
+      )
+      write(log_line, file = log_file, append = TRUE)
+    }, error = function(e) {
+      # Silently fail if logging fails
+      NULL
+    })
+  }
+
+  invisible(log_entry)
 }
