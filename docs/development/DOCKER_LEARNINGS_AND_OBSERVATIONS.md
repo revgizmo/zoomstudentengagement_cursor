@@ -168,9 +168,9 @@ This document captures undocumented observations, learnings, and insights from o
 
 - `docs/development/BACKGROUND_AGENT_DOCKER_FIX.md` - Background agent fix details
 - `DOCKER_OPTIMIZATION_COMPREHENSIVE_PLAN.md` - Overall Docker optimization plan
-- `DOCKER_EPIC_ASSESSMENT_AND_PLAN_UPDATE.md` - Epic progress assessment
+- `docs/development/assessments/docs/development/assessments/docs/development/assessments/DOCKER_EPIC_ASSESSMENT_AND_PLAN_UPDATE.md` - Epic progress assessment
 - `docs/docker-best-practices.md` - Docker best practices
-- `DEVELOPMENT_SETUP.md` - Development setup guide
+- `docs/development/docs/development/docs/development/DEVELOPMENT_SETUP.md` - Development setup guide
 
 ## 🔗 **Related Issues**
 

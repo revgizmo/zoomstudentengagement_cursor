@@ -166,3 +166,11 @@
 ^LICENSE\.md$
 ^ISSUE_308_IMPLEMENTATION_GUIDE\.md$
 ^ISSUE_310_IMPLEMENTATION_GUIDE\.md$
+
+# File reorganization - Issue #362
+docs/development/implementation-guides/
+docs/development/completion-summaries/
+docs/development/assessments/
+docs/analysis/reports/
+docs/analysis/investigations/
+docs/analysis/lessons-learned/

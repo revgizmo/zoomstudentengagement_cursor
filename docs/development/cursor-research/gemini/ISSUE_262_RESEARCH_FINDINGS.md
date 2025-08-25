@@ -66,6 +66,6 @@ The core issue stems from a mismatch of assumptions between the Cursor backgroun
 
 ### Implementation Roadmap
 
-1.  **Short-Term (User-Facing):** Distribute the provided documentation (`CURSOR_BACKGROUND_AGENT_SETUP.md`, `Dockerfile.cursor-template`, etc.) to users encountering this issue.
+1.  **Short-Term (User-Facing):** Distribute the provided documentation (`docs/development/docs/development/docs/development/CURSOR_BACKGROUND_AGENT_SETUP.md`, `Dockerfile.cursor-template`, etc.) to users encountering this issue.
 2.  **Mid-Term (Development):** Implement improved error messaging and allow the remote username to be configured in `environment.json`.
 3.  **Long-Term (Development):** Update official documentation and explore automatic UID/GID detection and injection.

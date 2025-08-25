@@ -10,7 +10,7 @@ This folder contains ready-to-use issue bodies for a small, curated set of group
 
 Prerequisites:
 - GitHub CLI installed and authenticated: `gh auth status`
-- Use only existing labels (see `ISSUE_MANAGEMENT_QUICK_REFERENCE.md`)
+- Use only existing labels (see `docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md`)
 
 Option A: One-command helper
 ```bash

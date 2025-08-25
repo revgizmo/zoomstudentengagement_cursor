@@ -76,7 +76,7 @@ Investigate Cursor IDE's background agent Docker integration to understand why I
 ## 🛠️ **Phase 3: Setup Guide Development Results**
 
 ### **Comprehensive Setup Guide Created**
-- **File**: `CURSOR_BACKGROUND_AGENT_SETUP.md`
+- **File**: `docs/development/docs/development/docs/development/CURSOR_BACKGROUND_AGENT_SETUP.md`
 - **Content**: Complete step-by-step setup instructions
 - **Examples**: Multiple configuration examples (R, Python, Node.js)
 - **Troubleshooting**: Comprehensive troubleshooting guide
@@ -141,7 +141,7 @@ Investigate Cursor IDE's background agent Docker integration to understand why I
 - `docs/development/cursor-research/issue-262-research-summary.md` - This comprehensive summary
 
 ### **2. Setup Guide and Templates**
-- `CURSOR_BACKGROUND_AGENT_SETUP.md` - Complete setup guide (enhanced with synthesis)
+- `docs/development/docs/development/docs/development/CURSOR_BACKGROUND_AGENT_SETUP.md` - Complete setup guide (enhanced with synthesis)
 - `Dockerfile.cursor-template` - Working Dockerfile template (enhanced with build arguments)
 - `scripts/verify-cursor-background-agent-setup.sh` - Verification script
 

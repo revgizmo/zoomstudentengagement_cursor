@@ -40,7 +40,7 @@ This directory contains the original planning and implementation files for Issue
 
 ## Current Plan
 
-See `docs/development/ISSUE_160_CONSOLIDATED_PLAN.md` for the current implementation status and path forward.
+See `docs/development/docs/development/implementation-guides/docs/development/implementation-guides/docs/development/implementation-guides/ISSUE_160_CONSOLIDATED_PLAN.md` for the current implementation status and path forward.
 
 ## Implementation Files
 

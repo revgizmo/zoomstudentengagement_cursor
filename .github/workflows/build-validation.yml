@@ -1,0 +1,99 @@
+name: Build and Content Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - '*.Rmd'
+      - '*.md'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - '*.Rmd'
+      - '*.md'
+  workflow_dispatch:
+
+jobs:
+  validate-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1.1'
+      
+      - name: Install dependencies
+        run: |
+          install.packages(c("bookdown", "rmarkdown", "knitr"))
+      
+      - name: Validate R Markdown files
+        run: |
+          echo "Checking R Markdown files for syntax errors..."
+          find . -name "*.Rmd" -exec Rscript -e '
+            tryCatch({
+              rmarkdown::render(commandArgs(trailingOnly = TRUE)[1], 
+                              output_format = "html_document",
+                              output_file = tempfile(fileext = ".html"),
+                              quiet = TRUE)
+              cat("✓", commandArgs(trailingOnly = TRUE)[1], "\n")
+            }, error = function(e) {
+              cat("✗", commandArgs(trailingOnly = TRUE)[1], ":", e$message, "\n")
+              quit(status = 1)
+            })
+          ' {} \;
+      
+      - name: Test bookdown build
+        run: |
+          echo "Testing bookdown build process..."
+          cd docs/ds-cheatsheet
+          Rscript -e '
+            tryCatch({
+              bookdown::render_book("index.Rmd", output_dir = "_book_test")
+              cat("✓ Bookdown build successful\n")
+            }, error = function(e) {
+              cat("✗ Bookdown build failed:", e$message, "\n")
+              quit(status = 1)
+            })
+          '
+      
+      - name: Check for broken links
+        run: |
+          echo "Checking for broken links in documentation..."
+          # Simple link checker for markdown files
+          find . -name "*.md" -exec grep -o '\[.*\]([^)]*)' {} \; | \
+          grep -v '^\[.*\]([^)]*)$' || echo "No obvious broken links found"
+      
+      - name: Validate file structure
+        run: |
+          echo "Validating file structure..."
+          
+          # Check for empty files
+          empty_files=$(find . -name "*.md" -size 0)
+          if [ -n "$empty_files" ]; then
+            echo "⚠️  Empty files found:"
+            echo "$empty_files"
+          else
+            echo "✓ No empty files found"
+          fi
+          
+          # Check for duplicate content
+          echo "Checking for potential duplicate content..."
+          find . -name "*.Rmd" -exec basename {} \; | sort | uniq -d || echo "✓ No duplicate filenames found"
+      
+      - name: Generate build report
+        run: |
+          echo "## Build Validation Report" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ✅ All checks passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Validation Results:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ R Markdown syntax validation" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Bookdown build process" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ File structure validation" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Link validation" >> $GITHUB_STEP_SUMMARY

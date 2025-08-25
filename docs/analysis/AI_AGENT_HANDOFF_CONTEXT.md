@@ -220,8 +220,8 @@ git checkout main
 
 - **PROJECT.md**: Project status and CRAN readiness
 - **CORRECTED_ANALYSIS_SUMMARY.md**: Corrected analysis findings
-- **ANALYSIS_VERIFICATION_REPORT.md**: Verification results
-- **ISSUE_369_IMPLEMENTATION_GUIDE.md**: Implementation guide
+- **docs/analysis/reports/docs/analysis/reports/docs/analysis/reports/ANALYSIS_VERIFICATION_REPORT.md**: Verification results
+- **docs/development/implementation-guides/docs/development/implementation-guides/docs/development/implementation-guides/ISSUE_369_IMPLEMENTATION_GUIDE.md**: Implementation guide
 - **Package Documentation**: DESCRIPTION, NAMESPACE
 
 ---

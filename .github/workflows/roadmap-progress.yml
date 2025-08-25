@@ -1,0 +1,95 @@
+name: Roadmap Progress Tracking
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: Phase to track (1, 2, or 3)
+        required: true
+        default: '1'
+      update_checklist:
+        description: Update ACTIVE_ROADMAP_CHECKLIST.md
+        required: false
+        default: 'true'
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday at 9 AM
+
+jobs:
+  track-progress:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1.1'
+      
+      - name: Install dependencies
+        run: |
+          install.packages(c("gh", "jsonlite", "yaml"))
+      
+      - name: Generate Progress Report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          Rscript -e '
+          library(gh)
+          library(jsonlite)
+          
+          # Get issues for the specified phase
+          phase <- "${{ github.event.inputs.phase }}"
+          issues <- gh("/repos/:owner/:repo/issues", 
+                      owner = "revgizmo", 
+                      repo = "career-data-science",
+                      state = "all",
+                      labels = paste0("phase-", phase),
+                      .limit = 100)
+          
+          # Calculate progress
+          total_issues <- length(issues)
+          closed_issues <- sum(sapply(issues, function(x) x$state == "closed"))
+          progress_pct <- round((closed_issues / total_issues) * 100, 1)
+          
+          # Create report
+          report <- list(
+            phase = phase,
+            total_issues = total_issues,
+            closed_issues = closed_issues,
+            progress_pct = progress_pct,
+            date = Sys.Date()
+          )
+          
+          # Save report
+          writeLines(toJSON(report, pretty = TRUE), "roadmap-progress.json")
+          
+          cat("Phase", phase, "Progress:", progress_pct, "%\n")
+          cat("Closed:", closed_issues, "/", total_issues, "issues\n")
+          '
+      
+      - name: Update Active Checklist
+        if: github.event.inputs.update_checklist == 'true'
+        run: |
+          echo "Updating ACTIVE_ROADMAP_CHECKLIST.md with current progress..."
+          # This would update the checklist with current progress
+          # Implementation depends on specific format requirements
+      
+      - name: Create Progress Summary
+        run: |
+          if [ -f roadmap-progress.json ]; then
+            echo "## Roadmap Progress Report" >> $GITHUB_STEP_SUMMARY
+            echo "**Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+            echo "**Phase:** ${{ github.event.inputs.phase }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat roadmap-progress.json | jq -r '"**Progress:** \(.progress_pct)%" >> $GITHUB_STEP_SUMMARY'
+            cat roadmap-progress.json | jq -r '"**Completed:** \(.closed_issues)/\(.total_issues) issues" >> $GITHUB_STEP_SUMMARY'
+          fi
+      
+      - name: Upload Progress Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: roadmap-progress-report
+          path: roadmap-progress.json

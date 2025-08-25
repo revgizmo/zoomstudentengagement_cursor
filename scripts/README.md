@@ -210,7 +210,7 @@ For quick context, copy and paste:
 **Key Files to Review**:
 - README.md - Package overview
 - PROJECT.md - Current status and CRAN readiness
-- ISSUE_MANAGEMENT_QUICK_REFERENCE.md - Issue workflow
+- docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md - Issue workflow
 - CONTRIBUTING.md - Contribution guidelines
 
 **Current Priorities**:
@@ -225,7 +225,7 @@ For quick context, copy and paste:
 
 For detailed information about using context scripts with Cursor, see:
 - [Cursor Integration Guide](../docs/development/CURSOR_INTEGRATION.md)
-- [Issue Management Quick Reference](../ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
+- [Issue Management Quick Reference](../docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
 - [Real-World Testing Guide](../zoom_real_world_testing/README.md)
 
 ## 💡 **Pro Tips**

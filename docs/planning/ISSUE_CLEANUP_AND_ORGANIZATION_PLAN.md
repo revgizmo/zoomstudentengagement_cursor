@@ -222,7 +222,7 @@ Based on current package status, these are the actual blockers:
   - [x] Create `docs/planning/` for completed planning docs
   - [x] Create `docs/README.md` for docs index
 - [x] **Phase 2**: Move detailed/archived docs to appropriate subdirectories
-  - [x] Move `ISSUE_MANAGEMENT_GUIDELINES.md` to `docs/development/`
+  - [x] Move `docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md` to `docs/development/`
   - [x] Move `AUDIT_LOG.md` to `docs/development/`
   - [x] Move planning docs to `docs/planning/`
   - [x] Move audit results to `docs/planning/`
@@ -329,12 +329,12 @@ Root (Essential - High Visibility):
 ├── LICENSE                       # Legal requirement
 ├── PROJECT.md                    # Project status (high visibility)
 ├── CRAN_CHECKLIST.md             # CRAN submission guide
-├── ISSUE_MANAGEMENT_QUICK_REFERENCE.md  # For immediate use
+├── docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md  # For immediate use
 └── DOCUMENTATION.md              # Documentation index
 
 docs/ (Reference - Detailed):
 ├── development/
-│   ├── ISSUE_MANAGEMENT_GUIDELINES.md
+│   ├── docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md
 │   └── AUDIT_LOG.md
 ├── planning/
 │   ├── ISSUE_CLEANUP_AND_ORGANIZATION_PLAN.md
