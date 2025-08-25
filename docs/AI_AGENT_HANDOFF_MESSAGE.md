@@ -8,8 +8,8 @@ Mission: Implement audit findings and recommendations for zoomstudentengagement 
 
 FIRST: Pull the audit branch and review the work completed:
 ```bash
-git checkout audit/2025-01-27
-git pull origin audit/2025-01-27
+git checkout cursor/audit-r-package-across-multiple-roles-f0bd
+git pull origin cursor/audit-r-package-across-multiple-roles-f0bd
 ```
 
 Context files to link:
