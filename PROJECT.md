@@ -284,9 +284,10 @@ A comprehensive premortem analysis conducted on 2025-08-04 revealed fundamental 
 - **[Issue #83](https://github.com/revgizmo/zoomstudentengagement/issues/83)**: Test package with real confidential data (Priority: HIGH - testing)
 - **[Issue #101](https://github.com/revgizmo/zoomstudentengagement/issues/101)**: Document QA vs Real-World Testing relationship and integration (Priority: MEDIUM - documentation)
 
-### FERPA Compliance Follow-up Issues (Post-CRAN)
-- **[Issue #153](https://github.com/revgizmo/zoomstudentengagement/issues/153)**: test: Real-world FERPA compliance validation (Priority: MEDIUM - testing)
-- **[Issue #154](https://github.com/revgizmo/zoomstudentengagement/issues/154)**: docs: Institutional FERPA compliance adoption guide (Priority: MEDIUM - documentation)
+### FERPA Compliance Tracking
+
+- CRAN Blocker: **[Issue #153](https://github.com/revgizmo/zoomstudentengagement/issues/153)** — Real-world FERPA compliance validation (**Label**: `CRAN-blocker`, `priority:high`). This validation must be completed before CRAN submission.
+- Post-CRAN: **[Issue #154](https://github.com/revgizmo/zoomstudentengagement/issues/154)** — Institutional FERPA compliance adoption guide (**Label**: `post-cran`, `documentation`). Nice-to-have for institutional rollout; not required for CRAN.
 
 ### Completed Issues ✅
 - **[Issue #15](https://github.com/revgizmo/zoomstudentengagement_cursor/issues/15)**: Master audit tracking issue (CLOSED)
