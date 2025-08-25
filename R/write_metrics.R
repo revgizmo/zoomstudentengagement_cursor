@@ -5,6 +5,7 @@
 #' @param data A tibble to write.
 #' @param what One of c("engagement", "summary", "session_summary"). Controls default filename.
 #' @param path Output file path. If missing, a default name is chosen based on `what` in the current dir.
+#'   Parent directories are created if they do not exist.
 #' @param comments_format For list-like `comments` columns: one of c("text", "count"). Default: "text".
 #' @param privacy_level Privacy level forwarded to `ensure_privacy()`. Default from option.
 #'
@@ -68,7 +69,10 @@ write_metrics <- function(
     )
     path <- fname
   }
-
+  dir_path <- dirname(path)
+  if (!dir.exists(dir_path)) {
+    dir.create(dir_path, recursive = TRUE)
+  }
   utils::write.csv(export_data, path, row.names = FALSE)
   invisible(export_data)
 }
