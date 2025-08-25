@@ -60,7 +60,7 @@ ensure_privacy <- function(x,
       "CRITICAL: Privacy disabled; outputs may contain identifiable data and violate FERPA requirements.",
       call. = FALSE
     )
-    
+
     # Log the privacy violation for audit purposes
     if (audit_log) {
       log_privacy_operation(
@@ -70,7 +70,7 @@ ensure_privacy <- function(x,
         warning_issued = TRUE
       )
     }
-    
+
     return(x)
   }
 
@@ -199,21 +199,24 @@ log_privacy_operation <- function(operation,
   # Optionally write to file if logging is enabled
   log_file <- getOption("zoomstudentengagement.privacy_log_file", NULL)
   if (!is.null(log_file) && is.character(log_file)) {
-    tryCatch({
-      log_line <- paste(
-        format(timestamp, "%Y-%m-%d %H:%M:%S"),
-        operation,
-        privacy_level,
-        ifelse(is.null(data_rows), "NA", data_rows),
-        ifelse(is.null(data_columns), "NA", data_columns),
-        ifelse(warning_issued, "WARNING", "OK"),
-        sep = "\t"
-      )
-      write(log_line, file = log_file, append = TRUE)
-    }, error = function(e) {
-      # Silently fail if logging fails
-      NULL
-    })
+    tryCatch(
+      {
+        log_line <- paste(
+          format(timestamp, "%Y-%m-%d %H:%M:%S"),
+          operation,
+          privacy_level,
+          ifelse(is.null(data_rows), "NA", data_rows),
+          ifelse(is.null(data_columns), "NA", data_columns),
+          ifelse(warning_issued, "WARNING", "OK"),
+          sep = "\t"
+        )
+        write(log_line, file = log_file, append = TRUE)
+      },
+      error = function(e) {
+        # Silently fail if logging fails
+        NULL
+      }
+    )
   }
 
   invisible(log_entry)

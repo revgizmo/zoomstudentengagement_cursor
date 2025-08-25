@@ -516,19 +516,22 @@ log_ferpa_compliance_check <- function(compliant,
   # Optionally write to file if logging is enabled
   log_file <- getOption("zoomstudentengagement.ferpa_log_file", NULL)
   if (!is.null(log_file) && is.character(log_file)) {
-    tryCatch({
-      log_line <- paste(
-        format(timestamp, "%Y-%m-%d %H:%M:%S"),
-        ifelse(compliant, "COMPLIANT", "NON_COMPLIANT"),
-        pii_detected,
-        institution_type,
-        sep = "\t"
-      )
-      write(log_line, file = log_file, append = TRUE)
-    }, error = function(e) {
-      # Silently fail if logging fails
-      NULL
-    })
+    tryCatch(
+      {
+        log_line <- paste(
+          format(timestamp, "%Y-%m-%d %H:%M:%S"),
+          ifelse(compliant, "COMPLIANT", "NON_COMPLIANT"),
+          pii_detected,
+          institution_type,
+          sep = "\t"
+        )
+        write(log_line, file = log_file, append = TRUE)
+      },
+      error = function(e) {
+        # Silently fail if logging fails
+        NULL
+      }
+    )
   }
 
   invisible(log_entry)

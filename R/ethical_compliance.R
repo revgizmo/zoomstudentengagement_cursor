@@ -57,7 +57,7 @@ validate_ethical_use <- function(usage_context = c("research", "teaching", "asse
 
   # Risk assessment based on context and scope
   risk_factors <- 0
-  
+
   # Context-based risk assessment
   if (usage_context == "assessment") {
     risk_factors <- risk_factors + 2
@@ -99,7 +99,7 @@ validate_ethical_use <- function(usage_context = c("research", "teaching", "asse
   # Purpose statement analysis
   if (!is.null(purpose_statement)) {
     purpose_lower <- tolower(purpose_statement)
-    
+
     # Check for surveillance-related terms
     surveillance_terms <- c("surveillance", "monitoring", "tracking", "spying", "watching")
     if (any(sapply(surveillance_terms, function(term) grepl(term, purpose_lower)))) {
@@ -112,7 +112,7 @@ validate_ethical_use <- function(usage_context = c("research", "teaching", "asse
         "Reframe purpose to focus on educational improvement and equity"
       )
     }
-    
+
     # Check for equity-focused terms
     equity_terms <- c("equity", "participation", "engagement", "improvement", "teaching", "learning")
     if (any(sapply(equity_terms, function(term) grepl(term, purpose_lower)))) {
@@ -273,9 +273,9 @@ create_ethical_use_report <- function(usage_context,
       "RECOMMENDATIONS\n",
       "---------------\n"
     )
-          for (rec in validation$recommendations) {
-        report <- paste0(report, "- ", rec, "\n")
-      }
+    for (rec in validation$recommendations) {
+      report <- paste0(report, "- ", rec, "\n")
+    }
     report <- paste0(report, "\n")
   }
 
@@ -286,9 +286,9 @@ create_ethical_use_report <- function(usage_context,
       "REQUIRED DOCUMENTATION\n",
       "----------------------\n"
     )
-          for (doc in validation$required_documentation) {
-        report <- paste0(report, "- ", doc, "\n")
-      }
+    for (doc in validation$required_documentation) {
+      report <- paste0(report, "- ", doc, "\n")
+    }
     report <- paste0(report, "\n")
   }
 
@@ -299,9 +299,9 @@ create_ethical_use_report <- function(usage_context,
       "INSTITUTIONAL GUIDANCE\n",
       "----------------------\n"
     )
-          for (guidance in validation$institutional_guidance) {
-        report <- paste0(report, "- ", guidance, "\n")
-      }
+    for (guidance in validation$institutional_guidance) {
+      report <- paste0(report, "- ", guidance, "\n")
+    }
     report <- paste0(report, "\n")
   }
 
@@ -400,7 +400,7 @@ audit_ethical_usage <- function(function_calls,
   if (length(data_sizes) > 0) {
     avg_size <- mean(data_sizes, na.rm = TRUE)
     max_size <- max(data_sizes, na.rm = TRUE)
-    
+
     result$usage_patterns$data_sizes <- list(
       average = avg_size,
       maximum = max_size,

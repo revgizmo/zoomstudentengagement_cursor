@@ -294,15 +294,18 @@ print(paste("Compliance Score:", monthly_audit$compliance_score))
 
 ```{r troubleshooting}
 # If privacy violations are detected
-tryCatch({
-  validate_privacy_compliance(results, stop_on_violation = TRUE)
-}, error = function(e) {
-  cat("Privacy violation detected. Immediate action required:\n")
-  cat("1. Stop all data processing\n")
-  cat("2. Review privacy settings\n")
-  cat("3. Contact institutional privacy officer\n")
-  cat("4. Document incident for compliance review\n")
-})
+tryCatch(
+  {
+    validate_privacy_compliance(results, stop_on_violation = TRUE)
+  },
+  error = function(e) {
+    cat("Privacy violation detected. Immediate action required:\n")
+    cat("1. Stop all data processing\n")
+    cat("2. Review privacy settings\n")
+    cat("3. Contact institutional privacy officer\n")
+    cat("4. Document incident for compliance review\n")
+  }
+)
 ```
 
 ### Ethical Use Concerns
@@ -310,8 +313,8 @@ tryCatch({
 ```{r ethical-troubleshooting}
 # If ethical use validation fails
 validation <- validate_ethical_use(
-  usage_context = "assessment",  # High-risk context
-  data_scope = "individual",     # High-risk scope
+  usage_context = "assessment", # High-risk context
+  data_scope = "individual", # High-risk scope
   purpose_statement = "Monitoring student participation for grading"
 )
 
