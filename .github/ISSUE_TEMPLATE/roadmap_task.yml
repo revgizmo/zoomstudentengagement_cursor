@@ -1,0 +1,81 @@
+name: Roadmap Task
+description: Task from the strategic roadmap implementation plan
+title: "roadmap: <phase> - <concise description>"
+labels: ["roadmap", "task"]
+assignees: []
+body:
+  - type: textarea
+    id: roadmap_context
+    attributes:
+      label: Roadmap Context
+      description: Which phase and section of the roadmap this task belongs to
+      placeholder: e.g., Phase 1 Week 1 - File Organization, Day 1-2
+    validations:
+      required: true
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: Why this task is needed based on the comprehensive review
+      placeholder: e.g., Address content duplication identified in FINAL_REVIEW_VALIDATION.md
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is in scope and out of scope for this task
+      value: |
+        In:
+        - 
+        Out:
+        - 
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Explicit pass/fail criteria for completion
+      options:
+        - label: Task completed according to roadmap specifications
+        - label: Build system remains functional (if applicable)
+        - label: No regression in existing functionality
+        - label: Documentation updated (if applicable)
+        - label: Active checklist updated with completion status
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test Plan
+      description: How to verify the task is completed successfully
+      value: |
+        - Manual verification steps:
+        - Build system test (if applicable):
+        - Content validation (if applicable):
+  - type: textarea
+    id: docs_impact
+    attributes:
+      label: Documentation Impact
+      description: Which documentation needs to be updated
+      value: |
+        - Active checklist status
+        - README updates (if applicable)
+        - Technical documentation (if applicable)
+  - type: input
+    id: links
+    attributes:
+      label: Related Links
+      description: Links to roadmap documents, related issues, or PRs
+      placeholder: Links to: STRATEGIC_ROADMAP_AND_ACTION_PLAN.md, FINAL_REVIEW_VALIDATION.md, etc.
+  - type: input
+    id: estimated_time
+    attributes:
+      label: Estimated Time
+      description: Estimated time to complete this task
+      placeholder: e.g., 2 hours, 1 day
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Issues that must be completed before this task
+      placeholder: e.g., #123, #124

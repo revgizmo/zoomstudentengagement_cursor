@@ -21,7 +21,7 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 - `Dockerfile.backup` - Backup Docker configuration
 - `.devcontainer/` - Devcontainer configuration directory
 - `.devcontainer_bak/` - Backup devcontainer directory
-- Docker-related documentation updates in `README.md`, `README.Rmd`, `DEVELOPMENT_SETUP.md`
+- Docker-related documentation updates in `README.md`, `README.Rmd`, `docs/development/docs/development/docs/development/DEVELOPMENT_SETUP.md`
 
 ### **Related Issues Status**
 - **Issue #263**: R Package Development with Cursor Background Agents - COMPLETED
@@ -63,7 +63,7 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 
 3. **Update documentation**
    - Remove Docker sections from `README.md` and `README.Rmd`
-   - Update `DEVELOPMENT_SETUP.md` to reflect standard R development
+   - Update `docs/development/docs/development/docs/development/DEVELOPMENT_SETUP.md` to reflect standard R development
    - Create `docker-removal-log.md` to document the removal process
 
 ### **Phase 3: Testing & Validation**
@@ -106,7 +106,7 @@ Remove Docker customization from main branch to ensure stability and isolate Doc
 
 ### **Documentation Updates Required**
 - Remove Docker sections from `README.md` and `README.Rmd`
-- Update `DEVELOPMENT_SETUP.md` to reflect standard R development
+- Update `docs/development/docs/development/docs/development/DEVELOPMENT_SETUP.md` to reflect standard R development
 - Create `docker-removal-log.md` to document the removal process
 - Update any other documentation referencing Docker customization
 

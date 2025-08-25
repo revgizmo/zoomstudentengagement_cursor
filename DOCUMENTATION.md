@@ -22,7 +22,7 @@
 
 ### For Contributors
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
-- **[ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick guide for issue management
+- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick guide for issue management
 
 ---
 
@@ -30,7 +30,7 @@
 
 ### Active Development
 - **[PROJECT.md](PROJECT.md)** - Current project status, roadmap, and priorities
-- **[ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Essential issue management practices
+- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Essential issue management practices
 
 ### Detailed Guidelines
 - **[docs/development/README.md](docs/development/README.md)** - Development guidelines index and quick start
@@ -40,7 +40,7 @@
 - **[docs/development/CURSOR_INTEGRATION.md](docs/development/CURSOR_INTEGRATION.md)** - Cursor-specific guidelines
 - **[docs/development/PRE_PR_VALIDATION.md](docs/development/PRE_PR_VALIDATION.md)** - Pre-PR validation checklist
 - **[docs/development/CRAN_SUBMISSION.md](docs/development/CRAN_SUBMISSION.md)** - CRAN submission requirements
-- **[docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/ISSUE_MANAGEMENT_GUIDELINES.md)** - Comprehensive issue management
+- **[docs/development/docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md)** - Comprehensive issue management
 - **[docs/development/AUDIT_LOG.md](docs/development/AUDIT_LOG.md)** - Codebase audit tracking and decisions
 - **[docs/development/TEST_COVERAGE_LEARNINGS.md](docs/development/TEST_COVERAGE_LEARNINGS.md)** - Test coverage improvement patterns and best practices
 
@@ -77,7 +77,7 @@
 
 ### **New Contributor**
 1. Read [CONTRIBUTING.md](CONTRIBUTING.md)
-2. Check [ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
+2. Check [docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
 3. Review [PROJECT.md](PROJECT.md) for current priorities
 
 ### **Package User**
@@ -87,7 +87,7 @@
 
 ### **Developer**
 1. Review [PROJECT.md](PROJECT.md) for current status
-2. Check [ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
+2. Check [docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
 3. Start with [docs/development/README.md](docs/development/README.md) for development guidelines
 4. Reference [docs/development/AI_ASSISTED_DEVELOPMENT.md](docs/development/AI_ASSISTED_DEVELOPMENT.md) for AI collaboration
 5. Use [docs/features/template.md](docs/features/template.md) for documenting new features

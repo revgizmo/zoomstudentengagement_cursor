@@ -210,7 +210,7 @@ Implement a complete R package development workflow using Cursor background agen
 
 ### **Cursor Background Agents**
 - [Issue #262 Research](docs/development/cursor-research/) - Complete research findings
-- [Setup Guide](CURSOR_BACKGROUND_AGENT_SETUP.md) - Background agent setup
+- [Setup Guide](docs/development/docs/development/docs/development/CURSOR_BACKGROUND_AGENT_SETUP.md) - Background agent setup
 - [Dockerfile Template](Dockerfile.cursor-template) - Working template
 
 ### **Project Documentation**
