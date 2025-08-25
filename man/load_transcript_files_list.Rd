@@ -48,11 +48,11 @@ recording start time of the transcript. Defaults to \verb{\\\%Y\\\%m\\\%d-\\\%H\
 the transcript. Defaults to \code{America/Los_Angeles}}
 }
 \value{
-A data.frame listing the transcript files from the zoom recordings
+A tibble listing the transcript files from the zoom recordings
 loaded from the cloud recording csvs and transcripts.
 }
 \description{
-This function creates a data.table from a provided folder including
+This function creates a tibble from a provided folder including
 transcript files of Zoom recordings.
 }
 \details{

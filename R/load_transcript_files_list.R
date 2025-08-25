@@ -1,6 +1,6 @@
 #' Load Zoom Recording Transcript Files List
 #'
-#' This function creates a data.table from a provided folder including
+#' This function creates a tibble from a provided folder including
 #' transcript files of Zoom recordings.
 #'
 #' ## Download Transcripts
@@ -35,7 +35,7 @@
 #' @param start_time_local_tzone Local time zone of the recording start time of
 #'   the transcript. Defaults to `America/Los_Angeles`
 #'
-#' @return A data.frame listing the transcript files from the zoom recordings
+#' @return A tibble listing the transcript files from the zoom recordings
 #'   loaded from the cloud recording csvs and transcripts.
 #' @export
 #'
