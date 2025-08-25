@@ -22,7 +22,7 @@
 
 ### For Contributors
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
-- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick guide for issue management
+- **[docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick guide for issue management
 
 ---
 
@@ -30,7 +30,7 @@
 
 ### Active Development
 - **[PROJECT.md](PROJECT.md)** - Current project status, roadmap, and priorities
-- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Essential issue management practices
+- **[docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Essential issue management practices
 
 ### Detailed Guidelines
 - **[docs/development/README.md](docs/development/README.md)** - Development guidelines index and quick start
@@ -77,7 +77,7 @@
 
 ### **New Contributor**
 1. Read [CONTRIBUTING.md](CONTRIBUTING.md)
-2. Check [docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
+2. Check [docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
 3. Review [PROJECT.md](PROJECT.md) for current priorities
 
 ### **Package User**
@@ -87,7 +87,7 @@
 
 ### **Developer**
 1. Review [PROJECT.md](PROJECT.md) for current status
-2. Check [docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
+2. Check [docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)
 3. Start with [docs/development/README.md](docs/development/README.md) for development guidelines
 4. Reference [docs/development/AI_ASSISTED_DEVELOPMENT.md](docs/development/AI_ASSISTED_DEVELOPMENT.md) for AI collaboration
 5. Use [docs/features/template.md](docs/features/template.md) for documenting new features
