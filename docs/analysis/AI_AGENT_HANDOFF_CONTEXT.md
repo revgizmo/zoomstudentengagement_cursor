@@ -26,6 +26,10 @@ Complete comprehensive analysis of the `zoomstudentengagement` R package to prep
 - ✅ **Privacy features**: FERPA-compliant privacy implementation
 - ✅ **Core functionality**: All 68 exported functions working
 
+#### Clarification on FERPA-related blockers
+- Only one FERPA-related item is a CRAN blocker: Issue #153 (Real-world FERPA compliance validation).
+- All other FERPA tasks (e.g., institutional adoption guide, dashboards) are explicitly Post-CRAN and do not block submission.
+
 ### **Package Metrics**
 - **Exported functions**: 68 (corrected from 67)
 - **Test files**: 73 (corrected from 43)
