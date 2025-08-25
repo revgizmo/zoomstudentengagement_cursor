@@ -60,6 +60,9 @@ mask_user_names_by_metric <-
 
     if (tibble::is_tibble(df)) {
       # Use base R operations instead of dplyr to avoid segmentation fault
+      if (!metric %in% names(df)) {
+        stop(sprintf("Metric '%s' not found in data", metric), call. = FALSE)
+      }
       metric_col <- df[[metric]]
 
       # Handle NA values by replacing with -Inf for sorting

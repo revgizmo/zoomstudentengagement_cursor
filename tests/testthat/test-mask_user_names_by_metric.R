@@ -27,3 +27,11 @@ test_that("mask_user_names_by_metric handles empty input", {
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 0)
 })
+
+test_that("mask_user_names_by_metric errors when metric is missing", {
+  df <- tibble::tibble(preferred_name = c("Alice"), session_ct = c(5))
+  expect_error(
+    mask_user_names_by_metric(df, metric = "duration"),
+    "Metric 'duration' not found in data"
+  )
+})
