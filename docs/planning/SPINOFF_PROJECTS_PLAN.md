@@ -113,7 +113,7 @@ Initial set to open:
 - Group 4 – Data Processing Modules: Items 7, 8, 14, 15
 - Group 5 – CI Templates for R: Item 6
 
-Labels (use existing labels only, per `docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md`):
+Labels (use existing labels only, per `docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md`):
 - Priority: `priority:high` for Groups 1–2; `priority:medium` for others
 - Area: `area:testing`, `area:development`, `area:documentation`, `area:core` as appropriate
 - Type: `enhancement`

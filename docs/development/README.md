@@ -99,7 +99,7 @@
 ### Essential Project Files
 - **[PROJECT.md](../../PROJECT.md)** - Current project status and CRAN readiness
 - **[CONTRIBUTING.md](../../CONTRIBUTING.md)** - General contribution guidelines
-- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](../../docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick issue workflow
+- **[docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick issue workflow
 - **[CRAN_CHECKLIST.md](../../CRAN_CHECKLIST.md)** - Detailed CRAN submission tracking
 
 ### Planning Documents

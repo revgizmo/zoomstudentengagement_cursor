@@ -308,7 +308,7 @@ For comprehensive project information, reference these key files:
 #### **Development Guidelines**
 - **`docs/development/CURSOR_CONTEXT_GUIDE.md`** - This file: AI-assisted development guidelines
 - **`docs/development/AUDIT_LOG.md`** - Recent audit results and findings
-- **`docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md`** - Issue workflow and management
+- **`docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md`** - Issue workflow and management
 
 #### **Package Documentation**
 - **`R/`** - Core functions (33 exported functions)
@@ -336,7 +336,7 @@ Copy and paste the following into your new Cursor chat:
 **Key Files to Review**:
 - README.md - Package overview
 - PROJECT.md - Current status and CRAN readiness
-- docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md - Issue workflow
+- docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md - Issue workflow
 - CONTRIBUTING.md - Contribution guidelines
 
 **Current Priorities**:

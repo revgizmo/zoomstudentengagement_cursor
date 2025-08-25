@@ -329,7 +329,7 @@ Root (Essential - High Visibility):
 ├── LICENSE                       # Legal requirement
 ├── PROJECT.md                    # Project status (high visibility)
 ├── CRAN_CHECKLIST.md             # CRAN submission guide
-├── docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md  # For immediate use
+├── docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md  # For immediate use
 └── DOCUMENTATION.md              # Documentation index
 
 docs/ (Reference - Detailed):

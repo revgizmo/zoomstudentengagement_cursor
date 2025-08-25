@@ -574,7 +574,7 @@ For feature requests, include:
 - [AI-Assisted Development Guide](docs/development/AI_ASSISTED_DEVELOPMENT.md) - Comprehensive AI guidelines
 - [PROJECT.md](PROJECT.md) - Current project status and priorities
 - [CRAN_CHECKLIST.md](CRAN_CHECKLIST.md) - CRAN submission checklist
-- [docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md) - Issue workflow
+- [docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md) - Issue workflow
 
 ### Best Practices
 - Follow R package development best practices

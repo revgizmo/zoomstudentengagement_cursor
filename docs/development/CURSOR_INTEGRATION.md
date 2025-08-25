@@ -312,7 +312,7 @@ covr::package_coverage()
 
 ### Key Files
 - **PROJECT.md** - Current project status
-- **docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md** - Issue workflow
+- **docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md** - Issue workflow
 - **CONTRIBUTING.md** - Development guidelines
 - **CRAN_CHECKLIST.md** - CRAN requirements
 
