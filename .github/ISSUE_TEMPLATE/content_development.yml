@@ -1,0 +1,117 @@
+name: Content Development Task
+description: Content development task for Week 2-4 implementation
+title: "content: <section> - <specific content focus>"
+labels: ["content", "week2-4", "development"]
+assignees: []
+body:
+  - type: textarea
+    id: roadmap_context
+    attributes:
+      label: Roadmap Context
+      description: Which week and content section this task belongs to
+      placeholder: e.g., Week 2 - Data Science Cheat Sheet Enhancement, Week 3 - Career Development Resources
+    validations:
+      required: true
+  - type: textarea
+    id: content_section
+    attributes:
+      label: Content Section
+      description: Which section of the documentation this content belongs to
+      placeholder: e.g., docs/ds-cheatsheet/, docs/interview-prep/, docs/career-guide/
+    validations:
+      required: true
+  - type: textarea
+    id: target_audience
+    attributes:
+      label: Target Audience
+      description: Who this content is intended for
+      placeholder: e.g., Data scientists, ML engineers, Interview candidates, Career changers
+    validations:
+      required: true
+  - type: textarea
+    id: content_scope
+    attributes:
+      label: Content Scope
+      description: What specific content will be created or enhanced
+      value: |
+        Content to create/enhance:
+        - 
+        - 
+        - 
+        
+        Content to avoid:
+        - 
+        - 
+    validations:
+      required: true
+  - type: textarea
+    id: cross_references
+    attributes:
+      label: Cross-References
+      description: Related content that should be linked to/from this content
+      placeholder: e.g., Link to interview prep from career guide, Reference ML algorithms in cheat sheet
+  - type: textarea
+    id: content_format
+    attributes:
+      label: Content Format
+      description: What format the content should take
+      value: |
+        Format options:
+        - [ ] Markdown documentation
+        - [ ] R Markdown with code examples
+        - [ ] HTML with interactive elements
+        - [ ] PDF guide or reference
+        - [ ] Structured data or templates
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Specific criteria for content completion
+      value: |
+        - [ ] Content created according to scope
+        - [ ] Cross-references properly implemented
+        - [ ] Content follows established formatting standards
+        - [ ] Build system validation passes (if applicable)
+        - [ ] Content index updated
+        - [ ] Navigation updated (if needed)
+        - [ ] Manual validation checklist completed
+  - type: textarea
+    id: quality_standards
+    attributes:
+      label: Quality Standards
+      description: Quality requirements for this content
+      value: |
+        - [ ] Accurate and up-to-date information
+        - [ ] Clear and concise writing
+        - [ ] Proper markdown formatting
+        - [ ] Consistent with existing content style
+        - [ ] User-friendly navigation
+        - [ ] Cross-reference accuracy
+  - type: input
+    id: estimated_time
+    attributes:
+      label: Estimated Time
+      description: Estimated time to complete this content task
+      placeholder: e.g., 4 hours, 1 day, 2-3 hours
+    validations:
+      required: true
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Issues that must be completed before this content task
+      placeholder: e.g., #12 (Task 3 completion), #15 (prerequisite content)
+  - type: textarea
+    id: resources
+    attributes:
+      label: Resources
+      description: External resources, references, or materials needed
+      placeholder: e.g., Industry reports, Academic papers, Online tutorials, Expert interviews
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Any additional context, considerations, or special requirements
+      placeholder: e.g., Special formatting requirements, Integration with existing tools, User feedback considerations
