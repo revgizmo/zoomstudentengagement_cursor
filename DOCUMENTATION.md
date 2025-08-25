@@ -31,6 +31,7 @@
 ### Active Development
 - **[PROJECT.md](PROJECT.md)** - Current project status, roadmap, and priorities
 - **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Essential issue management practices
+- **[docs/development/AI_AGENT_HANDOFF_TEMPLATE.md](docs/development/AI_AGENT_HANDOFF_TEMPLATE.md)** - Standardized handoff process for background agent work
 
 ### Detailed Guidelines
 - **[docs/development/README.md](docs/development/README.md)** - Development guidelines index and quick start

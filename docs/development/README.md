@@ -15,6 +15,7 @@
 - **[AI_ASSISTED_DEVELOPMENT.md](AI_ASSISTED_DEVELOPMENT.md)** - Core guidelines for AI-assisted development
 - **[CONTEXT_PROVISION.md](CONTEXT_PROVISION.md)** - How to provide effective context to AI assistants
 - **[CURSOR_INTEGRATION.md](CURSOR_INTEGRATION.md)** - Cursor-specific guidelines and features
+- **[AI_AGENT_HANDOFF_TEMPLATE.md](AI_AGENT_HANDOFF_TEMPLATE.md)** - Standardized handoff process for background agent work
 
 ### 🔍 Quality Assurance
 - **[PRE_PR_VALIDATION.md](PRE_PR_VALIDATION.md)** - Pre-PR validation checklist and requirements
