@@ -58,7 +58,7 @@ participation equity, from Zoom transcripts of recorded course sessions.
 - **[docs/features/feature-index.md](docs/features/feature-index.md)** -
   Comprehensive feature documentation
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
-- **[ISSUE_MANAGEMENT_QUICK_REFERENCE.md](ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** -
+- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** -
   Quick guide for issue management
 
 ## 🚀 Quick Start

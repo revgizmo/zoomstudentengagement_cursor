@@ -151,7 +151,7 @@ All implementation details are in:
 - `scripts/real_world_testing/README.md` - Complete setup guide
 - `scripts/real_world_testing/run_tests.sh` - Automated test runner
 - `scripts/real_world_testing/whole_game_real_world.Rmd` - Manual workflow
-- `ISSUE_129_IMPLEMENTATION_GUIDE.md` - Step-by-step implementation plan
+- `docs/development/implementation-guides/docs/development/implementation-guides/docs/development/implementation-guides/ISSUE_129_IMPLEMENTATION_GUIDE.md` - Step-by-step implementation plan
 
 ### **Security Requirements**
 - **CRITICAL**: Never run in Cursor, GitHub Codespaces, or other LLM/IDE environments

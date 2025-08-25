@@ -316,7 +316,7 @@ devtools::load_all(export_all = FALSE)
 ## 🔗 **Related Documentation**
 
 - [Issue #262 Research](docs/development/cursor-research/) - Background agent research
-- [Docker Setup Guide](CURSOR_BACKGROUND_AGENT_SETUP.md) - Docker configuration
+- [Docker Setup Guide](docs/development/docs/development/docs/development/CURSOR_BACKGROUND_AGENT_SETUP.md) - Docker configuration
 - [CRAN Checklist](CRAN_CHECKLIST.md) - CRAN submission requirements
 - [Project Status](PROJECT.md) - Current project status
 

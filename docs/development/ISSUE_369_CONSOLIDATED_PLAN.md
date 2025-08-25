@@ -220,7 +220,7 @@ Update all analysis documents with correct information while preserving valuable
 
 - **Issue #369**: [GitHub Issue](https://github.com/revgizmo/zoomstudentengagement/issues/369)
 - **Corrected Analysis Summary**: `docs/analysis/CORRECTED_ANALYSIS_SUMMARY.md`
-- **Analysis Verification Report**: `ANALYSIS_VERIFICATION_REPORT.md`
+- **Analysis Verification Report**: `docs/analysis/reports/docs/analysis/reports/docs/analysis/reports/ANALYSIS_VERIFICATION_REPORT.md`
 - **Valuable Content Extraction**: `docs/analysis/VALUABLE_ISSUE_CONTENT_EXTRACTION.md`
 - **Project Status**: `PROJECT.md`
 

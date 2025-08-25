@@ -1,0 +1,76 @@
+name: Roadmap Epic
+description: Major phase or milestone from the strategic roadmap implementation plan
+title: "epic: Phase <X> - <concise outcome>"
+labels: ["roadmap", "epic"]
+assignees: []
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Problem statement and desired outcome from the roadmap
+    validations:
+      required: true
+  - type: textarea
+    id: roadmap_context
+    attributes:
+      label: Roadmap Context
+      description: Which phase and weeks this epic covers
+      placeholder: e.g., Phase 1: Foundation and Cleanup (Weeks 1-4)
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What's in and out of scope for this phase
+      value: |
+        In:
+        - 
+        Out:
+        - 
+  - type: textarea
+    id: success
+    attributes:
+      label: Success Metrics
+      description: How we'll measure success for this phase
+      value: |
+        - Phase completion criteria:
+        - Quality gates:
+        - User experience improvements:
+  - type: textarea
+    id: plan
+    attributes:
+      label: Work Breakdown
+      description: Child issues and weekly breakdown
+      value: |
+        Week 1:
+        - #
+        - #
+        Week 2:
+        - #
+        - #
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / Blockers
+      description: Known risks, dependencies, and mitigations
+  - type: input
+    id: owner
+    attributes:
+      label: Phase Owner
+      description: DRI for this phase
+  - type: input
+    id: milestone
+    attributes:
+      label: Target Milestone
+      description: Target completion date
+  - type: textarea
+    id: links
+    attributes:
+      label: Related Documentation
+      description: Links to roadmap documents and related materials
+      value: |
+        - STRATEGIC_ROADMAP_AND_ACTION_PLAN.md
+        - ACTIVE_ROADMAP_CHECKLIST.md
+        - FINAL_REVIEW_VALIDATION.md

@@ -114,5 +114,5 @@ Development methodologies and processes that can be reused.
 
 - **Project Documentation**: `docs/README.md`
 - **Development Guidelines**: `docs/development/README.md`
-- **Issue Management**: `docs/development/ISSUE_MANAGEMENT_GUIDELINES.md`
+- **Issue Management**: `docs/development/docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md`
 - **AI-Assisted Development**: `docs/development/AI_ASSISTED_DEVELOPMENT.md` 

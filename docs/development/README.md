@@ -21,12 +21,12 @@
 - **[CRAN_SUBMISSION.md](CRAN_SUBMISSION.md)** - CRAN submission requirements and process
 
 ### 📋 Project Management
-- **[ISSUE_MANAGEMENT_GUIDELINES.md](ISSUE_MANAGEMENT_GUIDELINES.md)** - Comprehensive issue management practices
+- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md)** - Comprehensive issue management practices
 - **[AUDIT_LOG.md](AUDIT_LOG.md)** - Codebase audit tracking and decisions
 - **[DOCUMENTATION_ORGANIZATION_SUMMARY.md](DOCUMENTATION_ORGANIZATION_SUMMARY.md)** - Summary of documentation reorganization (Issue #105)
 
 ### 🎯 Active Issues
-- **[ISSUE_160_CONSOLIDATED_PLAN.md](ISSUE_160_CONSOLIDATED_PLAN.md)** - Name Matching with Privacy-First Design (95% complete)
+- **[docs/development/implementation-guides/docs/development/implementation-guides/docs/development/implementation-guides/ISSUE_160_CONSOLIDATED_PLAN.md](docs/development/implementation-guides/docs/development/implementation-guides/docs/development/implementation-guides/ISSUE_160_CONSOLIDATED_PLAN.md)** - Name Matching with Privacy-First Design (95% complete)
 
 ---
 
@@ -48,7 +48,7 @@
 3. Check [AUDIT_LOG.md](AUDIT_LOG.md) for recent decisions
 
 ### **Issue Management**
-1. Reference [ISSUE_MANAGEMENT_GUIDELINES.md](ISSUE_MANAGEMENT_GUIDELINES.md) for workflows
+1. Reference [docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md](docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_GUIDELINES.md) for workflows
 2. Use [CONTEXT_PROVISION.md](CONTEXT_PROVISION.md) for context templates
 3. Follow [AI_ASSISTED_DEVELOPMENT.md](AI_ASSISTED_DEVELOPMENT.md) for AI collaboration
 
@@ -99,7 +99,7 @@
 ### Essential Project Files
 - **[PROJECT.md](../../PROJECT.md)** - Current project status and CRAN readiness
 - **[CONTRIBUTING.md](../../CONTRIBUTING.md)** - General contribution guidelines
-- **[ISSUE_MANAGEMENT_QUICK_REFERENCE.md](../../ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick issue workflow
+- **[docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](../../docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md)** - Quick issue workflow
 - **[CRAN_CHECKLIST.md](../../CRAN_CHECKLIST.md)** - Detailed CRAN submission tracking
 
 ### Planning Documents

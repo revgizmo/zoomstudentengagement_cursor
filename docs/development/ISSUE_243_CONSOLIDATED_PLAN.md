@@ -176,7 +176,7 @@
 ### **Key Files**
 - `DOCKER_OPTIMIZATION_COMPREHENSIVE_PLAN.md` - Complete plan documentation
 - `PROJECT.md` - Updated with Docker optimization section
-- `DOCKER_SETUP.md` - Current Docker setup documentation
+- `docs/development/docs/development/docs/development/DOCKER_SETUP.md` - Current Docker setup documentation
 - `.devcontainer/devcontainer.json` - Dev Container configuration
 - `Dockerfile`, `Dockerfile.updated`, `Dockerfile.complete` - Current Dockerfiles
 

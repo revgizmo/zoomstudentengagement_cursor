@@ -6,7 +6,7 @@ Project: zoomstudentengagement
 Define a comprehensive, standardized strategy for memorializing, organizing, optimizing, and maintaining AI agent prompts used across this repository. Aligns with CRAN-bound, privacy-first development.
 
 ### Current Prompt Inventory (Initial)
-- `AI_AGENT_PROMPT_GENERATOR.md`: Prompt generation workflow
+- `docs/development/docs/development/docs/development/AI_AGENT_PROMPT_GENERATOR.md`: Prompt generation workflow
 - `AI_AGENT_REVIEW_PROMPT.md`: Prompt review workflow
 - docs/development/process/organization-prompt*.md: Organization prompts
 - Additional planning prompts within docs/development and planning
@@ -53,7 +53,7 @@ Define a comprehensive, standardized strategy for memorializing, organizing, opt
 - **Advanced Prompt Optimization**: A/B testing and performance analytics
 
 ### Links
-- See `AI_PROMPT_OPTIMIZATION_IMPLEMENTATION_GUIDE.md` for step-by-step actions
+- See `docs/development/implementation-guides/docs/development/implementation-guides/docs/development/implementation-guides/AI_PROMPT_OPTIMIZATION_IMPLEMENTATION_GUIDE.md` for step-by-step actions
 - See `FUTURE_AI_COMPLEXITY_ASSESSMENT_FRAMEWORK.md` for post-CRAN enhancement plan
 
 ### Strategic Recommendations

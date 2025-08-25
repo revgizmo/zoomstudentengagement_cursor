@@ -226,8 +226,8 @@ The original analysis provided valuable workflow recommendations:
 ## 🔗 **Related Documents**
 
 - **Original Analysis**: `docs/analysis/` directory
-- **Verification Report**: `ANALYSIS_VERIFICATION_REPORT.md`
-- **Lessons Learned**: `ISSUE_360_ANALYSIS_LESSONS_LEARNED.md`
+- **Verification Report**: `docs/analysis/reports/docs/analysis/reports/docs/analysis/reports/ANALYSIS_VERIFICATION_REPORT.md`
+- **Lessons Learned**: `docs/analysis/lessons-learned/docs/analysis/lessons-learned/docs/analysis/lessons-learned/ISSUE_360_ANALYSIS_LESSONS_LEARNED.md`
 - **Package Documentation**: `DESCRIPTION`, `NAMESPACE`
 
 ---

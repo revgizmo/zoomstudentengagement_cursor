@@ -1,0 +1,77 @@
+name: Content Improvement
+description: Task to improve documentation, guides, or learning materials
+title: "content: <type> - <concise description>"
+labels: ["content", "documentation"]
+assignees: []
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: Why this content improvement is needed
+      placeholder: e.g., Improve user experience for career planning section
+    validations:
+      required: true
+  - type: dropdown
+    id: content_type
+    attributes:
+      label: Content Type
+      description: Type of content being improved
+      options:
+        - Career Guide
+        - Technical Reference
+        - Interview Preparation
+        - Documentation
+        - Tutorial
+        - Example
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What content is being improved and what's out of scope
+      value: |
+        Files to update:
+        - 
+        Out of scope:
+        - 
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Criteria for successful content improvement
+      options:
+        - label: Content is clear and well-structured
+        - label: Technical accuracy verified
+        - label: Grammar and spelling checked
+        - label: Links and references updated
+        - label: Build system still functional (if applicable)
+        - label: User experience improved
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test Plan
+      description: How to verify the content improvement
+      value: |
+        - Content review by subject matter expert
+        - User testing (if applicable)
+        - Build verification (if applicable)
+        - Link validation
+  - type: textarea
+    id: docs_impact
+    attributes:
+      label: Documentation Impact
+      description: Which documentation needs to be updated
+      value: |
+        - README updates
+        - Navigation improvements
+        - Cross-references
+  - type: input
+    id: links
+    attributes:
+      label: Related Links
+      description: Links to related issues, PRs, or external resources
+      placeholder: e.g., #123, external documentation links

@@ -5,7 +5,7 @@
 
 ## 🎯 **Overview**
 
-This document summarizes the GitHub issues created to address the corrected analysis findings. Each issue can be worked on by separate AI agents using the `@AI_AGENT_PROMPT_GENERATOR.md` workflow.
+This document summarizes the GitHub issues created to address the corrected analysis findings. Each issue can be worked on by separate AI agents using the `@docs/development/docs/development/docs/development/AI_AGENT_PROMPT_GENERATOR.md` workflow.
 
 ## 📋 **Created Issues**
 
@@ -28,7 +28,7 @@ git push -u origin feature/issue-369-documentation-updates
 Context files to link:
 - @PROJECT.md (Project status and CRAN readiness)
 - @docs/analysis/CORRECTED_ANALYSIS_SUMMARY.md (Corrected analysis)
-- @ANALYSIS_VERIFICATION_REPORT.md (Verification findings)
+- @docs/analysis/reports/docs/analysis/reports/docs/analysis/reports/ANALYSIS_VERIFICATION_REPORT.md (Verification findings)
 
 Your task: Update all analysis documents with correct information while preserving valuable insights.
 
@@ -206,7 +206,7 @@ Start by creating test fixtures in inst/extdata/test_transcripts/.
 ### **For Each Issue**:
 
 1. **Use the provided AI agent prompts** above for each issue
-2. **Follow the @AI_AGENT_PROMPT_GENERATOR.md workflow**:
+2. **Follow the @docs/development/docs/development/docs/development/AI_AGENT_PROMPT_GENERATOR.md workflow**:
    - Create consolidated plan
    - Create implementation guide
    - Generate short copyable message
@@ -245,8 +245,8 @@ Start by creating test fixtures in inst/extdata/test_transcripts/.
 
 - **Corrected Analysis**: `docs/analysis/CORRECTED_ANALYSIS_SUMMARY.md`
 - **Content Extraction**: `docs/analysis/VALUABLE_ISSUE_CONTENT_EXTRACTION.md`
-- **Verification Report**: `ANALYSIS_VERIFICATION_REPORT.md`
-- **AI Agent Generator**: `AI_AGENT_PROMPT_GENERATOR.md`
+- **Verification Report**: `docs/analysis/reports/docs/analysis/reports/docs/analysis/reports/ANALYSIS_VERIFICATION_REPORT.md`
+- **AI Agent Generator**: `docs/development/docs/development/docs/development/AI_AGENT_PROMPT_GENERATOR.md`
 
 ---
 

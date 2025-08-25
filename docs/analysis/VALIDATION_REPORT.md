@@ -152,8 +152,8 @@
 
 - **Original Analysis**: `docs/analysis/backup_20250824_110338/`
 - **Corrected Analysis**: `docs/analysis/` (updated files)
-- **Verification Report**: `ANALYSIS_VERIFICATION_REPORT.md`
-- **Implementation Guide**: `ISSUE_369_IMPLEMENTATION_GUIDE.md`
+- **Verification Report**: `docs/analysis/reports/docs/analysis/reports/docs/analysis/reports/ANALYSIS_VERIFICATION_REPORT.md`
+- **Implementation Guide**: `docs/development/implementation-guides/docs/development/implementation-guides/docs/development/implementation-guides/ISSUE_369_IMPLEMENTATION_GUIDE.md`
 - **Package Documentation**: `DESCRIPTION`, `NAMESPACE`
 
 ---

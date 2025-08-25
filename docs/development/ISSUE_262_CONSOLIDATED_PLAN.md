@@ -65,7 +65,7 @@ Investigate Cursor IDE's background agent Docker integration to understand why I
 **Objective**: Create practical setup guidance and working templates
 
 **Tasks:**
-- [ ] Create `CURSOR_BACKGROUND_AGENT_SETUP.md` with complete setup instructions
+- [ ] Create `docs/development/docs/development/docs/development/CURSOR_BACKGROUND_AGENT_SETUP.md` with complete setup instructions
 - [ ] Develop minimal working Dockerfile template for Cursor background agents
 - [ ] Document required configuration files and their contents
 - [ ] Test setup guide with our specific use case

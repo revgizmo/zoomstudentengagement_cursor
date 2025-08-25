@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Questions & Support
-    url: https://github.com/revgizmo/zoomstudentengagement_cursor/discussions
-    about: Please ask and answer questions here.
-  - name: CRAN Policies
-    url: https://cran.r-project.org/web/packages/policies.html
-    about: Review CRAN policies before proposing changes that affect submission.
+  - name: 📋 Roadmap Implementation
+    url: https://github.com/revgizmo/career-data-science/blob/main/STRATEGIC_ROADMAP_AND_ACTION_PLAN.md
+    about: View the strategic roadmap and implementation plan
+  - name: ✅ Active Checklist
+    url: https://github.com/revgizmo/career-data-science/blob/main/ACTIVE_ROADMAP_CHECKLIST.md
+    about: Track progress on the active roadmap checklist
+  - name: 📊 Process Management
+    url: https://github.com/revgizmo/career-data-science/blob/main/PROCESS_MANAGEMENT_GUIDE.md
+    about: Learn about our process management approach

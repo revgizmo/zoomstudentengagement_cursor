@@ -55,7 +55,7 @@ For comprehensive project information, reference these key files:
 #### **Development Guidelines**
 - **`docs/development/AI_ASSISTED_DEVELOPMENT.md`** - AI-assisted development guidelines
 - **`docs/development/AUDIT_LOG.md`** - Recent audit results and findings
-- **`ISSUE_MANAGEMENT_QUICK_REFERENCE.md`** - Issue workflow and management
+- **`docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md`** - Issue workflow and management
 
 ### Option 3: Manual Context Provision
 
@@ -73,7 +73,7 @@ Copy and paste the following into your new Cursor chat:
 **Key Files to Review**:
 - README.md - Package overview
 - PROJECT.md - Current status and CRAN readiness
-- ISSUE_MANAGEMENT_QUICK_REFERENCE.md - Issue workflow
+- docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md - Issue workflow
 - CONTRIBUTING.md - Contribution guidelines
 
 **Current Priorities**:
@@ -368,4 +368,4 @@ alias fullcontext='./scripts/context-for-new-chat.sh && Rscript scripts/context-
 
 ---
 
-**See Also**: [ISSUE_MANAGEMENT_QUICK_REFERENCE.md](../../ISSUE_MANAGEMENT_QUICK_REFERENCE.md) for issue workflow 
+**See Also**: [docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md](../../docs/development/docs/development/docs/development/ISSUE_MANAGEMENT_QUICK_REFERENCE.md) for issue workflow 
