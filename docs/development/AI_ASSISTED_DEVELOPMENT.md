@@ -97,6 +97,14 @@
 4. **Test Thoroughly**: Verify all functionality works as expected
 5. **Prepare Context**: Update context for next development session
 
+### **For Background Agent Handoffs**
+When completing work that will be continued by another AI agent:
+1. **Follow Handoff Template**: Use [AI_AGENT_HANDOFF_TEMPLATE.md](AI_AGENT_HANDOFF_TEMPLATE.md) for standardized handoffs
+2. **Create Handoff Branch**: Use date-based branch naming for easy identification
+3. **Document Progress**: Include comprehensive status and next steps
+4. **Provide Context**: Link all necessary files and resources
+5. **Create Copy-Pasteable Message**: Enable seamless handoff to next agent
+
 ---
 
 ## 🚫 AI Agent Constraints and Limitations

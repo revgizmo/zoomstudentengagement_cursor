@@ -9,7 +9,8 @@ validate_ferpa_compliance(
   institution_type = c("educational", "research", "mixed"),
   check_retention = TRUE,
   retention_period = c("academic_year", "semester", "quarter", "custom"),
-  custom_retention_days = NULL
+  custom_retention_days = NULL,
+  audit_log = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ validate_ferpa_compliance(
 \item{retention_period}{Retention period to check against. One of \code{c("academic_year", "semester", "quarter", "custom")}}
 
 \item{custom_retention_days}{Custom retention period in days (used when retention_period = "custom")}
+
+\item{audit_log}{Whether to log compliance checks for institutional review}
 }
 \value{
 A list containing compliance validation results with the following elements:
@@ -36,6 +39,11 @@ A list containing compliance validation results with the following elements:
 \description{
 Validates data for FERPA compliance by checking for personally identifiable
 information (PII) and validating data handling procedures.
+}
+\details{
+\strong{CRITICAL ETHICAL COMPLIANCE}: This function is essential for ensuring
+educational data protection and FERPA compliance. It helps institutions
+maintain legal compliance while using student data for educational improvement.
 }
 \examples{
 # Validate sample data for FERPA compliance

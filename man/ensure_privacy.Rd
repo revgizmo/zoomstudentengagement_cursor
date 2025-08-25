@@ -8,7 +8,8 @@ ensure_privacy(
   x,
   privacy_level = getOption("zoomstudentengagement.privacy_level", "mask"),
   id_columns = c("preferred_name", "name", "first_last", "name_raw", "student_id",
-    "email", "transcript_name", "formal_name")
+    "email", "transcript_name", "formal_name"),
+  audit_log = TRUE
 )
 }
 \arguments{
@@ -16,10 +17,15 @@ ensure_privacy(
 \code{tibble}. Other object types are returned unchanged.}
 
 \item{privacy_level}{Privacy level to apply. One of \code{c("ferpa_strict", "ferpa_standard", "mask", "none")}.
-Defaults to \code{getOption("zoomstudentengagement.privacy_level", "mask")}.}
+Defaults to \code{getOption("zoomstudentengagement.privacy_level", "mask")}.
+\strong{WARNING}: Setting to "none" disables privacy protection and may violate
+FERPA requirements.}
 
 \item{id_columns}{Character vector of column names to treat as identifiers.
 Defaults to common name/identifier columns.}
+
+\item{audit_log}{Whether to log privacy operations for compliance tracking.
+Defaults to TRUE for maximum transparency.}
 }
 \value{
 The object with privacy rules applied. For data frames, the same
@@ -31,6 +37,11 @@ plotted. By default, masks personally identifiable information in tabular
 data to FERPA-safe placeholders.
 }
 \details{
+\strong{CRITICAL ETHICAL COMPLIANCE}: This function is designed to promote
+participation equity and educational improvement, NOT surveillance. All
+outputs are automatically anonymized by default to protect student privacy
+and ensure FERPA compliance.
+
 The default behavior is controlled by the global option
 \code{zoomstudentengagement.privacy_level}, which is set to "mask" on package
 load. Use \code{set_privacy_defaults()} to change at runtime.
@@ -45,5 +56,5 @@ df <- tibble::tibble(
 ensure_privacy(df)
 }
 \seealso{
-\code{\link[=set_privacy_defaults]{set_privacy_defaults()}}
+\code{\link[=set_privacy_defaults]{set_privacy_defaults()}}, \code{\link[=validate_ethical_use]{validate_ethical_use()}}
 }
